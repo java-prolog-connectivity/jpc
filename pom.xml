@@ -1,12 +1,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>jpc</groupId>
+  
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent>
+  
+  <groupId>com.github.java-prolog-connectivity</groupId>
   <artifactId>jpc</artifactId>
   <version>0.0.1-alpha-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>JPC</name>
   <description>The Java-Prolog Connectivity Project</description>
-   <url></url>
+  <url>https://github.com/sergioc78/java-prolog-connectivity</url>
   
   <licenses>
 	    <license>
@@ -16,8 +23,9 @@
   </licenses>
   
   <scm>
-      <connection></connection>
-      <url></url>
+    <connection>scm:git:git@github.com:sergioc78/java-prolog-connectivity.git</connection>
+    <developerConnection>scm:git:git@github.com:sergioc78/java-prolog-connectivity.git</developerConnection>
+    <url>git@github.com:sergioc78/java-prolog-connectivity.git</url>
   </scm>
     
   <developers>
@@ -25,6 +33,17 @@
       <name>Sergio Castro</name>
     </developer>
   </developers>
+  
+  
+  <repositories>
+       <repository>
+         <id>snapshots-repo</id>
+         <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+         <releases><enabled>false</enabled></releases>
+         <snapshots><enabled>true</enabled></snapshots>
+       </repository>
+  </repositories>
+     
   
   
   <prerequisites>
@@ -51,8 +70,8 @@
 		</dependency>
 		
 		<dependency>
-    		<groupId>MiniToolBox</groupId>
-    		<artifactId>MiniToolBox</artifactId>
+    		<groupId>com.github.minitoolbox</groupId>
+    		<artifactId>minitoolbox</artifactId>
     		<version>0.0.1-alpha-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
