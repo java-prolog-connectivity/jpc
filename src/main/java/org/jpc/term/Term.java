@@ -3,7 +3,7 @@ package org.jpc.term;
 import java.util.List;
 import java.util.Map;
 
-import org.jpc.engine.visitor.AbstractTermVisitor;
+import org.jpc.engine.visitor.AbstractJplVisitor;
 
 /**
  * Implementations of this interface are Java representations of Logic Terms (i.e., Prolog data types)
@@ -94,7 +94,7 @@ public interface Term extends TermAdaptable {
 
 	public abstract boolean isBound();
 
-	public abstract void accept(AbstractTermVisitor termVisitor);
+	public abstract void accept(AbstractJplVisitor termVisitor);
 
 	/**
 	 * the length of this list, iff it is one, else an exception is thrown

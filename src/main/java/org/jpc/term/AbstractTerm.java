@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.jpc.JpcException;
-import org.jpc.engine.visitor.AbstractTermVisitor;
+import org.jpc.engine.visitor.AbstractJplVisitor;
 import org.jpc.engine.visitor.ChangeVariableNameVisitor;
 import org.jpc.engine.visitor.CollectVariableNamesVisitor;
-import org.jpc.engine.visitor.JpcTermWriterVisitor;
+import org.jpc.engine.visitor.JpcWriterVisitor;
 import org.jpc.engine.visitor.ReplaceVariableVisitor;
 import org.jpc.util.DefaultTermAdapter;
 
@@ -140,7 +140,7 @@ public abstract class AbstractTerm implements Term {
 	 * @see org.jpc.term.Term#accept(org.jpc.engine.visitor.AbstractJpcVisitor)
 	 */
 	@Override
-	public abstract void accept(AbstractTermVisitor termVisitor);
+	public abstract void accept(AbstractJplVisitor termVisitor);
 	
 	/* (non-Javadoc)
 	 * @see org.jpc.term.Term#listLength()
@@ -195,7 +195,7 @@ public abstract class AbstractTerm implements Term {
 	 */
 	@Override
 	public Term replaceVariables(Map<String, TermAdaptable> map) {
-		JpcTermWriterVisitor termWriter = new JpcTermWriterVisitor();
+		JpcWriterVisitor termWriter = new JpcWriterVisitor();
 		ReplaceVariableVisitor adapterVisitor = new ReplaceVariableVisitor(termWriter, map);
 		accept(adapterVisitor);
 		return termWriter.terms().get(0);
@@ -206,7 +206,7 @@ public abstract class AbstractTerm implements Term {
 	 */
 	@Override
 	public Term changeVariablesNames(Map<String, String> map) {
-		JpcTermWriterVisitor termWriter = new JpcTermWriterVisitor();
+		JpcWriterVisitor termWriter = new JpcWriterVisitor();
 		ChangeVariableNameVisitor adapterVisitor = new ChangeVariableNameVisitor(termWriter, map);
 		accept(adapterVisitor);
 		return termWriter.terms().get(0);

@@ -8,9 +8,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import org.jpc.engine.visitor.AbstractTermVisitor;
-import org.jpc.engine.visitor.TermDomVisitor;
-import org.jpc.engine.visitor.TermStreamingVisitor;
+import org.jpc.engine.visitor.AbstractJplVisitor;
+import org.jpc.engine.visitor.JpcDomVisitor;
+import org.jpc.engine.visitor.JpcStreamingVisitor;
 
 /**
  * A class reifying a logic compound term
@@ -132,7 +132,7 @@ public class Compound extends AbstractTerm {
 		return false;
 	}
 	
-	public void accept(TermDomVisitor termVisitor) {
+	public void accept(JpcDomVisitor termVisitor) {
 		if(termVisitor.visitCompound(this)) {
 			name().accept(termVisitor);
 			for(Term child: args) {
@@ -142,7 +142,7 @@ public class Compound extends AbstractTerm {
 	}
 
 
-	public void accept(TermStreamingVisitor termVisitor) {
+	public void accept(JpcStreamingVisitor termVisitor) {
 		termVisitor.visitCompound();
 		termVisitor.visitCompoundName();
 		name().accept(termVisitor);
@@ -156,11 +156,11 @@ public class Compound extends AbstractTerm {
 	}
 
 
-	public void accept(AbstractTermVisitor termVisitor) {
-		if(termVisitor instanceof TermDomVisitor)
-			accept((TermDomVisitor)termVisitor);
-		else if(termVisitor instanceof TermStreamingVisitor)
-			accept((TermStreamingVisitor)termVisitor);
+	public void accept(AbstractJplVisitor termVisitor) {
+		if(termVisitor instanceof JpcDomVisitor)
+			accept((JpcDomVisitor)termVisitor);
+		else if(termVisitor instanceof JpcStreamingVisitor)
+			accept((JpcStreamingVisitor)termVisitor);
 		else
 			throw new RuntimeException("Unrecognized visitor: " + termVisitor.getClass().getName());
 	}

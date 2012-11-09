@@ -6,7 +6,7 @@ import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
 import org.jpc.term.Variable;
 
-public class DefaultJpcDomVisitor implements TermDomVisitor {
+public class DefaultJpcDomVisitor implements JpcDomVisitor {
 
 	@Override
 	public void visitInteger(IntegerTerm term) {

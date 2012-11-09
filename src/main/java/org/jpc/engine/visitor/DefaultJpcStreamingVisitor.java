@@ -5,7 +5,7 @@ import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
 import org.jpc.term.Variable;
 
-public class DefaultJpcStreamingVisitor implements TermStreamingVisitor {
+public class DefaultJpcStreamingVisitor implements JpcStreamingVisitor {
 
 	@Override
 	public void visitInteger(IntegerTerm integerTerm) {

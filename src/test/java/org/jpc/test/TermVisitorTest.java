@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jpc.engine.visitor.JpcTermWriterVisitor;
+import org.jpc.engine.visitor.JpcWriterVisitor;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
@@ -70,7 +70,7 @@ public class TermVisitorTest {
 	
 	@Test
 	public void testTermWriter() {
-		JpcTermWriterVisitor termWriter = new JpcTermWriterVisitor();
+		JpcWriterVisitor termWriter = new JpcWriterVisitor();
 		t1.accept(termWriter);
 		assertTrue(t1.termEquals(termWriter.terms().get(0)));
 	}

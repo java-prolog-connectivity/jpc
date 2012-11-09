@@ -13,7 +13,7 @@ public class ChangeVariableNameVisitor extends ReplaceVariableVisitor {
 		super(asVariableReplacementMap(map));
 	}
 	
-	public ChangeVariableNameVisitor(TermStreamingVisitor adaptee, Map<String, String> map) {
+	public ChangeVariableNameVisitor(JpcStreamingVisitor adaptee, Map<String, String> map) {
 		super(adaptee, asVariableReplacementMap(map));
 	}
 	

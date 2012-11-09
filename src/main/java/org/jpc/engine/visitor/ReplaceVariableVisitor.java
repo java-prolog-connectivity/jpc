@@ -6,14 +6,14 @@ import org.jpc.term.Term;
 import org.jpc.term.TermAdaptable;
 import org.jpc.term.Variable;
 
-public class ReplaceVariableVisitor extends JpcTermAdapterVisitor {
+public class ReplaceVariableVisitor extends JpcAdapterVisitor {
 	private Map<String, TermAdaptable> map;
 	
 	public ReplaceVariableVisitor(Map<String, TermAdaptable> map) {
-		this(new JpcTermWriterVisitor(), map);
+		this(new JpcWriterVisitor(), map);
 	}
 	
-	public ReplaceVariableVisitor(TermStreamingVisitor adaptee, Map<String, TermAdaptable> map) {
+	public ReplaceVariableVisitor(JpcStreamingVisitor adaptee, Map<String, TermAdaptable> map) {
 		super(adaptee);
 		this.map = map;
 	}

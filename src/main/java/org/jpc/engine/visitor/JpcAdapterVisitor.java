@@ -5,15 +5,15 @@ import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
 import org.jpc.term.Variable;
 
-public class JpcTermAdapterVisitor implements TermStreamingVisitor {
+public class JpcAdapterVisitor implements JpcStreamingVisitor {
 
-	protected TermStreamingVisitor adaptee;
+	protected JpcStreamingVisitor adaptee;
 	
-	public JpcTermAdapterVisitor(TermStreamingVisitor adapteee) {
+	public JpcAdapterVisitor(JpcStreamingVisitor adapteee) {
 		this.adaptee = adapteee;
 	}
 	
-	public TermStreamingVisitor getAdaptee() {
+	public JpcStreamingVisitor getAdaptee() {
 		return adaptee;
 	}
 	
