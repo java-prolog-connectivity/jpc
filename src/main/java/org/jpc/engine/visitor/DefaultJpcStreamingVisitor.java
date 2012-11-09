@@ -3,10 +3,9 @@ package org.jpc.engine.visitor;
 import org.jpc.term.Atom;
 import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
-import org.jpc.term.Term;
 import org.jpc.term.Variable;
 
-public class DefaultJpcStreamingVisitor implements JpcStreamingVisitor {
+public class DefaultJpcStreamingVisitor implements TermStreamingVisitor {
 
 	@Override
 	public void visitInteger(IntegerTerm integerTerm) {

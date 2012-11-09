@@ -1,15 +1,15 @@
 package org.jpc.term;
 
 import org.jpc.JpcException;
-import org.jpc.engine.visitor.AbstractJpcVisitor;
+import org.jpc.engine.visitor.AbstractTermVisitor;
 
 /**
  * A class reifying a logic integer term
- * DISCLAIMER: In the current version many methods in this class have been copied or adapted from the class jpl.Integer in the JPL library.
+ * Disclaimer: Some methods were inspired or taken from the JPL library
  * @author scastro
  *
  */
-public class IntegerTerm extends Term {
+public class IntegerTerm extends AbstractTerm {
 
 	/**
 	 * the Integer's immutable long value
@@ -66,7 +66,7 @@ public class IntegerTerm extends Term {
 
 	@Override
 	public boolean hasFunctor(TermAdaptable nameTerm, int arity) {
-		return termEquivalent(nameTerm) && arity == 0;
+		return termEquals(nameTerm) && arity == 0;
 	}
 	
 	/**
@@ -79,18 +79,33 @@ public class IntegerTerm extends Term {
 		return ""+value;
 	}
 	
+	@Override
+	public int hashCode() {
+		return Long.valueOf(value).hashCode();
+	}
+	
 	/**
 	 * Two IntegerTerms are equal if they are the same object, or their values are equal
 	 * 
 	 * @param   obj  The Object to compare
 	 * @return  true if the Object satisfies the above condition
 	 */
-	public final boolean equals(Object obj) {
-		return this == obj || (obj instanceof IntegerTerm && value == ((IntegerTerm) obj).value);
+	@Override
+	public boolean equals(Object obj) {
+		return this == obj || (obj instanceof IntegerTerm && ((IntegerTerm)obj).canEquals(this) && value == ((IntegerTerm) obj).value);
 	}
 
+	/**
+	 * Any class overriding equals should override this method
+	 * @param obj the object to compare
+	 * @return whether this instance can equals the object sent as parameter
+	 */
+	public boolean canEquals(Object obj) {
+		return obj instanceof IntegerTerm;
+	}
+	
 	@Override
-	public void accept(AbstractJpcVisitor termVisitor) {
+	public void accept(AbstractTermVisitor termVisitor) {
 		termVisitor.visitInteger(this);
 	}
 }

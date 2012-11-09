@@ -1,21 +1,23 @@
 package org.jpc.term;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jpc.util.DefaultTermAdapter.asTerms;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
-import org.jpc.engine.visitor.AbstractJpcVisitor;
-import org.jpc.engine.visitor.JpcDomVisitor;
-import org.jpc.engine.visitor.JpcStreamingVisitor;
+import org.jpc.engine.visitor.AbstractTermVisitor;
+import org.jpc.engine.visitor.TermDomVisitor;
+import org.jpc.engine.visitor.TermStreamingVisitor;
 
 /**
  * A class reifying a logic compound term
- * DISCLAIMER: In the current version many methods in this class have been copied or adapted from the class jpl.Compound in the JPL library.
  * @author scastro
  *
  */
-public class Compound extends Term {
+public class Compound extends AbstractTerm {
 	
 	/**
 	 * the name of this Compound
@@ -25,23 +27,7 @@ public class Compound extends Term {
 	 * the arguments of this Compound
 	 */
 	protected final List<Term> args;
-	
-	/**
-	 * Creates a Compound with name but no args (i.e. an Atom).
-	 * This condsructor is protected (from illegal public use) and is used
-	 * only by Atom, which inherits it.
-	 * 
-	 * @param   name   the name of this Compound
-	 * @param   args   the arguments of this Compound
-	 */
-	/*
-	protected Compound(String name) {
-		checkNotNull(name);
-		checkArgument(!name.isEmpty(), "The name of a logic variable cannot be an empty string");
-		this.name = name;
-		this.args = new ArrayList<>();
-	}
-	*/
+
 	
 	public <T extends TermAdaptable> Compound(String name, List<T> args) {
 		this(new Atom(name), args);
@@ -54,8 +40,6 @@ public class Compound extends Term {
 	 * @param   args   the (one or more) arguments of this Compound
 	 */
 	public <T extends TermAdaptable> Compound(TermAdaptable name, List<T> args) {
-		checkNotNull(name);
-		checkNotNull(args);
 		checkArgument(!args.isEmpty(), "A compound term must have at least one argument");
 		this.name = name.asTerm();
 		this.args = asTerms(args);
@@ -70,7 +54,7 @@ public class Compound extends Term {
 	
 	//@Override
 	public boolean hasFunctor(TermAdaptable nameTermObject, int arity) {
-		return name.asTerm().termEquivalent(nameTermObject) && args.size() == arity;
+		return name.asTerm().termEquals(nameTermObject) && args.size() == arity;
 	}
 	
 	
@@ -102,8 +86,16 @@ public class Compound extends Term {
 	 * 
 	 * @return  string representation of an Compound
 	 */
+	@Override
 	public String toString() {
-		return name().toString() + (args.size() > 0 ? "(" + Term.toString(args) + ")" : "");
+		return name().toString() + (args.size() > 0 ? "(" + AbstractTerm.toString(args) + ")" : "");
+	}
+	
+	@Override
+	public int hashCode() {
+		List<Term> allFields = new ArrayList<Term>(args());
+		allFields.add(0, name());
+		return Objects.hash(allFields.toArray());
 	}
 	
 	/**
@@ -113,20 +105,34 @@ public class Compound extends Term {
 	 * @param   obj  the Object to compare (not necessarily another Compound)
 	 * @return  true if the Object satisfies the above condition
 	 */
+	@Override
 	public boolean equals(Object obj) {
-		return (this == obj || (obj instanceof Compound && name.equals(((Compound) obj).name) && equals(args, ((Compound) obj).args)));
+		return (this == obj || (obj instanceof Compound && 
+				((Compound) obj).canEquals(this) &&
+				name.equals(((Compound) obj).name) && 
+				Arrays.equals(args.toArray(), ((Compound) obj).args.toArray())));
 	}
 	
-	public boolean termEquivalent(TermAdaptable termAdaptable) {
+	/**
+	 * Any class overriding equals should override this method
+	 * @param obj the object to compare
+	 * @return whether this instance can equals the object sent as parameter
+	 */
+	public boolean canEquals(Object obj) {
+		return obj instanceof Compound;
+	}
+	
+	@Override
+	public boolean termEquals(TermAdaptable termAdaptable) {
 		Term term = termAdaptable.asTerm();
 		if(term.isCompound()) {
 			Compound compound = (Compound) term;
-			return this.name.termEquivalent(compound.name) && termEquivalent(args, compound.args);
+			return this.name.termEquals(compound.name) && termEquals(args, compound.args);
 		}
 		return false;
 	}
 	
-	public void accept(JpcDomVisitor termVisitor) {
+	public void accept(TermDomVisitor termVisitor) {
 		if(termVisitor.visitCompound(this)) {
 			name().accept(termVisitor);
 			for(Term child: args) {
@@ -136,7 +142,7 @@ public class Compound extends Term {
 	}
 
 
-	public void accept(JpcStreamingVisitor termVisitor) {
+	public void accept(TermStreamingVisitor termVisitor) {
 		termVisitor.visitCompound();
 		termVisitor.visitCompoundName();
 		name().accept(termVisitor);
@@ -150,11 +156,11 @@ public class Compound extends Term {
 	}
 
 
-	public void accept(AbstractJpcVisitor termVisitor) {
-		if(termVisitor instanceof JpcDomVisitor)
-			accept((JpcDomVisitor)termVisitor);
-		else if(termVisitor instanceof JpcStreamingVisitor)
-			accept((JpcStreamingVisitor)termVisitor);
+	public void accept(AbstractTermVisitor termVisitor) {
+		if(termVisitor instanceof TermDomVisitor)
+			accept((TermDomVisitor)termVisitor);
+		else if(termVisitor instanceof TermStreamingVisitor)
+			accept((TermStreamingVisitor)termVisitor);
 		else
 			throw new RuntimeException("Unrecognized visitor: " + termVisitor.getClass().getName());
 	}

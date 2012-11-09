@@ -6,15 +6,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Collections;
 import java.util.List;
 
-import org.jpc.engine.visitor.AbstractJpcVisitor;
+import org.jpc.engine.visitor.AbstractTermVisitor;
 
 /**
  * A class reifying a logic variable
- * DISCLAIMER: In the current version many methods in this class have been copied or adapted from the class jpl.Variable in the JPL library.
+ * Disclaimer: Some methods were inspired or taken from the JPL library
  * @author scastro
  *
  */
-public class Variable extends Term {
+public class Variable extends AbstractTerm {
 
 	public static final Variable ANONYMOUS_VAR = new Variable("_");
 	
@@ -25,7 +25,6 @@ public class Variable extends Term {
 	public final String name; // the name of this Variable
 	
 	public Variable(String name) {
-		checkNotNull(name);
 		checkArgument(isValidVariableName(name), "The variable name " + name + " is not valid");
 		this.name = name;
 	}
@@ -52,29 +51,47 @@ public class Variable extends Term {
 		return !variableName.isEmpty(); //additional checks could be added here
 	}
 	
+	@Override
+	public int hashCode() {
+		return name.hashCode();
+	}
+	
 	/**
 	 * A Variable is equal to another if their names are the same and they are not anonymous.
 	 * 
 	 * @param   obj  The Object to compare.
 	 * @return  true if the Object is a Variable and the above condition apply.
 	 */
-	public final boolean equals(Object obj) {
-		return obj instanceof Variable && !this.name.equals("_") && this.name.equals(((Variable) obj).name);
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof Variable && 
+				((Variable)obj).canEquals(this) && 
+				!this.name.equals("_") && 
+				this.name.equals(((Variable) obj).name);
 	}
 
+	/**
+	 * Any class overriding equals should override this method
+	 * @param obj the object to compare
+	 * @return whether this instance can equals the object sent as parameter
+	 */
+	public boolean canEquals(Object obj) {
+		return obj instanceof Variable;
+	}
+	
 	@Override
-	public final boolean termEquivalent(TermAdaptable termAdaptable) {
-		Term term = termAdaptable.asTerm();
+	public final boolean termEquals(TermAdaptable o) {
+		Term term = o.asTerm();
 		return term.isVariable() && this.name.equals(((Variable) term).name);
 	}
 	
 	@Override
 	public boolean hasFunctor(TermAdaptable nameTerm, int arity) {
-		return termEquivalent(nameTerm) && arity == 0;
+		return termEquals(nameTerm) && arity == 0;
 	}
 
 	@Override
-	public void accept(AbstractJpcVisitor termVisitor) {
+	public void accept(AbstractTermVisitor termVisitor) {
 		termVisitor.visitVariable(this);
 	}
 	

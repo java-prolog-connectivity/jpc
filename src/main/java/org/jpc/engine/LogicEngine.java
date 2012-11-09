@@ -9,6 +9,7 @@ import org.jpc.flags.LogtalkFlag;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Query;
+import org.jpc.term.AbstractTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Variable;
 import static org.jpc.util.LogicUtil.*;

@@ -12,7 +12,7 @@ import org.jpc.term.Variable;
 import org.jpc.util.JpcTermBuilder;
 import org.jpc.util.TermBuilder;
 
-public class JpcTermWriterVisitor implements JpcStreamingVisitor {
+public class JpcTermWriterVisitor implements TermStreamingVisitor {
 
 	Deque<TermBuilder<Term>> queue = new LinkedList<>();
 	

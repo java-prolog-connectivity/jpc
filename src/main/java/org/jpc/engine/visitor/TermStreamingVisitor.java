@@ -1,7 +1,7 @@
 package org.jpc.engine.visitor;
 
 
-public interface JpcStreamingVisitor extends AbstractJpcVisitor {
+public interface TermStreamingVisitor extends AbstractTermVisitor {
 
 	public abstract void visitCompound();
 	public abstract void visitCompoundName();

@@ -1,17 +1,14 @@
 package org.jpc.term;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.jpc.engine.visitor.AbstractJpcVisitor;
+import org.jpc.engine.visitor.AbstractTermVisitor;
 
 /**
  * A class reifying a logic float term
- * DISCLAIMER: In the current version many methods in this class have been copied or adapted from the class jpl.Float in the JPL library.
+ * Disclaimer: Some methods were inspired or taken from the JPL library
  * @author scastro
  *
  */
-public class FloatTerm extends Term {
+public class FloatTerm extends AbstractTerm {
 
 	protected final double value;
 	
@@ -75,22 +72,37 @@ public class FloatTerm extends Term {
 
 	@Override
 	public boolean hasFunctor(TermAdaptable nameTerm, int arity) {
-		return termEquivalent(nameTerm) && arity == 0;
+		return termEquals(nameTerm) && arity == 0;
 	}
 
+	@Override
+	public int hashCode() {
+		return Double.valueOf(value).hashCode();
+	}
+	
 	/**
 	 * Two FloatTerms are equal if they are the same object, or their values are equal
 	 * 
 	 * @param   obj  The Object to compare
 	 * @return  true if the Object satisfies the above condition
 	 */
-	public final boolean equals(Object obj) {
-		return this == obj || (obj instanceof FloatTerm && value == ((FloatTerm) obj).value);
+	@Override
+	public boolean equals(Object obj) {
+		return this == obj || (obj instanceof FloatTerm && ((FloatTerm)obj).canEquals(this) && value == ((FloatTerm) obj).value);
 	}
 
+	/**
+	 * Any class overriding equals should override this method
+	 * @param obj the object to compare
+	 * @return whether this instance can equals the object sent as parameter
+	 */
+	public boolean canEquals(Object obj) {
+		return obj instanceof FloatTerm;
+	}
 
 	@Override
-	public void accept(AbstractJpcVisitor termVisitor) {
+	public void accept(AbstractTermVisitor termVisitor) {
 		termVisitor.visitFloat(this);
 	}
+
 }

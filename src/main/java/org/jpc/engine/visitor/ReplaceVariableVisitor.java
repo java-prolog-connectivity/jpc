@@ -13,7 +13,7 @@ public class ReplaceVariableVisitor extends JpcTermAdapterVisitor {
 		this(new JpcTermWriterVisitor(), map);
 	}
 	
-	public ReplaceVariableVisitor(JpcStreamingVisitor adaptee, Map<String, TermAdaptable> map) {
+	public ReplaceVariableVisitor(TermStreamingVisitor adaptee, Map<String, TermAdaptable> map) {
 		super(adaptee);
 		this.map = map;
 	}

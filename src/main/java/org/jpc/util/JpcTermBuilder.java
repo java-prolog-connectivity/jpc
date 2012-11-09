@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
-import org.jpc.term.TermAdaptable;
 
 public class JpcTermBuilder extends TermBuilder<Term> {//implements TermAdaptable {
 

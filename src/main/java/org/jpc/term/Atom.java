@@ -5,14 +5,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Collections;
 import java.util.List;
 
-import org.jpc.engine.visitor.AbstractJpcVisitor;
+import org.jpc.engine.visitor.AbstractTermVisitor;
 
 /**
  * A class reifying a logic atom
  * @author scastro
  *
  */
-public class Atom extends Term {
+public class Atom extends AbstractTerm {
 
 	public static final Term TRUE_TERM = new Atom("true");
 	public static final Term FALSE_TERM = new Atom("false");
@@ -23,7 +23,6 @@ public class Atom extends Term {
 	 * @param   name   the Atom's name (unquoted)
 	 */
 	public Atom(String name) {
-		checkNotNull(name);
 		this.name = name;
 	}
 	
@@ -34,11 +33,26 @@ public class Atom extends Term {
 
 	@Override
 	public boolean hasFunctor(TermAdaptable nameTermObject, int arity) {
-		return termEquivalent(nameTermObject) && arity == 0;
+		return termEquals(nameTermObject) && arity == 0;
 	}
 	
+	@Override
+	public int hashCode() {
+		return name.hashCode();
+	}
+	
+	@Override
 	public boolean equals(Object obj) {
-		return (this == obj || (obj instanceof Atom && name.equals(((Atom)obj).name)));
+		return (this == obj || (obj instanceof Atom && ((Atom)obj).canEquals(this) && name.equals(((Atom)obj).name)));
+	}
+	
+	/**
+	 * Any class overriding equals should override this method
+	 * @param obj the object to compare
+	 * @return whether this instance can equals the object sent as parameter
+	 */
+	public boolean canEquals(Object obj) {
+		return obj instanceof Atom;
 	}
 	
 	@Override
@@ -57,7 +71,7 @@ public class Atom extends Term {
 	}
 
 	@Override
-	public void accept(AbstractJpcVisitor termVisitor) {
+	public void accept(AbstractTermVisitor termVisitor) {
 		termVisitor.visitAtom(this);
 	}
 

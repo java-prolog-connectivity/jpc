@@ -24,7 +24,7 @@ import org.junit.Test;
  */
 public class TermVisitorTest {
 
-	Term t0 = new Compound(new Variable("A"), asList(new Variable("_")));
+	Term t0 = new Compound(new Variable("C"), asList(new Variable("_")));
 	Term t1 = new Compound(new Variable("A"), asList(new Compound(new Variable("_"), asList(LogicUtil.termsToList(new Variable("C"), new Atom("D"), new Variable("C"), new Variable("_"), new Variable("E"))))));
 	
 	@Test
@@ -46,7 +46,7 @@ public class TermVisitorTest {
 		Variable anon = new Variable("ANONYMOUS");
 		assertEquals(anon, new Variable("_").changeVariablesNames(map));
 		
-		assertEquals(new Compound(new Variable("A"), asList(anon)), t0.changeVariablesNames(map));
+		assertEquals(new Compound(new Variable("C"), asList(anon)), t0.changeVariablesNames(map));
 		
 		assertEquals(new Compound(new Variable("A"), asList(new Compound(anon, asList(LogicUtil.termsToList(new Variable("C"), new Atom("D"), new Variable("C"), anon, new Variable("E")))))), 
 				t1.changeVariablesNames(map));
@@ -58,16 +58,21 @@ public class TermVisitorTest {
 		Map<String, TermAdaptable> map = new HashMap<String, TermAdaptable>(){{
 			put("C", replacementTerm);
 		}};
+		
 		//not using Term.equals because that method fails when comparing two anonymous variables (they should not be considered equals)
+		System.out.println(new Compound(new Compound(new Variable("C"), asList(new Atom("C"))), asList(new Variable("_"))));
+		System.out.println(t0);
+		System.out.println(t0.replaceVariables(map));
+		assertTrue(new Compound(new Compound(new Variable("C"), asList(new Atom("C"))), asList(new Variable("_"))).termEquals(t0.replaceVariables(map)));
 		assertTrue(new Compound(new Variable("A"), asList(new Compound(new Variable("_"), asList(LogicUtil.termsToList(replacementTerm, new Atom("D"), replacementTerm, new Variable("_"), new Variable("E")))))).
-				termEquivalent(t1.replaceVariables(map)));
+				termEquals(t1.replaceVariables(map)));
 	}
 	
 	@Test
 	public void testTermWriter() {
 		JpcTermWriterVisitor termWriter = new JpcTermWriterVisitor();
 		t1.accept(termWriter);
-		assertTrue(t1.termEquivalent(termWriter.terms().get(0)));
+		assertTrue(t1.termEquals(termWriter.terms().get(0)));
 	}
 
 }

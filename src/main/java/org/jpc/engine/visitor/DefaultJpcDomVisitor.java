@@ -4,10 +4,9 @@ import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
-import org.jpc.term.Term;
 import org.jpc.term.Variable;
 
-public class DefaultJpcDomVisitor implements JpcDomVisitor {
+public class DefaultJpcDomVisitor implements TermDomVisitor {
 
 	@Override
 	public void visitInteger(IntegerTerm term) {

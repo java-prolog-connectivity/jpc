@@ -1,24 +1,31 @@
 package org.jpc.util;
 
+import static java.util.Arrays.asList;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jpc.JpcException;
-import org.jpc.engine.BootstrapLogicEngine;
-import org.jpc.engine.LogicEngineConfiguration;
-import org.jpc.flags.LogtalkFlag;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
-import org.jpc.term.Query;
 import org.jpc.term.Term;
+import org.jpc.term.TermAdaptable;
 import org.jpc.term.Variable;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterators;
 
 /**
  * An utility class for general purpose queries and term manipulation
@@ -29,6 +36,7 @@ import org.jpc.term.Variable;
 public class LogicUtil {
 	
 
+	
 	public static Term termsToList(List<Term> terms) {
 		return termsToList(terms.toArray(new Term[]{}));
 	}
@@ -44,7 +52,7 @@ public class LogicUtil {
 		Term list = new Atom("[]");
 
 		for (int i = terms.length - 1; i >= 0; --i) {
-			list = new Compound(".", Arrays.asList(terms[i], list));
+			list = new Compound(".", asList(terms[i], list));
 		}
 		return list;
 	}
@@ -59,7 +67,7 @@ public class LogicUtil {
 	public static Term stringsToList(String... a) {
 		Term list = new Atom("[]");
 		for (int i = a.length - 1; i >= 0; i--) {
-			list = new Compound(".", Arrays.asList(new Atom(a[i]), list));
+			list = new Compound(".", asList(new Atom(a[i]), list));
 		}
 		return list;
 	}
@@ -74,7 +82,7 @@ public class LogicUtil {
 	public static Term intsToList(int... a) {
 		Term list = new Atom("[]");
 		for (int i = a.length - 1; i >= 0; i--) {
-			list = new Compound(".", Arrays.asList(new IntegerTerm(a[i]), list));
+			list = new Compound(".", asList(new IntegerTerm(a[i]), list));
 		}
 		return list;
 	}
@@ -89,7 +97,7 @@ public class LogicUtil {
 	public static Term intTableToList(int[][] a) {
 		Term list = new Atom("[]");
 		for (int i = a.length - 1; i >= 0; i--) {
-			list = new Compound(".", Arrays.asList(intsToList(a[i]), list));
+			list = new Compound(".", asList(intsToList(a[i]), list));
 		}
 		return list;
 	}
@@ -119,7 +127,7 @@ public class LogicUtil {
 				ts[i] = t.arg(1);
 				t = t.arg(2);
 			}
-			return Arrays.asList(ts);
+			return asList(ts);
 		} catch (Exception e) {
 			throw new JpcException("term " + t + " is not a proper list");
 		}
@@ -139,7 +147,7 @@ public class LogicUtil {
 			}
 			head = head.arg(2);
 		}
-		return (head.hasFunctor("[]", 0) ? Arrays.asList(a) : null );
+		return (head.hasFunctor("[]", 0) ? asList(a) : null );
 	}
 	
 	/**
@@ -153,7 +161,7 @@ public class LogicUtil {
 	}
 	
 	public static Term applyFunctor(String functor, Term term) {
-		return new Compound(functor, Arrays.asList(term));
+		return new Compound(functor, asList(term));
 	}
 	
 	public static List<Term> forAllApplyFunctor(String functor, List<Term> terms) {

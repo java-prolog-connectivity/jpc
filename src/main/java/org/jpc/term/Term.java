@@ -1,305 +1,152 @@
 package org.jpc.term;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
-import org.jpc.JpcException;
-import org.jpc.engine.visitor.AbstractJpcVisitor;
-import org.jpc.engine.visitor.ChangeVariableNameVisitor;
-import org.jpc.engine.visitor.CollectVariableNamesVisitor;
-import org.jpc.engine.visitor.JpcTermWriterVisitor;
-import org.jpc.engine.visitor.ReplaceVariableVisitor;
-import org.jpc.util.LogicUtil;
-
+import org.jpc.engine.visitor.AbstractTermVisitor;
 
 /**
- * A class reifying a logic term
- * DISCLAIMER: In the current version many methods in this class have been copied or adapted from the class jpl.Term in the JPL library.
+ * Implementations of this interface are Java representations of Logic Terms (i.e., Prolog data types)
+ * Disclaimer: Some methods were inspired or taken from the JPL library
  * @author scastro
  *
  */
-public abstract class Term implements TermAdaptable {
+public interface Term extends TermAdaptable {
 
-	public static Term newTerm(Object o) {
-		Term term = null;
-		if(o == null)
-			term = Variable.ANONYMOUS_VAR;
-		else if(o instanceof TermAdaptable)
-			term = ((TermAdaptable)o).asTerm();
-		else if(o instanceof Boolean || o instanceof String || o instanceof StringBuilder || o instanceof StringBuffer)
-			term = new Atom(o.toString());
-		else if(o instanceof Number) {
-			if(o instanceof BigDecimal || o instanceof Float || o instanceof Double)
-				term = new FloatTerm(((Number)o).doubleValue());
-			else
-				term = new IntegerTerm(((Number)o).longValue());
-		} else if (o instanceof Entry) {
-			Term key = newTerm(((Entry)o).getKey());
-			Term value = newTerm(((Entry)o).getValue());
-			if(key != null && value != null)
-				term = new Compound("=", Arrays.<TermAdaptable>asList(key, value));
-		} else if(o instanceof Map) {
-			term = newTerm(((Map)o).entrySet());
-		} else if(o instanceof Enumeration) {
-			term = newTerm(Collections.list((Enumeration) o));
-		} else if(o instanceof Iterable) {
-			term = newTerm(((Iterable)o).iterator());
-		} else if(o instanceof Iterator) {
-			Iterator it = (Iterator) o;
-			List<Term> list = new ArrayList<>();
-			while(it.hasNext()) {
-				list.add(newTerm(it.next()));
-			}
-			term = LogicUtil.termsToList(list);
-		}
-		return term;
-	}
-
-	
 	/**
-	 * Returns the ith argument (counting from 1) of this Compound;
+	 * Returns the ith argument (if any) of this Term.
+	 * Arguments are counted from 1.
 	 * throws an ArrayIndexOutOfBoundsException if i is inappropriate.
 	 * 
-	 * @return the ith argument (counting from 1) of this Compound
+	 * @return the ith argument (counting from one) of this Term.
 	 */
-	public Term arg(int i) {
-		return args().get(i-1);
-	}
-	
-	public List<Term> args() {
-		return Collections.emptyList();
-	}
+	public abstract Term arg(int i);
+
+	/**
+	 * Returns the arguments list of this term.
+	 * If the term has no arguments will return an empty list
+	 * @return the arguments of this term
+	 */
+	public abstract List<Term> args();
+
+	/**
+	 * Returns the arity (i.e., number of arguments) of this Term.
+	 * 
+	 * @return the arity (1+) of this Term. Returns 0 if the term does not have any arguments (i.e., the Term is an instance of Compound)
+	 */
+	public abstract int arity();
+
+	public abstract boolean hasFunctor(String nameTermObject, int arity);
 	
 	/**
-	 * Returns the arity (1+) of this Term.
-	 * 
-	 * @return the arity (1+) of this Term. Returns 0 if the terms is not an instance of Compound
+	 * wether this term has a functor with a given name and arity
+	 * @param nameTermObject the name of this term
+	 * @param arity the arity of this term
+	 * @return true if the term has the given name and arity. False otherwise
 	 */
-	public int arity() {
-		return args().size();
-	}
-	
-	public boolean hasFunctor(String name, int arity) {
-		return hasFunctor(new Atom(name), arity);
-	}
-	
 	public abstract boolean hasFunctor(TermAdaptable nameTermObject, int arity);
 
-	
 	/**
 	 * whether this Term represents an atom
 	 * 
 	 * @return whether this Term represents an atom
 	 */
-	public boolean isAtom() {
-		return this instanceof Atom;
-	}
+	public abstract boolean isAtom();
 
 	/**
 	 * whether this Term represents a compound term
 	 * 
 	 * @return whether this Term represents a compound atom
 	 */
-	public boolean isCompound() {
-		return this instanceof Compound;
-	}
+	public abstract boolean isCompound();
 
-	public boolean isNumber() {
-		return isInteger() || isFloat();
-	}
-	
-	/**
-	 * whether this Term represents an atom
-	 * 
-	 * @return whether this Term represents an atom
-	 */
-	public boolean isFloat() {
-		return this instanceof FloatTerm;
-	}
+	public abstract boolean isNumber();
 
 	/**
 	 * whether this Term represents an atom
 	 * 
 	 * @return whether this Term represents an atom
 	 */
-	public boolean isInteger() {
-		return this instanceof IntegerTerm;
-	}
+	public abstract boolean isFloat();
+
+	/**
+	 * whether this Term represents an atom
+	 * 
+	 * @return whether this Term represents an atom
+	 */
+	public abstract boolean isInteger();
 
 	/**
 	 * whether this Term is a variable
 	 * 
 	 * @return whether this Term is a variable
 	 */
-	public boolean isVariable() {
-		return this instanceof Variable;
-	}
-	
+	public abstract boolean isVariable();
+
 	/**
 	 * whether this Term is a list
 	 * 
 	 * @return whether this Term is a list
 	 */
-	public boolean isList() {
-		try {
-			listLength(); //will throw an exception if the list is not well formed
-			return true;
-		} catch(Exception e) {
-			return false;
-		}
-	}
-	
-	public boolean isUnification() {
-		return hasFunctor("=", 2);
-	}
-	
-	public boolean bound() {
-		return getVariablesNames().isEmpty();
-	}
-	
-	public abstract void accept(AbstractJpcVisitor termVisitor);
-	
+	public abstract boolean isList();
+
+	public abstract boolean isUnification();
+
+	public abstract boolean isBound();
+
+	public abstract void accept(AbstractTermVisitor termVisitor);
+
 	/**
 	 * the length of this list, iff it is one, else an exception is thrown
 	 * 
 	 * @throws LException
 	 * @return the length (as an int) of this list, iff it is one
 	 */
-	public int listLength() {
-		Compound compound = (Compound) this;
-		if (compound.hasFunctor(".", 2)) {
-			return 1 + compound.arg(2).asTerm().listLength();
-		} else if (compound.hasFunctor("[]", 0)) {
-			return 0;
-		} else {
-			throw new JpcException("term" + compound.toString() + "is not a list");
-		}
-	}
-	
-	
-	
+	public abstract int listLength();
 
-	protected static <T extends TermAdaptable> boolean equals(List<T> t1, List<T> t2) {
-		if (t1.size() != t2.size()) {
-			return false;
-		}
-		for (int i = 0; i < t1.size(); ++i) {
-			if (!t1.get(i).equals(t2.get(i))) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	/**
-	 * @param   t1  a list of Terms
-	 * @param   t2  another list of Terms
-	 * @return  true if all of the Terms in the (same-length) lists are pairwise term equivalent
-	 */
-	protected static boolean termEquivalent(List<? super Term> t1, List<? super Term> t2) {
-		if (t1.size() != t2.size()) {
-			return false;
-		}
-		for (int i = 0; i < t1.size(); ++i) {
-			Object o1 = t1.get(i);
-			Object o2 = t2.get(i);
-			if(o1 instanceof TermAdaptable && o2 instanceof TermAdaptable) {
-				Term term1 = ((TermAdaptable)o1).asTerm();
-				Term term2 = ((TermAdaptable)o1).asTerm();
-				if (!term1.termEquivalent(term2)) {
-					return false;
-				}
-			} else
-				return false;
-		}
-		return true;
-	}
-	
 	/**
 	 * Test if this object is equivalent to the term representation of the object sent as parameter
 	 * This is not testing for equality in the mathematical sense, for example:
 	 * 		'new Variable("_").equals(new Variable("_"))'
-	 * is false, since both the receiver and the arguments are anonymous variables. But:
-	 * 		'new Variable("_").termEquivalent(new Variable("_"))'
+	 * is false, since both the receiver and the arguments are anonymous variables, not the same variable. But:
+	 * 		'new Variable("_").termEquals(new Variable("_"))'
 	 * is true, since they both have the same term representation
 	 * @param termAdaptable
 	 * @return
 	 */
-	public boolean termEquivalent(TermAdaptable termAdaptable) {
-		return equals(termAdaptable.asTerm());
-	}
-	
+	public abstract boolean termEquals(TermAdaptable o);
+
 	/**
-	 * Converts a list of Terms to a String.
-	 * 
-	 * @param   args    An array of Terms to convert
-	 * @return  String representation of a list of Terms
+	 * Returns a term with all the occurrences of the variables in the parameter map replaced with its associated value (converted to a term)
+	 * @param map maps variable names to values.
+	 * @return a new term with its variables replaced according to the map
 	 */
-	public static String toString(TermAdaptable... termObjects) {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < termObjects.length; ++i) {
-			sb.append(termObjects[i].asTerm().toString());
-			if (i != termObjects.length - 1) {
-				sb.append(", ");
-			}
-		}
-		return sb.toString();
-	}
-	
-	public static <T extends TermAdaptable>String toString(List<T> termAdapters) {
-		return toString(termAdapters.toArray(new TermAdaptable[]{}));
-	}
+	public abstract Term replaceVariables(Map<String, TermAdaptable> map);
 
+	/**
+	 * Replace all the variable names according to the map parameter
+	 * @param map maps variable names to new names
+	 * @return a new term with its variables renamed according to the map
+	 */
+	public abstract Term changeVariablesNames(Map<String, String> map);
 
-	public Term replaceVariables(Map<String, TermAdaptable> map) {
-		JpcTermWriterVisitor termWriter = new JpcTermWriterVisitor();
-		ReplaceVariableVisitor adapterVisitor = new ReplaceVariableVisitor(termWriter, map);
-		accept(adapterVisitor);
-		return termWriter.terms().get(0);
-	}
-	
-	public Term changeVariablesNames(Map<String, String> map) {
-		JpcTermWriterVisitor termWriter = new JpcTermWriterVisitor();
-		ChangeVariableNameVisitor adapterVisitor = new ChangeVariableNameVisitor(termWriter, map);
-		accept(adapterVisitor);
-		return termWriter.terms().get(0);
-	}
-	
-	public List<String> getVariablesNames() {
-		CollectVariableNamesVisitor visitor = new CollectVariableNamesVisitor();
-		accept(visitor);
-		return visitor.getVariableNames();
-	}
-	
-	public boolean hasVariable(String variableName) {
-		return getVariablesNames().contains(variableName);
-	}
-	
-	public List<String> nonAnonymousVariablesNames() {
-		List<String> nonAnonymousVariablesNames = new ArrayList<>();
-		for(String variableName : getVariablesNames()) {
-			if(!Variable.isAnonymousVariableName(variableName))
-				nonAnonymousVariablesNames.add(variableName);
-		}
-		return nonAnonymousVariablesNames;
-	}
-	
-	public Term asTerm() {
-		return this;
-	}
-	
-	public static <T extends TermAdaptable> List<Term> asTerms(List<T> termObjects) {
-		List<Term> terms = new ArrayList<>();
-		for(TermAdaptable termObject : termObjects)
-			terms.add(termObject.asTerm());
-		return terms;
-	}
-	
+	/**
+	 * Returns the variable names present in the term
+	 * @return the variable names present in the term
+	 */
+	public abstract List<String> getVariablesNames();
+
+	/**
+	 * wether the term has a variable with a given name
+	 * @param variableName the variable name that is queried
+	 * @return wether the term has a variable with a given name
+	 */
+	public abstract boolean hasVariable(String variableName);
+
+	/**
+	 * Returns a list with all the non anonymous variables names
+	 * @return a list with all the non anonymous variables names
+	 */
+	public abstract List<String> nonAnonymousVariablesNames();
+
 }
