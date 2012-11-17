@@ -13,7 +13,7 @@
   <packaging>jar</packaging>
   <name>JPC</name>
   <description>The Java-Prolog Connectivity Project</description>
-  <url>https://github.com/sergioc78/java-prolog-connectivity</url>
+  <url>https://github.com/sergio-castro/java-prolog-connectivity</url>
   
   <licenses>
 	    <license>
@@ -23,9 +23,9 @@
   </licenses>
   
   <scm>
-    <connection>scm:git:git@github.com:sergioc78/java-prolog-connectivity.git</connection>
-    <developerConnection>scm:git:git@github.com:sergioc78/java-prolog-connectivity.git</developerConnection>
-    <url>git@github.com:sergioc78/java-prolog-connectivity.git</url>
+    <connection>scm:git:git@github.com:sergio-castro/jpc.git</connection>
+    <developerConnection>scm:git:git@github.com:sergio-castro/jpc.git</developerConnection>
+    <url>git@github.com:sergio-castro/jpc.git</url>
   </scm>
     
   <developers>
