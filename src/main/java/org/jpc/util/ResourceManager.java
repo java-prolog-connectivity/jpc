@@ -14,7 +14,7 @@ import org.reflections.scanners.ResourcesScanner;
 import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import static com.google.common.base.Preconditions.*;
 import com.google.common.base.Predicate;
 import com.google.common.io.Resources;
 
@@ -22,33 +22,54 @@ public class ResourceManager {
 
 	private static Logger logger = LoggerFactory.getLogger(ResourceManager.class);
 	
+	private static ResourceManager defaultResourceManager = new ResourceManager(new JpcPreferences());
+
+	public static ResourceManager getDefaultResourceManager() {
+		return defaultResourceManager;
+	}
+
+	public static void setDefaultResourceManager(ResourceManager defaultResourceManager) {
+		ResourceManager.defaultResourceManager = defaultResourceManager;
+	}
+
+	
+	
+
+	
 	private final String tmpDirPath; // the root temporary directory 
-	private final File logicObjectsTmpDir; //a File object representing a folder in the tmp directory where logic files or similar resources can be unzipped if required
+	private final File jpcTmpDir; //a File object representing a folder in the tmp directory where logic files or similar resources can be unzipped if required
 
 	private Set<URL> processedURLs;
 	
 	
-	public ResourceManager(JpcPreferences prerecences) {
-		this.tmpDirPath = prerecences.getTmpDirectory();
-		processedURLs = new HashSet<URL>();
-		logicObjectsTmpDir = new File(tmpDirPath, prerecences.getTmpSubdirectoryName());
-		logicObjectsTmpDir.mkdirs();
+	public ResourceManager(JpcPreferences prefecences) {
+		this.tmpDirPath = prefecences.getTmpDirectory(); //the system tmp directory
+		checkNotNull(tmpDirPath, "No tmp directory has been defined in the preferences");
+		processedURLs = new HashSet<>();
+		String tmpSubdirectoryPath = prefecences.getTmpSubdirectoryName(); //the tmp subdirectory to be created in the tmp directory
+		checkNotNull(tmpSubdirectoryPath, "No tmp subdirectory has been defined in the preferences");
+		jpcTmpDir = new File(tmpDirPath, tmpSubdirectoryPath);
+		jpcTmpDir.mkdirs(); //creating all the directories needed to locate the tmp logic files
+	}
+	
+	public synchronized boolean hasBeenProcessed(URL url) {
+		return processedURLs.contains(url);
 	}
 	
 	/**
-	 * 
+	 * Find all the logic files in the given url and copy them in a tmp folder
 	 * @param url
 	 * @return a boolean indicating if the url has been processed after this call
 	 * if the URL was already processed before returns false
-	 * If it is not possible to process the URL (e.g., it is needed to copy resources to a undefined tmp folder) an exception will be launched
+	 * If it is not possible to process the URL an exception will be launched
 	 */
-	public boolean process(URL url) {
-		if(hasAlreadyBeenProcessed(url))
+	public synchronized boolean process(URL url) {
+		if(hasBeenProcessed(url))
 			return false;
 		//if(!isFileSystemDir(url)) { 
 			try {
 				/*
-				 * This sould be done if the logic files are in a jar or directly located in an exploded directory in the file system
+				 * This should be done if the logic files are in a jar or directly located in an exploded directory in the file system
 				 * Even if the files are directly in the file system it does not mean they are accessible from the current execution path
 				 * Referring always to the tmp directory 
 				 */
@@ -63,12 +84,16 @@ public class ResourceManager {
 
 
 	
-	
+	/**
+	 * Answers a convenient name of a tmp subdirectory for a given url
+	 * @param url
+	 * @return
+	 */
 	public File getTmpDir(URL url) {
 		String tmpFolderPath = url.toExternalForm();
 		tmpFolderPath = tmpFolderPath.replaceAll("[\\W]+", "_");
-		tmpFolderPath = tmpFolderPath.replaceAll("[_]+$", "");
-		return new File(logicObjectsTmpDir, tmpFolderPath);
+		tmpFolderPath = tmpFolderPath.replaceAll("[_]+$", ""); //drop the last _ (if any)
+		return new File(jpcTmpDir, tmpFolderPath);
 	}
 	
 	
@@ -134,23 +159,21 @@ public class ResourceManager {
 	 * @param url
 	 * @return
 	 */
-	private String basePath(URL url) {
+	private File basePath(URL url) {
 		/*
 		if(isFileSystemDir(url)) 
-			return url.getFile();
+			return new File(url.getFile());
 		else*/
-			return getTmpDir(url).getAbsolutePath(); //always consider the base path the temp directory given the url sent as parameter
+			return getTmpDir(url); //always consider the base path the temp directory given the url sent as parameter
 	}
 
 	public String getResourcePath(String resource, URL url) {
-		File baseDirectory = new File(basePath(url));
+		File baseDirectory = basePath(url);
 		File resourceFile = new File(baseDirectory, resource);
 		return resourceFile.getAbsolutePath();
 	}
 	
-	public boolean hasAlreadyBeenProcessed(URL url) {
-		return processedURLs.contains(url);
-	}
+
 	
 
 

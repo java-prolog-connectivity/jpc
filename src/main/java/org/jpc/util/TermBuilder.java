@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * An utility class for defining term objects incrementally
+ * @author sergioc78
+ *
+ * @param <TermType> the term type this TermBuilder defines
+ */
 public abstract class TermBuilder<TermType> {
 
 	public static <T> List<T> asTerms(Iterable<TermBuilder<T>> termBuilders) {

@@ -1,13 +1,14 @@
 package org.jpc.term;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.jpc.util.DefaultTermAdapter.asTerms;
+import static org.jpc.util.DefaultTermConverter.asTerms;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import org.jpc.JpcException;
 import org.jpc.engine.visitor.AbstractJplVisitor;
 import org.jpc.engine.visitor.JpcDomVisitor;
 import org.jpc.engine.visitor.JpcStreamingVisitor;
@@ -19,6 +20,10 @@ import org.jpc.engine.visitor.JpcStreamingVisitor;
  */
 public class Compound extends AbstractTerm {
 	
+	public boolean isUnification() {
+		return hasFunctor("=", 2);
+	}
+	
 	/**
 	 * the name of this Compound
 	 */
@@ -29,8 +34,25 @@ public class Compound extends AbstractTerm {
 	protected final List<Term> args;
 
 	
-	public <T extends TermAdaptable> Compound(String name, List<T> args) {
+	public <T extends TermConvertable> Compound(String name, List<T> args) {
 		this(new Atom(name), args);
+	}
+	
+	@Override
+	public boolean isListTerm() {
+		return isCons() && arg(2).isListTerm();
+	}
+	
+	public boolean isCons() {
+		return hasFunctor(".", 2);
+	}
+	
+	@Override
+	public ListTerm asListTerm() {
+		if(isListTerm())
+			return new Cons(this);
+		else
+			throw new JpcException("The term " + this + " is not a list");
 	}
 	
 	/**
@@ -39,7 +61,7 @@ public class Compound extends AbstractTerm {
 	 * @param   name   the name of this Compound
 	 * @param   args   the (one or more) arguments of this Compound
 	 */
-	public <T extends TermAdaptable> Compound(TermAdaptable name, List<T> args) {
+	public <T extends TermConvertable> Compound(TermConvertable name, List<T> args) {
 		checkArgument(!args.isEmpty(), "A compound term must have at least one argument");
 		this.name = name.asTerm();
 		this.args = asTerms(args);
@@ -53,7 +75,7 @@ public class Compound extends AbstractTerm {
 	 */
 	
 	//@Override
-	public boolean hasFunctor(TermAdaptable nameTermObject, int arity) {
+	public boolean hasFunctor(TermConvertable nameTermObject, int arity) {
 		return name.asTerm().termEquals(nameTermObject) && args.size() == arity;
 	}
 	
@@ -78,7 +100,9 @@ public class Compound extends AbstractTerm {
 		return args;
 	}
 	
+	
 
+	
 	
 	/**
 	 * Returns a prefix functional representation of a Compound of the form name(arg1,...),
@@ -123,9 +147,9 @@ public class Compound extends AbstractTerm {
 	}
 	
 	@Override
-	public boolean termEquals(TermAdaptable termAdaptable) {
-		Term term = termAdaptable.asTerm();
-		if(term.isCompound()) {
+	public boolean termEquals(TermConvertable termConvertable) {
+		Term term = termConvertable.asTerm();
+		if(term instanceof Compound) {
 			Compound compound = (Compound) term;
 			return this.name.termEquals(compound.name) && termEquals(args, compound.args);
 		}

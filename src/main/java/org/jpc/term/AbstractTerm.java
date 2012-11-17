@@ -1,9 +1,6 @@
 package org.jpc.term;
 
-import static org.jpc.util.LogicUtil.*;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +11,6 @@ import org.jpc.engine.visitor.ChangeVariableNameVisitor;
 import org.jpc.engine.visitor.CollectVariableNamesVisitor;
 import org.jpc.engine.visitor.JpcWriterVisitor;
 import org.jpc.engine.visitor.ReplaceVariableVisitor;
-import org.jpc.util.DefaultTermAdapter;
 
 
 /**
@@ -52,80 +48,39 @@ public abstract class AbstractTerm implements Term {
 		return hasFunctor(new Atom(nameTermObject), arity);
 	}
 	
+	@Override
+	public boolean hasFunctor(boolean nameTermObject, int arity) {
+		return hasFunctor(new Atom(Boolean.toString(nameTermObject)), arity);
+	}
+	
+	@Override
+	public boolean hasFunctor(double nameTermObject, int arity) {
+		return hasFunctor(new FloatTerm(nameTermObject), arity);
+	}
+	
+	@Override
+	public boolean hasFunctor(long nameTermObject, int arity) {
+		return hasFunctor(new IntegerTerm(nameTermObject), arity);
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.jpc.term.Term#hasFunctor(org.jpc.term.TermAdaptable, int)
 	 */
 	@Override
-	public abstract boolean hasFunctor(TermAdaptable nameTermObject, int arity);
+	public abstract boolean hasFunctor(TermConvertable nameTermObject, int arity);
 
-	
-	/* (non-Javadoc)
-	 * @see org.jpc.term.Term#isAtom()
-	 */
-	@Override
-	public boolean isAtom() {
-		return this instanceof Atom;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.jpc.term.Term#isCompound()
-	 */
-	@Override
-	public boolean isCompound() {
-		return this instanceof Compound;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.jpc.term.Term#isNumber()
-	 */
-	@Override
-	public boolean isNumber() {
-		return isInteger() || isFloat();
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.jpc.term.Term#isFloat()
-	 */
-	@Override
-	public boolean isFloat() {
-		return this instanceof FloatTerm;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.jpc.term.Term#isInteger()
-	 */
-	@Override
-	public boolean isInteger() {
-		return this instanceof IntegerTerm;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.jpc.term.Term#isVariable()
-	 */
-	@Override
-	public boolean isVariable() {
-		return this instanceof Variable;
-	}
 	
 	/* (non-Javadoc)
 	 * @see org.jpc.term.Term#isList()
 	 */
 	@Override
-	public boolean isList() {
-		try {
-			listLength(); //will throw an exception if the list is not well formed
-			return true;
-		} catch(Exception e) {
-			return false;
-		}
+	public boolean isListTerm() {
+		return false;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.jpc.term.Term#isUnification()
-	 */
 	@Override
-	public boolean isUnification() {
-		return hasFunctor("=", 2);
+	public ListTerm asListTerm() {
+		throw new UnsupportedOperationException();
 	}
 	
 	/* (non-Javadoc)
@@ -137,19 +92,13 @@ public abstract class AbstractTerm implements Term {
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.jpc.term.Term#accept(org.jpc.engine.visitor.AbstractJpcVisitor)
-	 */
-	@Override
-	public abstract void accept(AbstractJplVisitor termVisitor);
-	
-	/* (non-Javadoc)
 	 * @see org.jpc.term.Term#listLength()
 	 */
 	@Override
 	public int listLength() {
 		Compound compound = (Compound) this;
 		if (compound.hasFunctor(".", 2)) {
-			return 1 + compound.arg(2).asTerm().listLength();
+			return 1 + compound.arg(2).listLength();
 		} else if (compound.hasFunctor("[]", 0)) {
 			return 0;
 		} else {
@@ -157,44 +106,28 @@ public abstract class AbstractTerm implements Term {
 		}
 	}
 	
-	
-	
-
-
-
-	
-	/**
-	 * @param   t1  a list of Terms
-	 * @param   t2  another list of Terms
-	 * @return  true if all of the Terms in the (same-length) lists are pairwise term equivalent
-	 */
-	protected static <T extends TermAdaptable> boolean termEquals(List<T> t1, List<T> t2) {
-		if (t1.size() != t2.size()) {
-			return false;
-		}
-		for (int i = 0; i < t1.size(); ++i) {
-			TermAdaptable o1 = t1.get(i);
-			TermAdaptable o2 = t2.get(i);
-			if(!o1.asTerm().termEquals(o2.asTerm()))
-				return false;
-		}
-		return true;
-	}
-	
 	/* (non-Javadoc)
-	 * @see org.jpc.term.Term#termEquivalent(org.jpc.term.TermAdaptable)
+	 * @see org.jpc.term.Term#accept(org.jpc.engine.visitor.AbstractJpcVisitor)
 	 */
 	@Override
-	public boolean termEquals(TermAdaptable o) {
-		return equals(o.asTerm());
-	}
+	public abstract void accept(AbstractJplVisitor termVisitor);
+	
+
+	
+	
+	
+
+
+
+	
+
 
 
 	/* (non-Javadoc)
 	 * @see org.jpc.term.Term#replaceVariables(java.util.Map)
 	 */
 	@Override
-	public Term replaceVariables(Map<String, TermAdaptable> map) {
+	public Term replaceVariables(Map<String, TermConvertable> map) {
 		JpcWriterVisitor termWriter = new JpcWriterVisitor();
 		ReplaceVariableVisitor adapterVisitor = new ReplaceVariableVisitor(termWriter, map);
 		accept(adapterVisitor);
@@ -251,13 +184,41 @@ public abstract class AbstractTerm implements Term {
 		return this;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.jpc.term.Term#termEquivalent(org.jpc.term.TermAdaptable)
+	 */
+	@Override
+	public boolean termEquals(TermConvertable o) {
+		return equals(o.asTerm());
+	}
+	
+	
+	
+	/**
+	 * @param   t1  a list of Terms
+	 * @param   t2  another list of Terms
+	 * @return  true if all of the Terms in the (same-length) lists are pairwise term equivalent
+	 */
+	protected static <T extends TermConvertable> boolean termEquals(List<T> t1, List<T> t2) {
+		if (t1.size() != t2.size()) {
+			return false;
+		}
+		for (int i = 0; i < t1.size(); ++i) {
+			TermConvertable o1 = t1.get(i);
+			TermConvertable o2 = t2.get(i);
+			if(!o1.asTerm().termEquals(o2.asTerm()))
+				return false;
+		}
+		return true;
+	}
+
 	/**
 	 * Converts an array of Terms to a String.
 	 * 
 	 * @param   args    an array of Terms to convert
 	 * @return  String representation of an array of Terms
 	 */
-	public static <T extends TermAdaptable> String toString(T... termObjects) {
+	public static <T extends TermConvertable> String toString(T... termObjects) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < termObjects.length; ++i) {
 			sb.append(termObjects[i].asTerm().toString());
@@ -274,8 +235,8 @@ public abstract class AbstractTerm implements Term {
 	 * @param termAdapters
 	 * @return String representation of a list of Terms
 	 */
-	public static <T extends TermAdaptable> String toString(List<T> termObjects) {
-		return toString(termObjects.<TermAdaptable>toArray(new TermAdaptable[]{}));
+	public static <T extends TermConvertable> String toString(List<T> termObjects) {
+		return toString(termObjects.<TermConvertable>toArray(new TermConvertable[]{}));
 	}
 
 }

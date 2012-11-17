@@ -65,7 +65,7 @@ public class IntegerTerm extends AbstractTerm {
 	}
 
 	@Override
-	public boolean hasFunctor(TermAdaptable nameTerm, int arity) {
+	public boolean hasFunctor(TermConvertable nameTerm, int arity) {
 		return termEquals(nameTerm) && arity == 0;
 	}
 	

@@ -1,10 +1,6 @@
 package org.jpc.term;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.Collections;
-import java.util.List;
-
+import org.jpc.JpcException;
 import org.jpc.engine.visitor.AbstractJplVisitor;
 
 /**
@@ -16,6 +12,7 @@ public class Atom extends AbstractTerm {
 
 	public static final Term TRUE_TERM = new Atom("true");
 	public static final Term FALSE_TERM = new Atom("false");
+	public static final Term EMPTY_LIST = new Atom("[]");
 	
 	protected final String name;
 	
@@ -32,7 +29,7 @@ public class Atom extends AbstractTerm {
 
 
 	@Override
-	public boolean hasFunctor(TermAdaptable nameTermObject, int arity) {
+	public boolean hasFunctor(TermConvertable nameTermObject, int arity) {
 		return termEquals(nameTermObject) && arity == 0;
 	}
 	
@@ -74,5 +71,18 @@ public class Atom extends AbstractTerm {
 	public void accept(AbstractJplVisitor termVisitor) {
 		termVisitor.visitAtom(this);
 	}
+	
+	@Override
+	public boolean isListTerm() {
+		return equals(EMPTY_LIST);
+	}
 
+	@Override
+	public ListTerm asListTerm() {
+		if(isListTerm())
+			return new EmptyList();
+		else
+			throw new JpcException("The term " + this + " is not a list");
+	}
+	
 }

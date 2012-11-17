@@ -5,6 +5,6 @@ package org.jpc.term;
  * @author sergioc78
  *
  */
-public interface TermAdaptable {
+public interface TermConvertable {
 	public Term asTerm();
 }

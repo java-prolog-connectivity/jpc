@@ -1,7 +1,7 @@
 package org.jpc.engine;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import static java.util.Arrays.asList;
 import java.util.List;
 import java.util.Map;
 
@@ -58,16 +58,30 @@ public class LogicEngine {
 		return terms;
 	}
 
+	public List<Term> asResourceTerms(List<String> resourceNames) {
+		List<Term> terms = new ArrayList<>();
+		for(String s : resourceNames)
+			terms.add(asResourceTerm(s));
+		return terms;
+	}
+	
+	public Term asResourceTerm(String resourceName) {
+		if(isResourceAlias(resourceName)) //it is a resource alias of the form library(lib_name)
+			return asTerm(resourceName);
+		else
+			return new Atom(resourceName);
+	}
+	
 	public boolean assertTerms(List<Term> terms) {
 		return bootstrapEngine.assertTerms(terms);
 	}
-	
+
 	public boolean ensureLoaded(List<Term> resources) {
 		return bootstrapEngine.ensureLoaded(resources);
 	}
-	
+
 	public boolean ensureLoaded(String... resources) {
-		return ensureLoaded(asTerms(Arrays.asList(resources), true));
+		return ensureLoaded(asResourceTerms(asList(resources)));
 	}
 
 	public boolean allSucceed(List<Term> terms) {
@@ -132,7 +146,7 @@ public class LogicEngine {
 	}
 	
 	public boolean cd(String path) {
-		Compound compound = new Compound("cd", Arrays.<Term>asList(new Atom(path)));
+		Compound compound = new Compound("cd", asList(new Atom(path)));
 		return hasSolution(compound);
 	}
 
@@ -190,12 +204,12 @@ public class LogicEngine {
 			} else
 				ts[i] = termSequence;
 		}
-		return Arrays.asList(ts);
+		return asList(ts);
 	} 
 
 	public int sequenceLength(Term sequence) {
 		int length = 1;
-		if(sequence.isCompound()) {
+		if(sequence instanceof Compound) {
 			if(sequence.hasFunctor(",", 2))
 				length = 1 + sequenceLength(sequence.arg(2));
 		}
@@ -207,9 +221,9 @@ public class LogicEngine {
 	
 	//LOGTALK methods
 
-	
+
 	public boolean logtalkLoad(String... resources) {
-		return logtalkLoad(asTerms(Arrays.asList(resources)));
+		return logtalkLoad(asResourceTerms(asList(resources)));
 	}
 	
 	public boolean logtalkLoad(List<Term> resourceTerms) {
@@ -217,13 +231,13 @@ public class LogicEngine {
 	}
 	
 	public boolean setLogtalkFlag(LogtalkFlag flag, String value) {
-		return hasSolution(new Compound("set_logtalk_flag", Arrays.<Term>asList(new Atom(flag.toString()), new Atom(value))));
+		return hasSolution(new Compound("set_logtalk_flag", asList(new Atom(flag.toString()), new Atom(value))));
 	}
 	
 	public List<Term> currentLogtalkObjects() {
 		List<Term> currentObjects = new ArrayList<>();
 		Variable logtalkObjectVar = new Variable("LogtalkObject");
-		Compound compound = new Compound("current_object", Arrays.<Term>asList(logtalkObjectVar));
+		Compound compound = new Compound("current_object", asList(logtalkObjectVar));
 		for(Map<String, Term> solution : allSolutions(compound)) {
 			currentObjects.add(solution.get(logtalkObjectVar.name()));
 		}

@@ -14,6 +14,7 @@ public class JpcPreferences extends Preferences {
 	//Properties configuring the framework behaviour
 	public final static String LOGTALK_HOME_ENV = "LOGTALKHOME";  //needed by the framework to find the integration scripts
 	public final static String LOGTALK_USER_ENV = "LOGTALKUSER"; //logtalk user directory environment variable
+
 	public final static String SYSTEM_TEMP_DIRECTORY_ENV = "tmp";
 	public final static String TEMP_SUBDIRECTORY_NAME_ENV = "TMP_SUBDIRECTORY";
 	
@@ -24,6 +25,21 @@ public class JpcPreferences extends Preferences {
 	public JpcPreferences(Properties properties) {
 		super(properties);
 	}
+	
+	public String logtalkIntegrationScript(String engineName) {
+		checkNotNull(engineName);
+		checkArgument(!engineName.isEmpty());
+		engineName = engineName.toLowerCase();
+		String logtalkHome = getVarOrDie(LOGTALK_HOME_ENV);
+		String scriptPath = logtalkHome + "/integration/";
+		String fileName = "logtalk_" + engineName + ".pl";
+		scriptPath += fileName;
+		File file = new File(scriptPath);
+		if(!file.exists())
+			throw new RuntimeException("The Logtalk installation at " + logtalkHome + " does not support the Prolog engine " + engineName);
+		return scriptPath;
+	}
+
 	
 	public static Properties defaultJPCProperties() {
 		Properties properties = new Properties();
@@ -42,18 +58,4 @@ public class JpcPreferences extends Preferences {
 		return getVar(TEMP_SUBDIRECTORY_NAME_ENV);
 	}
 	
-	public String logtalkIntegrationScript(String engineName) {
-		checkNotNull(engineName);
-		checkArgument(!engineName.isEmpty());
-		engineName = engineName.toLowerCase();
-		String logtalkHome = getVarOrDie(LOGTALK_HOME_ENV);
-		String scriptPath = logtalkHome + "/integration/";
-		String fileName = "logtalk_" + engineName + ".pl";
-		scriptPath += fileName;
-		File file = new File(scriptPath);
-		if(!file.exists())
-			throw new RuntimeException("The Logtalk installation at " + logtalkHome + " does not support the Prolog engine " + engineName);
-		return scriptPath;
-	}
-
 }

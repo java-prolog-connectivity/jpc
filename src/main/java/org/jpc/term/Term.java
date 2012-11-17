@@ -11,7 +11,7 @@ import org.jpc.engine.visitor.AbstractJplVisitor;
  * @author scastro
  *
  */
-public interface Term extends TermAdaptable {
+public interface Term extends TermConvertable {
 
 	/**
 	 * Returns the ith argument (if any) of this Term.
@@ -44,53 +44,17 @@ public interface Term extends TermAdaptable {
 	 * @param arity the arity of this term
 	 * @return true if the term has the given name and arity. False otherwise
 	 */
-	public abstract boolean hasFunctor(TermAdaptable nameTermObject, int arity);
+	public abstract boolean hasFunctor(TermConvertable nameTermObject, int arity);
 
-	/**
-	 * whether this Term represents an atom
-	 * 
-	 * @return whether this Term represents an atom
-	 */
-	public abstract boolean isAtom();
-
-	/**
-	 * whether this Term represents a compound term
-	 * 
-	 * @return whether this Term represents a compound atom
-	 */
-	public abstract boolean isCompound();
-
-	public abstract boolean isNumber();
-
-	/**
-	 * whether this Term represents an atom
-	 * 
-	 * @return whether this Term represents an atom
-	 */
-	public abstract boolean isFloat();
-
-	/**
-	 * whether this Term represents an atom
-	 * 
-	 * @return whether this Term represents an atom
-	 */
-	public abstract boolean isInteger();
-
-	/**
-	 * whether this Term is a variable
-	 * 
-	 * @return whether this Term is a variable
-	 */
-	public abstract boolean isVariable();
 
 	/**
 	 * whether this Term is a list
 	 * 
 	 * @return whether this Term is a list
 	 */
-	public abstract boolean isList();
-
-	public abstract boolean isUnification();
+	public abstract boolean isListTerm();
+	
+	public abstract ListTerm asListTerm();
 
 	public abstract boolean isBound();
 
@@ -114,14 +78,14 @@ public interface Term extends TermAdaptable {
 	 * @param termAdaptable
 	 * @return
 	 */
-	public abstract boolean termEquals(TermAdaptable o);
+	public abstract boolean termEquals(TermConvertable o);
 
 	/**
 	 * Returns a term with all the occurrences of the variables in the parameter map replaced with its associated value (converted to a term)
 	 * @param map maps variable names to values.
 	 * @return a new term with its variables replaced according to the map
 	 */
-	public abstract Term replaceVariables(Map<String, TermAdaptable> map);
+	public abstract Term replaceVariables(Map<String, TermConvertable> map);
 
 	/**
 	 * Replace all the variable names according to the map parameter
@@ -148,5 +112,11 @@ public interface Term extends TermAdaptable {
 	 * @return a list with all the non anonymous variables names
 	 */
 	public abstract List<String> nonAnonymousVariablesNames();
+
+	public abstract boolean hasFunctor(boolean nameTermObject, int arity);
+
+	boolean hasFunctor(double nameTermObject, int arity);
+
+	boolean hasFunctor(long nameTermObject, int arity);
 
 }

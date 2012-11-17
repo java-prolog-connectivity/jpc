@@ -1,11 +1,10 @@
-package org.jpc.util;
+package org.jpc.term;
 
 import java.util.List;
 
-import org.jpc.term.Compound;
-import org.jpc.term.Term;
+import org.jpc.util.TermBuilder;
 
-public class JpcTermBuilder extends TermBuilder<Term> {//implements TermAdaptable {
+public class JpcTermBuilder extends TermBuilder<Term> {
 
 	public JpcTermBuilder() {
 	}

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.jpc.term.TermAdaptable;
+import org.jpc.term.TermConvertable;
 import org.jpc.term.Variable;
 
 public class ChangeVariableNameVisitor extends ReplaceVariableVisitor {
@@ -17,8 +17,8 @@ public class ChangeVariableNameVisitor extends ReplaceVariableVisitor {
 		super(adaptee, asVariableReplacementMap(map));
 	}
 	
-	private static Map<String, TermAdaptable> asVariableReplacementMap(final Map<String, String> variableNamesMap) {
-		Map<String, TermAdaptable> termReplacementMap = new HashMap<String, TermAdaptable>() {{
+	private static Map<String, TermConvertable> asVariableReplacementMap(final Map<String, String> variableNamesMap) {
+		Map<String, TermConvertable> termReplacementMap = new HashMap<String, TermConvertable>() {{
 			for(Entry<String, String> entry : variableNamesMap.entrySet()) {
 				put(entry.getKey(), new Variable(entry.getValue()));
 			}

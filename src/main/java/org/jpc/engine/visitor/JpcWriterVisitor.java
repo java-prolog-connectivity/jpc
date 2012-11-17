@@ -7,9 +7,9 @@ import java.util.List;
 import org.jpc.term.Atom;
 import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
+import org.jpc.term.JpcTermBuilder;
 import org.jpc.term.Term;
 import org.jpc.term.Variable;
-import org.jpc.util.JpcTermBuilder;
 import org.jpc.util.TermBuilder;
 
 public class JpcWriterVisitor implements JpcStreamingVisitor {

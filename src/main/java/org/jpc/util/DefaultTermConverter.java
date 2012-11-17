@@ -20,30 +20,30 @@ import org.jpc.term.Compound;
 import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
 import org.jpc.term.Term;
-import org.jpc.term.TermAdaptable;
+import org.jpc.term.TermConvertable;
 import org.jpc.term.Variable;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
 
-public class DefaultTermAdapter implements TermAdaptable {
+public class DefaultTermConverter {//implements TermConvertable {
 
-	private Object o;
-	public DefaultTermAdapter(Object o) {
-		
-	}
-	
-	@Override
-	public Term asTerm() {
-		return asTerm(o);
-	}
+//	private Object o;
+////	public DefaultTermConverter(Object o) {
+////		this.o = o;
+////	}
+//	
+//	@Override
+//	public Term asTerm() {
+//		return asTerm(o);
+//	}
 	
 	public static Term asTerm(Object o) {
 		Term term = null;
 		if(o == null)
 			term = Variable.ANONYMOUS_VAR;
-		else if(o instanceof TermAdaptable)
-			term = ((TermAdaptable)o).asTerm();
+		else if(o instanceof TermConvertable)
+			term = ((TermConvertable)o).asTerm();
 		else if(o instanceof Boolean || o instanceof String || o instanceof StringBuilder || o instanceof StringBuffer)
 			term = new Atom(o.toString());
 		else if(o instanceof Number) {
@@ -70,33 +70,33 @@ public class DefaultTermAdapter implements TermAdaptable {
 	}
 
 	public static Object asObject(Term term) {
-		if(term.isVariable()) {
+		if(term instanceof Variable) {
 			return null;
 		}
 		Object o = null;
-		if(term.isAtom()) {
+		if(term instanceof Atom) {
 			Atom atom = (Atom) term;
 			String name = atom.name();
 			if(name.equals("true") || name.equals("false"))
 				o = Boolean.valueOf(name);
 			else
 				o = name;
-		} else if(term.isFloat()) {
+		} else if(term instanceof FloatTerm) {
 			FloatTerm floatTerm = (FloatTerm) term;
 			o = floatTerm.doubleValue();
-		} else if(term.isInteger()) {
+		} else if(term instanceof IntegerTerm) {
 			IntegerTerm integerTerm = (IntegerTerm) term;
 			o = integerTerm.intValue();
-		} else if(term.isUnification()) {
+		} else if(LogicUtil.isUnification(term)) {
 			final Compound compound = (Compound) term;
 			o = new Hashtable() {{put(asObject(compound.arg(1)), compound.arg(2));}}.entrySet().toArray()[0];
-		} else if(term.isList()) {
+		} else if(term.isListTerm()) {
 			final Compound compound = (Compound) term;
 			List<Term> listMembers = LogicUtil.listToTerms(compound);
 			
 			Predicate<Term> isUnification = new Predicate<Term>() {
 				public boolean apply(Term t) {
-					return t.isUnification();
+					return LogicUtil.isUnification(t);
 				}	
 			};
 			if(Iterators.all(listMembers.iterator(), isUnification) && !listMembers.isEmpty()) {

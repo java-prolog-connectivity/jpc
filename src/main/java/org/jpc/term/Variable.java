@@ -47,8 +47,16 @@ public class Variable extends AbstractTerm {
 		return this.name;
 	}
 	
+	/**
+	 * Wether a logic variable has a valid name
+	 * @param variableName the name of the variable
+	 * @return wether a logic variable has a valid name
+	 */
 	protected boolean isValidVariableName(String variableName) {
-		return !variableName.isEmpty(); //additional checks could be added here
+		if(variableName.isEmpty())
+			return false;
+		char firstChar = variableName.toCharArray()[0];
+		return firstChar == '_' || Character.isUpperCase(firstChar); //additional checks could be added here
 	}
 	
 	@Override
@@ -80,13 +88,13 @@ public class Variable extends AbstractTerm {
 	}
 	
 	@Override
-	public final boolean termEquals(TermAdaptable o) {
+	public final boolean termEquals(TermConvertable o) {
 		Term term = o.asTerm();
-		return term.isVariable() && this.name.equals(((Variable) term).name);
+		return term instanceof Variable && this.name.equals(((Variable) term).name);
 	}
 	
 	@Override
-	public boolean hasFunctor(TermAdaptable nameTerm, int arity) {
+	public boolean hasFunctor(TermConvertable nameTerm, int arity) {
 		return termEquals(nameTerm) && arity == 0;
 	}
 

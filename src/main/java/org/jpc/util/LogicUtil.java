@@ -21,7 +21,7 @@ import org.jpc.term.Compound;
 import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
 import org.jpc.term.Term;
-import org.jpc.term.TermAdaptable;
+import org.jpc.term.TermConvertable;
 import org.jpc.term.Variable;
 
 import com.google.common.base.Predicate;
@@ -29,13 +29,28 @@ import com.google.common.collect.Iterators;
 
 /**
  * An utility class for general purpose queries and term manipulation
- * DISCLAIMER: In the current version many methods in this class have been copied or adapted from the class jpl.Util in the JPL library.
+ * Disclaimer: Some methods were inspired or taken from the JPL library
  * @author scastro
  *
  */
 public class LogicUtil {
 	
 
+	public static boolean isUnification(Term term) {
+		return term instanceof Compound && ((Compound)term).isUnification();
+	}
+	
+	/**
+	 * Returns whether the resource name is an alias.
+	 * Resource names can be either:
+	 *   - an alias expressed as a compound term, like: 'library(my_module)' 
+	 *   - or a source file located in the classpath, expressed as 'dir1/dir2/filename.ext' where the extension can be a prolog file (typically pl) or a Logtalk file (typically lgt) 
+	 * @param resourceName the name of the resource
+	 * @return whether the resource name is an alias.
+	 */
+	public static boolean isResourceAlias(String resourceName) {
+		return resourceName.indexOf('(') != -1;
+	}
 	
 	public static Term termsToList(List<Term> terms) {
 		return termsToList(terms.toArray(new Term[]{}));
@@ -140,7 +155,7 @@ public class LogicUtil {
 		Term head = t;
 		while ( head.hasFunctor(".", 2)){
 			Term x = head.arg(1);
-			if ( x.isAtom()){
+			if (x instanceof Atom){
 				a[i++]=((Atom)x).name();
 			} else {
 				return null;
@@ -248,11 +263,11 @@ public class LogicUtil {
 	
 	
 	public static String toString(Term term) {
-		if(term.isInteger())
+		if(term instanceof IntegerTerm)
 			return ""+((IntegerTerm)term).longValue();
-		else if(term.isFloat())
+		else if(term instanceof FloatTerm)
 			return ""+((FloatTerm)term).doubleValue();
-		else if(term.isAtom())
+		else if(term instanceof Atom)
 			return ((Atom)term).name();
 		else
 			return term.toString();
@@ -263,11 +278,11 @@ public class LogicUtil {
 	}
 	
 	public static long toLong(Term term) {
-		if(term.isInteger())
+		if(term instanceof IntegerTerm)
 			return ((IntegerTerm)term).longValue();
-		else if(term.isFloat())
+		else if(term instanceof FloatTerm)
 			return (long) toDouble(term);
-		else if(term.isAtom())
+		else if(term instanceof Atom)
 			return Long.valueOf(((Atom)term).name());
 		else
 			throw new JpcException("Impossible to convert the term " + term + " to a long");
@@ -278,28 +293,28 @@ public class LogicUtil {
 	}
 	
 	public static double toDouble(Term term) {
-		if(term.isFloat())
+		if(term instanceof FloatTerm)
 			return ((FloatTerm)term).doubleValue();
-		else if(term.isAtom())
+		else if(term instanceof Atom)
 			return Double.valueOf(((Atom)term).name());
 		else
 			throw new JpcException("Impossible to convert the term " + term + " to a double");
 	}
 	
 	public static Number toNumber(Term term) {
-		if(term.isInteger())
+		if(term instanceof IntegerTerm)
 			return toLong(term);
-		if(term.isFloat())
+		if(term instanceof FloatTerm)
 			return toDouble(term);
-		else if(term.isAtom())
+		else if(term instanceof Atom)
 			return Double.valueOf(((Atom)term).name());
 		else
 			throw new JpcException("Impossible to convert the term " + term + " to a number");
 	}
 	
 	public static List<Term> getChildren(Term term) {
-		if(term.isCompound()) {
-			if(term.isList())
+		if(term instanceof Compound) {
+			if(term.isListTerm())
 				return listToTerms(term);
 			else
 				return term.args();

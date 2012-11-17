@@ -12,7 +12,7 @@ import org.jpc.engine.visitor.JpcWriterVisitor;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
-import org.jpc.term.TermAdaptable;
+import org.jpc.term.TermConvertable;
 import org.jpc.term.Variable;
 import org.jpc.util.LogicUtil;
 import org.junit.Test;
@@ -55,7 +55,7 @@ public class TermVisitorTest {
 	@Test
 	public void testReplaceVariables() {
 		final Term replacementTerm = new Compound(new Variable("C"), asList(new Atom("C")));
-		Map<String, TermAdaptable> map = new HashMap<String, TermAdaptable>(){{
+		Map<String, TermConvertable> map = new HashMap<String, TermConvertable>(){{
 			put("C", replacementTerm);
 		}};
 		
