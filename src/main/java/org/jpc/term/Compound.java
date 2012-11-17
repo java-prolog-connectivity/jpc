@@ -18,7 +18,7 @@ import org.jpc.engine.visitor.JpcStreamingVisitor;
  * @author scastro
  *
  */
-public class Compound extends AbstractTerm {
+public final class Compound extends AbstractTerm {
 	
 	public boolean isUnification() {
 		return hasFunctor("=", 2);
@@ -132,18 +132,8 @@ public class Compound extends AbstractTerm {
 	@Override
 	public boolean equals(Object obj) {
 		return (this == obj || (obj instanceof Compound && 
-				((Compound) obj).canEquals(this) &&
 				name.equals(((Compound) obj).name) && 
 				Arrays.equals(args.toArray(), ((Compound) obj).args.toArray())));
-	}
-	
-	/**
-	 * Any class overriding equals should override this method
-	 * @param obj the object to compare
-	 * @return whether this instance can equals the object sent as parameter
-	 */
-	public boolean canEquals(Object obj) {
-		return obj instanceof Compound;
 	}
 	
 	@Override

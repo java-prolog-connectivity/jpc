@@ -9,7 +9,7 @@ import org.jpc.engine.visitor.AbstractJplVisitor;
  * @author scastro
  *
  */
-public class IntegerTerm extends AbstractTerm {
+public final class IntegerTerm extends AbstractTerm {
 
 	/**
 	 * the Integer's immutable long value
@@ -92,17 +92,9 @@ public class IntegerTerm extends AbstractTerm {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		return this == obj || (obj instanceof IntegerTerm && ((IntegerTerm)obj).canEquals(this) && value == ((IntegerTerm) obj).value);
+		return this == obj || (obj instanceof IntegerTerm && value == ((IntegerTerm) obj).value);
 	}
 
-	/**
-	 * Any class overriding equals should override this method
-	 * @param obj the object to compare
-	 * @return whether this instance can equals the object sent as parameter
-	 */
-	public boolean canEquals(Object obj) {
-		return obj instanceof IntegerTerm;
-	}
 	
 	@Override
 	public void accept(AbstractJplVisitor termVisitor) {

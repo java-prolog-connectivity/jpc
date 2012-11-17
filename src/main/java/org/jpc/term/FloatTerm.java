@@ -8,7 +8,7 @@ import org.jpc.engine.visitor.AbstractJplVisitor;
  * @author scastro
  *
  */
-public class FloatTerm extends AbstractTerm {
+public final class FloatTerm extends AbstractTerm {
 
 	protected final double value;
 	
@@ -88,17 +88,9 @@ public class FloatTerm extends AbstractTerm {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		return this == obj || (obj instanceof FloatTerm && ((FloatTerm)obj).canEquals(this) && value == ((FloatTerm) obj).value);
+		return this == obj || (obj instanceof FloatTerm && value == ((FloatTerm) obj).value);
 	}
 
-	/**
-	 * Any class overriding equals should override this method
-	 * @param obj the object to compare
-	 * @return whether this instance can equals the object sent as parameter
-	 */
-	public boolean canEquals(Object obj) {
-		return obj instanceof FloatTerm;
-	}
 
 	@Override
 	public void accept(AbstractJplVisitor termVisitor) {

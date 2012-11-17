@@ -6,5 +6,14 @@ public class ListTerm extends TermWrapper {
 		super(term);
 	}
 	
+	@Override
+	public int hashCode() {
+		return getWrappedTerm().hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		return (this == obj || (obj instanceof ListTerm && getWrappedTerm().equals(((ListTerm)obj).getWrappedTerm())));
+	}
 	
 }

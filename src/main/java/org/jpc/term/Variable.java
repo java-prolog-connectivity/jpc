@@ -14,7 +14,7 @@ import org.jpc.engine.visitor.AbstractJplVisitor;
  * @author scastro
  *
  */
-public class Variable extends AbstractTerm {
+public final class Variable extends AbstractTerm {
 
 	public static final Variable ANONYMOUS_VAR = new Variable("_");
 	
@@ -73,18 +73,8 @@ public class Variable extends AbstractTerm {
 	@Override
 	public boolean equals(Object obj) {
 		return obj instanceof Variable && 
-				((Variable)obj).canEquals(this) && 
 				!this.name.equals("_") && 
 				this.name.equals(((Variable) obj).name);
-	}
-
-	/**
-	 * Any class overriding equals should override this method
-	 * @param obj the object to compare
-	 * @return whether this instance can equals the object sent as parameter
-	 */
-	public boolean canEquals(Object obj) {
-		return obj instanceof Variable;
 	}
 	
 	@Override

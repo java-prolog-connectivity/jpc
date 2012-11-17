@@ -8,7 +8,7 @@ import org.jpc.engine.visitor.AbstractJplVisitor;
  * @author scastro
  *
  */
-public class Atom extends AbstractTerm {
+public final class Atom extends AbstractTerm {
 
 	public static final Term TRUE_TERM = new Atom("true");
 	public static final Term FALSE_TERM = new Atom("false");
@@ -40,16 +40,7 @@ public class Atom extends AbstractTerm {
 	
 	@Override
 	public boolean equals(Object obj) {
-		return (this == obj || (obj instanceof Atom && ((Atom)obj).canEquals(this) && name.equals(((Atom)obj).name)));
-	}
-	
-	/**
-	 * Any class overriding equals should override this method
-	 * @param obj the object to compare
-	 * @return whether this instance can equals the object sent as parameter
-	 */
-	public boolean canEquals(Object obj) {
-		return obj instanceof Atom;
+		return (this == obj || (obj instanceof Atom && name.equals(((Atom)obj).name)));
 	}
 	
 	@Override

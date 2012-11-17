@@ -10,7 +10,11 @@ public class TermWrapper implements Term {
 	private Term wrappedTerm;
 	
 	public Term asTerm() {
-		return wrappedTerm.asTerm();
+		return this;
+	}
+
+	public Term getWrappedTerm() {
+		return wrappedTerm;
 	}
 
 	public Term arg(int i) {
