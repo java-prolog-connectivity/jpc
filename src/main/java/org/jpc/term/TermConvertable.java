@@ -2,7 +2,7 @@ package org.jpc.term;
 
 /**
  * Implementors can be adapted to terms
- * @author sergioc78
+ * @author sergioc
  *
  */
 public interface TermConvertable {

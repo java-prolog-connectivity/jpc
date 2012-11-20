@@ -1,7 +1,7 @@
 package org.jpc.term;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.jpc.util.DefaultTermConverter.asTerms;
+import static org.jpc.util.DefaultTermConverter.asTermList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,23 +38,6 @@ public final class Compound extends AbstractTerm {
 		this(new Atom(name), args);
 	}
 	
-	@Override
-	public boolean isListTerm() {
-		return isCons() && arg(2).isListTerm();
-	}
-	
-	public boolean isCons() {
-		return hasFunctor(".", 2);
-	}
-	
-	@Override
-	public ListTerm asListTerm() {
-		if(isListTerm())
-			return new Cons(this);
-		else
-			throw new JpcException("The term " + this + " is not a list");
-	}
-	
 	/**
 	 * Creates a Compound with name and args.
 	 * 
@@ -64,7 +47,31 @@ public final class Compound extends AbstractTerm {
 	public <T extends TermConvertable> Compound(TermConvertable name, List<T> args) {
 		checkArgument(!args.isEmpty(), "A compound term must have at least one argument");
 		this.name = name.asTerm();
-		this.args = asTerms(args);
+		this.args = asTermList(args);
+	}
+	
+	
+	@Override
+	public boolean isList() {
+		return isCons() && arg(2).isList();
+	}
+	
+	public boolean isCons() {
+		return hasFunctor(".", 2);
+	}
+	
+	@Override
+	public ListTerm asList() {
+		if(isList()) {
+			ListTerm list = new ListTerm();
+			Term current = this;
+			while(!current.equals(Atom.EMPTY_LIST)) {
+				list.add(current.arg(1));
+				current = current.arg(2);
+			}
+			return list;
+		} else
+			throw new JpcException("The term " + this + " is not a list");
 	}
 	
 

@@ -52,118 +52,6 @@ public class LogicUtil {
 		return resourceName.indexOf('(') != -1;
 	}
 	
-	public static Term termsToList(List<Term> terms) {
-		return termsToList(terms.toArray(new Term[]{}));
-	}
-	
-	/**
-	 * Converts an array of Terms to a Prolog list term
-	 * whose members correspond to the respective array elements.
-	 * 
-	 * @param   terms  An array of Term
-	 * @return  Term   a list of the array elements
-	 */
-	public static Term termsToList(Term... terms) {
-		Term list = new Atom("[]");
-
-		for (int i = terms.length - 1; i >= 0; --i) {
-			list = new Compound(".", asList(terms[i], list));
-		}
-		return list;
-	}
-	
-	/**
-	 * Converts an array of String to a corresponding Term list
-	 * 
-	 * @param a
-	 *            An array of String objects
-	 * @return Term a Term list corresponding to the given String array
-	 */
-	public static Term stringsToList(String... a) {
-		Term list = new Atom("[]");
-		for (int i = a.length - 1; i >= 0; i--) {
-			list = new Compound(".", asList(new Atom(a[i]), list));
-		}
-		return list;
-	}
-	
-	/**
-	 * Converts an array of int to a corresponding term list
-	 * 
-	 * @param a
-	 *            An array of int values
-	 * @return a term list corresponding to the given int array
-	 */
-	public static Term intsToList(int... a) {
-		Term list = new Atom("[]");
-		for (int i = a.length - 1; i >= 0; i--) {
-			list = new Compound(".", asList(new IntegerTerm(a[i]), list));
-		}
-		return list;
-	}
-	
-	/**
-	 * Converts an array of arrays of int to a corresponding list of lists
-	 * 
-	 * @param a
-	 *            An array of arrays of int values
-	 * @return a term list of lists corresponding to the given int array of arrays
-	 */
-	public static Term intTableToList(int[][] a) {
-		Term list = new Atom("[]");
-		for (int i = a.length - 1; i >= 0; i--) {
-			list = new Compound(".", asList(intsToList(a[i]), list));
-		}
-		return list;
-	}
-	
-	
-	public static int listToLength(Term t) {
-		int length = 0;
-		Term head = t;
-		while (head.hasFunctor(".", 2)) {
-			length++;
-			head = head.arg(2);
-		}
-		return (head.hasFunctor("[]", 0) ? length : -1);
-	}
-	
-	/** converts a proper list to an array of terms, else throws an exception
-	 * 
-	 * @throws LException
-	 * @return an array of terms whose successive elements are the corresponding members of the list (if it is a list)
-	 */
-	public static List<Term> listToTerms(Term t) {
-		try {
-			int len = t.listLength();
-			Term[] ts = new Term[len];
-
-			for (int i = 0; i < len; i++) {
-				ts[i] = t.arg(1);
-				t = t.arg(2);
-			}
-			return asList(ts);
-		} catch (Exception e) {
-			throw new JpcException("term " + t + " is not a proper list");
-		}
-	}
-	
-	public static List<String> atomListToStrings(Term t){
-		int n = listToLength(t);
-		String[] a = new String[n];
-		int i = 0;
-		Term head = t;
-		while ( head.hasFunctor(".", 2)){
-			Term x = head.arg(1);
-			if (x instanceof Atom){
-				a[i++]=((Atom)x).name();
-			} else {
-				return null;
-			}
-			head = head.arg(2);
-		}
-		return (head.hasFunctor("[]", 0) ? asList(a) : null );
-	}
 	
 	/**
 	 * Surround an atom with a functor
@@ -313,13 +201,10 @@ public class LogicUtil {
 	}
 	
 	public static List<Term> getChildren(Term term) {
-		if(term instanceof Compound) {
-			if(term.isListTerm())
-				return listToTerms(term);
-			else
-				return term.args();
-		} else
-			return Collections.emptyList();
+		if(term.isList())
+			return term.asList();
+		else 
+			return term.args();
 	}
 
 }

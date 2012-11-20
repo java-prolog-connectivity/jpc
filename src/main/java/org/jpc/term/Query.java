@@ -11,7 +11,7 @@ import org.jpc.JpcException;
 
 /**
  * Disclaimer: Some methods were inspired or taken from the JPL library
- * @author sergioc78
+ * @author sergioc
  *
  */
 public abstract class Query implements AutoCloseable, Iterator<Map<String, Term>> {

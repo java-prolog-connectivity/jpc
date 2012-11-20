@@ -74,12 +74,12 @@ public abstract class AbstractTerm implements Term {
 	 * @see org.jpc.term.Term#isList()
 	 */
 	@Override
-	public boolean isListTerm() {
+	public boolean isList() {
 		return false;
 	}
 	
 	@Override
-	public ListTerm asListTerm() {
+	public ListTerm asList() {
 		throw new UnsupportedOperationException();
 	}
 	

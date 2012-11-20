@@ -52,9 +52,9 @@ public interface Term extends TermConvertable {
 	 * 
 	 * @return whether this Term is a list
 	 */
-	public abstract boolean isListTerm();
+	public abstract boolean isList();
 	
-	public abstract ListTerm asListTerm();
+	public abstract ListTerm asList();
 
 	public abstract boolean isBound();
 

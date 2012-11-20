@@ -64,14 +64,14 @@ public final class Atom extends AbstractTerm {
 	}
 	
 	@Override
-	public boolean isListTerm() {
+	public boolean isList() {
 		return equals(EMPTY_LIST);
 	}
 
 	@Override
-	public ListTerm asListTerm() {
-		if(isListTerm())
-			return new EmptyList();
+	public ListTerm asList() {
+		if(isList())
+			return new ListTerm();
 		else
 			throw new JpcException("The term " + this + " is not a list");
 	}

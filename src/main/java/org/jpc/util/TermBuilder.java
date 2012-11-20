@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * An utility class for defining term objects incrementally
- * @author sergioc78
+ * @author sergioc
  *
  * @param <TermType> the term type this TermBuilder defines
  */
