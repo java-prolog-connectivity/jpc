@@ -75,7 +75,7 @@ public abstract class Query implements AutoCloseable, Iterator<Map<String, Term>
 		if (isOpen()) {
 			throw new JpcException("Query is already open");
 		} else {
-			try (Query queryToCLose = this){
+			try (Query queryToClose = this){
 				long count = 0;
 				while(count<to) {
 					Map<String, Term> solution = null;

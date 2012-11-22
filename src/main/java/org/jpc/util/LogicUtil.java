@@ -35,7 +35,12 @@ import com.google.common.collect.Iterators;
  */
 public class LogicUtil {
 	
-
+	/**
+	 * Returns whether the term is an unification
+	 * A term is an unification if it is a compound with functor("=", 2)
+	 * @param term
+	 * @return whether the term is an unification
+	 */
 	public static boolean isUnification(Term term) {
 		return term instanceof Compound && ((Compound)term).isUnification();
 	}
@@ -49,7 +54,7 @@ public class LogicUtil {
 	 * @return whether the resource name is an alias.
 	 */
 	public static boolean isResourceAlias(String resourceName) {
-		return resourceName.indexOf('(') != -1;
+		return resourceName.indexOf('(') != -1; //the current implementation just try a best guess based on the existence or not of an opening parenthesis
 	}
 	
 	
@@ -130,6 +135,7 @@ public class LogicUtil {
 		return start + sb.toString().substring(1).toLowerCase(); //will not modify the case of the first character
 	}
 	
+	
 	public static String prologNameToJava(String prologName) {
 		Pattern pattern = Pattern.compile("_(\\w)");
 		Matcher matcher = pattern.matcher(prologName);
@@ -143,11 +149,6 @@ public class LogicUtil {
 		matcher.appendTail(sb);
 		return sb.toString();
 	}
-	
-	
-	
-	
-
 	
 	
 	public static String toString(Term term) {

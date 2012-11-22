@@ -14,6 +14,11 @@ import org.jpc.term.Term;
 import org.jpc.term.Variable;
 import static org.jpc.util.LogicUtil.*;
 
+/**
+ * Extends the BootstrapLogicEngine by composition
+ * @author sergioc
+ *
+ */
 public class LogicEngine {
 
 	private BootstrapLogicEngine bootstrapEngine;
