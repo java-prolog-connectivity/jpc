@@ -1,4 +1,4 @@
-package org.jpc.test;
+package org.jpc.term;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

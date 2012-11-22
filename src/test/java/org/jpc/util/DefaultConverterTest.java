@@ -1,4 +1,4 @@
-package org.jpc.test;
+package org.jpc.util;
 
 import static java.util.Arrays.asList;
 import static org.jpc.term.ListTerm.listTerm;

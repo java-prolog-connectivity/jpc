@@ -1,4 +1,4 @@
-package org.jpc.test;
+package org.jpc.engine.visitor;
 
 import static java.util.Arrays.asList;
 import static org.jpc.term.Variable.ANONYMOUS_VAR;
@@ -23,7 +23,7 @@ import org.junit.Test;
  * @author sergioc
  *
  */
-public class TermVisitorTest {
+public class TermManipulationTest {
 	Term aAtom = new Atom("A");
 	Term aVar = new Variable("A");
 	Term bVar = new Variable("B");

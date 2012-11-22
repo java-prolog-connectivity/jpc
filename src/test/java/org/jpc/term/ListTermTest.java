@@ -1,4 +1,4 @@
-package org.jpc.test;
+package org.jpc.term;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
