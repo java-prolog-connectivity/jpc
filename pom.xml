@@ -143,13 +143,12 @@
                 <executions>
                     <execution>
                         <id>jar-test-classes</id>
-                        <phase>package</phase>
                         <goals>
                             <goal>test-jar</goal>
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin> 
 
 		</plugins>
 

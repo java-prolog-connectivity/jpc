@@ -47,8 +47,11 @@ public class ListTerm<E extends TermConvertable> extends ArrayList<E> implements
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("[");
-		for(TermConvertable termConvertable : this) {
-			sb.append(termConvertable.asTerm().toString());
+		for(int i=0; i<size(); i++) {
+			E item = get(i);
+			sb.append(item == this?"(this List)":item.asTerm().toString());
+			if(i<size()-1)
+				sb.append(", ");
 		}
 		sb.append("]");
 		return sb.toString();

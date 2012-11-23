@@ -19,7 +19,7 @@ import org.jpc.term.Variable;
 import org.junit.Test;
 
 /**
- * Testing the methods that use visitors
+ * Testing the methods that query/transform terms using visitors
  * @author sergioc
  *
  */
