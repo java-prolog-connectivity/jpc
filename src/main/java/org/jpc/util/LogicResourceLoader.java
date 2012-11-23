@@ -73,7 +73,7 @@ public class LogicResourceLoader {
 		if(resourceTerm instanceof Atom) { //it is not an alias but a concrete path
 			//TODO maybe a smart default could be implemented when attempting to load a package/directory instead of a concrete file, for example, try to load a file in the directory called "load_all"
 			if(resourceName.substring(resourceName.length()-1).equals("/")) {
-				throw new RuntimeException("The resource to load is not a file");
+				throw new JpcException("The resource to load is not a file");
 			}
 			String[] splitted = resourceName.split("/");
 			String fileResourceName = splitted[splitted.length-1];
@@ -86,10 +86,10 @@ public class LogicResourceLoader {
 				if(urls.isEmpty())
 					throw new JpcException("The package " + parentPackage + " cannot be located");
 				if(urls.size() > 1) {
-					logger.error("There are multiple urls containing the package " + parentPackage + ". Listing the URLs:"); //TODO fix this finding the right URL in the set containing the resource
+					logger.error("There are multiple urls containing the package " + parentPackage + ". Listing the URLs:"); 
 					for(URL url: urls)
 						logger.error(url.toString());
-					throw new RuntimeException();
+					throw new JpcException("There are multiple urls containing the package " + parentPackage + ". Listing the URLs:"); //TODO fix this finding the right URL in the set containing the resource instead of throwing an exception
 				}
 				baseUrl = urls.iterator().next(); //if no exception was thrown there is exactly one url in the set
 			}
