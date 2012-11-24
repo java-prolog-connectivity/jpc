@@ -1,6 +1,6 @@
 package org.jpc.term;
 
-import org.jpc.engine.visitor.AbstractJplVisitor;
+import org.jpc.visitor.AbstractJpcVisitor;
 
 /**
  * A class reifying a logic float term
@@ -93,7 +93,7 @@ public final class FloatTerm extends AbstractTerm {
 
 
 	@Override
-	public void accept(AbstractJplVisitor termVisitor) {
+	public void accept(AbstractJpcVisitor termVisitor) {
 		termVisitor.visitFloat(this);
 	}
 

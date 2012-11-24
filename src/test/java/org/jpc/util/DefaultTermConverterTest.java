@@ -26,7 +26,7 @@ import org.jpc.term.TermConvertable;
 import org.jpc.term.Variable;
 import org.junit.Test;
 
-public class DefaultConverterTest {
+public class DefaultTermConverterTest {
 
 	// *** TERM TO OBJECTS TESTS ***
 	

@@ -1,4 +1,4 @@
-package org.jpc.engine.visitor;
+package org.jpc.term;
 
 import static java.util.Arrays.asList;
 import static org.jpc.term.Variable.ANONYMOUS_VAR;
@@ -9,13 +9,13 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jpc.engine.visitor.JpcWriterVisitor;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 import org.jpc.term.TermConvertable;
 import org.jpc.term.Variable;
+import org.jpc.visitor.JpcWriterVisitor;
 import org.junit.Test;
 
 /**
@@ -23,7 +23,7 @@ import org.junit.Test;
  * @author sergioc
  *
  */
-public class TermManipulationTest {
+public class AbstractTermTest {
 	Term aAtom = new Atom("A");
 	Term aVar = new Variable("A");
 	Term bVar = new Variable("B");
@@ -132,12 +132,7 @@ public class TermManipulationTest {
 				t3.replaceVariables(map));
 	}
 	
-	@Test
-	public void testTermWriter() {
-		JpcWriterVisitor termWriter = new JpcWriterVisitor();
-		t3.accept(termWriter);
-		assertTrue(t3.termEquals(termWriter.terms().get(0)));
-	}
+	
 
 	
 }

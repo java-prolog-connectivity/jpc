@@ -1,4 +1,4 @@
-package org.jpc.engine.visitor;
+package org.jpc.visitor;
 
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;

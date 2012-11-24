@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.jpc.flags.PrologFlag;
+import org.jpc.engine.flags.PrologFlag;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Query;

@@ -6,7 +6,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Collections;
 import java.util.List;
 
-import org.jpc.engine.visitor.AbstractJplVisitor;
+import org.jpc.visitor.AbstractJpcVisitor;
 
 /**
  * A class reifying a logic variable
@@ -89,7 +89,7 @@ public final class Variable extends AbstractTerm {
 	}
 
 	@Override
-	public void accept(AbstractJplVisitor termVisitor) {
+	public void accept(AbstractJpcVisitor termVisitor) {
 		termVisitor.visitVariable(this);
 	}
 	

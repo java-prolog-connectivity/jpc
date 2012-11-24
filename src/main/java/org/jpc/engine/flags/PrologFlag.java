@@ -1,4 +1,4 @@
-package org.jpc.flags;
+package org.jpc.engine.flags;
 
 public abstract class PrologFlag {
 

@@ -1,7 +1,7 @@
 package org.jpc.term;
 
 import org.jpc.JpcException;
-import org.jpc.engine.visitor.AbstractJplVisitor;
+import org.jpc.visitor.AbstractJpcVisitor;
 
 /**
  * A class reifying a logic atom
@@ -59,7 +59,7 @@ public final class Atom extends AbstractTerm {
 	}
 
 	@Override
-	public void accept(AbstractJplVisitor termVisitor) {
+	public void accept(AbstractJpcVisitor termVisitor) {
 		termVisitor.visitAtom(this);
 	}
 	

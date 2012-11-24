@@ -5,7 +5,7 @@ import static java.util.Arrays.asList;
 import java.util.List;
 import java.util.Map;
 
-import org.jpc.flags.LogtalkFlag;
+import org.jpc.engine.flags.LogtalkFlag;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Query;

@@ -1,4 +1,4 @@
-package org.jpc.engine.visitor;
+package org.jpc.visitor;
 
 import java.util.HashMap;
 import java.util.Map;

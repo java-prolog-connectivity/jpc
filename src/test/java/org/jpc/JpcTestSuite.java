@@ -1,13 +1,14 @@
 package org.jpc;
 
-import org.jpc.engine.visitor.TermManipulationTest;
+import org.jpc.term.AbstractTermTest;
 import org.jpc.term.AtomTest;
 import org.jpc.term.CompoundTest;
 import org.jpc.term.FloatTermTest;
 import org.jpc.term.IntegerTermTest;
 import org.jpc.term.ListTermTest;
 import org.jpc.term.VariableTest;
-import org.jpc.util.DefaultConverterTest;
+import org.jpc.util.DefaultTermConverterTest;
+import org.jpc.visitor.JpcWriterVisitorTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -19,7 +20,8 @@ import org.junit.runners.Suite;
 	AtomTest.class,
 	CompoundTest.class,
 	ListTermTest.class,
-	DefaultConverterTest.class,
-	TermManipulationTest.class
+	AbstractTermTest.class,
+	DefaultTermConverterTest.class,
+	JpcWriterVisitorTest.class
 	})
 public class JpcTestSuite {}

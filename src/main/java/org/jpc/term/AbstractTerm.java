@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.jpc.JpcException;
-import org.jpc.engine.visitor.AbstractJplVisitor;
-import org.jpc.engine.visitor.ChangeVariableNameVisitor;
-import org.jpc.engine.visitor.CollectVariableNamesVisitor;
-import org.jpc.engine.visitor.JpcWriterVisitor;
-import org.jpc.engine.visitor.ReplaceVariableVisitor;
+import org.jpc.visitor.AbstractJpcVisitor;
+import org.jpc.visitor.ChangeVariableNameVisitor;
+import org.jpc.visitor.CollectVariableNamesVisitor;
+import org.jpc.visitor.JpcWriterVisitor;
+import org.jpc.visitor.ReplaceVariableVisitor;
 
 
 /**
@@ -110,7 +110,7 @@ public abstract class AbstractTerm implements Term {
 	 * @see org.jpc.term.Term#accept(org.jpc.engine.visitor.AbstractJpcVisitor)
 	 */
 	@Override
-	public abstract void accept(AbstractJplVisitor termVisitor);
+	public abstract void accept(AbstractJpcVisitor termVisitor);
 	
 
 	

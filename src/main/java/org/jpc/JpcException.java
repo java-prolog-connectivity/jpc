@@ -1,5 +1,10 @@
 package org.jpc;
 
+/**
+ * The exception for any Jpc specific problems
+ * @author sergioc
+ *
+ */
 public class JpcException extends RuntimeException {
 
 	public JpcException() {}

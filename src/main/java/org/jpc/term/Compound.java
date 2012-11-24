@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Objects;
 
 import org.jpc.JpcException;
-import org.jpc.engine.visitor.AbstractJplVisitor;
-import org.jpc.engine.visitor.JpcDomVisitor;
-import org.jpc.engine.visitor.JpcStreamingVisitor;
+import org.jpc.visitor.AbstractJpcVisitor;
+import org.jpc.visitor.JpcDomVisitor;
+import org.jpc.visitor.JpcStreamingVisitor;
 
 /**
  * A class reifying a logic compound term
@@ -177,7 +177,7 @@ public final class Compound extends AbstractTerm {
 	}
 
 
-	public void accept(AbstractJplVisitor termVisitor) {
+	public void accept(AbstractJpcVisitor termVisitor) {
 		if(termVisitor instanceof JpcDomVisitor)
 			accept((JpcDomVisitor)termVisitor);
 		else if(termVisitor instanceof JpcStreamingVisitor)
