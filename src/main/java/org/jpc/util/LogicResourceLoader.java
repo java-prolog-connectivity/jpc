@@ -2,8 +2,10 @@ package org.jpc.util;
 
 import static java.util.Arrays.asList;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Set;
 
@@ -21,9 +23,10 @@ public class LogicResourceLoader {
 	
 	private LogicEngine logicEngine;
 	private ResourceManager resourceManager;
+	private ClassLoader[] classLoaders;
 	
-	public LogicResourceLoader(LogicEngine logicEngine) {
-		this(logicEngine, ResourceManager.getDefaultResourceManager()); //use the default resource manager if no one is provided
+	public LogicResourceLoader(LogicEngine logicEngine, ClassLoader... classLoaders) {
+		this(logicEngine, ResourceManager.getDefaultResourceManager(), classLoaders); //use the default resource manager if no one is provided
 	}
 	
 	/**
@@ -31,9 +34,10 @@ public class LogicResourceLoader {
 	 * @param logicEngine the logic engine where the resources will be loaded
 	 * @param jpcPreferences the preferences defining (among other things) where logic tmp files will be copied before being loaded in the logic engine
 	 */
-	public LogicResourceLoader(LogicEngine logicEngine, ResourceManager resourceManager) {
+	public LogicResourceLoader(LogicEngine logicEngine, ResourceManager resourceManager, ClassLoader... classLoaders) {
 		this.logicEngine = logicEngine;
 		this.resourceManager = resourceManager;
+		this.classLoaders = classLoaders;
 	}
 	
 	public boolean ensureLoaded(List<String> resources) {
@@ -61,7 +65,7 @@ public class LogicResourceLoader {
 	}
 	
 	/**
-	 * Given a resource name (possibly inside a jar) answers a Term that represents the resource in the file system. If the resource is not a library, it will be copied to a tmp location
+	 * Given a resource name (possibly inside a jar) answers a Term that represents the resource in the file system. If the resource is not a library (i.e., with the form 'library(lib_name)'), it will be copied to a tmp location
 	 * @param resourceName
 	 * @return
 	 */
@@ -82,7 +86,7 @@ public class LogicResourceLoader {
 			if(parentPackage.isEmpty() || parentPackage.equals("/")) //the resource is at the root.
 				baseUrl = ReflectionUtil.getConsumerLibraryUrl(); //use the url of the user of the library
 			else {
-				Set<URL> urls = ClasspathHelper.forPackage(parentPackage); //TODO verify that it is working in applications with custom classloaders, such as Eclipse Plug-ins and web servers.
+				Set<URL> urls = ClasspathHelper.forPackage(parentPackage, classLoaders); //TODO verify that it is working in applications with custom classloaders, such as Eclipse Plug-ins and web servers.
 				if(urls.isEmpty())
 					throw new JpcException("The package " + parentPackage + " cannot be located");
 				if(urls.size() > 1) {
@@ -105,10 +109,15 @@ public class LogicResourceLoader {
 	}
 	
 	
-	public static void main(String[] args) {
-		String t = "a/";
-		String[] sp = t.split("/");
-		System.out.println(sp.length);
-		System.out.println(sp[0]);
+	public static void main(String[] args) throws IOException {
+//		String t = "a/";
+//		String[] sp = t.split("/");
+//		System.out.println(sp.length);
+//		System.out.println(sp[0]);
+		
+		URL url = LogicResourceLoader.class.getClassLoader().getResource("org/jpc/util/LogicResourceLoader.class");
+		Enumeration<URL> urls = LogicResourceLoader.class.getClassLoader().getResources("org/jpc/util/LogicResourceLoader.class");
+		System.out.println(url);
+		System.out.println(urls.nextElement());
 	}
 }
