@@ -45,7 +45,7 @@ public class JpcPreferences extends Preferences {
 	}
 	
 	public String getTmpSubdirectoryName() {
-		return getVar(JPC_SHORT_NAME);
+		return JPC_SHORT_NAME;
 	}
 	
 }
