@@ -14,9 +14,13 @@ import org.jpc.engine.LogicEngine;
 import org.jpc.term.Atom;
 import org.jpc.term.Term;
 import org.minitoolbox.ReflectionUtil;
+import org.reflections.scanners.ResourcesScanner;
 import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Joiner;
 
 public class LogicResourceLoader {
 	private static Logger logger = LoggerFactory.getLogger(LogicResourceLoader.class);
@@ -75,33 +79,55 @@ public class LogicResourceLoader {
 			throw new JpcException("Empty resource name");
 		Term resourceTerm = logicEngine.asResourceTerm(resourceName);
 		if(resourceTerm instanceof Atom) { //it is not an alias but a concrete path
+			
 			//TODO maybe a smart default could be implemented when attempting to load a package/directory instead of a concrete file, for example, try to load a file in the directory called "load_all"
 			if(resourceName.substring(resourceName.length()-1).equals("/")) {
 				throw new JpcException("The resource to load is not a file");
 			}
-			String[] splitted = resourceName.split("/");
-			String fileResourceName = splitted[splitted.length-1];
 			URL baseUrl;
-			String parentPackage = resourceName.substring(0, resourceName.length() - fileResourceName.length());
-			if(parentPackage.isEmpty() || parentPackage.equals("/")) //the resource is at the root.
-				baseUrl = ReflectionUtil.getConsumerLibraryUrl(); //use the url of the user of the library
-			else {
-				Set<URL> urls = ClasspathHelper.forPackage(parentPackage, classLoaders); //TODO verify that it is working in applications with custom classloaders, such as Eclipse Plug-ins and web servers.
-				if(urls.isEmpty())
-					throw new JpcException("The package " + parentPackage + " cannot be located");
-				if(urls.size() > 1) {
-					logger.error("There are multiple urls containing the package " + parentPackage + ". Listing the URLs:"); 
-					for(URL url: urls)
-						logger.error(url.toString());
-					throw new JpcException("There are multiple urls containing the package " + parentPackage + ". Listing the URLs:"); //TODO fix this finding the right URL in the set containing the resource instead of throwing an exception
+			Set<URL> urls = ReflectionUtil.getResources(resourceName, classLoaders);
+			
+			if(urls.size() > 0) {
+				baseUrl = urls.iterator().next();
+				if(urls.size() > 1)
+					logger.warn("Resource " + resourceName + " found in multiple locations: " + Joiner.on(", ").join(urls) +". Chosen the one in: " + baseUrl);
+			} else {
+				String[] splitted = resourceName.split("/");
+				String fileResourceName = splitted[splitted.length-1];
+				String parentPackage = resourceName.substring(0, resourceName.length() - fileResourceName.length());
+				
+				
+				Set<URL> classLoaderUrls = ClasspathHelper.forClassLoader(classLoaders);
+				ConfigurationBuilder cb = new ConfigurationBuilder();
+				cb.setUrls(classLoaderUrls);
+				cb.setScanners(new ResourcesScanner());
+				
+				if(parentPackage.isEmpty() || parentPackage.equals("/")) //the resource is at the root.
+					baseUrl = ReflectionUtil.getConsumerLibraryUrl(); //use the url of the user of the library
+				else {
+					urls = ClasspathHelper.forPackage(parentPackage, classLoaders); 
+					if(urls.isEmpty())
+						throw new JpcException("The package " + parentPackage + " cannot be located");
+					if(urls.size() > 1) {
+						logger.error("There are multiple urls containing the package " + parentPackage + ". Listing the URLs:"); 
+						for(URL url: urls)
+							logger.error(url.toString());
+						throw new JpcException("There are multiple urls containing the package " + parentPackage + ". Listing the URLs:"); //TODO fix this finding the right URL in the set containing the resource instead of throwing an exception
+					}
+					baseUrl = urls.iterator().next(); //if no exception was thrown there is exactly one url in the set
 				}
-				baseUrl = urls.iterator().next(); //if no exception was thrown there is exactly one url in the set
 			}
+				
+			
+			
+			
+			
 			resourceTerm = resolveResource(resourceName, baseUrl);
 		}
 		return resourceTerm;
 	}
 	
+
 	public Term resolveResource(String resourceName, URL url) {
 		resourceManager.process(url); //will copy the logic files in the url in a temporary location (the resource manager remembers which urls have been processed before)
 		String fileSystemPath = resourceManager.getResourcePath(resourceName, url);
@@ -114,10 +140,11 @@ public class LogicResourceLoader {
 //		String[] sp = t.split("/");
 //		System.out.println(sp.length);
 //		System.out.println(sp[0]);
-		
+		/*
 		URL url = LogicResourceLoader.class.getClassLoader().getResource("org/jpc/util/LogicResourceLoader.class");
 		Enumeration<URL> urls = LogicResourceLoader.class.getClassLoader().getResources("org/jpc/util/LogicResourceLoader.class");
 		System.out.println(url);
 		System.out.println(urls.nextElement());
+		*/
 	}
 }
