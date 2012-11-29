@@ -2,7 +2,7 @@ package org.jpc.term;
 
 import java.util.List;
 
-import org.jpc.util.TermBuilder;
+import org.jpc.salt.helpers.TermBuilder;
 
 public class JpcTermBuilder extends TermBuilder<Term> {
 

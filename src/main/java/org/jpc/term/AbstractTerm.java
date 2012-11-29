@@ -6,11 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.jpc.JpcException;
-import org.jpc.visitor.AbstractJpcVisitor;
-import org.jpc.visitor.ChangeVariableNameVisitor;
-import org.jpc.visitor.CollectVariableNamesVisitor;
-import org.jpc.visitor.JpcWriterVisitor;
-import org.jpc.visitor.ReplaceVariableVisitor;
+import org.jpc.salt.JpcWriter;
+import org.jpc.util.salt.ChangeVariableNameAdapter;
+import org.jpc.util.salt.ReplaceVariableAdapter;
+import org.jpc.util.visitor.CollectVariableNamesVisitor;
 
 
 /**
@@ -105,22 +104,6 @@ public abstract class AbstractTerm implements Term {
 			throw new JpcException("term" + compound.toString() + "is not a list");
 		}
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.jpc.term.Term#accept(org.jpc.engine.visitor.AbstractJpcVisitor)
-	 */
-	@Override
-	public abstract void accept(AbstractJpcVisitor termVisitor);
-	
-
-	
-	
-	
-
-
-
-	
-
 
 
 	/* (non-Javadoc)
@@ -128,9 +111,9 @@ public abstract class AbstractTerm implements Term {
 	 */
 	@Override
 	public Term replaceVariables(Map<String, TermConvertable> map) {
-		JpcWriterVisitor termWriter = new JpcWriterVisitor();
-		ReplaceVariableVisitor adapterVisitor = new ReplaceVariableVisitor(termWriter, map);
-		accept(adapterVisitor);
+		JpcWriter termWriter = new JpcWriter();
+		ReplaceVariableAdapter replaceVariableAdapter = new ReplaceVariableAdapter(termWriter, map);
+		streamTo(replaceVariableAdapter);
 		return termWriter.terms().get(0);
 	}
 	
@@ -139,9 +122,9 @@ public abstract class AbstractTerm implements Term {
 	 */
 	@Override
 	public Term changeVariablesNames(Map<String, String> map) {
-		JpcWriterVisitor termWriter = new JpcWriterVisitor();
-		ChangeVariableNameVisitor adapterVisitor = new ChangeVariableNameVisitor(termWriter, map);
-		accept(adapterVisitor);
+		JpcWriter termWriter = new JpcWriter();
+		ChangeVariableNameAdapter changeVariableNameAdapter = new ChangeVariableNameAdapter(termWriter, map);
+		streamTo(changeVariableNameAdapter);
 		return termWriter.terms().get(0);
 	}
 	
@@ -192,7 +175,10 @@ public abstract class AbstractTerm implements Term {
 		return equals(o.asTerm());
 	}
 	
-	
+	@Override
+	public LogtalkObject asLogtalkObject() {
+		return new LogtalkObject(this);
+	}
 	
 	/**
 	 * @param   t1  a list of Terms

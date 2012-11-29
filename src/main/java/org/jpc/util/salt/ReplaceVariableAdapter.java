@@ -1,0 +1,30 @@
+package org.jpc.util.salt;
+
+import java.util.Map;
+
+import org.jpc.salt.ContentHandler;
+import org.jpc.salt.ContentHandlerAdapter;
+import org.jpc.term.Term;
+import org.jpc.term.TermConvertable;
+
+public class ReplaceVariableAdapter extends ContentHandlerAdapter {
+	private Map<String, TermConvertable> map;
+	
+	
+	public ReplaceVariableAdapter(ContentHandler contentHandler, Map<String, TermConvertable> map) {
+		super(contentHandler);
+		this.map = map;
+	}
+	
+	@Override
+	public void startVariable(String name) {
+		TermConvertable termConvertable = map.get(name);
+		if(termConvertable != null) {
+			Term transformedTerm = termConvertable.asTerm();
+			transformedTerm.streamTo(contentHandler);
+		}
+		else
+			super.startVariable(name);
+	}
+
+}

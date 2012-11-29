@@ -9,13 +9,13 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jpc.salt.JpcWriter;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 import org.jpc.term.TermConvertable;
 import org.jpc.term.Variable;
-import org.jpc.visitor.JpcWriterVisitor;
 import org.junit.Test;
 
 /**

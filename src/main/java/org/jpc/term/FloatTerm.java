@@ -1,6 +1,8 @@
 package org.jpc.term;
 
-import org.jpc.visitor.AbstractJpcVisitor;
+import org.jpc.salt.ContentHandler;
+import org.jpc.visitor.JpcVisitor;
+
 
 /**
  * A class reifying a logic float term
@@ -91,10 +93,14 @@ public final class FloatTerm extends AbstractTerm {
 		return this == obj || (obj instanceof FloatTerm && value == ((FloatTerm) obj).value);
 	}
 
+	@Override
+	public void accept(JpcVisitor termVisitor) {
+		termVisitor.visitFloat(this);
+	}
 
 	@Override
-	public void accept(AbstractJpcVisitor termVisitor) {
-		termVisitor.visitFloat(this);
+	public void streamTo(ContentHandler contentHandler) {
+		contentHandler.startFloatTerm(value);
 	}
 
 }

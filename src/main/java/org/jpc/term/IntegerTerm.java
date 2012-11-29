@@ -1,7 +1,8 @@
 package org.jpc.term;
 
 import org.jpc.JpcException;
-import org.jpc.visitor.AbstractJpcVisitor;
+import org.jpc.salt.ContentHandler;
+import org.jpc.visitor.JpcVisitor;
 
 /**
  * A class reifying a logic integer term
@@ -97,7 +98,12 @@ public final class IntegerTerm extends AbstractTerm {
 
 	
 	@Override
-	public void accept(AbstractJpcVisitor termVisitor) {
+	public void accept(JpcVisitor termVisitor) {
 		termVisitor.visitInteger(this);
+	}
+
+	@Override
+	public void streamTo(ContentHandler contentHandler) {
+		contentHandler.startIntegerTerm(value);
 	}
 }

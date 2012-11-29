@@ -1,22 +1,22 @@
-package org.jpc.util;
+package org.jpc.salt.helpers;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * An utility class for defining term objects incrementally
+ * A utility class for creating term objects incrementally
  * @author sergioc
  *
  * @param <TermType> the term type this TermBuilder defines
  */
 public abstract class TermBuilder<TermType> {
 
-	public static <T> List<T> asTerms(Iterable<TermBuilder<T>> termBuilders) {
+	public static <T>List<T> asTerms(Iterable<TermBuilder<T>> termBuilders) {
 		return asTerms(termBuilders.iterator());
 	}
-	
-	public static <T> List<T> asTerms(Iterator<TermBuilder<T>> termBuilders) {
+
+	public static <T>List<T> asTerms(Iterator<TermBuilder<T>> termBuilders) {
 		List<T> list = new ArrayList<>();
 		while(termBuilders.hasNext()) {
 			TermBuilder<T> tb = termBuilders.next();
@@ -44,6 +44,10 @@ public abstract class TermBuilder<TermType> {
 	
 	public abstract TermType asTerm();
 
+	public boolean hasFunctor() {
+		return functor != null;
+	}
+	
 	public Object getFunctor() {
 		return functor;
 	}
@@ -52,11 +56,15 @@ public abstract class TermBuilder<TermType> {
 		this.functor = functor;
 	}
 
+	public void addTerm() {
+		
+	}
+	
 	public List<TermType> getArgs() {
 		return args;
 	}
 
-	public void setArgs(List<TermType> args) {
+	private void setArgs(List<TermType> args) {
 		this.args = args;
 	}
 	

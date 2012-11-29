@@ -1,7 +1,8 @@
 package org.jpc.term;
 
 import org.jpc.JpcException;
-import org.jpc.visitor.AbstractJpcVisitor;
+import org.jpc.salt.ContentHandler;
+import org.jpc.visitor.JpcVisitor;
 
 /**
  * A class reifying a logic atom
@@ -57,11 +58,6 @@ public final class Atom extends AbstractTerm {
 	private String prologName() {
 		return "'" + name + "'";
 	}
-
-	@Override
-	public void accept(AbstractJpcVisitor termVisitor) {
-		termVisitor.visitAtom(this);
-	}
 	
 	@Override
 	public boolean isList() {
@@ -74,6 +70,16 @@ public final class Atom extends AbstractTerm {
 			return new ListTerm();
 		else
 			throw new JpcException("The term " + this + " is not a list");
+	}
+
+	@Override
+	public void accept(JpcVisitor termVisitor) {
+		termVisitor.visitAtom(this);
+	}
+	
+	@Override
+	public void streamTo(ContentHandler contentHandler) {
+		contentHandler.startAtom(name);
 	}
 	
 }

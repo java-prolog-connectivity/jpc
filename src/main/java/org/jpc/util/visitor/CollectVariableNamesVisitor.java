@@ -1,4 +1,4 @@
-package org.jpc.visitor;
+package org.jpc.util.visitor;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -6,8 +6,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.jpc.term.Variable;
+import org.jpc.visitor.DefaultJpcVisitor;
 
-public class CollectVariableNamesVisitor extends DefaultJpcDomVisitor {
+public class CollectVariableNamesVisitor extends DefaultJpcVisitor {
 	
 	Set<String> variableNames;
 	

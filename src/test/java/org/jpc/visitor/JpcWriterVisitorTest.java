@@ -4,6 +4,7 @@ import static java.util.Arrays.asList;
 import static org.jpc.term.Variable.ANONYMOUS_VAR;
 import static org.junit.Assert.assertTrue;
 
+import org.jpc.salt.JpcWriter;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
@@ -23,8 +24,8 @@ public class JpcWriterVisitorTest {
 	
 	@Test
 	public void testTermWriter() {
-		JpcWriterVisitor termWriter = new JpcWriterVisitor();
-		t3.accept(termWriter);
+		JpcWriter termWriter = new JpcWriter();
+		t3.streamTo(termWriter);
 		assertTrue(t3.termEquals(termWriter.terms().get(0)));
 	}
 }

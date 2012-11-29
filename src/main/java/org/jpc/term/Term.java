@@ -3,7 +3,8 @@ package org.jpc.term;
 import java.util.List;
 import java.util.Map;
 
-import org.jpc.visitor.AbstractJpcVisitor;
+import org.jpc.salt.ContentHandler;
+import org.jpc.visitor.JpcVisitor;
 
 /**
  * Implementations of this interface are Java representations of Logic Terms (i.e., Prolog data types)
@@ -39,7 +40,7 @@ public interface Term extends TermConvertable {
 	public abstract boolean hasFunctor(String nameTermObject, int arity);
 	
 	/**
-	 * wether this term has a functor with a given name and arity
+	 * whether this term has a functor with a given name and arity
 	 * @param nameTermObject the name of this term
 	 * @param arity the arity of this term
 	 * @return true if the term has the given name and arity. False otherwise
@@ -54,11 +55,17 @@ public interface Term extends TermConvertable {
 	 */
 	public abstract boolean isList();
 	
+	/**
+	 * Returns a list representation of this term. Throws an exception if the term cannot be converted to a list (if it is not either the atom '[]' or a cons compound term)
+	 * @return a list representation of this term.
+	 */
 	public abstract ListTerm asList();
 
+	/**
+	 * whether this term does not have unbound variables
+	 * @return
+	 */
 	public abstract boolean isBound();
-
-	public abstract void accept(AbstractJpcVisitor termVisitor);
 
 	/**
 	 * the length of this list, iff it is one, else an exception is thrown
@@ -115,8 +122,21 @@ public interface Term extends TermConvertable {
 
 	public abstract boolean hasFunctor(boolean nameTermObject, int arity);
 
-	boolean hasFunctor(double nameTermObject, int arity);
+	public boolean hasFunctor(double nameTermObject, int arity);
 
-	boolean hasFunctor(long nameTermObject, int arity);
+	public boolean hasFunctor(long nameTermObject, int arity);
 
+	public LogtalkObject asLogtalkObject();
+	
+	/**
+	 * Accepts a Jpc term visitor.
+	 * @param termVisitor the accepted visitor
+	 */
+	public abstract void accept(JpcVisitor termVisitor);
+	
+	/**
+	 * Reads the contents of this term (i.e., generates events) to a content handler
+	 * @param contentHandler the content handler that will receive the events describing the structure of this term
+	 */
+	public abstract void streamTo(ContentHandler contentHandler);
 }

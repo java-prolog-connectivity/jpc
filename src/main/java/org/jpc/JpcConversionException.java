@@ -5,17 +5,17 @@ package org.jpc;
  * @author sergioc
  *
  */
-public class JpcTransformationException extends JpcException {
+public class JpcConversionException extends JpcException {
 
-	public JpcTransformationException(String from, String to) {
+	public JpcConversionException(String from, String to) {
 		super(formatMessage(from, to));
 	}
 	
-	public JpcTransformationException(String from, String to, String reason) {
+	public JpcConversionException(String from, String to, String reason) {
 		super(formatMessage(from, to, reason));
 	}
 	
-	public JpcTransformationException(String from, String to, Exception ex) {
+	public JpcConversionException(String from, String to, Exception ex) {
 		super(formatMessage(from, to), ex);
 	}
 	

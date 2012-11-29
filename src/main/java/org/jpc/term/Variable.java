@@ -1,12 +1,9 @@
 package org.jpc.term;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.jpc.visitor.AbstractJpcVisitor;
+import org.jpc.salt.ContentHandler;
+import org.jpc.visitor.JpcVisitor;
 
 /**
  * A class reifying a logic variable
@@ -89,8 +86,14 @@ public final class Variable extends AbstractTerm {
 	}
 
 	@Override
-	public void accept(AbstractJpcVisitor termVisitor) {
+	public void accept(JpcVisitor termVisitor) {
 		termVisitor.visitVariable(this);
+	}
+
+	@Override
+	public void streamTo(ContentHandler contentHandler) {
+		contentHandler.startVariable(name);
+		
 	}
 	
 }

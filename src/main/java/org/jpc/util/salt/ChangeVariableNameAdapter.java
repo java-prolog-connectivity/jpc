@@ -1,19 +1,16 @@
-package org.jpc.visitor;
+package org.jpc.util.salt;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.jpc.salt.ContentHandler;
 import org.jpc.term.TermConvertable;
 import org.jpc.term.Variable;
 
-public class ChangeVariableNameVisitor extends ReplaceVariableVisitor {
-
-	public ChangeVariableNameVisitor(Map<String, String> map) {
-		super(asVariableReplacementMap(map));
-	}
+public class ChangeVariableNameAdapter extends ReplaceVariableAdapter {
 	
-	public ChangeVariableNameVisitor(JpcStreamingVisitor adaptee, Map<String, String> map) {
+	public ChangeVariableNameAdapter(ContentHandler adaptee, Map<String, String> map) {
 		super(adaptee, asVariableReplacementMap(map));
 	}
 	

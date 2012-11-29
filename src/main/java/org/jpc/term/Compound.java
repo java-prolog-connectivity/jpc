@@ -9,9 +9,8 @@ import java.util.List;
 import java.util.Objects;
 
 import org.jpc.JpcException;
-import org.jpc.visitor.AbstractJpcVisitor;
-import org.jpc.visitor.JpcDomVisitor;
-import org.jpc.visitor.JpcStreamingVisitor;
+import org.jpc.salt.ContentHandler;
+import org.jpc.visitor.JpcVisitor;
 
 /**
  * A class reifying a logic compound term
@@ -153,7 +152,7 @@ public final class Compound extends AbstractTerm {
 		return false;
 	}
 	
-	public void accept(JpcDomVisitor termVisitor) {
+	public void accept(JpcVisitor termVisitor) {
 		if(termVisitor.visitCompound(this)) {
 			name().accept(termVisitor);
 			for(Term child: args) {
@@ -162,27 +161,18 @@ public final class Compound extends AbstractTerm {
 		}
 	}
 
-
-	public void accept(JpcStreamingVisitor termVisitor) {
-		termVisitor.visitCompound();
-		termVisitor.visitCompoundName();
-		name().accept(termVisitor);
-		termVisitor.endVisitCompoundName();
+	@Override
+	public void streamTo(ContentHandler contentHandler) {
+		contentHandler.startCompound();
+		contentHandler.startCompoundName();
+		name().streamTo(contentHandler);
+		contentHandler.endCompoundName();
 		for(Term child: args) {
-			termVisitor.visitCompoundArg();
-			child.accept(termVisitor);
-			termVisitor.endVisitCompoundArg();
+			contentHandler.startCompoundArg();
+			child.streamTo(contentHandler);
+			contentHandler.endCompoundArg();
 		}
-		termVisitor.endVisitCompound();
+		contentHandler.endCompound();
 	}
 
-
-	public void accept(AbstractJpcVisitor termVisitor) {
-		if(termVisitor instanceof JpcDomVisitor)
-			accept((JpcDomVisitor)termVisitor);
-		else if(termVisitor instanceof JpcStreamingVisitor)
-			accept((JpcStreamingVisitor)termVisitor);
-		else
-			throw new RuntimeException("Unrecognized visitor: " + termVisitor.getClass().getName());
-	}
 }
