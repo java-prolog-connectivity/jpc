@@ -3,7 +3,7 @@ package org.jpc.term;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import org.jpc.salt.ContentHandler;
-import org.jpc.visitor.JpcVisitor;
+import org.jpc.term.visitor.TermVisitor;
 
 /**
  * A class reifying a logic variable
@@ -86,7 +86,7 @@ public final class Variable extends AbstractTerm {
 	}
 
 	@Override
-	public void accept(JpcVisitor termVisitor) {
+	public void accept(TermVisitor termVisitor) {
 		termVisitor.visitVariable(this);
 	}
 

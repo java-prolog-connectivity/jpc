@@ -1,9 +1,15 @@
-package org.jpc.term;
+package org.jpc.salt;
 
 import java.util.List;
 
-import org.jpc.salt.helpers.TermBuilder;
+import org.jpc.term.Compound;
+import org.jpc.term.Term;
 
+/**
+ * A utility class for creating JPC term objects incrementally
+ * @author sergioc
+ *
+ */
 public class JpcTermBuilder extends TermBuilder<Term> {
 
 	public JpcTermBuilder() {
@@ -18,13 +24,12 @@ public class JpcTermBuilder extends TermBuilder<Term> {
 	}
 
 	@Override
-	public Term asTerm() {
+	public Term build() {
 		Term builtTerm;
-		Term termFunctor = (Term) getFunctor();
-		if(arity() == 0)
-			builtTerm = termFunctor;
+		if(!isCompound())
+			builtTerm = getFunctor();
 		else
-			builtTerm = new Compound(termFunctor, getArgs());
+			builtTerm = new Compound(getFunctor(), getArgs());
 		return builtTerm;
 	}
 

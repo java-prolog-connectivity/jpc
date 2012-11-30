@@ -8,7 +8,6 @@ import java.util.Map;
 import org.jpc.engine.flags.LogtalkFlag;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
-import org.jpc.term.Query;
 import org.jpc.term.AbstractTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Variable;

@@ -10,7 +10,7 @@ import java.util.Objects;
 
 import org.jpc.JpcException;
 import org.jpc.salt.ContentHandler;
-import org.jpc.visitor.JpcVisitor;
+import org.jpc.term.visitor.TermVisitor;
 
 /**
  * A class reifying a logic compound term
@@ -152,7 +152,7 @@ public final class Compound extends AbstractTerm {
 		return false;
 	}
 	
-	public void accept(JpcVisitor termVisitor) {
+	public void accept(TermVisitor termVisitor) {
 		if(termVisitor.visitCompound(this)) {
 			name().accept(termVisitor);
 			for(Term child: args) {
@@ -164,13 +164,9 @@ public final class Compound extends AbstractTerm {
 	@Override
 	public void streamTo(ContentHandler contentHandler) {
 		contentHandler.startCompound();
-		contentHandler.startCompoundName();
 		name().streamTo(contentHandler);
-		contentHandler.endCompoundName();
 		for(Term child: args) {
-			contentHandler.startCompoundArg();
 			child.streamTo(contentHandler);
-			contentHandler.endCompoundArg();
 		}
 		contentHandler.endCompound();
 	}

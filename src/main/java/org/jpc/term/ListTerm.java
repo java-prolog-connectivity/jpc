@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.jpc.salt.ContentHandler;
+
 public class ListTerm<E extends TermConvertable> extends ArrayList<E> implements TermConvertable {
 
 	public static <E extends TermConvertable> ListTerm listTerm(E ...terms) {
@@ -57,4 +59,10 @@ public class ListTerm<E extends TermConvertable> extends ArrayList<E> implements
 		return sb.toString();
 	}
 
+	public void streamEachTo(ContentHandler contentHandler) {
+		for(TermConvertable each : this) {
+			each.asTerm().streamTo(contentHandler);
+		}
+	}
+	
 }

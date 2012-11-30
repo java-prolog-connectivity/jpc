@@ -1,10 +1,10 @@
-package org.jpc.visitor;
+package org.jpc.salt;
 
 import static java.util.Arrays.asList;
 import static org.jpc.term.Variable.ANONYMOUS_VAR;
 import static org.junit.Assert.assertTrue;
 
-import org.jpc.salt.JpcWriter;
+import org.jpc.salt.JpcTermWriter;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
@@ -12,7 +12,7 @@ import org.jpc.term.Term;
 import org.jpc.term.Variable;
 import org.junit.Test;
 
-public class JpcWriterVisitorTest {
+public class JpcTermWriterTest {
 
 	Term aAtom = new Atom("A");
 	Term aVar = new Variable("A");
@@ -24,8 +24,8 @@ public class JpcWriterVisitorTest {
 	
 	@Test
 	public void testTermWriter() {
-		JpcWriter termWriter = new JpcWriter();
+		JpcTermWriter termWriter = new JpcTermWriter();
 		t3.streamTo(termWriter);
-		assertTrue(t3.termEquals(termWriter.terms().get(0)));
+		assertTrue(t3.termEquals(termWriter.getTerms().get(0)));
 	}
 }

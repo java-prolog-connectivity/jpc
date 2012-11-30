@@ -7,7 +7,6 @@ import java.util.Map;
 import org.jpc.engine.flags.PrologFlag;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
-import org.jpc.term.Query;
 import org.jpc.term.Term;
 import org.jpc.term.Variable;
 import org.jpc.util.LogicUtil;
@@ -63,7 +62,5 @@ public abstract class BootstrapLogicEngine {
 	 * @return the term representation of a String. Variable names should be preserved.
 	 */
 	public abstract Term asTerm(String termString);
-	
-	
-	
+
 }

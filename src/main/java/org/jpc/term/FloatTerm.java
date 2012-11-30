@@ -1,7 +1,7 @@
 package org.jpc.term;
 
 import org.jpc.salt.ContentHandler;
-import org.jpc.visitor.JpcVisitor;
+import org.jpc.term.visitor.TermVisitor;
 
 
 /**
@@ -94,7 +94,7 @@ public final class FloatTerm extends AbstractTerm {
 	}
 
 	@Override
-	public void accept(JpcVisitor termVisitor) {
+	public void accept(TermVisitor termVisitor) {
 		termVisitor.visitFloat(this);
 	}
 

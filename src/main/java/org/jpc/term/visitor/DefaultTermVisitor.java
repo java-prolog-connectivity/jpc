@@ -1,4 +1,4 @@
-package org.jpc.visitor;
+package org.jpc.term.visitor;
 
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
@@ -6,7 +6,7 @@ import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
 import org.jpc.term.Variable;
 
-public class DefaultJpcVisitor implements JpcVisitor {
+public class DefaultTermVisitor implements TermVisitor {
 
 	@Override
 	public void visitInteger(IntegerTerm term) {

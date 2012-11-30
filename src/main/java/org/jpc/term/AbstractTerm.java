@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jpc.JpcException;
-import org.jpc.salt.JpcWriter;
+import org.jpc.salt.JpcTermWriter;
 import org.jpc.util.salt.ChangeVariableNameAdapter;
 import org.jpc.util.salt.ReplaceVariableAdapter;
 import org.jpc.util.visitor.CollectVariableNamesVisitor;
@@ -111,10 +111,10 @@ public abstract class AbstractTerm implements Term {
 	 */
 	@Override
 	public Term replaceVariables(Map<String, TermConvertable> map) {
-		JpcWriter termWriter = new JpcWriter();
+		JpcTermWriter termWriter = new JpcTermWriter();
 		ReplaceVariableAdapter replaceVariableAdapter = new ReplaceVariableAdapter(termWriter, map);
 		streamTo(replaceVariableAdapter);
-		return termWriter.terms().get(0);
+		return termWriter.getTerms().get(0);
 	}
 	
 	/* (non-Javadoc)
@@ -122,10 +122,10 @@ public abstract class AbstractTerm implements Term {
 	 */
 	@Override
 	public Term changeVariablesNames(Map<String, String> map) {
-		JpcWriter termWriter = new JpcWriter();
+		JpcTermWriter termWriter = new JpcTermWriter();
 		ChangeVariableNameAdapter changeVariableNameAdapter = new ChangeVariableNameAdapter(termWriter, map);
 		streamTo(changeVariableNameAdapter);
-		return termWriter.terms().get(0);
+		return termWriter.getTerms().get(0);
 	}
 	
 	/* (non-Javadoc)
@@ -224,5 +224,7 @@ public abstract class AbstractTerm implements Term {
 	public static <T extends TermConvertable> String toString(List<T> termObjects) {
 		return toString(termObjects.<TermConvertable>toArray(new TermConvertable[]{}));
 	}
+	
+
 
 }

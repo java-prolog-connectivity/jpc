@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.jpc.term.Variable;
-import org.jpc.visitor.DefaultJpcVisitor;
+import org.jpc.term.visitor.DefaultTermVisitor;
 
-public class CollectVariableNamesVisitor extends DefaultJpcVisitor {
+public class CollectVariableNamesVisitor extends DefaultTermVisitor {
 	
 	Set<String> variableNames;
 	

@@ -1,11 +1,15 @@
 package org.jpc.salt;
 
-
-public abstract class ContentHandlerAdapter implements ContentHandler {
+/**
+ * A SALT reader
+ * @author sergioc
+ *
+ */
+public abstract class TermReader implements ContentHandler {
 
 	protected ContentHandler contentHandler;
 	
-	public ContentHandlerAdapter(ContentHandler contentHandler) {
+	public TermReader(ContentHandler contentHandler) {
 		this.contentHandler = contentHandler;
 	}
 	
@@ -31,22 +35,6 @@ public abstract class ContentHandlerAdapter implements ContentHandler {
 
 	public void startCompound() {
 		contentHandler.startCompound();
-	}
-
-	public void startCompoundName() {
-		contentHandler.startCompoundName();
-	}
-
-	public void endCompoundName() {
-		contentHandler.endCompoundName();
-	}
-
-	public void startCompoundArg() {
-		contentHandler.startCompoundArg();
-	}
-
-	public void endCompoundArg() {
-		contentHandler.endCompoundArg();
 	}
 
 	public void endCompound() {

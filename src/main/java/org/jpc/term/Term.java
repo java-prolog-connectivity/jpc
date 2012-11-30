@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jpc.salt.ContentHandler;
-import org.jpc.visitor.JpcVisitor;
+import org.jpc.term.visitor.TermVisitor;
 
 /**
  * Implementations of this interface are Java representations of Logic Terms (i.e., Prolog data types)
@@ -132,7 +132,7 @@ public interface Term extends TermConvertable {
 	 * Accepts a Jpc term visitor.
 	 * @param termVisitor the accepted visitor
 	 */
-	public abstract void accept(JpcVisitor termVisitor);
+	public abstract void accept(TermVisitor termVisitor);
 	
 	/**
 	 * Reads the contents of this term (i.e., generates events) to a content handler

@@ -3,11 +3,11 @@ package org.jpc.util.salt;
 import java.util.Map;
 
 import org.jpc.salt.ContentHandler;
-import org.jpc.salt.ContentHandlerAdapter;
+import org.jpc.salt.TermReader;
 import org.jpc.term.Term;
 import org.jpc.term.TermConvertable;
 
-public class ReplaceVariableAdapter extends ContentHandlerAdapter {
+public class ReplaceVariableAdapter extends TermReader {
 	private Map<String, TermConvertable> map;
 	
 	

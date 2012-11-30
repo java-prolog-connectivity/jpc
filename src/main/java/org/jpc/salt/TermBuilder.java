@@ -1,7 +1,6 @@
-package org.jpc.salt.helpers;
+package org.jpc.salt;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -11,53 +10,35 @@ import java.util.List;
  * @param <TermType> the term type this TermBuilder defines
  */
 public abstract class TermBuilder<TermType> {
-
-	public static <T>List<T> asTerms(Iterable<TermBuilder<T>> termBuilders) {
-		return asTerms(termBuilders.iterator());
-	}
-
-	public static <T>List<T> asTerms(Iterator<TermBuilder<T>> termBuilders) {
-		List<T> list = new ArrayList<>();
-		while(termBuilders.hasNext()) {
-			TermBuilder<T> tb = termBuilders.next();
-			list.add(tb.asTerm());
-		}
-		return list;
-	}
 	
-	
-	private Object functor;//can be a TermType or a String
+	private TermType functor;//can be a TermType or a String
 	private List<TermType> args;
 	
 	public TermBuilder() {
 		setArgs(new ArrayList<TermType>());
 	}
 	
-	public TermBuilder(Object functor) {
+	public TermBuilder(TermType functor) {
 		this(functor, new ArrayList<TermType>());
 	}
 	
-	public TermBuilder(Object functor, List<TermType> args) {
+	public TermBuilder(TermType functor, List<TermType> args) {
 		setFunctor(functor);
 		setArgs(args);
 	}
 	
-	public abstract TermType asTerm();
+	public abstract TermType build();
 
 	public boolean hasFunctor() {
 		return functor != null;
 	}
 	
-	public Object getFunctor() {
+	public TermType getFunctor() {
 		return functor;
 	}
 
-	public void setFunctor(Object functor) {
+	public void setFunctor(TermType functor) {
 		this.functor = functor;
-	}
-
-	public void addTerm() {
-		
 	}
 	
 	public List<TermType> getArgs() {
@@ -74,6 +55,10 @@ public abstract class TermBuilder<TermType> {
 	
 	public int arity() {
 		return args.size();
+	}
+	
+	public boolean isCompound() {
+		return arity() > 0;
 	}
 
 }

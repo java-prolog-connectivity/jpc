@@ -1,4 +1,4 @@
-package org.jpc.term;
+package org.jpc.engine;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.jpc.JpcException;
+import org.jpc.term.Compound;
+import org.jpc.term.Term;
 
 /**
  * Disclaimer: Some methods were inspired or taken from the JPL library

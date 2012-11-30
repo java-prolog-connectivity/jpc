@@ -1,6 +1,5 @@
-package org.jpc.salt.helpers;
+package org.jpc.salt;
 
-import org.jpc.salt.ContentHandler;
 
 /**
  * Defines do-nothing methods for the Context Handler interface, facilitating in this way the implementation
@@ -29,27 +28,9 @@ public class DefaultHandler implements ContentHandler {
 	@Override
 	public void startCompound() {
 	}
-	
-	@Override
-	public void startCompoundName() {
-	}
-
-	@Override
-	public void endCompoundName() {
-	}
-	
-	@Override
-	public void startCompoundArg() {
-	}
-	
-	@Override
-	public void endCompoundArg() {
-	}
 
 	@Override
 	public void endCompound() {
 	}
-
-
 
 }
