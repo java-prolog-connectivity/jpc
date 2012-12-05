@@ -1,6 +1,7 @@
 package org.jpc.term;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.jpc.engine.prolog.PrologConstants.CONS_FUNCTOR;
 import static org.jpc.util.DefaultTermConverter.asTermList;
 
 import java.util.ArrayList;
@@ -26,11 +27,11 @@ public final class Compound extends AbstractTerm {
 	/**
 	 * the name of this Compound
 	 */
-	protected final Term name;
+	private final Term name;
 	/**
 	 * the arguments of this Compound
 	 */
-	protected final List<Term> args;
+	private final List<Term> args;
 
 	
 	public <T extends TermConvertable> Compound(String name, List<T> args) {
@@ -56,7 +57,7 @@ public final class Compound extends AbstractTerm {
 	}
 	
 	public boolean isCons() {
-		return hasFunctor(".", 2);
+		return hasFunctor(CONS_FUNCTOR, 2);
 	}
 	
 	@Override
@@ -162,13 +163,16 @@ public final class Compound extends AbstractTerm {
 	}
 
 	@Override
-	public void streamTo(ContentHandler contentHandler) {
-		contentHandler.startCompound();
-		name().streamTo(contentHandler);
+	public void read(ContentHandler contentHandler) {
+		contentHandler.startCompoundName();
+		name().read(contentHandler);
+		contentHandler.startCompoundArgs();
 		for(Term child: args) {
-			child.streamTo(contentHandler);
+			contentHandler.startCompoundArg();
+			child.read(contentHandler);
+			contentHandler.endCompoundArg();
 		}
-		contentHandler.endCompound();
+		contentHandler.endCompoundArgs();
 	}
 
 }

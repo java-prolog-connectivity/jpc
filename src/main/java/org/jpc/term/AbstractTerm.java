@@ -9,7 +9,7 @@ import org.jpc.JpcException;
 import org.jpc.salt.JpcTermWriter;
 import org.jpc.util.salt.ChangeVariableNameAdapter;
 import org.jpc.util.salt.ReplaceVariableAdapter;
-import org.jpc.util.visitor.CollectVariableNamesVisitor;
+import org.jpc.util.salt.VariableNamesCollector;
 
 
 /**
@@ -113,7 +113,7 @@ public abstract class AbstractTerm implements Term {
 	public Term replaceVariables(Map<String, TermConvertable> map) {
 		JpcTermWriter termWriter = new JpcTermWriter();
 		ReplaceVariableAdapter replaceVariableAdapter = new ReplaceVariableAdapter(termWriter, map);
-		streamTo(replaceVariableAdapter);
+		read(replaceVariableAdapter);
 		return termWriter.getTerms().get(0);
 	}
 	
@@ -124,7 +124,7 @@ public abstract class AbstractTerm implements Term {
 	public Term changeVariablesNames(Map<String, String> map) {
 		JpcTermWriter termWriter = new JpcTermWriter();
 		ChangeVariableNameAdapter changeVariableNameAdapter = new ChangeVariableNameAdapter(termWriter, map);
-		streamTo(changeVariableNameAdapter);
+		read(changeVariableNameAdapter);
 		return termWriter.getTerms().get(0);
 	}
 	
@@ -133,9 +133,9 @@ public abstract class AbstractTerm implements Term {
 	 */
 	@Override
 	public List<String> getVariablesNames() {
-		CollectVariableNamesVisitor visitor = new CollectVariableNamesVisitor();
-		accept(visitor);
-		return visitor.getVariableNames();
+		VariableNamesCollector variableNamesCollector = new VariableNamesCollector();
+		read(variableNamesCollector);
+		return variableNamesCollector.getVariableNames();
 	}
 	
 	/* (non-Javadoc)
@@ -174,11 +174,7 @@ public abstract class AbstractTerm implements Term {
 	public boolean termEquals(TermConvertable o) {
 		return equals(o.asTerm());
 	}
-	
-	@Override
-	public LogtalkObject asLogtalkObject() {
-		return new LogtalkObject(this);
-	}
+
 	
 	/**
 	 * @param   t1  a list of Terms

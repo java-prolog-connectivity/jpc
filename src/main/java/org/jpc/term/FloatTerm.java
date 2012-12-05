@@ -12,7 +12,7 @@ import org.jpc.term.visitor.TermVisitor;
  */
 public final class FloatTerm extends AbstractTerm {
 
-	protected final double value;
+	private final double value;
 	
 	/**
 	 * This constructor creates a Float with the supplied 
@@ -99,7 +99,7 @@ public final class FloatTerm extends AbstractTerm {
 	}
 
 	@Override
-	public void streamTo(ContentHandler contentHandler) {
+	public void read(ContentHandler contentHandler) {
 		contentHandler.startFloatTerm(value);
 	}
 

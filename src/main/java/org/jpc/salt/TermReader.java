@@ -5,9 +5,12 @@ package org.jpc.salt;
  * @author sergioc
  *
  */
-public abstract class TermReader implements ContentHandler {
+public abstract class TermReader {
 
 	protected ContentHandler contentHandler;
+	
+//	public TermReader() {
+//	}
 	
 	public TermReader(ContentHandler contentHandler) {
 		this.contentHandler = contentHandler;
@@ -17,28 +20,10 @@ public abstract class TermReader implements ContentHandler {
 		return contentHandler;
 	}
 
-	public void startIntegerTerm(long value) {
-		contentHandler.startIntegerTerm(value);
+	public void setContentHandler(ContentHandler contentHandler) {
+		this.contentHandler = contentHandler;
 	}
-
-	public void startFloatTerm(double value) {
-		contentHandler.startFloatTerm(value);
-	}
-
-	public void startVariable(String variableName) {
-		contentHandler.startVariable(variableName);
-	}
-
-	public void startAtom(String atomName) {
-		contentHandler.startAtom(atomName);
-	}
-
-	public void startCompound() {
-		contentHandler.startCompound();
-	}
-
-	public void endCompound() {
-		contentHandler.endCompound();
-	}
+	
+	public abstract void read();
 
 }

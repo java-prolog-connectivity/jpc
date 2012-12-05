@@ -5,13 +5,14 @@ import static java.util.Arrays.asList;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.jpc.salt.ContentHandler;
 
 public class ListTerm<E extends TermConvertable> extends ArrayList<E> implements TermConvertable {
 
 	public static <E extends TermConvertable> ListTerm listTerm(E ...terms) {
-		return new ListTerm(Arrays.asList(terms));
+		return new ListTerm(asList(terms));
 	}
 	
 	public ListTerm() {
@@ -35,6 +36,17 @@ public class ListTerm<E extends TermConvertable> extends ArrayList<E> implements
 		return unwrappedListTerm;
 	}
 	
+	/**
+	 * Transforms this list of TermConvertables to a list of Terms
+	 * @return
+	 */
+//	public List<Term> asTerms() {
+//		List<Term> terms = new ArrayList<>();
+//		for(TermConvertable termConvertable : this) {
+//			terms.add(termConvertable.asTerm());
+//		}
+//		return terms;
+//	}
 	
 	@Override
 	public int hashCode() {
@@ -61,8 +73,24 @@ public class ListTerm<E extends TermConvertable> extends ArrayList<E> implements
 
 	public void streamEachTo(ContentHandler contentHandler) {
 		for(TermConvertable each : this) {
-			each.asTerm().streamTo(contentHandler);
+			each.asTerm().read(contentHandler);
 		}
 	}
 	
+	/**
+	 * 
+	 * @param term
+	 * @return a term convertable in the list with the same term representation of the object sent as parameter
+	 */
+	public E get(Term term) {
+		for(E termConvertable : this) {
+			if(termConvertable.asTerm().equals(term))
+				return termConvertable;
+		}
+		return null;
+	}
+	
+	public boolean containsTerm(Term term) {
+		return get(term) != null;
+	}
 }

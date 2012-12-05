@@ -126,8 +126,6 @@ public interface Term extends TermConvertable {
 
 	public boolean hasFunctor(long nameTermObject, int arity);
 
-	public LogtalkObject asLogtalkObject();
-	
 	/**
 	 * Accepts a Jpc term visitor.
 	 * @param termVisitor the accepted visitor
@@ -138,5 +136,5 @@ public interface Term extends TermConvertable {
 	 * Reads the contents of this term (i.e., generates events) to a content handler
 	 * @param contentHandler the content handler that will receive the events describing the structure of this term
 	 */
-	public abstract void streamTo(ContentHandler contentHandler);
+	public abstract void read(ContentHandler contentHandler);
 }

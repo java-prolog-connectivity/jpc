@@ -25,7 +25,7 @@ public class JpcTermWriterTest {
 	@Test
 	public void testTermWriter() {
 		JpcTermWriter termWriter = new JpcTermWriter();
-		t3.streamTo(termWriter);
+		t3.read(termWriter);
 		assertTrue(t3.termEquals(termWriter.getTerms().get(0)));
 	}
 }

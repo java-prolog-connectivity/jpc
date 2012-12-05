@@ -1,6 +1,6 @@
 package org.jpc.util;
 
-import org.jpc.engine.LogicEngine;
+import org.jpc.engine.prolog.PrologEngine;
 
 /**
  * A utility class for configuring one logic engine per thread
@@ -9,13 +9,13 @@ import org.jpc.engine.LogicEngine;
  */
 public class ThreadLocalLogicEngine {
 	
-	private static ThreadLocal<LogicEngine> threadLocal = new ThreadLocal();
+	private static ThreadLocal<PrologEngine> threadLocal = new ThreadLocal();
 
-	public static LogicEngine getLogicEngine() {
+	public static PrologEngine getLogicEngine() {
 		return threadLocal.get();
 	}
 	
-	public static void setLogicEngine(LogicEngine logicEngine) {
+	public static void setLogicEngine(PrologEngine logicEngine) {
 		threadLocal.set(logicEngine);
 	}
 

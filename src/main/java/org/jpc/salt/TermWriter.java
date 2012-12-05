@@ -5,9 +5,16 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class TermWriter<TermType> implements ContentHandler {
-	
+public abstract class TermWriter<TermType> extends DefaultHandler {
+	/**
+	 * The terms that have been written using this TermWritter
+	 * Subclasses could decide to stream each processed term somewhere else (e.g., asserting it in a logic engine) instead of storing them here
+	 */
 	private List<TermType> terms = new ArrayList<>();
+	
+	/**
+	 * An auxiliar stack for storing partially built terms (like compounds)
+	 */
 	private Deque<TermBuilder<TermType>> processingStack = new LinkedList<>();
 
 	private boolean isProcessingCompound() {
@@ -39,12 +46,12 @@ public abstract class TermWriter<TermType> implements ContentHandler {
 	}
 	
 	@Override
-	public void startCompound() {
+	public void startCompoundName() {
 		processingStack.push(createCompoundBuilder());
 	}
 
 	@Override
-	public void endCompound() {
+	public void endCompoundArgs() {
 		process(processingStack.pop().build());
 	}
 	

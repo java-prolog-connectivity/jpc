@@ -32,10 +32,6 @@ public class ResourceManager {
 		ResourceManager.defaultResourceManager = defaultResourceManager;
 	}
 
-	
-	
-
-	
 	private final String tmpDirPath; // the root temporary directory 
 	private final File jpcTmpDir; //a File object representing a folder in the tmp directory where logic files or similar resources can be unzipped if required
 

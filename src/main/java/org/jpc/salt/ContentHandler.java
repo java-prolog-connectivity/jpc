@@ -9,7 +9,10 @@ public interface ContentHandler {
 	public abstract void startVariable(String name);
 	public abstract void startAtom(String name);
 	
-	public abstract void startCompound();
-	public abstract void endCompound();
+	public abstract void startCompoundName();
+	public abstract void startCompoundArgs();
+	public abstract void startCompoundArg();
+	public abstract void endCompoundArg();
+	public abstract void endCompoundArgs();
 	
 }

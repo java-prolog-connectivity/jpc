@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.jpc.JpcException;
-import org.jpc.engine.LogicEngine;
+import org.jpc.engine.logtalk.LogtalkEngine;
+import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Atom;
 import org.jpc.term.Term;
 import org.minitoolbox.ReflectionUtil;
@@ -22,11 +23,11 @@ import com.google.common.base.Joiner;
 public class LogicResourceLoader {
 	private static Logger logger = LoggerFactory.getLogger(LogicResourceLoader.class);
 	
-	private LogicEngine logicEngine;
+	private PrologEngine logicEngine;
 	private ResourceManager resourceManager;
 	private ClassLoader[] classLoaders;
 	
-	public LogicResourceLoader(LogicEngine logicEngine, ClassLoader... classLoaders) {
+	public LogicResourceLoader(PrologEngine logicEngine, ClassLoader... classLoaders) {
 		this(logicEngine, ResourceManager.getDefaultResourceManager(), classLoaders); //use the default resource manager if no one is provided
 	}
 	
@@ -35,7 +36,7 @@ public class LogicResourceLoader {
 	 * @param logicEngine the logic engine where the resources will be loaded
 	 * @param jpcPreferences the preferences defining (among other things) where logic tmp files will be copied before being loaded in the logic engine
 	 */
-	public LogicResourceLoader(LogicEngine logicEngine, ResourceManager resourceManager, ClassLoader... classLoaders) {
+	public LogicResourceLoader(PrologEngine logicEngine, ResourceManager resourceManager, ClassLoader... classLoaders) {
 		this.logicEngine = logicEngine;
 		this.resourceManager = resourceManager;
 		this.classLoaders = classLoaders;
@@ -50,11 +51,11 @@ public class LogicResourceLoader {
 	}
 
 	public boolean logtalkLoad(List<String> resources) {
-		return logicEngine.logtalkLoad(resolveResources(resources));
+		return logicEngine.asLogtalkEngine().logtalkLoad(resolveResources(resources));
 	}
 	
 	public boolean logtalkLoad(String... resources) {
-		return logicEngine.logtalkLoad(resolveResources(asList(resources)));
+		return logicEngine.asLogtalkEngine().logtalkLoad(resolveResources(asList(resources)));
 	}
 	
 	private List<Term> resolveResources(List<String> resources) {
@@ -120,17 +121,4 @@ public class LogicResourceLoader {
 		return new Atom(fileSystemPath);
 	}
 	
-	
-	public static void main(String[] args) throws IOException {
-//		String t = "a/";
-//		String[] sp = t.split("/");
-//		System.out.println(sp.length);
-//		System.out.println(sp[0]);
-		/*
-		URL url = LogicResourceLoader.class.getClassLoader().getResource("org/jpc/util/LogicResourceLoader.class");
-		Enumeration<URL> urls = LogicResourceLoader.class.getClassLoader().getResources("org/jpc/util/LogicResourceLoader.class");
-		System.out.println(url);
-		System.out.println(urls.nextElement());
-		*/
-	}
 }

@@ -1,20 +1,20 @@
-package org.jpc.engine;
+package org.jpc.engine.prolog;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.jpc.JpcPreferences;
-import org.jpc.util.LogicUtil;
+import org.jpc.engine.logtalk.LogtalkEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class LogicEngineConfiguration {
+public abstract class PrologEngineConfiguration {
 
-	private static Logger logger = LoggerFactory.getLogger(LogicEngineConfiguration.class);
+	private static Logger logger = LoggerFactory.getLogger(PrologEngineConfiguration.class);
 	
 	protected JpcPreferences preferences;
-	protected LogicEngine logicEngine;
+	protected PrologEngine logicEngine;
 	protected boolean enabled = true;
 	private boolean configured = false;
 	
@@ -24,11 +24,11 @@ public abstract class LogicEngineConfiguration {
 	protected boolean logtalkRequired = true;
 	protected boolean logtalkLoaded = false;
 	
-	public LogicEngineConfiguration() {
+	public PrologEngineConfiguration() {
 		this(new JpcPreferences()); //default preferences
 	}
 	
-	public LogicEngineConfiguration(JpcPreferences preferences) {
+	public PrologEngineConfiguration(JpcPreferences preferences) {
 		this.preferences = preferences;
 		preloadedPrologResources = new ArrayList<String>();
 		preloadedLogtalkResources = new ArrayList<String>();
@@ -108,14 +108,14 @@ public abstract class LogicEngineConfiguration {
 		scope.addAll(Arrays.asList(newScopes));
 	}
 	
-	public LogicEngine getEngine() {
+	public PrologEngine getEngine() {
 		if(logicEngine == null) {
 			logger.info("Initializing logic engine");
 			long startTime = System.nanoTime();
 			if(!isConfigured()) {
 				configure();
 			}
-			logicEngine = new LogicEngine(createBootstrapLogicEngine());
+			logicEngine = new PrologEngine(createBootstrapEngine());
 			if(isLogtalkRequired()) {
 				logger.info("Attempting to load logtalk ...");
 				try {
@@ -147,7 +147,8 @@ public abstract class LogicEngineConfiguration {
 
 	private void loadPreloadedResources() {
 		logicEngine.ensureLoaded(preloadedPrologResources.toArray(new String[]{}));
-		logicEngine.logtalkLoad(preloadedLogtalkResources.toArray(new String[]{}));
+		if(isLogtalkRequired())
+			logicEngine.asLogtalkEngine().logtalkLoad(preloadedLogtalkResources.toArray(new String[]{}));
 	}
 
 	public void configure() {
@@ -158,6 +159,6 @@ public abstract class LogicEngineConfiguration {
 	 * The defaults configuration tasks of the engine
 	 * @return
 	 */
-	protected abstract BootstrapLogicEngine createBootstrapLogicEngine();
+	protected abstract BootstrapPrologEngine createBootstrapEngine();
 
 }

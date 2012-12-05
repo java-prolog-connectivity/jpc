@@ -4,9 +4,11 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import org.jpc.term.Atom;
-import org.jpc.term.Compound;
-import org.jpc.term.Term;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.jpc.util.LogicUtil;
 import org.junit.Test;
 
 public class CompoundTest {
@@ -38,6 +40,15 @@ public class CompoundTest {
 		assertFalse(t1.hasFunctor("yellow", 0));
 		assertFalse(t1.hasFunctor("yellow", 2));
 		assertFalse(t1.hasFunctor("orange", 1));
+	}
+	
+	@Test
+	public void sequence() {
+		Term sequence = new Compound(",", asList(new Atom("a"), new Compound(",", asList(new Atom("b"), new Atom("c")))));
+		assertEquals(3, LogicUtil.sequenceLength(sequence));
+		List<Term> terms = LogicUtil.sequenceAsTerms(sequence);
+		assertEquals(asList(new Atom("a"), new Atom("b"), new Atom("c")), terms);
+		assertEquals(sequence, LogicUtil.termsToSequence(terms));
 	}
 
 }

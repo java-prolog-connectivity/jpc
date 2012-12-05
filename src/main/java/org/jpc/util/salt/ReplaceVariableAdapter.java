@@ -3,11 +3,11 @@ package org.jpc.util.salt;
 import java.util.Map;
 
 import org.jpc.salt.ContentHandler;
-import org.jpc.salt.TermReader;
+import org.jpc.salt.TermAdapter;
 import org.jpc.term.Term;
 import org.jpc.term.TermConvertable;
 
-public class ReplaceVariableAdapter extends TermReader {
+public class ReplaceVariableAdapter extends TermAdapter {
 	private Map<String, TermConvertable> map;
 	
 	
@@ -21,7 +21,7 @@ public class ReplaceVariableAdapter extends TermReader {
 		TermConvertable termConvertable = map.get(name);
 		if(termConvertable != null) {
 			Term transformedTerm = termConvertable.asTerm();
-			transformedTerm.streamTo(contentHandler);
+			transformedTerm.read(contentHandler);
 		}
 		else
 			super.startVariable(name);

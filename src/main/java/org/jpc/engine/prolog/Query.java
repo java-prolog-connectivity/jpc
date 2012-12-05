@@ -1,4 +1,4 @@
-package org.jpc.engine;
+package org.jpc.engine.prolog;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -10,6 +10,7 @@ import java.util.Map;
 import org.jpc.JpcException;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
+import org.jpc.term.TermConvertable;
 
 /**
  * Disclaimer: Some methods were inspired or taken from the JPL library
@@ -18,13 +19,13 @@ import org.jpc.term.Term;
  */
 public abstract class Query implements AutoCloseable, Iterator<Map<String, Term>> {
 
-	private Compound goal;
+	private Term goal;
 	
-	public Query(Term goal) {
-		this.goal = (Compound) goal;
+	public Query(TermConvertable termConvertable) {
+		this.goal = termConvertable.asTerm();
 	}
 
-	public Compound goal() {
+	public Term goal() {
 		return goal;
 	}
 

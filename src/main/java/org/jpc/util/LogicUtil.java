@@ -1,5 +1,6 @@
 package org.jpc.util;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Arrays.asList;
 
 import java.math.BigDecimal;
@@ -41,7 +42,8 @@ public class LogicUtil {
 	 * @param term
 	 * @return whether the term is an unification
 	 */
-	public static boolean isUnification(Term term) {
+	public static boolean isUnification(TermConvertable termConvertable) {
+		Term term = termConvertable.asTerm();
 		return term instanceof Compound && ((Compound)term).isUnification();
 	}
 	
@@ -57,6 +59,39 @@ public class LogicUtil {
 		return resourceName.indexOf('(') != -1; //the current implementation just try a best guess based on the existence or not of an opening parenthesis
 	}
 	
+
+	public static Term termsToSequence(List<? extends TermConvertable> termConvertables) {
+		checkArgument(!termConvertables.isEmpty());
+		Term termSequence = termConvertables.get(termConvertables.size()-1).asTerm();
+		for(int i = termConvertables.size()-2; i>=0; i--) {
+			termSequence = new Compound(",", asList(termConvertables.get(i), termSequence));
+		}
+		return termSequence;
+	}
+	
+	public static List<Term> sequenceAsTerms(TermConvertable termConvertableSequence) {
+		Term termSequence = termConvertableSequence.asTerm();
+		int len = sequenceLength(termSequence);
+		Term[] ts = new Term[len];
+		for (int i = 0; i < len; i++) {
+			if(i<len-1) {
+				ts[i] = termSequence.arg(1);
+				termSequence = termSequence.arg(2);
+			} else
+				ts[i] = termSequence;
+		}
+		return asList(ts);
+	} 
+
+	public static int sequenceLength(TermConvertable termConvertableSequence) {
+		Term termSequence = termConvertableSequence.asTerm();
+		int length = 1;
+		if(termSequence instanceof Compound) {
+			if(termSequence.hasFunctor(",", 2))
+				length = 1 + sequenceLength(termSequence.arg(2));
+		}
+		return length;
+	}
 	
 	/**
 	 * Surround an atom with a functor
@@ -68,14 +103,15 @@ public class LogicUtil {
 		return applyFunctor(functor, new Atom(atom));
 	}
 	
-	public static Term applyFunctor(String functor, Term term) {
-		return new Compound(functor, asList(term));
+	private static Term applyFunctor(String functor, TermConvertable termConvertable) {
+		return new Compound(functor, asList(termConvertable));
 	}
 	
-	public static List<Term> forAllApplyFunctor(String functor, List<Term> terms) {
+	
+	public static List<Term> forEachApplyFunctor(String functor, List<? extends TermConvertable> termConvertables) {
 		List<Term> appliedFunctorTerms = new ArrayList<>();
-		for(Term term : terms) {
-			appliedFunctorTerms.add(applyFunctor(functor, term));
+		for(TermConvertable termConvertable : termConvertables) {
+			appliedFunctorTerms.add(applyFunctor(functor, termConvertable));
 		}
 		return appliedFunctorTerms;
 	}
@@ -151,7 +187,8 @@ public class LogicUtil {
 	}
 	
 	
-	public static String toString(Term term) {
+	public static String toString(TermConvertable termConvertable) {
+		Term term = termConvertable.asTerm();
 		if(term instanceof IntegerTerm)
 			return ""+((IntegerTerm)term).longValue();
 		else if(term instanceof FloatTerm)
@@ -162,11 +199,12 @@ public class LogicUtil {
 			return term.toString();
 	}
 	
-	public static int toInt(Term term) {
-		return (int) toLong(term);
+	public static int toInt(TermConvertable termConvertable) {
+		return (int) toLong(termConvertable);
 	}
 	
-	public static long toLong(Term term) {
+	public static long toLong(TermConvertable termConvertable) {
+		Term term = termConvertable.asTerm();
 		if(term instanceof IntegerTerm)
 			return ((IntegerTerm)term).longValue();
 		else if(term instanceof FloatTerm)
@@ -177,11 +215,12 @@ public class LogicUtil {
 			throw new JpcException("Impossible to convert the term " + term + " to a long");
 	}
 	
-	public static float toFloat(Term term) {
-		return (float) toDouble(term);
+	public static float toFloat(TermConvertable termConvertable) {
+		return (float) toDouble(termConvertable);
 	}
 	
-	public static double toDouble(Term term) {
+	public static double toDouble(TermConvertable termConvertable) {
+		Term term = termConvertable.asTerm();
 		if(term instanceof FloatTerm)
 			return ((FloatTerm)term).doubleValue();
 		else if(term instanceof Atom)
@@ -190,7 +229,8 @@ public class LogicUtil {
 			throw new JpcException("Impossible to convert the term " + term + " to a double");
 	}
 	
-	public static Number toNumber(Term term) {
+	public static Number toNumber(TermConvertable termConvertable) {
+		Term term = termConvertable.asTerm();
 		if(term instanceof IntegerTerm)
 			return toLong(term);
 		if(term instanceof FloatTerm)
@@ -201,11 +241,14 @@ public class LogicUtil {
 			throw new JpcException("Impossible to convert the term " + term + " to a number");
 	}
 	
-	public static List<Term> getChildren(Term term) {
+	public static List<Term> getChildren(TermConvertable termConvertable) {
+		Term term = termConvertable.asTerm();
 		if(term.isList())
 			return term.asList();
 		else 
 			return term.args();
 	}
 
+	
+	
 }

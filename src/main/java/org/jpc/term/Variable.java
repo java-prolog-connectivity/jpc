@@ -19,7 +19,7 @@ public final class Variable extends AbstractTerm {
 		return variableName.substring(0, 1).equals("_"); //the variable name is equals to "_" or starts with "_"
 	}
 	
-	public final String name; // the name of this Variable
+	private final String name; // the name of this Variable
 	
 	public Variable(String name) {
 		checkArgument(isValidVariableName(name), "The variable name " + name + " is not valid");
@@ -91,7 +91,7 @@ public final class Variable extends AbstractTerm {
 	}
 
 	@Override
-	public void streamTo(ContentHandler contentHandler) {
+	public void read(ContentHandler contentHandler) {
 		contentHandler.startVariable(name);
 		
 	}

@@ -1,4 +1,4 @@
-package org.jpc.engine.flags;
+package org.jpc.engine.logtalk;
 
 
 

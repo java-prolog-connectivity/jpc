@@ -1,5 +1,7 @@
 package org.jpc.term;
 
+import static org.jpc.engine.prolog.PrologConstants.EMPTY_LIST_SYMBOL;
+
 import org.jpc.JpcException;
 import org.jpc.salt.ContentHandler;
 import org.jpc.term.visitor.TermVisitor;
@@ -13,9 +15,9 @@ public final class Atom extends AbstractTerm {
 
 	public static final Term TRUE_TERM = new Atom("true");
 	public static final Term FALSE_TERM = new Atom("false");
-	public static final Term EMPTY_LIST = new Atom("[]");
+	public static final Term EMPTY_LIST = new Atom(EMPTY_LIST_SYMBOL);
 	
-	protected final String name;
+	private final String name;
 	
 	/**
 	 * @param   name   the Atom's name (unquoted)
@@ -44,19 +46,12 @@ public final class Atom extends AbstractTerm {
 		return (this == obj || (obj instanceof Atom && name.equals(((Atom)obj).name)));
 	}
 	
+	/**
+	 * Note: This method does not escape or quote the name
+	 */
 	@Override
 	public String toString() {
-		return prologName();
-	}
-	
-	/**
-	 *   This method should return the Prolog representation of an atom (the name of the compound)
-	 * 	 for example, 'name' is quoted if necessary or escaping characters are added before special characters
-	 *   by default this class just surrounds the name with single quotes (but this could be overridden if necessary).
-	 *   This method affects only the string representation of the term
-	 */
-	private String prologName() {
-		return "'" + name + "'";
+		return name();
 	}
 	
 	@Override
@@ -78,7 +73,7 @@ public final class Atom extends AbstractTerm {
 	}
 	
 	@Override
-	public void streamTo(ContentHandler contentHandler) {
+	public void read(ContentHandler contentHandler) {
 		contentHandler.startAtom(name);
 	}
 	

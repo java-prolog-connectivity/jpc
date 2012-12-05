@@ -15,7 +15,7 @@ public final class IntegerTerm extends AbstractTerm {
 	/**
 	 * the Integer's immutable long value
 	 */
-	protected final long value;
+	private final long value;
 	
 	/**
 	 * @param   value  This Integer's (long) value
@@ -103,7 +103,7 @@ public final class IntegerTerm extends AbstractTerm {
 	}
 
 	@Override
-	public void streamTo(ContentHandler contentHandler) {
+	public void read(ContentHandler contentHandler) {
 		contentHandler.startIntegerTerm(value);
 	}
 }

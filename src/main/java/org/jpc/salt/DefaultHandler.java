@@ -26,11 +26,24 @@ public class DefaultHandler implements ContentHandler {
 	}
 
 	@Override
-	public void startCompound() {
+	public void startCompoundName() {
 	}
 
 	@Override
-	public void endCompound() {
+	public void startCompoundArgs() {
 	}
 
+	@Override
+	public void startCompoundArg() {
+	}
+
+	@Override
+	public void endCompoundArg() {
+	}
+
+	@Override
+	public void endCompoundArgs() {
+	}
+
+	
 }
