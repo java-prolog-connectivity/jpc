@@ -84,7 +84,7 @@ public class DefaultTermConverter {//implements TermConvertable {
 		Object o = null;
 		if(term instanceof Atom) {
 			Atom atom = (Atom) term;
-			String name = atom.name();
+			String name = atom.getName();
 			if(name.equals("true") || name.equals("false"))
 				o = Boolean.valueOf(name);
 			else

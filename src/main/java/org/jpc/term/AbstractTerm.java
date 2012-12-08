@@ -23,14 +23,14 @@ public abstract class AbstractTerm implements Term {
 	 */
 	@Override
 	public Term arg(int i) {
-		return args().get(i-1);
+		return getArgs().get(i-1);
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.jpc.term.Term#args()
 	 */
 	@Override
-	public List<Term> args() {
+	public List<Term> getArgs() {
 		return Collections.emptyList();//assuming no arguments by default
 	}
 	
@@ -39,7 +39,7 @@ public abstract class AbstractTerm implements Term {
 	 */
 	@Override
 	public int arity() {
-		return args().size();
+		return getArgs().size();
 	}
 	
 	@Override

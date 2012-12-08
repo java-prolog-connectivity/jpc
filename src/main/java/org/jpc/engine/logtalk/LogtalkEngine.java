@@ -2,6 +2,7 @@ package org.jpc.engine.logtalk;
 
 import static java.util.Arrays.asList;
 import static org.jpc.engine.logtalk.LogtalkConstants.ABOLISH_CATEGORY;
+import static org.jpc.engine.logtalk.LogtalkConstants.ABOLISH_EVENTS;
 import static org.jpc.engine.logtalk.LogtalkConstants.ABOLISH_OBJECT;
 import static org.jpc.engine.logtalk.LogtalkConstants.ABOLISH_PROTOCOL;
 import static org.jpc.engine.logtalk.LogtalkConstants.CATEGORY_PROPERTY;
@@ -11,8 +12,11 @@ import static org.jpc.engine.logtalk.LogtalkConstants.CREATE_CATEGORY;
 import static org.jpc.engine.logtalk.LogtalkConstants.CREATE_OBJECT;
 import static org.jpc.engine.logtalk.LogtalkConstants.CREATE_PROTOCOL;
 import static org.jpc.engine.logtalk.LogtalkConstants.CURRENT_CATEGORY;
+import static org.jpc.engine.logtalk.LogtalkConstants.CURRENT_EVENT;
+import static org.jpc.engine.logtalk.LogtalkConstants.CURRENT_LOGTALK_FLAG;
 import static org.jpc.engine.logtalk.LogtalkConstants.CURRENT_OBJECT;
 import static org.jpc.engine.logtalk.LogtalkConstants.CURRENT_PROTOCOL;
+import static org.jpc.engine.logtalk.LogtalkConstants.DEFINE_EVENTS;
 import static org.jpc.engine.logtalk.LogtalkConstants.EXTENDS_CATEGORY;
 import static org.jpc.engine.logtalk.LogtalkConstants.EXTENDS_OBJECTS;
 import static org.jpc.engine.logtalk.LogtalkConstants.EXTENDS_PROTOCOL;
@@ -24,9 +28,12 @@ import static org.jpc.engine.logtalk.LogtalkConstants.OBJECT_PROPERTY;
 import static org.jpc.engine.logtalk.LogtalkConstants.PROTOCOL_PROPERTY;
 import static org.jpc.engine.logtalk.LogtalkConstants.SET_LOGTALK_FLAG;
 import static org.jpc.engine.logtalk.LogtalkConstants.SPECIALIZES_CLASS;
+import static org.jpc.engine.logtalk.LogtalkConstants.THREADED;
+import static org.jpc.engine.prolog.PrologConstants.CURRENT_PROLOG_FLAG;
 import static org.jpc.util.LogicUtil.forEachApplyFunctor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +59,17 @@ public class LogtalkEngine extends PrologEngine {
 	
 	public boolean logtalkLoad(List<? extends TermConvertable> termConvertables) {
 		return allSucceed(forEachApplyFunctor(LOGTALK_LOAD, termConvertables));
+	}
+	
+	public String currentLogtalkFlag(LogtalkFlag flag) {
+		String flagValue = null;
+		Variable varFlag = new Variable("Var");
+		Map<String, Term> solutions = createQuery(new Compound(CURRENT_LOGTALK_FLAG, Arrays.asList(flag, varFlag))).oneSolution();
+		if(solutions!=null) {
+			Atom flagValueTerm = (Atom) solutions.get(varFlag.name());
+			flagValue = flagValueTerm.getName();
+		}
+		return flagValue;
 	}
 	
 	public boolean setLogtalkFlag(LogtalkFlag flag, String value) {
@@ -84,7 +102,7 @@ public class LogtalkEngine extends PrologEngine {
 		List<Integer> arities = new ArrayList<>();
 		for(LogtalkObject currentObject: currentObjects) {
 			Term name = currentObject.name();
-			if(name instanceof Atom && ((Atom)name).name().equals(objectName)) {
+			if(name instanceof Atom && ((Atom)name).getName().equals(objectName)) {
 				arities.add(currentObject.arity());
 			}
 		}
@@ -203,6 +221,18 @@ public class LogtalkEngine extends PrologEngine {
 	
 	public Query categoryProperty(TermConvertable category, TermConvertable property) {
 		return createQuery(new Compound(CATEGORY_PROPERTY, asList(category, property)));
+	}
+	
+	public Query currentEvent(TermConvertable event, TermConvertable object, TermConvertable message, TermConvertable sender, TermConvertable monitor) {
+		return createQuery(new Compound(CURRENT_EVENT, asList(event, object, message, sender, monitor)));
+	}
+	
+	public Query defineEvents(TermConvertable event, TermConvertable object, TermConvertable message, TermConvertable sender, TermConvertable monitor) {
+		return createQuery(new Compound(DEFINE_EVENTS, asList(event, object, message, sender, monitor)));
+	}
+	
+	public Query abolishEvents(TermConvertable event, TermConvertable object, TermConvertable message, TermConvertable sender, TermConvertable monitor) {
+		return createQuery(new Compound(ABOLISH_EVENTS, asList(event, object, message, sender, monitor)));
 	}
 	
 }

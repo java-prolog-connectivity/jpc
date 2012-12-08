@@ -17,6 +17,8 @@ public class LogtalkConstants {
 	
 	public static final String SET_LOGTALK_FLAG = "set_logtalk_flag";
 	
+	public static final String CURRENT_LOGTALK_FLAG = "current_logtalk_flag";
+	
 	public static final String CURRENT_OBJECT = "current_object";
 	
 	public static final String CREATE_OBJECT = "create_object";
@@ -61,4 +63,63 @@ public class LogtalkConstants {
 	
 	public static final String CATEGORY_PROPERTY = "category_property";
 	
+	
+	public static final String PREDICATE_PROPERTY = "predicate_property";
+	
+	public static final String CURRENT_PREDICATE = "current_predicate";
+	
+	public static final String CURRENT_EVENT = "current_event";
+	
+	public static final String DEFINE_EVENTS = "define_events";
+	
+	public static final String ABOLISH_EVENTS = "abolish_events";
+	
+	
+	//MULTI THREADING CONSTANTS
+	public static final String THREADED = "threaded";
+	
+	public static final String THREADED_CALL = "threaded_call";
+	
+	public static final String THREADED_ONCE = "threaded_once";
+	
+	public static final String THREADED_PEEK = "threaded_peek";
+	
+	public static final String THREADED_EXIT = "threaded_exit";
+	
+	public static final String THREADED_IGNORE = "threaded_ignore";
+	
+	public static final String THREADED_NOTIFY = "threaded_notify";
+	
+	//DOCUMENTATION CONSTANTS
+	//(entities)
+	public static final String COMMENT = "comment";
+	
+	public static final String AUTHOR = "author";
+	
+	public static final String VERSION = "version";
+	
+	public static final String DATE = "date";
+	
+	public static final String PARAMETERS = "parameters";
+	
+	public static final String PARNAMES = "parnames";
+	
+	public static final String COPYRIGHT = "copyright";
+	
+	public static final String LICENSE = "license";
+	
+	public static final String REMARKS = "remarks";
+	
+	//(predicates)
+	public static final String ARGUMENTS = "arguments";
+	
+	public static final String ARGNAMES = "argnames";
+	
+	public static final String ALLOCATION = "allocation";
+	
+	public static final String REDEFINITION = "redefinition";
+	
+	public static final String EXCEPTIONS = "exceptions";
+	
+	public static final String EXAMPLES = "examples";
 }

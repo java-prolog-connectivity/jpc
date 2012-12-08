@@ -1,13 +1,19 @@
 package org.jpc.engine.prolog;
 
 import static java.util.Arrays.asList;
-import static org.jpc.engine.logtalk.LogtalkConstants.ABOLISH_OBJECT;
+import static org.jpc.engine.prolog.PrologConstants.ASSERTA;
+import static org.jpc.engine.prolog.PrologConstants.ASSERTZ;
+import static org.jpc.engine.prolog.PrologConstants.ATOM_CHARS;
+import static org.jpc.engine.prolog.PrologConstants.BAGOF;
 import static org.jpc.engine.prolog.PrologConstants.CD;
-import static org.jpc.engine.logtalk.LogtalkConstants.CREATE_OBJECT;
-import static org.jpc.engine.logtalk.LogtalkConstants.CURRENT_OBJECT;
-import static org.jpc.engine.logtalk.LogtalkConstants.LOGTALK_LOAD;
-import static org.jpc.engine.logtalk.LogtalkConstants.SET_LOGTALK_FLAG;
-import static org.jpc.util.LogicUtil.forEachApplyFunctor;
+import static org.jpc.engine.prolog.PrologConstants.CURRENT_OP;
+import static org.jpc.engine.prolog.PrologConstants.CURRENT_PROLOG_FLAG;
+import static org.jpc.engine.prolog.PrologConstants.FINDALL;
+import static org.jpc.engine.prolog.PrologConstants.FORALL;
+import static org.jpc.engine.prolog.PrologConstants.SETOF;
+import static org.jpc.engine.prolog.PrologConstants.SET_PROLOG_FLAG;
+import static org.jpc.term.ListTerm.listTerm;
+import static org.jpc.term.Variable.ANONYMOUS_VAR;
 import static org.jpc.util.LogicUtil.isResourceAlias;
 
 import java.util.ArrayList;
@@ -15,8 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.jpc.engine.logtalk.LogtalkEngine;
-import org.jpc.engine.logtalk.LogtalkFlag;
-import org.jpc.engine.logtalk.LogtalkObject;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
@@ -26,7 +30,9 @@ import org.jpc.util.LogicUtil;
 import org.jpc.util.salt.TermToStringBuilder;
 
 /**
+ * A utility class for interacting with a Prolog engine
  * Extends the BootstrapLogicEngine by composition
+ * It also adds new functionality
  * @author sergioc
  *
  */
@@ -46,26 +52,24 @@ public class PrologEngine implements DatabaseHandler {
 		return new LogtalkEngine(bootstrapEngine);
 	}
 	
-	public boolean stop() {
-		return bootstrapEngine.stop();
-	}
 	
-	public Query createQuery(TermConvertable termConvertable) {
-		return bootstrapEngine.createQuery(termConvertable);
+	
+	/* ********************************************************************************************************************************
+	 * PROXY METHODS IMPLEMENTED IN THE BOOTSTRAP ENGINE (and overloaded variations of those methods)
+     **********************************************************************************************************************************
+     */
+	
+	public Query createQuery(TermConvertable... termConvertables) {
+		Term termSequence = LogicUtil.termsToSequence(asList(termConvertables));
+		return bootstrapEngine.createQuery(termSequence);
 	}
 	
 	public Query createQuery(String termString) {
 		return createQuery(asTerm(termString));
 	}
 	
-	public String toString(Term term) {
-		TermToStringBuilder termToStringBuilder = new TermToStringBuilder(this);
-		term.read(termToStringBuilder);
-		return termToStringBuilder.toString();
-	}
-	
-	public String escape(String s) {
-		return bootstrapEngine.escape(s);
+	public boolean stop() {
+		return bootstrapEngine.stop();
 	}
 	
 	public Term asTerm(String termString) {
@@ -93,20 +97,82 @@ public class PrologEngine implements DatabaseHandler {
 			terms.add(asTerm(s, force));
 		return terms;
 	}
-
-	public List<Term> asResourceTerms(List<String> resourceNames) {
-		List<Term> terms = new ArrayList<>();
-		for(String s : resourceNames)
-			terms.add(asResourceTerm(s));
-		return terms;
+	
+	public String escape(String s) {
+		return bootstrapEngine.escape(s);
 	}
 	
-	public Term asResourceTerm(String resourceName) {
-		if(isResourceAlias(resourceName)) //it is a resource alias of the form library(lib_name)
-			return asTerm(resourceName);
-		else
-			return new Atom(resourceName);
+	
+	
+	
+	
+	
+
+	
+
+
+	
+
+
+
+	
+
+	
+
+	
+	
+	
+	
+	
+	
+	public boolean flushOutput() {
+		return bootstrapEngine.flushOutput();
 	}
+	
+	public boolean setPrologFlag(TermConvertable flag, TermConvertable flagValue) {
+		return bootstrapEngine.setPrologFlag(flag, flagValue);
+	}
+	
+	public boolean setPrologFlag(TermConvertable flag, String flagValue) {
+		return setPrologFlag(flag, new Atom(flagValue));
+	}
+	
+	public Query currentPrologFlag(TermConvertable flag, TermConvertable flagValue) {
+		return bootstrapEngine.currentPrologFlag(flag, flagValue);
+	}
+	
+	public String currentPrologFlag(TermConvertable flag) {
+		String flagValue = null;
+		Variable varFlagValue = new Variable("Var");
+		Map<String, Term> solutions = currentPrologFlag(flag, varFlagValue).oneSolution();
+		if(solutions!=null) {
+			Atom flagValueTerm = (Atom) solutions.get(varFlagValue.name());
+			flagValue = flagValueTerm.getName();
+		}
+		return flagValue;
+	}
+	
+	public String prologDialect() {
+		return currentPrologFlag(PrologFlag.DIALECT);
+	}
+	
+	public Query currentOp(TermConvertable priority, TermConvertable specifier, TermConvertable operator) {
+		return bootstrapEngine.currentOp(priority, specifier, operator);
+	}
+
+	public boolean isBinaryOperator(String op) {
+		return createQuery(new Compound(CURRENT_OP, asList(ANONYMOUS_VAR, new Variable("Type"), new Atom(op))), new Compound(ATOM_CHARS, asList(new Variable("Type"), listTerm(ANONYMOUS_VAR, new Atom("f"), ANONYMOUS_VAR)))).hasSolution();
+		//return createQuery("current_op(_, Type, '" + op + "'), atom_chars(Type, [_, f, _])").hasSolution();
+	}
+	
+	public boolean isUnaryOperator(String op) {
+		return createQuery(new Compound(CURRENT_OP, asList(ANONYMOUS_VAR, new Variable("Type"), new Atom(op))), new Compound(ATOM_CHARS, asList(new Variable("Type"), listTerm(new Atom("f"), ANONYMOUS_VAR)))).hasSolution();
+		//return createQuery("current_op(_, Type, '" + op + "'), atom_chars(Type, [f, _])").hasSolution();
+	}
+	
+	
+	
+	
 	
 	@Override
 	public boolean asserta(TermConvertable termConvertable) {
@@ -138,13 +204,23 @@ public class PrologEngine implements DatabaseHandler {
 		return bootstrapEngine.clause(head, body);
 	}
 	
+	/**
+	 * Assert a list of clauses in the logic database. Terms are asserted as the first facts or rules of the corresponding predicate.
+	 * @param terms the terms to assert
+	 * @return
+	 */
 	public boolean asserta(List<? extends TermConvertable> termConvertables) {
-		return bootstrapEngine.asserta(termConvertables);
+		return allSucceed(LogicUtil.forEachApplyFunctor(ASSERTA, termConvertables));
 	}
 	
+	/**
+	 * Assert a list of clauses in the logic database. Term are asserted as the last facts or rules of the corresponding predicate.
+	 * @param terms the terms to assert
+	 * @return
+	 */
 	public boolean assertz(List<? extends TermConvertable> termConvertables) {
-		return bootstrapEngine.assertz(termConvertables);
-	}
+		return allSucceed(LogicUtil.forEachApplyFunctor(ASSERTZ, termConvertables));
+	}	
 	
 	
 	public boolean ensureLoaded(List<? extends TermConvertable> termConvertables) {
@@ -152,58 +228,74 @@ public class PrologEngine implements DatabaseHandler {
 	}
 	
 	public boolean ensureLoaded(TermConvertable... termConvertables) {
-		return bootstrapEngine.ensureLoaded(termConvertables);
+		return bootstrapEngine.ensureLoaded(asList(termConvertables));
 	}
 
 	public boolean ensureLoaded(String... resources) {
 		return bootstrapEngine.ensureLoaded(asResourceTerms(asList(resources)));
 	}
-
-	public boolean allSucceed(List<? extends TermConvertable> termConvertables) {
-		return bootstrapEngine.allSucceed(termConvertables);
-	}
 	
-	
-	
-	public String currentPrologFlag(String flagName) {
-		return bootstrapEngine.currentPrologFlag(flagName);
-	}
-	
-	public String prologDialect() {
-		return bootstrapEngine.prologDialect();
+	public boolean cd(TermConvertable path) {
+		return bootstrapEngine.cd(path);
 	}
 	
 	public boolean cd(String path) {
-		Compound compound = new Compound(CD, asList(new Atom(path)));
-		return createQuery(compound).hasSolution();
+		return cd(new Atom(path));
+	}
+	
+	public Query bagof(TermConvertable select, TermConvertable exp, TermConvertable all) {
+		return bootstrapEngine.bagof(select, exp, all);
+	}
+	
+	public Query findall(TermConvertable select, TermConvertable exp, TermConvertable all) {
+		return bootstrapEngine.findall(select, exp, all);
+	}
+	
+	public Query setof(TermConvertable select, TermConvertable exp, TermConvertable all) {
+		return bootstrapEngine.setof(select, exp, all);
+	}
+	
+	public Query forall(TermConvertable generator, TermConvertable test) {
+		return bootstrapEngine.forall(generator, test);
 	}
 
+
 	
-	/**
-	 * Answers an array of anonymous logic variables
-	 * @param n the number of variables in the array
-	 * @return
-	 */
-	public static List<Variable> anonymousVariables(int n) {
-		List<Variable> variablesList = new ArrayList<>();
-		for(int i=0; i<n; i++) {
-			variablesList.add(Variable.ANONYMOUS_VAR);
+
+	
+	/* ********************************************************************************************************************************
+	 * UTILITY METHODS
+     **********************************************************************************************************************************
+     */
+	
+	
+	public boolean allSucceed(List<? extends TermConvertable> termConvertables) {
+		boolean success = true;
+		for(TermConvertable termConvertable: termConvertables) {
+			if(!createQuery(termConvertable).hasSolution())
+				success = false;
 		}
-		return variablesList;
+		return success;
 	}
 	
-
-
-	public boolean isBinaryOperator(String op) {
-		return createQuery("Op='" + op + "', current_op(_, Type, Op), atom_chars(Type, Chars), Chars=[_, f, _]").hasSolution();
+	public List<Term> asResourceTerms(List<String> resourceNames) {
+		List<Term> terms = new ArrayList<>();
+		for(String s : resourceNames)
+			terms.add(asResourceTerm(s));
+		return terms;
 	}
 	
-	public boolean isUnaryOperator(String op) {
-		return createQuery("Op='" + op + "', current_op(_, Type, Op), atom_chars(Type, Chars), Chars=[f, _]").hasSolution();
+	public Term asResourceTerm(String resourceName) {
+		if(isResourceAlias(resourceName)) //it is a resource alias of the form library(lib_name)
+			return asTerm(resourceName);
+		else
+			return new Atom(resourceName);
 	}
 	
-	public boolean flushOutput() {
-		return bootstrapEngine.flushOutput();
+	public String toString(TermConvertable termConvertable) {
+		TermToStringBuilder termToStringBuilder = new TermToStringBuilder(this);
+		termConvertable.asTerm().read(termToStringBuilder);
+		return termToStringBuilder.toString();
 	}
 	
 	public String termSequenceToString(TermConvertable sequenceTermConvertable) {
@@ -216,9 +308,5 @@ public class PrologEngine implements DatabaseHandler {
 		}
 		return sequenceString;
 	}
-	
-	
-	
 
-	
 }

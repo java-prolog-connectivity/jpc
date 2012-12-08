@@ -9,6 +9,7 @@ import org.jpc.term.IntegerTermTest;
 import org.jpc.term.ListTermTest;
 import org.jpc.term.VariableTest;
 import org.jpc.util.DefaultTermConverterTest;
+import org.jpc.util.LogicUtilTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -22,6 +23,7 @@ import org.junit.runners.Suite;
 	ListTermTest.class,
 	AbstractTermTest.class,
 	DefaultTermConverterTest.class,
+	LogicUtilTest.class,
 	JpcTermWriterTest.class
 	})
 public class JpcTestSuite {}

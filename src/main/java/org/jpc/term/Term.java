@@ -28,7 +28,7 @@ public interface Term extends TermConvertable {
 	 * If the term has no arguments will return an empty list
 	 * @return the arguments of this term
 	 */
-	public abstract List<Term> args();
+	public abstract List<Term> getArgs();
 
 	/**
 	 * Returns the arity (i.e., number of arguments) of this Term.

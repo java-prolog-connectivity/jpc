@@ -34,7 +34,7 @@ public final class Compound extends AbstractTerm {
 	private final List<Term> args;
 
 	
-	public <T extends TermConvertable> Compound(String name, List<T> args) {
+	public Compound(String name, List<? extends TermConvertable> args) {
 		this(new Atom(name), args);
 	}
 	
@@ -44,7 +44,7 @@ public final class Compound extends AbstractTerm {
 	 * @param   name   the name of this Compound
 	 * @param   args   the (one or more) arguments of this Compound
 	 */
-	public <T extends TermConvertable> Compound(TermConvertable name, List<T> args) {
+	public Compound(TermConvertable name, List<? extends TermConvertable> args) {
 		checkArgument(!args.isEmpty(), "A compound term must have at least one argument");
 		this.name = name.asTerm();
 		this.args = asTermList(args);
@@ -93,7 +93,7 @@ public final class Compound extends AbstractTerm {
 	 * 
 	 * @return the name (unquoted) of this Compound
 	 */
-	public Term name() {
+	public Term getName() {
 		return name;
 	}
 	
@@ -103,7 +103,7 @@ public final class Compound extends AbstractTerm {
 	 * @return the arguments (1..arity) of this Compound as an array[0..arity-1] of Term
 	 */
 	@Override
-	public List<Term> args() {
+	public List<Term> getArgs() {
 		return args;
 	}
 	
@@ -119,13 +119,13 @@ public final class Compound extends AbstractTerm {
 	 */
 	@Override
 	public String toString() {
-		return name().toString() + (args.size() > 0 ? "(" + AbstractTerm.toString(args) + ")" : "");
+		return getName().toString() + (args.size() > 0 ? "(" + AbstractTerm.toString(args) + ")" : "");
 	}
 	
 	@Override
 	public int hashCode() {
-		List<Term> allFields = new ArrayList<Term>(args());
-		allFields.add(0, name());
+		List<Term> allFields = new ArrayList<Term>(getArgs());
+		allFields.add(0, getName());
 		return Objects.hash(allFields.toArray());
 	}
 	
@@ -155,7 +155,7 @@ public final class Compound extends AbstractTerm {
 	
 	public void accept(TermVisitor termVisitor) {
 		if(termVisitor.visitCompound(this)) {
-			name().accept(termVisitor);
+			getName().accept(termVisitor);
 			for(Term child: args) {
 				child.accept(termVisitor);
 			}
@@ -165,7 +165,7 @@ public final class Compound extends AbstractTerm {
 	@Override
 	public void read(ContentHandler contentHandler) {
 		contentHandler.startCompoundName();
-		name().read(contentHandler);
+		getName().read(contentHandler);
 		contentHandler.startCompoundArgs();
 		for(Term child: args) {
 			contentHandler.startCompoundArg();

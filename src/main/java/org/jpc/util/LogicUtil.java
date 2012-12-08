@@ -60,6 +60,10 @@ public class LogicUtil {
 	}
 	
 
+	public static Term termsToSequence(TermConvertable... termConvertables) {
+		return termsToSequence(asList(termConvertables));
+	}
+	
 	public static Term termsToSequence(List<? extends TermConvertable> termConvertables) {
 		checkArgument(!termConvertables.isEmpty());
 		Term termSequence = termConvertables.get(termConvertables.size()-1).asTerm();
@@ -194,7 +198,7 @@ public class LogicUtil {
 		else if(term instanceof FloatTerm)
 			return ""+((FloatTerm)term).doubleValue();
 		else if(term instanceof Atom)
-			return ((Atom)term).name();
+			return ((Atom)term).getName();
 		else
 			return term.toString();
 	}
@@ -210,7 +214,7 @@ public class LogicUtil {
 		else if(term instanceof FloatTerm)
 			return (long) toDouble(term);
 		else if(term instanceof Atom)
-			return Long.valueOf(((Atom)term).name());
+			return Long.valueOf(((Atom)term).getName());
 		else
 			throw new JpcException("Impossible to convert the term " + term + " to a long");
 	}
@@ -224,7 +228,7 @@ public class LogicUtil {
 		if(term instanceof FloatTerm)
 			return ((FloatTerm)term).doubleValue();
 		else if(term instanceof Atom)
-			return Double.valueOf(((Atom)term).name());
+			return Double.valueOf(((Atom)term).getName());
 		else
 			throw new JpcException("Impossible to convert the term " + term + " to a double");
 	}
@@ -236,7 +240,7 @@ public class LogicUtil {
 		if(term instanceof FloatTerm)
 			return toDouble(term);
 		else if(term instanceof Atom)
-			return Double.valueOf(((Atom)term).name());
+			return Double.valueOf(((Atom)term).getName());
 		else
 			throw new JpcException("Impossible to convert the term " + term + " to a number");
 	}
@@ -246,9 +250,20 @@ public class LogicUtil {
 		if(term.isList())
 			return term.asList();
 		else 
-			return term.args();
+			return term.getArgs();
 	}
 
-	
+	/**
+	 * Answers an array of anonymous logic variables
+	 * @param n the number of variables in the array
+	 * @return
+	 */
+	public static List<Variable> anonymousVariables(int n) {
+		List<Variable> variablesList = new ArrayList<>();
+		for(int i=0; i<n; i++) {
+			variablesList.add(Variable.ANONYMOUS_VAR);
+		}
+		return variablesList;
+	}
 	
 }

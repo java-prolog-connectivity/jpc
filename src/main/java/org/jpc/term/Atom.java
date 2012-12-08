@@ -26,7 +26,7 @@ public final class Atom extends AbstractTerm {
 		this.name = name;
 	}
 	
-	public String name() {
+	public String getName() {
 		return name;
 	}
 
@@ -51,7 +51,7 @@ public final class Atom extends AbstractTerm {
 	 */
 	@Override
 	public String toString() {
-		return name();
+		return getName();
 	}
 	
 	@Override
