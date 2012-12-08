@@ -1,15 +1,21 @@
 package org.jpc.engine.prolog;
 
 import static java.util.Arrays.asList;
+import static org.jpc.engine.prolog.PrologConstants.ABOLISH;
 import static org.jpc.engine.prolog.PrologConstants.ASSERTA;
 import static org.jpc.engine.prolog.PrologConstants.ASSERTZ;
 import static org.jpc.engine.prolog.PrologConstants.ATOM_CHARS;
 import static org.jpc.engine.prolog.PrologConstants.BAGOF;
 import static org.jpc.engine.prolog.PrologConstants.CD;
+import static org.jpc.engine.prolog.PrologConstants.CLAUSE;
 import static org.jpc.engine.prolog.PrologConstants.CURRENT_OP;
 import static org.jpc.engine.prolog.PrologConstants.CURRENT_PROLOG_FLAG;
+import static org.jpc.engine.prolog.PrologConstants.ENSURE_LOADED;
 import static org.jpc.engine.prolog.PrologConstants.FINDALL;
+import static org.jpc.engine.prolog.PrologConstants.FLUSH_OUTPUT;
 import static org.jpc.engine.prolog.PrologConstants.FORALL;
+import static org.jpc.engine.prolog.PrologConstants.RETRACT;
+import static org.jpc.engine.prolog.PrologConstants.RETRACT_ALL;
 import static org.jpc.engine.prolog.PrologConstants.SETOF;
 import static org.jpc.engine.prolog.PrologConstants.SET_PROLOG_FLAG;
 import static org.jpc.term.ListTerm.listTerm;
@@ -23,16 +29,17 @@ import java.util.Map;
 import org.jpc.engine.logtalk.LogtalkEngine;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
+import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 import org.jpc.term.TermConvertable;
 import org.jpc.term.Variable;
 import org.jpc.util.LogicUtil;
-import org.jpc.util.salt.TermToStringBuilder;
+import org.jpc.util.salt.TermToStringHandler;
 
 /**
  * A utility class for interacting with a Prolog engine
  * Extends the BootstrapLogicEngine by composition
- * It also adds new functionality
+ * It also adds methods for facilitating querying of certain prolog predicates
  * @author sergioc
  *
  */
@@ -51,7 +58,6 @@ public class PrologEngine implements DatabaseHandler {
 	public LogtalkEngine asLogtalkEngine() {
 		return new LogtalkEngine(bootstrapEngine);
 	}
-	
 	
 	
 	/* ********************************************************************************************************************************
@@ -103,34 +109,13 @@ public class PrologEngine implements DatabaseHandler {
 	}
 	
 	
-	
-	
-	
-	
-
-	
-
-
-	
-
-
-
-	
-
-	
-
-	
-	
-	
-	
-	
-	
-	public boolean flushOutput() {
-		return bootstrapEngine.flushOutput();
-	}
+	/* ********************************************************************************************************************************
+	 * FLAGS
+     **********************************************************************************************************************************
+     */
 	
 	public boolean setPrologFlag(TermConvertable flag, TermConvertable flagValue) {
-		return bootstrapEngine.setPrologFlag(flag, flagValue);
+		return createQuery(new Compound(SET_PROLOG_FLAG, asList(flag, flagValue))).hasSolution();
 	}
 	
 	public boolean setPrologFlag(TermConvertable flag, String flagValue) {
@@ -138,7 +123,7 @@ public class PrologEngine implements DatabaseHandler {
 	}
 	
 	public Query currentPrologFlag(TermConvertable flag, TermConvertable flagValue) {
-		return bootstrapEngine.currentPrologFlag(flag, flagValue);
+		return createQuery(new Compound(CURRENT_PROLOG_FLAG, asList(flag, flagValue)));
 	}
 	
 	public String currentPrologFlag(TermConvertable flag) {
@@ -156,8 +141,14 @@ public class PrologEngine implements DatabaseHandler {
 		return currentPrologFlag(PrologFlag.DIALECT);
 	}
 	
+	
+	/* ********************************************************************************************************************************
+	 * OPERATORS
+     **********************************************************************************************************************************
+     */
+	
 	public Query currentOp(TermConvertable priority, TermConvertable specifier, TermConvertable operator) {
-		return bootstrapEngine.currentOp(priority, specifier, operator);
+		return createQuery(new Compound(CURRENT_OP, asList(priority, specifier, operator)));
 	}
 
 	public boolean isBinaryOperator(String op) {
@@ -171,39 +162,64 @@ public class PrologEngine implements DatabaseHandler {
 	}
 	
 	
+	/* ********************************************************************************************************************************
+	 * FILE SYSTEM
+     **********************************************************************************************************************************
+     */
 	
-	
-	
-	@Override
-	public boolean asserta(TermConvertable termConvertable) {
-		return bootstrapEngine.asserta(termConvertable);
+	public boolean cd(TermConvertable path) {
+		Compound compound = new Compound(CD, asList(path));
+		return createQuery(compound).hasSolution();
 	}
 	
+	public boolean cd(String path) {
+		return cd(new Atom(path));
+	}
+	
+	
+	/* ********************************************************************************************************************************
+	 * DATABASE PREDICATES
+     **********************************************************************************************************************************
+     */
+	
+	/**
+	 * Assert a clause in the logic database. Term is asserted as the first fact or rule of the corresponding predicate.
+	 * @param terms the terms to assert
+	 * @return
+	 */
+	@Override
+	public boolean asserta(TermConvertable termConvertable) {
+		return createQuery(new Compound(ASSERTA, asList(termConvertable))).hasSolution();
+	}
+	
+	/**
+	 * Assert a clause in the logic database. Term is asserted as the last fact or rule of the corresponding predicate.
+	 * @param terms the terms to assert
+	 * @return
+	 */
 	@Override
 	public boolean assertz(TermConvertable termConvertable) {
-		return bootstrapEngine.assertz(termConvertable);
+		return createQuery(new Compound(ASSERTZ, asList(termConvertable))).hasSolution();
 	}
 
 	@Override
-	public Query retract(TermConvertable termConvertable) {
-		return bootstrapEngine.retract(termConvertable);
+	public Query retract(TermConvertable termConvertable)  {
+		return createQuery(new Compound(RETRACT, asList(termConvertable)));
 	}
 	
 	@Override
-	public boolean retractAll(TermConvertable termConvertable) {
-		return bootstrapEngine.retractAll(termConvertable);
+	public boolean retractAll(TermConvertable termConvertable)  {
+		return createQuery(new Compound(RETRACT_ALL, asList(termConvertable))).hasSolution();
 	}
-	
+
 	@Override
-	public boolean abolish(TermConvertable termConvertable) {
-		return bootstrapEngine.abolish(termConvertable);
+	public boolean abolish(TermConvertable termConvertable)  {
+		return createQuery(new Compound(ABOLISH, asList(termConvertable))).hasSolution();
 	}
 	
-	@Override
-	public Query clause(TermConvertable head, TermConvertable body) {
-		return bootstrapEngine.clause(head, body);
+	public Query clause(TermConvertable head, TermConvertable body)  {
+		return createQuery(new Compound(CLAUSE, asList(head, body)));
 	}
-	
 	/**
 	 * Assert a list of clauses in the logic database. Terms are asserted as the first facts or rules of the corresponding predicate.
 	 * @param terms the terms to assert
@@ -223,46 +239,54 @@ public class PrologEngine implements DatabaseHandler {
 	}	
 	
 	
+	/* ********************************************************************************************************************************
+	 * FILE LOADER PREDICATES
+     **********************************************************************************************************************************
+     */
+	
 	public boolean ensureLoaded(List<? extends TermConvertable> termConvertables) {
-		return bootstrapEngine.ensureLoaded(termConvertables);
+		return createQuery(new Compound(ENSURE_LOADED, asList(new ListTerm(termConvertables)))).hasSolution();
 	}
 	
 	public boolean ensureLoaded(TermConvertable... termConvertables) {
-		return bootstrapEngine.ensureLoaded(asList(termConvertables));
+		return ensureLoaded(asList(termConvertables));
 	}
 
 	public boolean ensureLoaded(String... resources) {
-		return bootstrapEngine.ensureLoaded(asResourceTerms(asList(resources)));
+		return ensureLoaded(asResourceTerms(asList(resources)));
 	}
 	
-	public boolean cd(TermConvertable path) {
-		return bootstrapEngine.cd(path);
-	}
-	
-	public boolean cd(String path) {
-		return cd(new Atom(path));
-	}
-	
+
+	/* ********************************************************************************************************************************
+	 * HIGH ORDER PREDICATES
+     **********************************************************************************************************************************
+     */
 	public Query bagof(TermConvertable select, TermConvertable exp, TermConvertable all) {
-		return bootstrapEngine.bagof(select, exp, all);
+		return createQuery(new Compound(BAGOF, asList(select, exp, all)));
 	}
 	
 	public Query findall(TermConvertable select, TermConvertable exp, TermConvertable all) {
-		return bootstrapEngine.findall(select, exp, all);
+		return createQuery(new Compound(FINDALL, asList(select, exp, all)));
 	}
 	
 	public Query setof(TermConvertable select, TermConvertable exp, TermConvertable all) {
-		return bootstrapEngine.setof(select, exp, all);
+		return createQuery(new Compound(SETOF, asList(select, exp, all)));
 	}
 	
 	public Query forall(TermConvertable generator, TermConvertable test) {
-		return bootstrapEngine.forall(generator, test);
+		return createQuery(new Compound(FORALL, asList(generator, test)));
 	}
 
 
+	/* ********************************************************************************************************************************
+	 * OTHER PREDICATES
+     **********************************************************************************************************************************
+     */
 	
+	public boolean flushOutput() {
+		return createQuery(new Atom(FLUSH_OUTPUT)).hasSolution();
+	}
 
-	
 	/* ********************************************************************************************************************************
 	 * UTILITY METHODS
      **********************************************************************************************************************************
@@ -293,7 +317,7 @@ public class PrologEngine implements DatabaseHandler {
 	}
 	
 	public String toString(TermConvertable termConvertable) {
-		TermToStringBuilder termToStringBuilder = new TermToStringBuilder(this);
+		TermToStringHandler termToStringBuilder = new TermToStringHandler(this);
 		termConvertable.asTerm().read(termToStringBuilder);
 		return termToStringBuilder.toString();
 	}
