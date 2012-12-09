@@ -9,7 +9,7 @@ import org.jpc.JpcException;
 import org.jpc.salt.JpcTermWriter;
 import org.jpc.util.salt.ChangeVariableNameAdapter;
 import org.jpc.util.salt.ReplaceVariableAdapter;
-import org.jpc.util.salt.VariableNamesCollector;
+import org.jpc.util.salt.VariableNamesCollectorHandler;
 
 
 /**
@@ -133,7 +133,7 @@ public abstract class AbstractTerm implements Term {
 	 */
 	@Override
 	public List<String> getVariablesNames() {
-		VariableNamesCollector variableNamesCollector = new VariableNamesCollector();
+		VariableNamesCollectorHandler variableNamesCollector = new VariableNamesCollectorHandler();
 		read(variableNamesCollector);
 		return variableNamesCollector.getVariableNames();
 	}

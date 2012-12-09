@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.jpc.JpcException;
-import org.jpc.salt.ContentHandler;
+import org.jpc.salt.contenthandler.TermContentHandler;
 import org.jpc.term.visitor.TermVisitor;
 
 /**
@@ -163,7 +163,7 @@ public final class Compound extends AbstractTerm {
 	}
 
 	@Override
-	public void read(ContentHandler contentHandler) {
+	public void read(TermContentHandler contentHandler) {
 		contentHandler.startCompoundName();
 		getName().read(contentHandler);
 		contentHandler.startCompoundArgs();

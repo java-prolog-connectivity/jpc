@@ -5,6 +5,6 @@ package org.jpc.term;
  * @author sergioc
  *
  */
-public interface TermConvertable {
-	public Term asTerm();
+public interface TermConvertable<T extends Term> {
+	public T asTerm();
 }

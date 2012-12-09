@@ -1,5 +1,7 @@
 package org.jpc.salt;
 
+import org.jpc.salt.contenthandler.TermContentHandler;
+
 /**
  * A SALT reader
  * @author sergioc
@@ -7,20 +9,20 @@ package org.jpc.salt;
  */
 public abstract class TermReader {
 
-	protected ContentHandler contentHandler;
+	protected TermContentHandler contentHandler;
 	
 //	public TermReader() {
 //	}
 	
-	public TermReader(ContentHandler contentHandler) {
+	public TermReader(TermContentHandler contentHandler) {
 		this.contentHandler = contentHandler;
 	}
 	
-	public ContentHandler getContentHandler() {
+	public TermContentHandler getContentHandler() {
 		return contentHandler;
 	}
 
-	public void setContentHandler(ContentHandler contentHandler) {
+	public void setContentHandler(TermContentHandler contentHandler) {
 		this.contentHandler = contentHandler;
 	}
 	

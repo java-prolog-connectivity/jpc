@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.jpc.salt.ContentHandler;
+import org.jpc.salt.contenthandler.TermContentHandler;
 
 public class ListTerm<E extends TermConvertable> extends ArrayList<E> implements TermConvertable {
 
@@ -71,7 +71,7 @@ public class ListTerm<E extends TermConvertable> extends ArrayList<E> implements
 		return sb.toString();
 	}
 
-	public void streamEachTo(ContentHandler contentHandler) {
+	public void streamEachTo(TermContentHandler contentHandler) {
 		for(TermConvertable each : this) {
 			each.asTerm().read(contentHandler);
 		}

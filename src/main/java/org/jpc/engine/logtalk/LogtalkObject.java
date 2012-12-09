@@ -51,6 +51,12 @@ public class LogtalkObject implements TermConvertable, DatabaseHandler {
 	}
 	
 	@Override
+	public String toString() {
+		//return logicEngine.toString(asTerm()); //more accurate but less performant
+		return asTerm().toString();
+	}
+	
+	@Override
 	public Term asTerm() {
 		return term;
 	}

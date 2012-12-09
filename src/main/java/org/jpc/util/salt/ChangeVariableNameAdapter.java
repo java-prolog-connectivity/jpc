@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.jpc.salt.ContentHandler;
+import org.jpc.salt.contenthandler.TermContentHandler;
 import org.jpc.term.TermConvertable;
 import org.jpc.term.Variable;
 
 public class ChangeVariableNameAdapter extends ReplaceVariableAdapter {
 	
-	public ChangeVariableNameAdapter(ContentHandler adaptee, Map<String, String> map) {
+	public ChangeVariableNameAdapter(TermContentHandler adaptee, Map<String, String> map) {
 		super(adaptee, asVariableReplacementMap(map));
 	}
 	

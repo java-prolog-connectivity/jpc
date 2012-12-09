@@ -1,15 +1,15 @@
 package org.jpc.util.salt;
 
 import org.jpc.engine.prolog.PrologEngine;
-import org.jpc.salt.DefaultHandler;
+import org.jpc.salt.contenthandler.DefaultTermContentHandler;
 
-public class TermToStringBuilder extends DefaultHandler {
+public class TermToStringHandler extends DefaultTermContentHandler {
 
 	private PrologEngine logicEngine;
 	private StringBuilder sb;
 	private boolean skipCompoundArgSeparator;
 	
-	public TermToStringBuilder(PrologEngine logicEngine) {
+	public TermToStringHandler(PrologEngine logicEngine) {
 		this.logicEngine = logicEngine;
 		this.sb = new StringBuilder();
 	}

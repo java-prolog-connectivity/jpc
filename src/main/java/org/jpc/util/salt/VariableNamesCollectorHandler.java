@@ -5,13 +5,13 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.jpc.salt.DefaultHandler;
+import org.jpc.salt.contenthandler.DefaultTermContentHandler;
 
-public class VariableNamesCollector extends DefaultHandler {
+public class VariableNamesCollectorHandler extends DefaultTermContentHandler {
 	
 	Set<String> variableNames;
 	
-	public VariableNamesCollector() {
+	public VariableNamesCollectorHandler() {
 		variableNames = new LinkedHashSet<String>(); //LinkedHashSet to preserve insertion order
 	}
 	

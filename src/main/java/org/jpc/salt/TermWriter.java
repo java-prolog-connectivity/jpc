@@ -1,37 +1,43 @@
 package org.jpc.salt;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.LinkedList;
 import java.util.List;
 
-public abstract class TermWriter<TermType> extends DefaultHandler {
+import org.jpc.salt.contenthandler.DefaultTermContentHandler;
+
+public abstract class TermWriter<TermType> extends DefaultTermContentHandler {
 	/**
 	 * The terms that have been written using this TermWritter
 	 * Subclasses could decide to stream each processed term somewhere else (e.g., asserting it in a logic engine) instead of storing them here
 	 */
-	private List<TermType> terms = new ArrayList<>();
+	private Deque<TermType> terms = new ArrayDeque<>();
 	
 	/**
 	 * An auxiliar stack for storing partially built terms (like compounds)
 	 */
-	private Deque<TermBuilder<TermType>> processingStack = new LinkedList<>();
+	private Deque<TermBuilder<TermType>> processingStack = new ArrayDeque<>();
 
 	private boolean isProcessingCompound() {
 		return !processingStack.isEmpty();
 	}
 	
 	public List<TermType> getTerms() {
-		return terms;
+		return new ArrayList<>(terms);
 	}
 	
-	protected void addTerm(TermType term) {
-		terms.add(term);
+	protected void addLast(TermType term) {
+		terms.addLast(term);
+	}
+	
+	protected TermType pollLast() {
+		return terms.pollLast();
 	}
 	
 	protected void process(TermType term) {
 		if(!isProcessingCompound())
-			addTerm(term);
+			addLast(term);
 		else {
 			addToProcessingStack(term);
 		}
@@ -54,7 +60,7 @@ public abstract class TermWriter<TermType> extends DefaultHandler {
 	public void endCompoundArgs() {
 		process(processingStack.pop().build());
 	}
-	
+
 	protected abstract TermBuilder<TermType> createCompoundBuilder();
 	
 }

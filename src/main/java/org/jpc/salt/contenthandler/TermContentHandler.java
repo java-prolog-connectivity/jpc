@@ -1,8 +1,8 @@
-package org.jpc.salt;
+package org.jpc.salt.contenthandler;
 
 
 
-public interface ContentHandler {
+public interface TermContentHandler {
 
 	public abstract void startIntegerTerm(long value);
 	public abstract void startFloatTerm(double value);

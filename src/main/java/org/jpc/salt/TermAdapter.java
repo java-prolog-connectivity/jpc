@@ -1,19 +1,21 @@
 package org.jpc.salt;
 
+import org.jpc.salt.contenthandler.TermContentHandler;
+
 /**
  * A SALT adapter
  * @author sergioc
  *
  */
-public class TermAdapter implements ContentHandler {
+public class TermAdapter implements TermContentHandler {
 
-	protected ContentHandler contentHandler;
+	protected TermContentHandler contentHandler;
 
-	public TermAdapter(ContentHandler contentHandler) {
+	public TermAdapter(TermContentHandler contentHandler) {
 		this.contentHandler = contentHandler;
 	}
 	
-	public ContentHandler getContentHandler() {
+	public TermContentHandler getContentHandler() {
 		return contentHandler;
 	}
 

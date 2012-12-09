@@ -3,7 +3,7 @@ package org.jpc.term;
 import java.util.List;
 import java.util.Map;
 
-import org.jpc.salt.ContentHandler;
+import org.jpc.salt.contenthandler.TermContentHandler;
 import org.jpc.term.visitor.TermVisitor;
 
 /**
@@ -136,5 +136,5 @@ public interface Term extends TermConvertable {
 	 * Reads the contents of this term (i.e., generates events) to a content handler
 	 * @param contentHandler the content handler that will receive the events describing the structure of this term
 	 */
-	public abstract void read(ContentHandler contentHandler);
+	public abstract void read(TermContentHandler contentHandler);
 }

@@ -1,4 +1,4 @@
-package org.jpc.salt;
+package org.jpc.salt.contenthandler;
 
 
 /**
@@ -7,7 +7,7 @@ package org.jpc.salt;
  * @author sergioc
  *
  */
-public class DefaultHandler implements ContentHandler {
+public class DefaultTermContentHandler implements TermContentHandler {
 
 	@Override
 	public void startIntegerTerm(long value) {
@@ -45,5 +45,4 @@ public class DefaultHandler implements ContentHandler {
 	public void endCompoundArgs() {
 	}
 
-	
 }

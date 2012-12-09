@@ -2,7 +2,7 @@ package org.jpc.term;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import org.jpc.salt.ContentHandler;
+import org.jpc.salt.contenthandler.TermContentHandler;
 import org.jpc.term.visitor.TermVisitor;
 
 /**
@@ -91,7 +91,7 @@ public final class Variable extends AbstractTerm {
 	}
 
 	@Override
-	public void read(ContentHandler contentHandler) {
+	public void read(TermContentHandler contentHandler) {
 		contentHandler.startVariable(name);
 		
 	}
