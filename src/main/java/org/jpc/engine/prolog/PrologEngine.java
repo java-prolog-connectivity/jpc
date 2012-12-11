@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jpc.engine.logtalk.LogtalkEngine;
+import org.jpc.term.AbstractTerm;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
@@ -34,7 +35,6 @@ import org.jpc.term.Term;
 import org.jpc.term.TermConvertable;
 import org.jpc.term.Variable;
 import org.jpc.util.LogicUtil;
-import org.jpc.util.salt.TermToStringHandler;
 
 /**
  * A utility class for interacting with a Prolog engine
@@ -316,21 +316,9 @@ public class PrologEngine implements DatabaseHandler {
 			return new Atom(resourceName);
 	}
 	
-	public String toString(TermConvertable termConvertable) {
-		TermToStringHandler termToStringBuilder = new TermToStringHandler(this);
-		termConvertable.asTerm().read(termToStringBuilder);
-		return termToStringBuilder.toString();
-	}
-	
 	public String termSequenceToString(TermConvertable sequenceTermConvertable) {
 		List<Term> terms = LogicUtil.sequenceAsTerms(sequenceTermConvertable);
-		String sequenceString = "";
-		for(int i = 0; i<terms.size(); i++) {
-			sequenceString += toString(terms.get(i));
-			if(i<terms.size()-1)
-				sequenceString += ", ";
-		}
-		return sequenceString;
+		return AbstractTerm.toString(this, terms);
 	}
 
 }
