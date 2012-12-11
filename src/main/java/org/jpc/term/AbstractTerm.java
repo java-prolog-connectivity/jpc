@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jpc.JpcException;
+import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.salt.JpcTermWriter;
 import org.jpc.util.salt.ChangeVariableNameAdapter;
 import org.jpc.util.salt.ReplaceVariableAdapter;
@@ -175,6 +176,8 @@ public abstract class AbstractTerm implements Term {
 		return equals(o.asTerm());
 	}
 
+	public abstract String toString(PrologEngine logicEngine);
+	
 	
 	/**
 	 * @param   t1  a list of Terms
@@ -218,9 +221,22 @@ public abstract class AbstractTerm implements Term {
 	 * @return String representation of a list of Terms
 	 */
 	public static <T extends TermConvertable> String toString(List<T> termObjects) {
-		return toString(termObjects.<TermConvertable>toArray(new TermConvertable[]{}));
+		return toString(termObjects.toArray(new TermConvertable[]{}));
 	}
 	
-
+	public static <T extends TermConvertable> String toString(PrologEngine logicEngine, T... termObjects) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < termObjects.length; ++i) {
+			sb.append(termObjects[i].asTerm().toString(logicEngine));
+			if (i != termObjects.length - 1) {
+				sb.append(", ");
+			}
+		}
+		return sb.toString();
+	}
+	
+	public static <T extends TermConvertable> String toString(PrologEngine logicEngine, List<T> termObjects) {
+		return toString(logicEngine, termObjects.toArray(new TermConvertable[]{}));
+	}
 
 }

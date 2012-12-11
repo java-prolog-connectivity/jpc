@@ -1,7 +1,8 @@
 package org.jpc.term;
 
 import org.jpc.JpcException;
-import org.jpc.salt.contenthandler.TermContentHandler;
+import org.jpc.engine.prolog.PrologEngine;
+import org.jpc.salt.ContentHandler;
 import org.jpc.term.visitor.TermVisitor;
 
 /**
@@ -81,6 +82,10 @@ public final class IntegerTerm extends AbstractTerm {
 	}
 	
 	@Override
+	public String toString(PrologEngine logicEngine) {
+		return toString();
+	}
+	@Override
 	public int hashCode() {
 		return Long.valueOf(value).hashCode();
 	}
@@ -103,7 +108,7 @@ public final class IntegerTerm extends AbstractTerm {
 	}
 
 	@Override
-	public void read(TermContentHandler contentHandler) {
+	public void read(ContentHandler contentHandler) {
 		contentHandler.startIntegerTerm(value);
 	}
 }

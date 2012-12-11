@@ -1,6 +1,7 @@
 package org.jpc.term;
 
-import org.jpc.salt.contenthandler.TermContentHandler;
+import org.jpc.engine.prolog.PrologEngine;
+import org.jpc.salt.ContentHandler;
 import org.jpc.term.visitor.TermVisitor;
 
 
@@ -71,7 +72,11 @@ public final class FloatTerm extends AbstractTerm {
 		return ""+value;
 	}
 
-
+	@Override
+	public String toString(PrologEngine logicEngine) {
+		return toString();
+	}
+	
 	@Override
 	public boolean hasFunctor(TermConvertable nameTerm, int arity) {
 		return termEquals(nameTerm) && arity == 0;
@@ -99,8 +104,9 @@ public final class FloatTerm extends AbstractTerm {
 	}
 
 	@Override
-	public void read(TermContentHandler contentHandler) {
+	public void read(ContentHandler contentHandler) {
 		contentHandler.startFloatTerm(value);
 	}
+
 
 }

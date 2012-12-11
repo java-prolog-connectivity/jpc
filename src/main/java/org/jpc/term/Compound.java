@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Objects;
 
 import org.jpc.JpcException;
-import org.jpc.salt.contenthandler.TermContentHandler;
+import org.jpc.engine.prolog.PrologEngine;
+import org.jpc.salt.ContentHandler;
 import org.jpc.term.visitor.TermVisitor;
 
 /**
@@ -119,7 +120,12 @@ public final class Compound extends AbstractTerm {
 	 */
 	@Override
 	public String toString() {
-		return getName().toString() + (args.size() > 0 ? "(" + AbstractTerm.toString(args) + ")" : "");
+		return getName().toString() + "(" + AbstractTerm.toString(args) + ")";
+	}
+	
+	@Override
+	public String toString(PrologEngine logicEngine) {
+		return getName().toString(logicEngine) + "(" + AbstractTerm.toString(logicEngine, args) + ")";
 	}
 	
 	@Override
@@ -163,16 +169,13 @@ public final class Compound extends AbstractTerm {
 	}
 
 	@Override
-	public void read(TermContentHandler contentHandler) {
-		contentHandler.startCompoundName();
+	public void read(ContentHandler contentHandler) {
+		contentHandler.startCompound();
 		getName().read(contentHandler);
-		contentHandler.startCompoundArgs();
 		for(Term child: args) {
-			contentHandler.startCompoundArg();
 			child.read(contentHandler);
-			contentHandler.endCompoundArg();
 		}
-		contentHandler.endCompoundArgs();
+		contentHandler.endCompound();
 	}
 
 }

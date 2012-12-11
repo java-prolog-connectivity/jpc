@@ -3,7 +3,8 @@ package org.jpc.term;
 import static org.jpc.engine.prolog.PrologConstants.EMPTY_LIST_SYMBOL;
 
 import org.jpc.JpcException;
-import org.jpc.salt.contenthandler.TermContentHandler;
+import org.jpc.engine.prolog.PrologEngine;
+import org.jpc.salt.ContentHandler;
 import org.jpc.term.visitor.TermVisitor;
 
 /**
@@ -55,6 +56,11 @@ public final class Atom extends AbstractTerm {
 	}
 	
 	@Override
+	public String toString(PrologEngine logicEngine) {
+		return logicEngine.escape(getName());
+	}
+	
+	@Override
 	public boolean isList() {
 		return equals(EMPTY_LIST);
 	}
@@ -73,7 +79,7 @@ public final class Atom extends AbstractTerm {
 	}
 	
 	@Override
-	public void read(TermContentHandler contentHandler) {
+	public void read(ContentHandler contentHandler) {
 		contentHandler.startAtom(name);
 	}
 	

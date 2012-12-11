@@ -1,64 +1,73 @@
 package org.jpc.salt;
 
-import org.jpc.salt.contenthandler.TermContentHandler;
 
 /**
  * A SALT adapter
  * @author sergioc
  *
  */
-public class TermAdapter implements TermContentHandler {
+public class TermAdapter implements ContentHandler {
 
-	protected TermContentHandler contentHandler;
+	protected ContentHandler contentHandler;
 
-	public TermAdapter(TermContentHandler contentHandler) {
+	public TermAdapter(ContentHandler contentHandler) {
 		this.contentHandler = contentHandler;
 	}
 	
-	public TermContentHandler getContentHandler() {
+	public ContentHandler getContentHandler() {
 		return contentHandler;
 	}
 
-
 	@Override
-	public void startIntegerTerm(long value) {
+	public ContentHandler startIntegerTerm(long value) {
 		contentHandler.startIntegerTerm(value);
+		return this;
 	}
 
 	@Override
-	public void startFloatTerm(double value) {
+	public ContentHandler startFloatTerm(double value) {
 		contentHandler.startFloatTerm(value);
+		return this;
 	}
 
 	@Override
-	public void startVariable(String variableName) {
+	public ContentHandler startVariable(String variableName) {
 		contentHandler.startVariable(variableName);
+		return this;
 	}
 
 	@Override
-	public void startAtom(String atomName) {
+	public ContentHandler startAtom(String atomName) {
 		contentHandler.startAtom(atomName);
+		return this;
 	}
 
 
-	public void startCompoundName() {
-		contentHandler.startCompoundName();
+	public ContentHandler startCompound() {
+		contentHandler.startCompound();
+		return this;
 	}
 
-	public void startCompoundArgs() {
-		contentHandler.startCompoundArgs();
-	}
-
-	public void startCompoundArg() {
-		contentHandler.startCompoundArg();
-	}
-
-	public void endCompoundArg() {
-		contentHandler.endCompoundArg();
-	}
-
-	public void endCompoundArgs() {
-		contentHandler.endCompoundArgs();
+	public ContentHandler endCompound() {
+		contentHandler.endCompound();
+		return this;
 	}
 	
+	
+
+	public ContentHandler startPrologDirective() {
+		contentHandler.startPrologDirective();
+		return this;
+	}
+
+	public ContentHandler startPrologClause() {
+		contentHandler.startPrologClause();
+		return this;
+	}
+
+	public ContentHandler startLogtalkObjectClause() {
+		contentHandler.startLogtalkObjectClause();
+		return this;
+	}
+
 }
