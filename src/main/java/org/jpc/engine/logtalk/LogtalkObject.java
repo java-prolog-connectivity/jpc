@@ -21,6 +21,7 @@ import static org.jpc.engine.prolog.PrologConstants.RETRACT_ALL;
 import org.jpc.engine.prolog.DatabaseHandler;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.engine.prolog.Query;
+import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
 import org.jpc.term.TermConvertable;
@@ -30,7 +31,7 @@ public class LogtalkObject implements TermConvertable, DatabaseHandler {
 	public static boolean isLogtalkMessage(TermConvertable termConvertable) {
 		Term term = termConvertable.asTerm();
 		return term instanceof Compound && 
-				((Compound)term).getName().equals(LogtalkConstants.LOGTALK_OPERATOR) &&
+				((Compound)term).getName().equals(new Atom(LogtalkConstants.LOGTALK_OPERATOR)) &&
 				((Compound)term).arity() == 2;
 	}
 	
