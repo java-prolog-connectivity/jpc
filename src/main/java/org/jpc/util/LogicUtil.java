@@ -3,16 +3,8 @@ package org.jpc.util;
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Arrays.asList;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,9 +16,6 @@ import org.jpc.term.IntegerTerm;
 import org.jpc.term.Term;
 import org.jpc.term.TermConvertable;
 import org.jpc.term.Variable;
-
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterators;
 
 /**
  * An utility class for general purpose queries and term manipulation
@@ -43,8 +32,11 @@ public class LogicUtil {
 	 * @return whether the term is an unification
 	 */
 	public static boolean isUnification(TermConvertable termConvertable) {
-		Term term = termConvertable.asTerm();
-		return term instanceof Compound && ((Compound)term).isUnification();
+		return termConvertable.asTerm().hasFunctor("=", 2);
+	}
+	
+	public static boolean isPair(TermConvertable termConvertable) {
+		return termConvertable.asTerm().hasFunctor("-", 2);
 	}
 	
 	/**

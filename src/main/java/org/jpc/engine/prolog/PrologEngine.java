@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jpc.engine.logtalk.LogtalkEngine;
+import org.jpc.query.Query;
 import org.jpc.term.AbstractTerm;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;

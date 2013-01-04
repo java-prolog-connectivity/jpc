@@ -6,7 +6,7 @@ import java.util.Deque;
 import java.util.List;
 
 
-public abstract class TermWriter<TermType> extends DefaultContentHandler {
+public abstract class TermWriter<TermType> extends DefaultTermContentHandler {
 	/**
 	 * The terms that have been written using this TermWritter
 	 * Subclasses could decide to stream each processed term somewhere else (e.g., asserting it in a logic engine) instead of storing them here
@@ -55,13 +55,13 @@ public abstract class TermWriter<TermType> extends DefaultContentHandler {
 	}
 	
 	@Override
-	public ContentHandler startCompound() {
+	public TermContentHandler startCompound() {
 		processingStack.push(createCompoundBuilder());
 		return this;
 	}
 
 	@Override
-	public ContentHandler endCompound() {
+	public TermContentHandler endCompound() {
 		process(processingStack.pop().build());
 		return this;
 	}

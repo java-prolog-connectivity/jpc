@@ -1,5 +1,6 @@
 package org.jpc.engine.prolog;
 
+import org.jpc.query.Query;
 import org.jpc.term.TermConvertable;
 
 public interface DatabaseHandler {

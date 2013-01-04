@@ -14,7 +14,7 @@ import org.jpc.engine.logtalk.LogtalkEngine;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Atom;
 import org.jpc.term.Term;
-import org.minitoolbox.ReflectionUtil;
+import org.minitoolbox.reflection.ReflectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

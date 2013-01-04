@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jpc.engine.prolog.PrologEngine;
-import org.jpc.salt.ContentHandler;
+import org.jpc.salt.TermContentHandler;
 import org.jpc.term.visitor.TermVisitor;
 
 /**
@@ -93,7 +93,7 @@ public interface Term extends TermConvertable {
 	 * @param map maps variable names to values.
 	 * @return a new term with its variables replaced according to the map
 	 */
-	public abstract Term replaceVariables(Map<String, TermConvertable> map);
+	public abstract Term replaceVariables(Map<String, ? extends TermConvertable> map);
 
 	/**
 	 * Replace all the variable names according to the map parameter
@@ -137,7 +137,7 @@ public interface Term extends TermConvertable {
 	 * Reads the contents of this term (i.e., generates events) to a content handler
 	 * @param contentHandler the content handler that will receive the events describing the structure of this term
 	 */
-	public abstract void read(ContentHandler contentHandler);
+	public abstract void read(TermContentHandler contentHandler);
 	
 	public abstract String toString(PrologEngine logicEngine);
 }

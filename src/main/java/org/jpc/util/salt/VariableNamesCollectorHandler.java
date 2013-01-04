@@ -5,10 +5,10 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.jpc.salt.ContentHandler;
-import org.jpc.salt.DefaultContentHandler;
+import org.jpc.salt.TermContentHandler;
+import org.jpc.salt.DefaultTermContentHandler;
 
-public class VariableNamesCollectorHandler extends DefaultContentHandler {
+public class VariableNamesCollectorHandler extends DefaultTermContentHandler {
 	
 	Set<String> variableNames;
 	
@@ -17,7 +17,7 @@ public class VariableNamesCollectorHandler extends DefaultContentHandler {
 	}
 	
 	@Override
-	public ContentHandler startVariable(String name) {
+	public TermContentHandler startVariable(String name) {
 		variableNames.add(name);
 		return this;
 	}

@@ -2,7 +2,6 @@ package org.jpc.term;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.jpc.engine.prolog.PrologConstants.CONS_FUNCTOR;
-import static org.jpc.util.DefaultTermConverter.asTermList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +10,7 @@ import java.util.Objects;
 
 import org.jpc.JpcException;
 import org.jpc.engine.prolog.PrologEngine;
-import org.jpc.salt.ContentHandler;
+import org.jpc.salt.TermContentHandler;
 import org.jpc.term.visitor.TermVisitor;
 
 /**
@@ -20,10 +19,6 @@ import org.jpc.term.visitor.TermVisitor;
  *
  */
 public final class Compound extends AbstractTerm {
-	
-	public boolean isUnification() {
-		return hasFunctor("=", 2);
-	}
 	
 	/**
 	 * the name of this Compound
@@ -48,7 +43,7 @@ public final class Compound extends AbstractTerm {
 	public Compound(TermConvertable name, List<? extends TermConvertable> args) {
 		checkArgument(!args.isEmpty(), "A compound term must have at least one argument");
 		this.name = name.asTerm();
-		this.args = asTermList(args);
+		this.args = new ListTerm(args).asTerms();
 	}
 	
 	
@@ -109,9 +104,6 @@ public final class Compound extends AbstractTerm {
 	}
 	
 	
-
-	
-	
 	/**
 	 * Returns a prefix functional representation of a Compound of the form name(arg1,...),
 	 * and each argument is represented according to its toString() method.
@@ -169,7 +161,7 @@ public final class Compound extends AbstractTerm {
 	}
 
 	@Override
-	public void read(ContentHandler contentHandler) {
+	public void read(TermContentHandler contentHandler) {
 		contentHandler.startCompound();
 		getName().read(contentHandler);
 		for(Term child: args) {

@@ -111,7 +111,7 @@ public abstract class AbstractTerm implements Term {
 	 * @see org.jpc.term.Term#replaceVariables(java.util.Map)
 	 */
 	@Override
-	public Term replaceVariables(Map<String, TermConvertable> map) {
+	public Term replaceVariables(Map<String, ? extends TermConvertable> map) {
 		JpcTermWriter termWriter = new JpcTermWriter();
 		ReplaceVariableAdapter replaceVariableAdapter = new ReplaceVariableAdapter(termWriter, map);
 		read(replaceVariableAdapter);

@@ -4,7 +4,7 @@ import static org.jpc.engine.prolog.PrologConstants.EMPTY_LIST_SYMBOL;
 
 import org.jpc.JpcException;
 import org.jpc.engine.prolog.PrologEngine;
-import org.jpc.salt.ContentHandler;
+import org.jpc.salt.TermContentHandler;
 import org.jpc.term.visitor.TermVisitor;
 
 /**
@@ -79,7 +79,7 @@ public final class Atom extends AbstractTerm {
 	}
 	
 	@Override
-	public void read(ContentHandler contentHandler) {
+	public void read(TermContentHandler contentHandler) {
 		contentHandler.startAtom(name);
 	}
 	

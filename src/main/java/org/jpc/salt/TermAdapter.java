@@ -6,68 +6,74 @@ package org.jpc.salt;
  * @author sergioc
  *
  */
-public class TermAdapter implements ContentHandler {
+public class TermAdapter implements TermContentHandler {
 
-	protected ContentHandler contentHandler;
+	protected TermContentHandler contentHandler;
 
-	public TermAdapter(ContentHandler contentHandler) {
+	public TermAdapter(TermContentHandler contentHandler) {
 		this.contentHandler = contentHandler;
 	}
 	
-	public ContentHandler getContentHandler() {
+	public TermContentHandler getContentHandler() {
 		return contentHandler;
 	}
 
 	@Override
-	public ContentHandler startIntegerTerm(long value) {
+	public TermContentHandler startIntegerTerm(long value) {
 		contentHandler.startIntegerTerm(value);
 		return this;
 	}
 
 	@Override
-	public ContentHandler startFloatTerm(double value) {
+	public TermContentHandler startFloatTerm(double value) {
 		contentHandler.startFloatTerm(value);
 		return this;
 	}
 
 	@Override
-	public ContentHandler startVariable(String variableName) {
+	public TermContentHandler startVariable(String variableName) {
 		contentHandler.startVariable(variableName);
 		return this;
 	}
 
 	@Override
-	public ContentHandler startAtom(String atomName) {
+	public TermContentHandler startAtom(String atomName) {
 		contentHandler.startAtom(atomName);
 		return this;
 	}
 
 
-	public ContentHandler startCompound() {
+	public TermContentHandler startCompound() {
 		contentHandler.startCompound();
 		return this;
 	}
 
-	public ContentHandler endCompound() {
+	public TermContentHandler endCompound() {
 		contentHandler.endCompound();
 		return this;
 	}
 	
 	
 
-	public ContentHandler startPrologDirective() {
-		contentHandler.startPrologDirective();
-		return this;
-	}
-
-	public ContentHandler startPrologClause() {
-		contentHandler.startPrologClause();
-		return this;
-	}
-
-	public ContentHandler startLogtalkObjectClause() {
-		contentHandler.startLogtalkObjectClause();
-		return this;
-	}
+//	public TermContentHandler startDirective() {
+//		contentHandler.startDirective();
+//		return this;
+//	}
+//
+//	public TermContentHandler startClause() {
+//		contentHandler.startClause();
+//		return this;
+//	}
+//
+//	public TermContentHandler startLogtalkObjectContext() {
+//		contentHandler.startLogtalkObjectContext();
+//		return this;
+//	}
+//
+//	@Override
+//	public TermContentHandler endLogtalkObjectContext() {
+//		contentHandler.endLogtalkObjectContext();
+//		return this;
+//	}
 
 }

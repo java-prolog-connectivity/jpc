@@ -2,9 +2,8 @@ package org.jpc.util;
 
 import static java.util.Arrays.asList;
 import static org.jpc.term.ListTerm.listTerm;
-import static org.jpc.util.DefaultTermConverter.deify;
-import static org.jpc.util.DefaultTermConverter.asTerm;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
@@ -17,6 +16,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.jpc.converter.fromterm.DefaultTermToObjectConverter;
+import org.jpc.converter.toterm.DefaultObjectToTermConverter;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.FloatTerm;
@@ -29,6 +30,10 @@ import org.junit.Test;
 public class DefaultTermConverterTest {
 
 	// *** TERM TO OBJECTS TESTS ***
+	
+	private Term asTerm(Object o) {
+		return new DefaultObjectToTermConverter().apply(o);
+	}
 	
 	@Test
 	public void testNullToTerm() {
@@ -92,7 +97,7 @@ public class DefaultTermConverterTest {
 	@Test
 	public void testEntryToTerm() {
 		Map.Entry<String, Integer> entry = new AbstractMap.SimpleEntry<>("apple", 10);
-		assertEquals(new Compound("=", asList(new Atom("apple"), new IntegerTerm(10))), asTerm(entry));
+		assertEquals(new Compound("-", asList(new Atom("apple"), new IntegerTerm(10))), asTerm(entry));
 	}
 	
 	@Test
@@ -103,8 +108,8 @@ public class DefaultTermConverterTest {
 		}};
 		List<Term> listTerm = asTerm(map).asList();
 		assertEquals(2, listTerm.size());
-		assertEquals(new Compound("=", asList(new Atom("apple"), new IntegerTerm(10))), listTerm.get(0));
-		assertEquals(new Compound("=", asList(new Atom("orange"), new IntegerTerm(20))), listTerm.get(1));
+		assertEquals(new Compound("-", asList(new Atom("apple"), new IntegerTerm(10))), listTerm.get(0));
+		assertEquals(new Compound("-", asList(new Atom("orange"), new IntegerTerm(20))), listTerm.get(1));
 	}
 	
 	@Test
@@ -131,38 +136,42 @@ public class DefaultTermConverterTest {
 	
 	// *** OBJECT TO TERM TESTS ***
 	
+	private Object asObject(Term t) {
+		return new DefaultTermToObjectConverter().apply(t);
+	}
+	
 	@Test
 	public void testNullTermToObject() {
-		assertEquals(null, deify(new Variable("X")));
+		assertNull(asObject(new Variable("X")));
 	}
 	
 	@Test
 	public void testTermToString() {
-		assertEquals("apple", deify(new Atom("apple")));
+		assertEquals("apple", asObject(new Atom("apple")));
 	}
 	
 	@Test
 	public void testTermToBoolean() {
-		assertEquals(true, deify(new Atom("true")));
-		assertEquals(false, deify(new Atom("false")));
+		assertEquals(true, asObject(new Atom("true")));
+		assertEquals(false, asObject(new Atom("false")));
 	}
 	
 	@Test
 	public void testTermToInt() {
-		assertEquals(10, deify(new IntegerTerm(10)));
+		assertEquals(10, asObject(new IntegerTerm(10)));
 	}
 	
 	@Test
 	public void testTermToDouble() {
-		assertEquals(10.5, deify(new FloatTerm(10.5)));
+		assertEquals(10.5, asObject(new FloatTerm(10.5)));
 	}
 	
 	@Test
 	public void testTermToEntry() {
 		Term entryTerm = new Compound("=", asList(new Atom("apple"), new IntegerTerm(10)));
 		Map.Entry<String, Integer> entry = new AbstractMap.SimpleEntry<>("apple", 10);
-		assertEquals(entry.getKey(), ((Map.Entry)deify(entryTerm)).getKey());
-		assertEquals(entry.getValue(), ((Map.Entry)deify(entryTerm)).getValue());
+		assertEquals(entry.getKey(), ((Map.Entry)asObject(entryTerm)).getKey());
+		assertEquals(entry.getValue(), ((Map.Entry)asObject(entryTerm)).getValue());
 	}
 	
 	@Test
@@ -170,7 +179,7 @@ public class DefaultTermConverterTest {
 		Compound c1 = new Compound("=", asList(new Atom("apple"), new IntegerTerm(10)));
 		Compound c2 = new Compound("=", asList(new Atom("orange"), new IntegerTerm(20)));
 		TermConvertable list = listTerm(c1, c2);
-		Map map = (Map) deify(list.asTerm());
+		Map map = (Map) asObject(list.asTerm());
 		assertEquals(2, map.size());
 		assertEquals(map.get("apple"), 10);
 		assertEquals(map.get("orange"), 20);
@@ -179,7 +188,7 @@ public class DefaultTermConverterTest {
 	@Test
 	public void testTermToList() {
 		TermConvertable listTerm = listTerm(new Atom("apple"), new Variable("X"));
-		List list = (List) deify(listTerm.asTerm());
+		List list = (List) asObject(listTerm.asTerm());
 		assertEquals(2, list.size());
 		assertEquals(list.get(0), "apple");
 		assertEquals(list.get(1), null);

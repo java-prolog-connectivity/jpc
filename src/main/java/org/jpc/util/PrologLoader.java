@@ -9,14 +9,10 @@ import org.jpc.engine.prolog.PrologEngine;
  */
 public abstract class PrologLoader {
 
-	private PrologEngine logicEngine;
+	protected PrologEngine logicEngine;
 	
 	public PrologLoader(PrologEngine logicEngine) {
 		this.logicEngine = logicEngine;
-	}
-	
-	public PrologEngine getLogicEngine() {
-		return logicEngine;
 	}
 	
 	public abstract void load();

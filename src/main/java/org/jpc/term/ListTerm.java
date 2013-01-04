@@ -3,14 +3,13 @@ package org.jpc.term;
 import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.jpc.salt.ContentHandler;
+import org.jpc.salt.TermContentHandler;
 
 public class ListTerm<E extends TermConvertable> extends ArrayList<E> implements TermConvertable {
-
+	
 	public static <E extends TermConvertable> ListTerm listTerm(E ...terms) {
 		return new ListTerm(asList(terms));
 	}
@@ -40,13 +39,13 @@ public class ListTerm<E extends TermConvertable> extends ArrayList<E> implements
 	 * Transforms this list of TermConvertables to a list of Terms
 	 * @return
 	 */
-//	public List<Term> asTerms() {
-//		List<Term> terms = new ArrayList<>();
-//		for(TermConvertable termConvertable : this) {
-//			terms.add(termConvertable.asTerm());
-//		}
-//		return terms;
-//	}
+	public List<Term> asTerms() {
+		List<Term> terms = new ArrayList<>();
+		for(TermConvertable termConvertable : this) {
+			terms.add(termConvertable.asTerm());
+		}
+		return terms;
+	}
 	
 	@Override
 	public int hashCode() {
@@ -71,7 +70,7 @@ public class ListTerm<E extends TermConvertable> extends ArrayList<E> implements
 		return sb.toString();
 	}
 
-	public void streamEachTo(ContentHandler contentHandler) {
+	public void readEach(TermContentHandler contentHandler) {
 		for(TermConvertable each : this) {
 			each.asTerm().read(contentHandler);
 		}

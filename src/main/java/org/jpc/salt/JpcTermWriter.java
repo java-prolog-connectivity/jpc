@@ -9,25 +9,25 @@ import org.jpc.term.Variable;
 public class JpcTermWriter extends TermWriter<Term> {
 
 	@Override
-	public ContentHandler startIntegerTerm(long value) {
+	public TermContentHandler startIntegerTerm(long value) {
 		process(new IntegerTerm(value));
 		return this;
 	}
 
 	@Override
-	public ContentHandler startFloatTerm(double value) {
+	public TermContentHandler startFloatTerm(double value) {
 		process(new FloatTerm(value));
 		return this;
 	}
 
 	@Override
-	public ContentHandler startVariable(String name) {
+	public TermContentHandler startVariable(String name) {
 		process(new Variable(name));
 		return this;
 	}
 	
 	@Override
-	public ContentHandler startAtom(String name) {
+	public TermContentHandler startAtom(String name) {
 		process(new Atom(name));
 		return this;
 	}

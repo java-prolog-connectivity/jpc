@@ -1,7 +1,9 @@
-package org.jpc;
+package org.jpc.converter;
+
+import org.jpc.JpcException;
 
 /**
- * This exception should be thrown when a problem occurs when transforming a Jpc term representation to another representation or vice-versa
+ * This exception should be thrown when a problem occurs when transforming an arbitrary object to its Jpc term representation or vice-versa
  * @author sergioc
  *
  */
@@ -24,7 +26,7 @@ public class JpcConversionException extends JpcException {
 	}
 	
 	private static String formatMessage(String from, String to, String reason) {
-		StringBuilder sb = new StringBuilder("Impossible to transform the term model from " + from + " to " + to + ". ");
+		StringBuilder sb = new StringBuilder("Impossible to convert from " + from + " to " + to + ". ");
 		if(reason != null)
 			sb.append("Cause: " + reason);
 		return sb.toString();

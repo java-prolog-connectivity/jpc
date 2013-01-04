@@ -3,7 +3,7 @@ package org.jpc.engine.logtalk;
 import static java.util.Arrays.asList;
 
 import org.jpc.engine.prolog.PrologEngine;
-import org.jpc.engine.prolog.Query;
+import org.jpc.query.Query;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.TermConvertable;
