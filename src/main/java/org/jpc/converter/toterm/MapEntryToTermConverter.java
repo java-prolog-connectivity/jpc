@@ -15,6 +15,10 @@ public class MapEntryToTermConverter implements ObjectToTermConverter<Entry> {
 	private ObjectToTermConverter<Object> valueConverter;
 	public String entrySeparator;
 	
+	public MapEntryToTermConverter() {
+		this(new DefaultObjectToTermConverter(), new DefaultObjectToTermConverter());
+	}
+	
 	public MapEntryToTermConverter(ObjectToTermConverter keyConverter, ObjectToTermConverter valueConverter) {
 		this(keyConverter, valueConverter, DEFAULT_ENTRY_SEPARATOR);
 	}

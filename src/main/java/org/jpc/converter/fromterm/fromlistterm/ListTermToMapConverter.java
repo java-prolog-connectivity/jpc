@@ -8,27 +8,19 @@ import java.util.Map.Entry;
 import org.jpc.converter.fromterm.TermToMapEntryConverter;
 import org.jpc.term.Term;
 
-public class ListTermToMapConverter<T extends Map> extends ListTermToObjectConverter<T> {
-
-	private Class<T> mapClass;
+public class ListTermToMapConverter extends ListTermToObjectConverter<Map> {
 	
-	public ListTermToMapConverter(TermToMapEntryConverter mapEntryConverter) {
-		this(mapEntryConverter, (Class<T>) HashMap.class);
+	public ListTermToMapConverter() {
+		this(new TermToMapEntryConverter());
 	}
 	
-	public ListTermToMapConverter(TermToMapEntryConverter mapEntryConverter, Class<T> mapClass) {
+	public ListTermToMapConverter(TermToMapEntryConverter mapEntryConverter) {
 		super(mapEntryConverter);
-		this.mapClass = mapClass;
 	}
 	
 	@Override
-	public T apply(Term listTerm) {
-		T map = null;
-		try {
-			map = mapClass.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
+	public Map apply(Term listTerm) {
+		Map map = new HashMap<>();
 		List<Term> listMembers = listTerm.asList();
 		for(Term term : listMembers) {
 			Entry entry = (Entry) getMemberConverter().apply(term);

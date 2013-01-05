@@ -2,12 +2,17 @@ package org.jpc.converter.toterm.tolistterm;
 
 import java.util.Iterator;
 
+import org.jpc.converter.toterm.DefaultObjectToTermConverter;
 import org.jpc.converter.toterm.ObjectToTermConverter;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 
 public class IteratorToTermConverter extends ObjectToListTermConverter<Iterator> {
 
+	public IteratorToTermConverter() {
+		this(new DefaultObjectToTermConverter());
+	}
+	
 	public IteratorToTermConverter(ObjectToTermConverter memberConverter) {
 		super(memberConverter);
 	}
