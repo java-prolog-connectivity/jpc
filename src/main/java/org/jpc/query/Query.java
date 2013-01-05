@@ -30,10 +30,7 @@ public abstract class Query extends Cursor<Map<String,Term>> implements TermConv
 	protected PrologEngine getLogicEngine() {
 		return logicEngine;
 	}
-	
-	
 
-	
 	public Cursor<Term> select(String selector) {
 		return select(logicEngine.asTerm(selector));
 	}
@@ -77,7 +74,6 @@ public abstract class Query extends Cursor<Map<String,Term>> implements TermConv
 	 */
 	@Override
 	public abstract Map<String, Term> next();
-
 
 	@Override
 	public String toString() {

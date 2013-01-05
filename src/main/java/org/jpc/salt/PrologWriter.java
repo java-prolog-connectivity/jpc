@@ -46,14 +46,14 @@ public class PrologWriter extends JpcTermWriter implements PrologContentHandler 
 	}
 	
 	@Override
-	public TermContentHandler comingDirectives() {
+	public TermContentHandler followingDirectives() {
 		resetWritingMode();
 		writeDirective = true;
 		return this;
 	}
 
 	@Override
-	public TermContentHandler comingDynamicClauses() {
+	public TermContentHandler followingDynamicClauses() {
 		resetWritingMode();
 		writeClause = true;
 		return this;
