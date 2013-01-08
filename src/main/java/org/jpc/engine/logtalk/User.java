@@ -11,7 +11,7 @@ import org.jpc.term.Atom;
 public class User extends LogtalkObject {
 
 	public User(PrologEngine logicEngine) {
-		super(logicEngine, new Atom(LogtalkConstants.USER_LOGTALK_OBJECT));
+		super(new Atom(LogtalkConstants.USER_LOGTALK_OBJECT), logicEngine);
 	}
 
 }

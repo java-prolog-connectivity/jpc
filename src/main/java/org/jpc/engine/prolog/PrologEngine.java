@@ -66,13 +66,13 @@ public class PrologEngine implements DatabaseHandler {
      **********************************************************************************************************************************
      */
 	
-	public Query createQuery(TermConvertable... termConvertables) {
+	public Query query(TermConvertable... termConvertables) {
 		Term termSequence = LogicUtil.termsToSequence(asList(termConvertables));
 		return bootstrapEngine.createQuery(termSequence);
 	}
 	
-	public Query createQuery(String termString) {
-		return createQuery(asTerm(termString));
+	public Query query(String termString) {
+		return query(asTerm(termString));
 	}
 	
 	public boolean stop() {
@@ -116,7 +116,7 @@ public class PrologEngine implements DatabaseHandler {
      */
 	
 	public boolean setPrologFlag(TermConvertable flag, TermConvertable flagValue) {
-		return createQuery(new Compound(SET_PROLOG_FLAG, asList(flag, flagValue))).hasSolution();
+		return query(new Compound(SET_PROLOG_FLAG, asList(flag, flagValue))).hasSolution();
 	}
 	
 	public boolean setPrologFlag(TermConvertable flag, String flagValue) {
@@ -124,7 +124,7 @@ public class PrologEngine implements DatabaseHandler {
 	}
 	
 	public Query currentPrologFlag(TermConvertable flag, TermConvertable flagValue) {
-		return createQuery(new Compound(CURRENT_PROLOG_FLAG, asList(flag, flagValue)));
+		return query(new Compound(CURRENT_PROLOG_FLAG, asList(flag, flagValue)));
 	}
 	
 	public String currentPrologFlag(TermConvertable flag) {
@@ -149,16 +149,16 @@ public class PrologEngine implements DatabaseHandler {
      */
 	
 	public Query currentOp(TermConvertable priority, TermConvertable specifier, TermConvertable operator) {
-		return createQuery(new Compound(CURRENT_OP, asList(priority, specifier, operator)));
+		return query(new Compound(CURRENT_OP, asList(priority, specifier, operator)));
 	}
 
 	public boolean isBinaryOperator(String op) {
-		return createQuery(new Compound(CURRENT_OP, asList(ANONYMOUS_VAR, new Variable("Type"), new Atom(op))), new Compound(ATOM_CHARS, asList(new Variable("Type"), listTerm(ANONYMOUS_VAR, new Atom("f"), ANONYMOUS_VAR)))).hasSolution();
+		return query(new Compound(CURRENT_OP, asList(ANONYMOUS_VAR, new Variable("Type"), new Atom(op))), new Compound(ATOM_CHARS, asList(new Variable("Type"), listTerm(ANONYMOUS_VAR, new Atom("f"), ANONYMOUS_VAR)))).hasSolution();
 		//return createQuery("current_op(_, Type, '" + op + "'), atom_chars(Type, [_, f, _])").hasSolution();
 	}
 	
 	public boolean isUnaryOperator(String op) {
-		return createQuery(new Compound(CURRENT_OP, asList(ANONYMOUS_VAR, new Variable("Type"), new Atom(op))), new Compound(ATOM_CHARS, asList(new Variable("Type"), listTerm(new Atom("f"), ANONYMOUS_VAR)))).hasSolution();
+		return query(new Compound(CURRENT_OP, asList(ANONYMOUS_VAR, new Variable("Type"), new Atom(op))), new Compound(ATOM_CHARS, asList(new Variable("Type"), listTerm(new Atom("f"), ANONYMOUS_VAR)))).hasSolution();
 		//return createQuery("current_op(_, Type, '" + op + "'), atom_chars(Type, [f, _])").hasSolution();
 	}
 	
@@ -170,7 +170,7 @@ public class PrologEngine implements DatabaseHandler {
 	
 	public boolean cd(TermConvertable path) {
 		Compound compound = new Compound(CD, asList(path));
-		return createQuery(compound).hasSolution();
+		return query(compound).hasSolution();
 	}
 	
 	public boolean cd(String path) {
@@ -190,7 +190,7 @@ public class PrologEngine implements DatabaseHandler {
 	 */
 	@Override
 	public boolean asserta(TermConvertable termConvertable) {
-		return createQuery(new Compound(ASSERTA, asList(termConvertable))).hasSolution();
+		return query(new Compound(ASSERTA, asList(termConvertable))).hasSolution();
 	}
 	
 	/**
@@ -200,26 +200,26 @@ public class PrologEngine implements DatabaseHandler {
 	 */
 	@Override
 	public boolean assertz(TermConvertable termConvertable) {
-		return createQuery(new Compound(ASSERTZ, asList(termConvertable))).hasSolution();
+		return query(new Compound(ASSERTZ, asList(termConvertable))).hasSolution();
 	}
 
 	@Override
 	public Query retract(TermConvertable termConvertable)  {
-		return createQuery(new Compound(RETRACT, asList(termConvertable)));
+		return query(new Compound(RETRACT, asList(termConvertable)));
 	}
 	
 	@Override
 	public boolean retractAll(TermConvertable termConvertable)  {
-		return createQuery(new Compound(RETRACT_ALL, asList(termConvertable))).hasSolution();
+		return query(new Compound(RETRACT_ALL, asList(termConvertable))).hasSolution();
 	}
 
 	@Override
 	public boolean abolish(TermConvertable termConvertable)  {
-		return createQuery(new Compound(ABOLISH, asList(termConvertable))).hasSolution();
+		return query(new Compound(ABOLISH, asList(termConvertable))).hasSolution();
 	}
 	
 	public Query clause(TermConvertable head, TermConvertable body)  {
-		return createQuery(new Compound(CLAUSE, asList(head, body)));
+		return query(new Compound(CLAUSE, asList(head, body)));
 	}
 	/**
 	 * Assert a list of clauses in the logic database. Terms are asserted as the first facts or rules of the corresponding predicate.
@@ -246,7 +246,7 @@ public class PrologEngine implements DatabaseHandler {
      */
 	
 	public boolean ensureLoaded(List<? extends TermConvertable> termConvertables) {
-		return createQuery(new Compound(ENSURE_LOADED, asList(new ListTerm(termConvertables)))).hasSolution();
+		return query(new Compound(ENSURE_LOADED, asList(new ListTerm(termConvertables)))).hasSolution();
 	}
 	
 	public boolean ensureLoaded(TermConvertable... termConvertables) {
@@ -263,19 +263,19 @@ public class PrologEngine implements DatabaseHandler {
      **********************************************************************************************************************************
      */
 	public Query bagof(TermConvertable select, TermConvertable exp, TermConvertable all) {
-		return createQuery(new Compound(BAGOF, asList(select, exp, all)));
+		return query(new Compound(BAGOF, asList(select, exp, all)));
 	}
 	
 	public Query findall(TermConvertable select, TermConvertable exp, TermConvertable all) {
-		return createQuery(new Compound(FINDALL, asList(select, exp, all)));
+		return query(new Compound(FINDALL, asList(select, exp, all)));
 	}
 	
 	public Query setof(TermConvertable select, TermConvertable exp, TermConvertable all) {
-		return createQuery(new Compound(SETOF, asList(select, exp, all)));
+		return query(new Compound(SETOF, asList(select, exp, all)));
 	}
 	
 	public Query forall(TermConvertable generator, TermConvertable test) {
-		return createQuery(new Compound(FORALL, asList(generator, test)));
+		return query(new Compound(FORALL, asList(generator, test)));
 	}
 
 
@@ -285,7 +285,7 @@ public class PrologEngine implements DatabaseHandler {
      */
 	
 	public boolean flushOutput() {
-		return createQuery(new Atom(FLUSH_OUTPUT)).hasSolution();
+		return query(new Atom(FLUSH_OUTPUT)).hasSolution();
 	}
 
 	/* ********************************************************************************************************************************
@@ -297,7 +297,7 @@ public class PrologEngine implements DatabaseHandler {
 	public boolean allSucceed(List<? extends TermConvertable> termConvertables) {
 		boolean success = true;
 		for(TermConvertable termConvertable: termConvertables) {
-			if(!createQuery(termConvertable).hasSolution())
+			if(!query(termConvertable).hasSolution())
 				success = false;
 		}
 		return success;

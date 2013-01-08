@@ -51,7 +51,7 @@ public class Logtalk extends LogtalkObject {
 	
 	
 	public Logtalk(PrologEngine logicEngine) {
-		super(logicEngine, new Atom(LogtalkConstants.LOGTALK_LOGTALK_OBJECT));
+		super(new Atom(LogtalkConstants.LOGTALK_LOGTALK_OBJECT), logicEngine);
 	}
 
 	public Query expandLibraryPath(TermConvertable library, TermConvertable path) {

@@ -64,7 +64,7 @@ public class LogtalkEngine extends PrologEngine {
 	public String currentLogtalkFlag(LogtalkFlag flag) {
 		String flagValue = null;
 		Variable varFlag = new Variable("Var");
-		Map<String, Term> solutions = createQuery(new Compound(CURRENT_LOGTALK_FLAG, Arrays.asList(flag, varFlag))).oneSolution();
+		Map<String, Term> solutions = query(new Compound(CURRENT_LOGTALK_FLAG, Arrays.asList(flag, varFlag))).oneSolution();
 		if(solutions!=null) {
 			Atom flagValueTerm = (Atom) solutions.get(varFlag.name());
 			flagValue = flagValueTerm.getName();
@@ -73,20 +73,20 @@ public class LogtalkEngine extends PrologEngine {
 	}
 	
 	public boolean setLogtalkFlag(LogtalkFlag flag, String value) {
-		return createQuery(new Compound(SET_LOGTALK_FLAG, asList(new Atom(flag.toString()), new Atom(value)))).hasSolution();
+		return query(new Compound(SET_LOGTALK_FLAG, asList(new Atom(flag.toString()), new Atom(value)))).hasSolution();
 	}
 	
 	public Query currentObject(TermConvertable term) {
-		return createQuery(new Compound(CURRENT_OBJECT, asList(term)));
+		return query(new Compound(CURRENT_OBJECT, asList(term)));
 	}
 	
 	public ListTerm<LogtalkObject> currentObjects() {
 		ListTerm<LogtalkObject> currentObjects = new ListTerm<>();
 		Variable logtalkObjectVar = new Variable("LogtalkObject");
 		Compound compound = new Compound(CURRENT_OBJECT, asList(logtalkObjectVar));
-		for(Map<String, Term> solution : createQuery(compound).allSolutions()) {
+		for(Map<String, Term> solution : query(compound).allSolutions()) {
 			Term currentObjectTerm = solution.get(logtalkObjectVar.name());
-			currentObjects.add(new LogtalkObject(this, currentObjectTerm));
+			currentObjects.add(new LogtalkObject(currentObjectTerm, this));
 		}
 		return currentObjects;
 	}
@@ -110,129 +110,129 @@ public class LogtalkEngine extends PrologEngine {
 	}
 
 	public Query createObject(TermConvertable object, TermConvertable relations, TermConvertable directives, TermConvertable Clauses) {
-		return createQuery(new Compound(CREATE_OBJECT, asList(object, relations, directives, Clauses)));
+		return query(new Compound(CREATE_OBJECT, asList(object, relations, directives, Clauses)));
 	}
 	
 	public Query abolishObject(TermConvertable object) {
-		return createQuery(new Compound(ABOLISH_OBJECT, asList(object)));
+		return query(new Compound(ABOLISH_OBJECT, asList(object)));
 	}
 	
 	public Query instantiatesClass(TermConvertable instance, TermConvertable clazz) {
-		return createQuery(new Compound(INSTANTIATES_CLASS, asList(instance, clazz)));
+		return query(new Compound(INSTANTIATES_CLASS, asList(instance, clazz)));
 	}
 	
 	public Query instantiatesClass(TermConvertable instance, TermConvertable clazz, TermConvertable scope) {
-		return createQuery(new Compound(INSTANTIATES_CLASS, asList(instance, clazz, scope)));
+		return query(new Compound(INSTANTIATES_CLASS, asList(instance, clazz, scope)));
 	}
 	
 	public Query specializesClass(TermConvertable clazz, TermConvertable superClass) {
-		return createQuery(new Compound(SPECIALIZES_CLASS, asList(clazz, superClass)));
+		return query(new Compound(SPECIALIZES_CLASS, asList(clazz, superClass)));
 	}
 	
 	public Query specializesClass(TermConvertable clazz, TermConvertable superClass, TermConvertable scope) {
-		return createQuery(new Compound(SPECIALIZES_CLASS, asList(clazz, superClass, scope)));
+		return query(new Compound(SPECIALIZES_CLASS, asList(clazz, superClass, scope)));
 	}
 	
 	public Query extendsObject(TermConvertable child, TermConvertable parent) {
-		return createQuery(new Compound(EXTENDS_OBJECTS, asList(child, parent)));
+		return query(new Compound(EXTENDS_OBJECTS, asList(child, parent)));
 	}
 	
 	public Query extendsObject(TermConvertable child, TermConvertable parent, TermConvertable scope) {
-		return createQuery(new Compound(EXTENDS_OBJECTS, asList(child, parent, scope)));
+		return query(new Compound(EXTENDS_OBJECTS, asList(child, parent, scope)));
 	}
 	
 	public Query importsCategory(TermConvertable object, TermConvertable category) {
-		return createQuery(new Compound(IMPORTS_CATEGORY, asList(object, category)));
+		return query(new Compound(IMPORTS_CATEGORY, asList(object, category)));
 	}
 	
 	public Query importsCategory(TermConvertable object, TermConvertable category, TermConvertable scope) {
-		return createQuery(new Compound(IMPORTS_CATEGORY, asList(object, category, scope)));
+		return query(new Compound(IMPORTS_CATEGORY, asList(object, category, scope)));
 	}
 	
 	public Query implementsProtocol(TermConvertable object, TermConvertable protocol) {
-		return createQuery(new Compound(IMPLEMENTS_PROTOCOL, asList(object, protocol)));
+		return query(new Compound(IMPLEMENTS_PROTOCOL, asList(object, protocol)));
 	}
 	
 	public Query implementsProtocol(TermConvertable object, TermConvertable protocol, TermConvertable scope) {
-		return createQuery(new Compound(IMPLEMENTS_PROTOCOL, asList(object, protocol, scope)));
+		return query(new Compound(IMPLEMENTS_PROTOCOL, asList(object, protocol, scope)));
 	}
 	
 	public Query conformsToProtocol(TermConvertable object, TermConvertable protocol) {
-		return createQuery(new Compound(CONFORMS_TO_PROTOCOL, asList(object, protocol)));
+		return query(new Compound(CONFORMS_TO_PROTOCOL, asList(object, protocol)));
 	}
 	
 	public Query conformsToProtocol(TermConvertable object, TermConvertable protocol, TermConvertable scope) {
-		return createQuery(new Compound(CONFORMS_TO_PROTOCOL, asList(object, protocol, scope)));
+		return query(new Compound(CONFORMS_TO_PROTOCOL, asList(object, protocol, scope)));
 	}
 	
 	public Query complementsObject(TermConvertable category, TermConvertable object) {
-		return createQuery(new Compound(COMPLEMENTS_OBJECT, asList(category, object)));
+		return query(new Compound(COMPLEMENTS_OBJECT, asList(category, object)));
 	}
 	
 	public Query objectProperty(TermConvertable object, TermConvertable property) {
-		return createQuery(new Compound(OBJECT_PROPERTY, asList(object, property)));
+		return query(new Compound(OBJECT_PROPERTY, asList(object, property)));
 	}
 	
 	
 	public Query currentProtocol(TermConvertable protocol) {
-		return createQuery(new Compound(CURRENT_PROTOCOL, asList(protocol)));
+		return query(new Compound(CURRENT_PROTOCOL, asList(protocol)));
 	}
 	
 	public Query createProtocol(TermConvertable protocol, TermConvertable relations, TermConvertable directives) {
-		return createQuery(new Compound(CREATE_PROTOCOL, asList(protocol, relations, directives)));
+		return query(new Compound(CREATE_PROTOCOL, asList(protocol, relations, directives)));
 	}
 	
 	public Query abolishProtocol(TermConvertable protocol) {
-		return createQuery(new Compound(ABOLISH_PROTOCOL, asList(protocol)));
+		return query(new Compound(ABOLISH_PROTOCOL, asList(protocol)));
 	}
 	
 	public Query extendsProtocol(TermConvertable child, TermConvertable parent) {
-		return createQuery(new Compound(EXTENDS_PROTOCOL, asList(child, parent)));
+		return query(new Compound(EXTENDS_PROTOCOL, asList(child, parent)));
 	}
 	
 	public Query extendsProtocol(TermConvertable child, TermConvertable parent, TermConvertable scope) {
-		return createQuery(new Compound(EXTENDS_PROTOCOL, asList(child, parent, scope)));
+		return query(new Compound(EXTENDS_PROTOCOL, asList(child, parent, scope)));
 	}
 	
 	public Query protocolProperty(TermConvertable protocol, TermConvertable property) {
-		return createQuery(new Compound(PROTOCOL_PROPERTY, asList(protocol, property)));
+		return query(new Compound(PROTOCOL_PROPERTY, asList(protocol, property)));
 	}
 	
 	
 	public Query currentCategory(TermConvertable category) {
-		return createQuery(new Compound(CURRENT_CATEGORY, asList(category)));
+		return query(new Compound(CURRENT_CATEGORY, asList(category)));
 	}
 	
 	public Query createCategory(TermConvertable category, TermConvertable relations, TermConvertable directives, TermConvertable Clauses) {
-		return createQuery(new Compound(CREATE_CATEGORY, asList(category, relations, directives, Clauses)));
+		return query(new Compound(CREATE_CATEGORY, asList(category, relations, directives, Clauses)));
 	}
 	
 	public Query abolishCategory(TermConvertable category) {
-		return createQuery(new Compound(ABOLISH_CATEGORY, asList(category)));
+		return query(new Compound(ABOLISH_CATEGORY, asList(category)));
 	}
 
 	public Query extendsCategory(TermConvertable child, TermConvertable parent) {
-		return createQuery(new Compound(EXTENDS_CATEGORY, asList(child, parent)));
+		return query(new Compound(EXTENDS_CATEGORY, asList(child, parent)));
 	}
 	
 	public Query extendsCategory(TermConvertable child, TermConvertable parent, TermConvertable scope) {
-		return createQuery(new Compound(EXTENDS_CATEGORY, asList(child, parent, scope)));
+		return query(new Compound(EXTENDS_CATEGORY, asList(child, parent, scope)));
 	}
 	
 	public Query categoryProperty(TermConvertable category, TermConvertable property) {
-		return createQuery(new Compound(CATEGORY_PROPERTY, asList(category, property)));
+		return query(new Compound(CATEGORY_PROPERTY, asList(category, property)));
 	}
 	
 	public Query currentEvent(TermConvertable event, TermConvertable object, TermConvertable message, TermConvertable sender, TermConvertable monitor) {
-		return createQuery(new Compound(CURRENT_EVENT, asList(event, object, message, sender, monitor)));
+		return query(new Compound(CURRENT_EVENT, asList(event, object, message, sender, monitor)));
 	}
 	
 	public Query defineEvents(TermConvertable event, TermConvertable object, TermConvertable message, TermConvertable sender, TermConvertable monitor) {
-		return createQuery(new Compound(DEFINE_EVENTS, asList(event, object, message, sender, monitor)));
+		return query(new Compound(DEFINE_EVENTS, asList(event, object, message, sender, monitor)));
 	}
 	
 	public Query abolishEvents(TermConvertable event, TermConvertable object, TermConvertable message, TermConvertable sender, TermConvertable monitor) {
-		return createQuery(new Compound(ABOLISH_EVENTS, asList(event, object, message, sender, monitor)));
+		return query(new Compound(ABOLISH_EVENTS, asList(event, object, message, sender, monitor)));
 	}
 	
 }

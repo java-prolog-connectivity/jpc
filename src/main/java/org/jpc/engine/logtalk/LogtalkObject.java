@@ -18,37 +18,41 @@ import static org.jpc.engine.prolog.PrologConstants.CURRENT_OP;
 import static org.jpc.engine.prolog.PrologConstants.RETRACT;
 import static org.jpc.engine.prolog.PrologConstants.RETRACT_ALL;
 
+import java.util.Arrays;
+
 import org.jpc.engine.prolog.DatabaseHandler;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.query.Query;
-import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
 import org.jpc.term.TermConvertable;
 
 public class LogtalkObject implements TermConvertable, DatabaseHandler {
 
+	public static Term logtalkMessage(TermConvertable receiver, TermConvertable message) {
+		return new Compound(LogtalkConstants.LOGTALK_OPERATOR, Arrays.asList(receiver, message));
+	}
+	
 	public static boolean isLogtalkMessage(TermConvertable termConvertable) {
 		Term term = termConvertable.asTerm();
 		return term instanceof Compound && 
-				((Compound)term).getName().equals(new Atom(LogtalkConstants.LOGTALK_OPERATOR)) &&
-				((Compound)term).arity() == 2;
+				((Compound)term).hasFunctor(LogtalkConstants.LOGTALK_OPERATOR, 2);
 	}
 	
 	private PrologEngine logicEngine;
 	private Term term;
 	
-	public LogtalkObject(PrologEngine logicEngine, TermConvertable termConvertable) {
+	public LogtalkObject(TermConvertable termConvertable, PrologEngine logicEngine) {
 		this.logicEngine = logicEngine;
 		this.term = termConvertable.asTerm();
 	}
 	
-	private Term messageTerm(TermConvertable message) {
-		return new Compound(LogtalkConstants.LOGTALK_OPERATOR, asList(this, message));
+	public Term message(TermConvertable message) {
+		return logtalkMessage(this, message);
 	}
 	
 	public Query perform(TermConvertable message) {
-		return logicEngine.createQuery(messageTerm(message));
+		return logicEngine.query(message(message));
 	}
 	
 	@Override
