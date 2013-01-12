@@ -7,7 +7,7 @@ import org.jpc.term.TermConvertable;
 
 public abstract class BootstrapPrologEngine {
 
-	public abstract Query createQuery(TermConvertable termConvertable);
+	public abstract Query query(TermConvertable termConvertable);
 	
 	public boolean stop() {
 		throw new UnsupportedOperationException();

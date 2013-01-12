@@ -86,11 +86,11 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T>{
 		}
 	}
 
-	public Cursor<T> filter(Predicate<T> predicate) {
+	public synchronized Cursor<T> filter(Predicate<T> predicate) {
 		return new CursorFilter<>(this, predicate);
 	}
 	
-	public <T2>Cursor<T2> adapt(Function<T,T2> converter) {
+	public synchronized <T2>Cursor<T2> adapt(Function<T,T2> converter) {
 		return new CursorAdapter<>(this, converter);
 	}
 
@@ -120,7 +120,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T>{
 	public abstract T next();
 
 	@Override
-	public synchronized void remove() {
+	public void remove() {
 		throw new UnsupportedOperationException();
 	}
 	

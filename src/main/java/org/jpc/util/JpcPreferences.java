@@ -10,6 +10,8 @@ public class JpcPreferences extends Preferences {
 
 	public static final String JPC_NAME = "The Java-Prolog Connectivity Library";
 	public static final String JPC_SHORT_NAME = "JPC";
+	public static final String JPC_BASE_PACKAGE = "org.jpc";
+	
 	
 	//Properties configuring the behaviour of JPC
 	public final static String LOGTALK_HOME_ENV_VAR = "LOGTALKHOME";  //needed by the framework to find the integration scripts with Logtalk

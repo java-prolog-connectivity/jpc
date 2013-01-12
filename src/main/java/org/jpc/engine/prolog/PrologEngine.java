@@ -68,7 +68,7 @@ public class PrologEngine implements DatabaseHandler {
 	
 	public Query query(TermConvertable... termConvertables) {
 		Term termSequence = LogicUtil.termsToSequence(asList(termConvertables));
-		return bootstrapEngine.createQuery(termSequence);
+		return bootstrapEngine.query(termSequence);
 	}
 	
 	public Query query(String termString) {
