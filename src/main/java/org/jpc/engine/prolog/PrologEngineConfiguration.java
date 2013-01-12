@@ -160,5 +160,9 @@ public abstract class PrologEngineConfiguration {
 	 * @return
 	 */
 	protected abstract BootstrapPrologEngine createBootstrapEngine();
+	
+	public abstract String getLibraryName();
+	
+	public abstract String getLogicEngineName();
 
 }
