@@ -1,11 +1,16 @@
 package org.jpc.query;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.jpc.converter.toterm.SolutionToTermConverter;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Term;
 import org.jpc.term.TermConvertable;
+
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 
 /**
  * Disclaimer: Some methods were inspired or taken from the JPL library
@@ -31,7 +36,7 @@ public abstract class Query extends Cursor<Map<String,Term>> implements TermConv
 		return logicEngine;
 	}
 
-	public Cursor<Term> select(String selector) {
+	public synchronized Cursor<Term> select(String selector) {
 		return select(logicEngine.asTerm(selector));
 	}
 	
@@ -40,12 +45,22 @@ public abstract class Query extends Cursor<Map<String,Term>> implements TermConv
 	 * @param selector a term with free variables
 	 * @return
 	 */
-	public Cursor<Term> select(Term selector) {
+	public synchronized Cursor<Term> select(Term selector) {
 		return adapt(new SolutionToTermConverter(selector));
 	}
 	
-	
-	
+	public synchronized Multimap<String, Term> allSolutionsMultimap() {
+		Multimap<String, Term> allSolutionsMultimap = ArrayListMultimap.create();
+		List<Map<String, Term>> allSolutions = allSolutions();
+		for(Map<String, Term> solution : allSolutions) {
+			for(Entry<String, Term> entry : solution.entrySet()) {
+				allSolutionsMultimap.put(entry.getKey(), entry.getValue());
+			}
+		}
+		return allSolutionsMultimap;
+	}
+
+
 	/**
 	 * Answers if there are still solutions to the query
 	 * In case there are no more solutions, the query will be closed by this method
