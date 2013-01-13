@@ -14,15 +14,15 @@ public abstract class PrologWriter extends JpcTermWriter implements PrologConten
 
 	private static Logger logger = LoggerFactory.getLogger(PrologWriter.class);
 	
-	private PrologEngine logicEngine;
+	private PrologEngine prologEngine;
 	
 	private boolean writeDirective;
 	private boolean writeClause;
 	private boolean readingLogtalkObjectTerm;
 	private Term currentLogtalkObjectTerm;
 	
-	public PrologWriter(PrologEngine logicEngine) {
-		this.logicEngine = logicEngine;
+	public PrologWriter(PrologEngine prologEngine) {
+		this.prologEngine = prologEngine;
 	}
 
 	private void resetLogtalkOjectTerm() {
@@ -37,8 +37,8 @@ public abstract class PrologWriter extends JpcTermWriter implements PrologConten
 		return currentLogtalkObjectTerm;
 	}
 	
-	public PrologEngine getLogicEngine() {
-		return logicEngine;
+	public PrologEngine getPrologEngine() {
+		return prologEngine;
 	}
 	
 	

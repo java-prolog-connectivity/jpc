@@ -82,7 +82,7 @@ public final class IntegerTerm extends AbstractTerm {
 	}
 	
 	@Override
-	public String toString(PrologEngine logicEngine) {
+	public String toString(PrologEngine prologEngine) {
 		return toString();
 	}
 	@Override

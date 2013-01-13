@@ -116,8 +116,8 @@ public final class Compound extends AbstractTerm {
 	}
 	
 	@Override
-	public String toString(PrologEngine logicEngine) {
-		return getName().toString(logicEngine) + "(" + AbstractTerm.toString(logicEngine, args) + ")";
+	public String toString(PrologEngine prologEngine) {
+		return getName().toString(prologEngine) + "(" + AbstractTerm.toString(prologEngine, args) + ")";
 	}
 	
 	@Override

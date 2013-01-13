@@ -14,7 +14,7 @@ public abstract class PrologEngineConfiguration {
 	private static Logger logger = LoggerFactory.getLogger(PrologEngineConfiguration.class);
 	
 	protected JpcPreferences preferences;
-	protected PrologEngine logicEngine;
+	protected PrologEngine prologEngine;
 	protected boolean enabled = true;
 	private boolean configured = false;
 	
@@ -109,20 +109,20 @@ public abstract class PrologEngineConfiguration {
 	}
 	
 	public PrologEngine getEngine() {
-		if(logicEngine == null) {
+		if(prologEngine == null) {
 			logger.info("Initializing logic engine");
 			long startTime = System.nanoTime();
 			if(!isConfigured()) {
 				configure();
 			}
-			logicEngine = new PrologEngine(createBootstrapEngine());
+			prologEngine = new PrologEngine(createBootstrapEngine());
 			if(isLogtalkRequired()) {
 				logger.info("Attempting to load logtalk ...");
 				try {
-					String prologDialect = logicEngine.prologDialect();
+					String prologDialect = prologEngine.prologDialect();
 					String logtalkIntegrationScript = preferences.logtalkIntegrationScript(prologDialect); //will throw an exception if a logtalk integration script cannot be found for a given engine
 					try {
-						logtalkLoaded = logicEngine.ensureLoaded(logtalkIntegrationScript);
+						logtalkLoaded = prologEngine.ensureLoaded(logtalkIntegrationScript);
 					} catch(Exception ex) {}
 					if(!logtalkLoaded) {
 						//throw new RuntimeException("Impossible to load Logtalk");
@@ -134,21 +134,21 @@ public abstract class PrologEngineConfiguration {
 					}
 				} catch(Exception ex) {
 					System.out.println(ex);
-					logger.warn("Impossible to load Logtalk in the " + logicEngine.prologDialect() + " Logic Engine");
+					logger.warn("Impossible to load Logtalk in the " + prologEngine.prologDialect() + " Logic Engine");
 				}
 			}
 			loadPreloadedResources();
 			long endTime = System.nanoTime();
 			long total = (endTime - startTime)/1000000;
-			logger.info("A " + logicEngine.prologDialect() + " logic engine has been initialized in " + total + " milliseconds");
+			logger.info("A " + prologEngine.prologDialect() + " logic engine has been initialized in " + total + " milliseconds");
 		}
-		return logicEngine;
+		return prologEngine;
 	}
 
 	private void loadPreloadedResources() {
-		logicEngine.ensureLoaded(preloadedPrologResources.toArray(new String[]{}));
+		prologEngine.ensureLoaded(preloadedPrologResources.toArray(new String[]{}));
 		if(isLogtalkRequired())
-			logicEngine.asLogtalkEngine().logtalkLoad(preloadedLogtalkResources.toArray(new String[]{}));
+			prologEngine.asLogtalkEngine().logtalkLoad(preloadedLogtalkResources.toArray(new String[]{}));
 	}
 
 	public void configure() {
@@ -163,6 +163,6 @@ public abstract class PrologEngineConfiguration {
 	
 	public abstract String getLibraryName();
 	
-	public abstract String getLogicEngineName();
+	public abstract String getEngineName();
 
 }

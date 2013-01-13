@@ -20,34 +20,34 @@ public class PrologStreamWriter extends PrologWriter {
 	public static final String DIRECTIVE_PREFIX = ":- ";
 	
 	
-	public PrologStreamWriter(PrologEngine logicEngine, PrintStream out) {
-		super(logicEngine);
+	public PrologStreamWriter(PrologEngine prologEngine, PrintStream out) {
+		super(prologEngine);
 		this.out = out;
 	}
 
 	@Override
 	public void writePrologDirective(Term directive) {
-		String termString = directive.toString(getLogicEngine());
+		String termString = directive.toString(getPrologEngine());
 		out.println(DIRECTIVE_PREFIX + termString+".");
 		
 	}
 
 	@Override
 	public void writeLogtalkObjectDirective(Term directive) {
-		String termString = logtalkMessage(getCurrentLogtalkObjectTerm(), directive).toString(getLogicEngine());
+		String termString = logtalkMessage(getCurrentLogtalkObjectTerm(), directive).toString(getPrologEngine());
 		out.println(DIRECTIVE_PREFIX + termString+".");
 	}
 
 	@Override
 	public void writePrologClause(Term clause) {
-		String termString = clause.toString(getLogicEngine());
+		String termString = clause.toString(getPrologEngine());
 		out.println(termString+".");
 	}
 
 	@Override
 	public void writeLogtalkObjectClause(Term clause) {
 		Term assertTerm = new Compound(ASSERTZ, asList(clause));
-		String termString = logtalkMessage(getCurrentLogtalkObjectTerm(), assertTerm).toString(getLogicEngine());
+		String termString = logtalkMessage(getCurrentLogtalkObjectTerm(), assertTerm).toString(getPrologEngine());
 		out.println(DIRECTIVE_PREFIX + termString+".");
 	}
 

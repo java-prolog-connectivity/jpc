@@ -10,8 +10,8 @@ import org.jpc.term.Atom;
  */
 public class User extends LogtalkObject {
 
-	public User(PrologEngine logicEngine) {
-		super(new Atom(LogtalkConstants.USER_LOGTALK_OBJECT), logicEngine);
+	public User(PrologEngine prologEngine) {
+		super(new Atom(LogtalkConstants.USER_LOGTALK_OBJECT), prologEngine);
 	}
 
 }

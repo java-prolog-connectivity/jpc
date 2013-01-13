@@ -55,8 +55,8 @@ public final class Atom extends AbstractTerm {
 	}
 	
 	@Override
-	public String toString(PrologEngine logicEngine) {
-		return logicEngine.escape(getName());
+	public String toString(PrologEngine prologEngine) {
+		return prologEngine.escape(getName());
 	}
 	
 	@Override

@@ -73,7 +73,7 @@ public final class FloatTerm extends AbstractTerm {
 	}
 
 	@Override
-	public String toString(PrologEngine logicEngine) {
+	public String toString(PrologEngine prologEngine) {
 		return toString();
 	}
 	

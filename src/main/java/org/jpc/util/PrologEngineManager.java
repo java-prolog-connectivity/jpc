@@ -27,17 +27,17 @@ import com.google.common.collect.Multimap;
  * A PrologEngineConfiguration answers always the same logic engine when its method 'getEngine' is invoked,
  * then this class can be useful if the programmer needs to refer, from different parts of a program, to the same prolog engine given an engine configuration.
  * The programmer needs to be aware that some engine configurations are incompatible (e.g., it is not possible to create a JPL logic engine configured for SWI and another configured for YAP in the same program).
- * Therefore, this class stores in its pool instance of the engine configurations, not instance of the engines themselves.
+ * Therefore, this class stores in its repository engine configurations, not instance of the engines themselves.
  * The user of the class should decide which of the registered engine configurations can be used to create logic engines.
  * @author sergioc
  *
  */
-public class LogicEngineManager {
+public class PrologEngineManager {
 	
-	private static LogicEngineManager defaultLogicEngineManager = new LogicEngineManager();
+	private static PrologEngineManager defaultPrologEngineManager = new PrologEngineManager();
 	
-	public static LogicEngineManager getDefault() {
-		return defaultLogicEngineManager;
+	public static PrologEngineManager getDefault() {
+		return defaultPrologEngineManager;
 	}
 	
 	public static Set<Class<? extends PrologEngineConfiguration>> findConfigurations(URL ...urls) {
@@ -55,57 +55,57 @@ public class LogicEngineManager {
 		return ReflectionUtil.filterAbstractClasses(reflections.getSubTypesOf(PrologEngineConfiguration.class));
 	}
 	
-	private Map<Class<? extends PrologEngineConfiguration>, PrologEngineConfiguration> engineConfigurationPool; // a pool of logic engine configurations
+	private Map<Class<? extends PrologEngineConfiguration>, PrologEngineConfiguration> engineConfigurationPool; // a repository of logic engine configurations
 	
-	public LogicEngineManager() {
+	public PrologEngineManager() {
 		engineConfigurationPool = new LinkedHashMap<>(); //to preserve insertion order
 	}
 	
-	public List<PrologEngineConfiguration> register(Iterable<Class<? extends PrologEngineConfiguration>> logicEngineConfigurationClasses) {
+	public List<PrologEngineConfiguration> register(Iterable<Class<? extends PrologEngineConfiguration>> prologEngineConfigurationClasses) {
 		List<PrologEngineConfiguration> configs = new ArrayList<>();
-		for(Class<? extends PrologEngineConfiguration> logicEngineConfigurationClass : logicEngineConfigurationClasses) {
-			configs.add(register(logicEngineConfigurationClass));
+		for(Class<? extends PrologEngineConfiguration> prologEngineConfigurationClass : prologEngineConfigurationClasses) {
+			configs.add(register(prologEngineConfigurationClass));
 		}
 		return configs;
 	}
 	
 	/**
 	 * Adds a PrologEngineConfiguration class to the pool if an instance is not already there. If an instance is already in the pool, it does nothing and returns the existing instance.
-	 * @param logicEngineConfigurationClass the class to register in the pool
+	 * @param prologEngineConfigurationClass the class to register in the pool
 	 * @return an existing instance of the class (previously registered in the pool) or a new instance (added to the pool) if the class was not registered before
 	 */
-	public PrologEngineConfiguration register(Class<? extends PrologEngineConfiguration> logicEngineConfigurationClass) {
-		PrologEngineConfiguration logicEngineConfiguration = engineConfigurationPool.get(logicEngineConfigurationClass);
+	public PrologEngineConfiguration register(Class<? extends PrologEngineConfiguration> prologEngineConfigurationClass) {
+		PrologEngineConfiguration prologEngineConfiguration = engineConfigurationPool.get(prologEngineConfigurationClass);
 		
-		if(logicEngineConfiguration == null) {
+		if(prologEngineConfiguration == null) {
 			try {
-				logicEngineConfiguration = logicEngineConfigurationClass.newInstance();
+				prologEngineConfiguration = prologEngineConfigurationClass.newInstance();
 			} catch (InstantiationException | IllegalAccessException e) {
 				throw new RuntimeException(e);
 			}
-			engineConfigurationPool.put(logicEngineConfigurationClass, logicEngineConfiguration);
+			engineConfigurationPool.put(prologEngineConfigurationClass, prologEngineConfiguration);
 		}
-		return logicEngineConfiguration;
+		return prologEngineConfiguration;
 	}
 	
 	/**
 	 * Answers a logic engine according to an engine configuration (using an existing instance of the configuration if available)
 	 * 
-	 * @param logicEngineConfigurationClass
+	 * @param prologEngineConfigurationClass
 	 * @return
 	 */
-	public PrologEngine getLogicEngine(Class<? extends PrologEngineConfiguration> logicEngineConfigurationClass) {
-		return register(logicEngineConfigurationClass).getEngine();
+	public PrologEngine getPrologEngine(Class<? extends PrologEngineConfiguration> prologEngineConfigurationClass) {
+		return register(prologEngineConfigurationClass).getEngine();
 	}
 	
 	public List<PrologEngineConfiguration> getAllConfigurations() {
 		return new ArrayList<>(engineConfigurationPool.values());
 	}
 	
-	public Multimap<String,PrologEngineConfiguration> groupByLogicEngine() {
+	public Multimap<String,PrologEngineConfiguration> groupByPrologEngine() {
 		ArrayListMultimap<String, PrologEngineConfiguration> multimap = ArrayListMultimap.create();
 		for(PrologEngineConfiguration config : getAllConfigurations()) {
-			multimap.put(config.getLogicEngineName(), config);
+			multimap.put(config.getEngineName(), config);
 		}
 		return multimap;
 	}

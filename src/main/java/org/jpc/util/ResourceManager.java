@@ -7,7 +7,7 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.minitoolbox.FileUtil;
+import org.minitoolbox.io.FileUtil;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 import org.reflections.util.ConfigurationBuilder;

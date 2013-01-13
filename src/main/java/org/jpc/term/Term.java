@@ -139,6 +139,6 @@ public interface Term extends TermConvertable {
 	 */
 	public abstract void read(TermContentHandler contentHandler);
 	
-	public abstract String toString(PrologEngine logicEngine);
+	public abstract String toString(PrologEngine prologEngine);
 
 }

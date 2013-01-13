@@ -39,7 +39,7 @@ import org.jpc.util.LogicUtil;
 
 /**
  * A utility class for interacting with a Prolog engine
- * Extends the BootstrapLogicEngine by composition
+ * Extends the BootstrapPrologEngine by composition
  * It also adds methods for facilitating querying of certain prolog predicates
  * @author sergioc
  *

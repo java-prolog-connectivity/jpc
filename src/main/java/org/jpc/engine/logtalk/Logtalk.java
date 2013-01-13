@@ -50,8 +50,8 @@ public class Logtalk extends LogtalkObject {
 	public static final String DEBUG_HANDLER = "debug_handler";
 	
 	
-	public Logtalk(PrologEngine logicEngine) {
-		super(new Atom(LogtalkConstants.LOGTALK_LOGTALK_OBJECT), logicEngine);
+	public Logtalk(PrologEngine prologEngine) {
+		super(new Atom(LogtalkConstants.LOGTALK_LOGTALK_OBJECT), prologEngine);
 	}
 
 	public Query expandLibraryPath(TermConvertable library, TermConvertable path) {

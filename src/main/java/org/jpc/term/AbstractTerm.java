@@ -178,7 +178,7 @@ public abstract class AbstractTerm implements Term {
 		return equals(o.asTerm());
 	}
 	
-	public abstract String toString(PrologEngine logicEngine);
+	public abstract String toString(PrologEngine prologEngine);
 	
 	
 	/**
@@ -226,10 +226,10 @@ public abstract class AbstractTerm implements Term {
 		return toString(termObjects.toArray(new TermConvertable[]{}));
 	}
 	
-	public static <T extends TermConvertable> String toString(PrologEngine logicEngine, T... termObjects) {
+	public static <T extends TermConvertable> String toString(PrologEngine prologEngine, T... termObjects) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < termObjects.length; ++i) {
-			sb.append(termObjects[i].asTerm().toString(logicEngine));
+			sb.append(termObjects[i].asTerm().toString(prologEngine));
 			if (i != termObjects.length - 1) {
 				sb.append(", ");
 			}
@@ -237,8 +237,8 @@ public abstract class AbstractTerm implements Term {
 		return sb.toString();
 	}
 	
-	public static <T extends TermConvertable> String toString(PrologEngine logicEngine, List<T> termObjects) {
-		return toString(logicEngine, termObjects.toArray(new TermConvertable[]{}));
+	public static <T extends TermConvertable> String toString(PrologEngine prologEngine, List<T> termObjects) {
+		return toString(prologEngine, termObjects.toArray(new TermConvertable[]{}));
 	}
 
 }

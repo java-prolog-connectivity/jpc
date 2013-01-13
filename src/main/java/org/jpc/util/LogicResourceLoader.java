@@ -23,39 +23,39 @@ import com.google.common.base.Joiner;
 public class LogicResourceLoader {
 	private static Logger logger = LoggerFactory.getLogger(LogicResourceLoader.class);
 	
-	private PrologEngine logicEngine;
+	private PrologEngine prologEngine;
 	private ResourceManager resourceManager;
 	private ClassLoader[] classLoaders;
 	
-	public LogicResourceLoader(PrologEngine logicEngine, ClassLoader... classLoaders) {
-		this(logicEngine, ResourceManager.getDefaultResourceManager(), classLoaders); //use the default resource manager if no one is provided
+	public LogicResourceLoader(PrologEngine prologEngine, ClassLoader... classLoaders) {
+		this(prologEngine, ResourceManager.getDefaultResourceManager(), classLoaders); //use the default resource manager if no one is provided
 	}
 	
 	/**
 	 * 
-	 * @param logicEngine the logic engine where the resources will be loaded
+	 * @param prologEngine the logic engine where the resources will be loaded
 	 * @param jpcPreferences the preferences defining (among other things) where logic tmp files will be copied before being loaded in the logic engine
 	 */
-	public LogicResourceLoader(PrologEngine logicEngine, ResourceManager resourceManager, ClassLoader... classLoaders) {
-		this.logicEngine = logicEngine;
+	public LogicResourceLoader(PrologEngine prologEngine, ResourceManager resourceManager, ClassLoader... classLoaders) {
+		this.prologEngine = prologEngine;
 		this.resourceManager = resourceManager;
 		this.classLoaders = classLoaders;
 	}
 	
 	public boolean ensureLoaded(List<String> resources) {
-		return logicEngine.ensureLoaded(resolveResources(resources));
+		return prologEngine.ensureLoaded(resolveResources(resources));
 	}
 	
 	public boolean ensureLoaded(String... resources) {
-		return logicEngine.ensureLoaded(resolveResources(asList(resources)));
+		return prologEngine.ensureLoaded(resolveResources(asList(resources)));
 	}
 
 	public boolean logtalkLoad(List<String> resources) {
-		return logicEngine.asLogtalkEngine().logtalkLoad(resolveResources(resources));
+		return prologEngine.asLogtalkEngine().logtalkLoad(resolveResources(resources));
 	}
 	
 	public boolean logtalkLoad(String... resources) {
-		return logicEngine.asLogtalkEngine().logtalkLoad(resolveResources(asList(resources)));
+		return prologEngine.asLogtalkEngine().logtalkLoad(resolveResources(asList(resources)));
 	}
 	
 	private List<Term> resolveResources(List<String> resources) {
@@ -87,7 +87,7 @@ public class LogicResourceLoader {
 		resource = resource.trim();
 		if(resource.isEmpty())
 			throw new JpcException("Invalid resource: empty string");
-		Term resourceTerm = logicEngine.asResourceTerm(resource);
+		Term resourceTerm = prologEngine.asResourceTerm(resource);
 		if(resourceTerm instanceof Atom) { //it is not an alias but a concrete path
 			//TODO maybe a smart default could be implemented when attempting to load a package/directory instead of a concrete file, for example, try to load a file in the directory called "load_all"
 			if(resource.substring(resource.length()-1).equals("/")) {

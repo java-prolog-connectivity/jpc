@@ -39,11 +39,11 @@ public class LogtalkObject implements TermConvertable, DatabaseHandler {
 				((Compound)term).hasFunctor(LogtalkConstants.LOGTALK_OPERATOR, 2);
 	}
 	
-	private PrologEngine logicEngine;
+	private PrologEngine prologEngine;
 	private Term term;
 	
-	public LogtalkObject(TermConvertable termConvertable, PrologEngine logicEngine) {
-		this.logicEngine = logicEngine;
+	public LogtalkObject(TermConvertable termConvertable, PrologEngine prologEngine) {
+		this.prologEngine = prologEngine;
 		this.term = termConvertable.asTerm();
 	}
 	
@@ -52,12 +52,12 @@ public class LogtalkObject implements TermConvertable, DatabaseHandler {
 	}
 	
 	public Query perform(TermConvertable message) {
-		return logicEngine.query(message(message));
+		return prologEngine.query(message(message));
 	}
 	
 	@Override
 	public String toString() {
-		//return logicEngine.toString(asTerm()); //more accurate but less performant
+		//return prologEngine.toString(asTerm()); //more accurate but less performant
 		return asTerm().toString();
 	}
 	

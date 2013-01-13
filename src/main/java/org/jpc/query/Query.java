@@ -20,11 +20,11 @@ import com.google.common.collect.Multimap;
 public abstract class Query extends Cursor<Map<String,Term>> implements TermConvertable<Term> {
 
 	private Term goal;
-	private PrologEngine logicEngine;
+	private PrologEngine prologEngine;
 	
 	
-	public Query(PrologEngine logicEngine, TermConvertable termConvertable) {
-		this.logicEngine = logicEngine;
+	public Query(PrologEngine prologEngine, TermConvertable termConvertable) {
+		this.prologEngine = prologEngine;
 		this.goal = termConvertable.asTerm();
 	}
 
@@ -32,12 +32,12 @@ public abstract class Query extends Cursor<Map<String,Term>> implements TermConv
 		return goal;
 	}
 
-	protected PrologEngine getLogicEngine() {
-		return logicEngine;
+	protected PrologEngine getPrologEngine() {
+		return prologEngine;
 	}
 
 	public synchronized Cursor<Term> select(String selector) {
-		return select(logicEngine.asTerm(selector));
+		return select(prologEngine.asTerm(selector));
 	}
 	
 	/**
