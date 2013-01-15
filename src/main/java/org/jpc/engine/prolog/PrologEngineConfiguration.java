@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.jpc.engine.logtalk.LogtalkEngine;
 import org.jpc.util.JpcPreferences;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -127,13 +126,15 @@ public abstract class PrologEngineConfiguration {
 		}
 		PrologEngine newPrologEngine = new PrologEngine(createBootstrapEngine());
 		if(isLogtalkRequired()) {
-			logger.info("Attempting to load logtalk ...");
+			String prologDialect = newPrologEngine.prologDialect();
+			logger.info("Attempting to load logtalk in a " + prologDialect + " Prolog engine...");
 			try {
-				String prologDialect = newPrologEngine.prologDialect();
 				String logtalkIntegrationScript = preferences.logtalkIntegrationScript(prologDialect); //will throw an exception if a logtalk integration script cannot be found for a given engine
 				try {
 					logtalkLoaded = newPrologEngine.ensureLoaded(logtalkIntegrationScript);
-				} catch(Exception ex) {}
+				} catch(Exception ex) {
+					logger.error(ex.getMessage());
+				}
 				if(!logtalkLoaded) {
 					//throw new RuntimeException("Impossible to load Logtalk");
 					logger.warn("Impossible to load Logtalk. Some features may not be available. If Logtalk is not required change the \"logtalkRequired\" property "+
@@ -146,6 +147,7 @@ public abstract class PrologEngineConfiguration {
 				System.out.println(ex);
 				logger.warn("Impossible to load Logtalk in the " + newPrologEngine.prologDialect() + " Logic Engine");
 			}
+			newPrologEngine.flushOutput();
 		}
 		loadPreloadedResources(newPrologEngine);
 		long endTime = System.nanoTime();
