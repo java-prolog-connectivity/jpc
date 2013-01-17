@@ -10,7 +10,7 @@ import org.jpc.term.Term;
 import org.jpc.term.TermConvertable;
 
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.ListMultimap;
 
 /**
  * Disclaimer: Some methods were inspired or taken from the JPL library
@@ -49,8 +49,8 @@ public abstract class Query extends Cursor<Map<String,Term>> implements TermConv
 		return adapt(new SolutionToTermConverter(selector));
 	}
 	
-	public synchronized Multimap<String, Term> allSolutionsMultimap() {
-		Multimap<String, Term> allSolutionsMultimap = ArrayListMultimap.create();
+	public synchronized ListMultimap<String, Term> allSolutionsMultimap() {
+		ListMultimap<String, Term> allSolutionsMultimap = ArrayListMultimap.create();
 		List<Map<String, Term>> allSolutions = allSolutions();
 		for(Map<String, Term> solution : allSolutions) {
 			for(Entry<String, Term> entry : solution.entrySet()) {
