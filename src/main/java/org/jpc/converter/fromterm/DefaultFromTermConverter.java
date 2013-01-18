@@ -19,7 +19,7 @@ import org.jpc.util.LogicUtil;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
 
-public class DefaultTermToObjectConverter implements TermToObjectConverter<Object> {
+public class DefaultFromTermConverter implements FromTermConverter<Object> {
 
 	public Object apply(Term term) {
 		if(term instanceof Variable) {

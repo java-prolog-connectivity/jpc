@@ -1,17 +1,17 @@
 package org.jpc.converter.toterm.tolistterm;
 
-import org.jpc.converter.toterm.DefaultObjectToTermConverter;
-import org.jpc.converter.toterm.ObjectToTermConverter;
+import org.jpc.converter.toterm.DefaultToTermConverter;
+import org.jpc.converter.toterm.ToTermConverter;
 import org.jpc.term.Term;
 
 
 public class IterableToTermConverter extends ObjectToListTermConverter<Iterable> {
 
 	public IterableToTermConverter() {
-		this(new DefaultObjectToTermConverter());
+		this(new DefaultToTermConverter());
 	}
 	
-	public IterableToTermConverter(ObjectToTermConverter memberConverter) {
+	public IterableToTermConverter(ToTermConverter memberConverter) {
 		super(memberConverter);
 	}
 	

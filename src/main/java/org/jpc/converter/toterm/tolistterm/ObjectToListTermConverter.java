@@ -1,18 +1,18 @@
 package org.jpc.converter.toterm.tolistterm;
 
-import org.jpc.converter.fromterm.TermToObjectConverter;
-import org.jpc.converter.toterm.ObjectToTermConverter;
+import org.jpc.converter.fromterm.FromTermConverter;
+import org.jpc.converter.toterm.ToTermConverter;
 
 
-public abstract class ObjectToListTermConverter<O> implements ObjectToTermConverter<O> {
+public abstract class ObjectToListTermConverter<O> implements ToTermConverter<O> {
 
-	private ObjectToTermConverter memberConverter;
+	private ToTermConverter memberConverter;
 	
-	public ObjectToListTermConverter(ObjectToTermConverter memberConverter) {
+	public ObjectToListTermConverter(ToTermConverter memberConverter) {
 		this.memberConverter = memberConverter;
 	}
 
-	public ObjectToTermConverter getMemberConverter() {
+	public ToTermConverter getMemberConverter() {
 		return memberConverter;
 	}
 

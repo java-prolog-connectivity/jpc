@@ -5,7 +5,7 @@ import java.util.GregorianCalendar;
 import org.jpc.term.FloatTerm;
 import org.jpc.term.Term;
 
-public class TermToGregorianCalendarConverter implements TermToObjectConverter<GregorianCalendar> {
+public class TermToGregorianCalendarConverter implements FromTermConverter<GregorianCalendar> {
 
 	@Override
 	public GregorianCalendar apply(Term term) {

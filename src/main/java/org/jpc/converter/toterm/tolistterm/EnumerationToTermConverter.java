@@ -3,17 +3,17 @@ package org.jpc.converter.toterm.tolistterm;
 import java.util.Collections;
 import java.util.Enumeration;
 
-import org.jpc.converter.toterm.DefaultObjectToTermConverter;
-import org.jpc.converter.toterm.ObjectToTermConverter;
+import org.jpc.converter.toterm.DefaultToTermConverter;
+import org.jpc.converter.toterm.ToTermConverter;
 import org.jpc.term.Term;
 
 public class EnumerationToTermConverter extends ObjectToListTermConverter<Enumeration> {
 	
 	public EnumerationToTermConverter() {
-		this(new DefaultObjectToTermConverter());
+		this(new DefaultToTermConverter());
 	}
 	
-	public EnumerationToTermConverter(ObjectToTermConverter memberConverter) {
+	public EnumerationToTermConverter(ToTermConverter memberConverter) {
 		super(memberConverter);
 	}
 	

@@ -7,23 +7,23 @@ import java.util.Map.Entry;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
 
-public class MapEntryToTermConverter implements ObjectToTermConverter<Entry> {
+public class MapEntryToTermConverter implements ToTermConverter<Entry> {
 
 	public static final String DEFAULT_ENTRY_SEPARATOR = "-";
 	
-	private ObjectToTermConverter<Object> keyConverter;
-	private ObjectToTermConverter<Object> valueConverter;
+	private ToTermConverter<Object> keyConverter;
+	private ToTermConverter<Object> valueConverter;
 	public String entrySeparator;
 	
 	public MapEntryToTermConverter() {
-		this(new DefaultObjectToTermConverter(), new DefaultObjectToTermConverter());
+		this(new DefaultToTermConverter(), new DefaultToTermConverter());
 	}
 	
-	public MapEntryToTermConverter(ObjectToTermConverter keyConverter, ObjectToTermConverter valueConverter) {
+	public MapEntryToTermConverter(ToTermConverter keyConverter, ToTermConverter valueConverter) {
 		this(keyConverter, valueConverter, DEFAULT_ENTRY_SEPARATOR);
 	}
 	
-	public MapEntryToTermConverter(ObjectToTermConverter keyConverter, ObjectToTermConverter valueConverter, String entrySeparator) {
+	public MapEntryToTermConverter(ToTermConverter keyConverter, ToTermConverter valueConverter, String entrySeparator) {
 		this.keyConverter = keyConverter;
 		this.valueConverter = valueConverter;
 		this.entrySeparator = entrySeparator;

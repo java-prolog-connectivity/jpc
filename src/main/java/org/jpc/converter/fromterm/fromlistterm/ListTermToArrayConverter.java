@@ -2,8 +2,8 @@ package org.jpc.converter.fromterm.fromlistterm;
 
 import java.util.List;
 
-import org.jpc.converter.fromterm.DefaultTermToObjectConverter;
-import org.jpc.converter.fromterm.TermToObjectConverter;
+import org.jpc.converter.fromterm.DefaultFromTermConverter;
+import org.jpc.converter.fromterm.FromTermConverter;
 import org.jpc.term.Term;
 import org.minitoolbox.reflection.ReflectionUtil;
 
@@ -13,14 +13,14 @@ public class ListTermToArrayConverter<T> extends ListTermToObjectConverter<T[]> 
 	private Class<T> arrayClass;
 	
 	public ListTermToArrayConverter() {
-		this((TermToObjectConverter<T>) new DefaultTermToObjectConverter());
+		this((FromTermConverter<T>) new DefaultFromTermConverter());
 	}
 	
-	public ListTermToArrayConverter(TermToObjectConverter<T> memberConverter) {
+	public ListTermToArrayConverter(FromTermConverter<T> memberConverter) {
 		this(memberConverter, (Class<T>) Object[].class);
 	}
 
-	public ListTermToArrayConverter(TermToObjectConverter<T> memberConverter, Class<T> arrayClass) {
+	public ListTermToArrayConverter(FromTermConverter<T> memberConverter, Class<T> arrayClass) {
 		super(memberConverter);
 		this.arrayClass = arrayClass;
 	}

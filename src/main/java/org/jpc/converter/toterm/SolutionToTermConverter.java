@@ -5,7 +5,7 @@ import org.jpc.term.Term;
 import org.jpc.term.TermConvertable;
 import com.google.common.base.Function;
 
-public class SolutionToTermConverter implements ObjectToTermConverter<Map<String, Term>> {
+public class SolutionToTermConverter implements ToTermConverter<Map<String, Term>> {
 
 	private Term term;
 	

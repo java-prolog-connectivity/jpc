@@ -5,7 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.jpc.converter.toterm.DefaultObjectToTermConverter;
+import org.jpc.converter.toterm.DefaultToTermConverter;
 import org.jpc.term.Variable;
 import org.junit.Test;
 

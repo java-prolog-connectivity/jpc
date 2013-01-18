@@ -16,8 +16,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.jpc.converter.fromterm.DefaultTermToObjectConverter;
-import org.jpc.converter.toterm.DefaultObjectToTermConverter;
+import org.jpc.converter.fromterm.DefaultFromTermConverter;
+import org.jpc.converter.toterm.DefaultToTermConverter;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.FloatTerm;
@@ -32,7 +32,7 @@ public class DefaultTermConverterTest {
 	// *** TERM TO OBJECTS TESTS ***
 	
 	private Term asTerm(Object o) {
-		return new DefaultObjectToTermConverter().apply(o);
+		return new DefaultToTermConverter().apply(o);
 	}
 	
 	@Test
@@ -137,7 +137,7 @@ public class DefaultTermConverterTest {
 	// *** OBJECT TO TERM TESTS ***
 	
 	private Object asObject(Term t) {
-		return new DefaultTermToObjectConverter().apply(t);
+		return new DefaultFromTermConverter().apply(t);
 	}
 	
 	@Test

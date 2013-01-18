@@ -3,17 +3,17 @@ package org.jpc.converter.fromterm.fromlistterm;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jpc.converter.fromterm.DefaultTermToObjectConverter;
-import org.jpc.converter.fromterm.TermToObjectConverter;
+import org.jpc.converter.fromterm.DefaultFromTermConverter;
+import org.jpc.converter.fromterm.FromTermConverter;
 import org.jpc.term.Term;
 
 public class ListTermToListConverter<T> extends ListTermToObjectConverter<List<T>> {
 	
 	public ListTermToListConverter() {
-		this((TermToObjectConverter<T>) new DefaultTermToObjectConverter());
+		this((FromTermConverter<T>) new DefaultFromTermConverter());
 	}
 	
-	public ListTermToListConverter(TermToObjectConverter<T> memberConverter) {
+	public ListTermToListConverter(FromTermConverter<T> memberConverter) {
 		super(memberConverter);
 	}
 

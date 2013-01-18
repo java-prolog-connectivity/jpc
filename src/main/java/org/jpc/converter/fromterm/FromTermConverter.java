@@ -4,6 +4,6 @@ import org.jpc.term.Term;
 
 import com.google.common.base.Function;
 
-public interface TermToObjectConverter<T> extends Function<Term, T> {
+public interface FromTermConverter<T> extends Function<Term, T> {
 
 }

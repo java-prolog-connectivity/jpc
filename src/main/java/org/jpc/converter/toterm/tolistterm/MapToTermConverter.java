@@ -3,7 +3,7 @@ package org.jpc.converter.toterm.tolistterm;
 import java.util.Map;
 
 import org.jpc.converter.toterm.MapEntryToTermConverter;
-import org.jpc.converter.toterm.ObjectToTermConverter;
+import org.jpc.converter.toterm.ToTermConverter;
 import org.jpc.term.Term;
 
 public class MapToTermConverter extends ObjectToListTermConverter<Map>{
@@ -12,7 +12,7 @@ public class MapToTermConverter extends ObjectToListTermConverter<Map>{
 		this(new MapEntryToTermConverter());
 	}
 	
-	public MapToTermConverter(ObjectToTermConverter memberConverter) {
+	public MapToTermConverter(ToTermConverter memberConverter) {
 		super(memberConverter);
 	}
 	

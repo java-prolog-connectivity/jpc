@@ -2,17 +2,17 @@ package org.jpc.converter.toterm.tolistterm;
 
 import java.util.Arrays;
 
-import org.jpc.converter.toterm.DefaultObjectToTermConverter;
-import org.jpc.converter.toterm.ObjectToTermConverter;
+import org.jpc.converter.toterm.DefaultToTermConverter;
+import org.jpc.converter.toterm.ToTermConverter;
 import org.jpc.term.Term;
 
 public class ArrayToTermConverter extends ObjectToListTermConverter {
 
 	public ArrayToTermConverter() {
-		this(new DefaultObjectToTermConverter());
+		this(new DefaultToTermConverter());
 	}
 	
-	public ArrayToTermConverter(ObjectToTermConverter memberConverter) {
+	public ArrayToTermConverter(ToTermConverter memberConverter) {
 		super(memberConverter);
 	}
 	

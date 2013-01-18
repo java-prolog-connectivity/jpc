@@ -6,16 +6,16 @@ import java.util.Map.Entry;
 
 import org.jpc.term.Term;
 
-public class TermToMapEntryConverter<K,V> implements TermToObjectConverter<Map.Entry<K,V>> {
+public class TermToMapEntryConverter<K,V> implements FromTermConverter<Map.Entry<K,V>> {
 
-	private TermToObjectConverter<K> keyConverter;
-	private TermToObjectConverter<V> valueConverter;
+	private FromTermConverter<K> keyConverter;
+	private FromTermConverter<V> valueConverter;
 	
 	public TermToMapEntryConverter() {
-		this((TermToObjectConverter<K>)new DefaultTermToObjectConverter(), (TermToObjectConverter<V>)new DefaultTermToObjectConverter());
+		this((FromTermConverter<K>)new DefaultFromTermConverter(), (FromTermConverter<V>)new DefaultFromTermConverter());
 	}
 	
-	public TermToMapEntryConverter(TermToObjectConverter<K> keyConverter, TermToObjectConverter<V> valueConverter) {
+	public TermToMapEntryConverter(FromTermConverter<K> keyConverter, FromTermConverter<V> valueConverter) {
 		this.keyConverter = keyConverter;
 		this.valueConverter = valueConverter;
 	}

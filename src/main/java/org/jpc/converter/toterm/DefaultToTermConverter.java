@@ -27,7 +27,7 @@ import org.jpc.term.Variable;
  * @author sergioc
  *
  */
-public class DefaultObjectToTermConverter implements ObjectToTermConverter<Object> {
+public class DefaultToTermConverter implements ToTermConverter<Object> {
 	
 	public Term apply(Object o) {
 		Term term = null;
@@ -47,17 +47,17 @@ public class DefaultObjectToTermConverter implements ObjectToTermConverter<Objec
 		} else if(o instanceof XMLGregorianCalendar) {
 			term = new XmlGregorianCalendarToTermConverter().apply((XMLGregorianCalendar)o);
 		} else if (o instanceof Entry) {
-			term = new MapEntryToTermConverter(new DefaultObjectToTermConverter(), new DefaultObjectToTermConverter()).apply((Entry)o);
+			term = new MapEntryToTermConverter(new DefaultToTermConverter(), new DefaultToTermConverter()).apply((Entry)o);
 		} else if(o instanceof Map) {
-			term = new MapToTermConverter(new MapEntryToTermConverter(new DefaultObjectToTermConverter(), new DefaultObjectToTermConverter())).apply((Map)o);
+			term = new MapToTermConverter(new MapEntryToTermConverter(new DefaultToTermConverter(), new DefaultToTermConverter())).apply((Map)o);
 		} else if(o instanceof Enumeration) {
-			term = new EnumerationToTermConverter(new DefaultObjectToTermConverter()).apply((Enumeration)o);
+			term = new EnumerationToTermConverter(new DefaultToTermConverter()).apply((Enumeration)o);
 		} else if(o instanceof Object[]) {
-			term = new ArrayToTermConverter(new DefaultObjectToTermConverter()).apply((Object[])o);
+			term = new ArrayToTermConverter(new DefaultToTermConverter()).apply((Object[])o);
 		} else if(o instanceof Iterable) {
-			term = new IterableToTermConverter(new DefaultObjectToTermConverter()).apply((Iterable)o);
+			term = new IterableToTermConverter(new DefaultToTermConverter()).apply((Iterable)o);
 		} else if(o instanceof Iterator) {
-			term = new IteratorToTermConverter(new DefaultObjectToTermConverter()).apply((Iterator)o);
+			term = new IteratorToTermConverter(new DefaultToTermConverter()).apply((Iterator)o);
 		}
 		else
 			throw new JpcException("Impossible to interpret the object " + o + " as a term");

@@ -4,7 +4,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.jpc.term.Term;
 
-public class XmlGregorianCalendarToTermConverter implements ObjectToTermConverter<XMLGregorianCalendar> {
+public class XmlGregorianCalendarToTermConverter implements ToTermConverter<XMLGregorianCalendar> {
 
 	@Override
 	public Term apply(XMLGregorianCalendar calendar) {
