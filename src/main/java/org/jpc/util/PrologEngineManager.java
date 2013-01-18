@@ -58,7 +58,12 @@ public class PrologEngineManager {
 	private Map<Class<? extends PrologEngineConfiguration>, PrologEngineConfiguration> engineConfigurationPool; // a repository of logic engine configurations
 	
 	public PrologEngineManager() {
+		this(new ArrayList<Class<? extends PrologEngineConfiguration>>());
+	}
+	
+	public PrologEngineManager(Iterable<Class<? extends PrologEngineConfiguration>> prologEngineConfigurationClasses) {
 		engineConfigurationPool = new LinkedHashMap<>(); //to preserve insertion order
+		register(prologEngineConfigurationClasses);
 	}
 	
 	public List<PrologEngineConfiguration> register(Iterable<Class<? extends PrologEngineConfiguration>> prologEngineConfigurationClasses) {
@@ -77,7 +82,7 @@ public class PrologEngineManager {
 	public PrologEngineConfiguration register(Class<? extends PrologEngineConfiguration> prologEngineConfigurationClass) {
 		PrologEngineConfiguration prologEngineConfiguration = engineConfigurationPool.get(prologEngineConfigurationClass);
 		
-		if(prologEngineConfiguration == null) {
+		if(prologEngineConfiguration == null) { 
 			try {
 				prologEngineConfiguration = prologEngineConfigurationClass.newInstance();
 			} catch (InstantiationException | IllegalAccessException e) {
