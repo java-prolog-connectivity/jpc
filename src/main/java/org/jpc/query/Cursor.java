@@ -11,7 +11,7 @@ import org.jpc.JpcException;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
-public abstract class Cursor<T> implements AutoCloseable, Iterator<T>{
+public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	
 	public synchronized boolean hasSolution() {
 		return oneSolution() != null;

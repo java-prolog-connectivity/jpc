@@ -16,8 +16,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.jpc.converter.fromterm.DefaultFromTermConverter;
-import org.jpc.converter.toterm.DefaultToTermConverter;
+import org.jpc.Jpc;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.FloatTerm;
@@ -29,10 +28,12 @@ import org.junit.Test;
 
 public class DefaultTermConverterTest {
 
+	private Jpc jpc = new Jpc();
+	
 	// *** TERM TO OBJECTS TESTS ***
 	
 	private Term asTerm(Object o) {
-		return new DefaultToTermConverter().apply(o);
+		return jpc.toTerm(o);
 	}
 	
 	@Test
@@ -136,8 +137,8 @@ public class DefaultTermConverterTest {
 	
 	// *** OBJECT TO TERM TESTS ***
 	
-	private Object asObject(Term t) {
-		return new DefaultFromTermConverter().apply(t);
+	private Object asObject(Term term) {
+		return jpc.fromTerm(term);
 	}
 	
 	@Test
@@ -158,7 +159,7 @@ public class DefaultTermConverterTest {
 	
 	@Test
 	public void testTermToInt() {
-		assertEquals(10, asObject(new IntegerTerm(10)));
+		assertEquals(10L, asObject(new IntegerTerm(10)));
 	}
 	
 	@Test
@@ -169,9 +170,8 @@ public class DefaultTermConverterTest {
 	@Test
 	public void testTermToEntry() {
 		Term entryTerm = new Compound("=", asList(new Atom("apple"), new IntegerTerm(10)));
-		Map.Entry<String, Integer> entry = new AbstractMap.SimpleEntry<>("apple", 10);
-		assertEquals(entry.getKey(), ((Map.Entry)asObject(entryTerm)).getKey());
-		assertEquals(entry.getValue(), ((Map.Entry)asObject(entryTerm)).getValue());
+		Map.Entry<String, Long> entry = new AbstractMap.SimpleEntry<>("apple", 10L);
+		assertEquals(entry, asObject(entryTerm));
 	}
 	
 	@Test
@@ -181,8 +181,8 @@ public class DefaultTermConverterTest {
 		TermConvertable list = listTerm(c1, c2);
 		Map map = (Map) asObject(list.asTerm());
 		assertEquals(2, map.size());
-		assertEquals(map.get("apple"), 10);
-		assertEquals(map.get("orange"), 20);
+		assertEquals(map.get("apple"), 10L);
+		assertEquals(map.get("orange"), 20L);
 	}
 	
 	@Test

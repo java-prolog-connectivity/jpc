@@ -2,37 +2,62 @@ package org.jpc;
 
 import java.lang.reflect.Type;
 
-import org.jpc.converter.fromterm.DefaultFromTermConverter;
-import org.jpc.converter.fromterm.FromTermConverter;
-import org.jpc.converter.toterm.DefaultToTermConverter;
-import org.jpc.converter.toterm.ToTermConverter;
+import org.jpc.converter.ConverterManager;
+import org.jpc.converter.DefaultConverterManager;
+import org.jpc.instantiationmanager.DefaultInstantiationManager;
+import org.jpc.instantiationmanager.InstantiationManager;
 import org.jpc.term.Term;
-import org.minitoolbox.exception.NotImplementedException;
+import org.jpc.typesolver.DefaultTypeSolverManager;
+import org.jpc.typesolver.TypeSolverManager;
 
 /**
- * A syntactic sugar class for abstracting common JPC functionality (such as converting between terms and Java objects)
+ * A class providing an interface for the main JPC functionality (such as converting between terms and Java objects)
  * This class is inspired by the Gson and GsonBuilder class from the Gson library (http://code.google.com/p/google-gson/)
  * @author sergioc
  *
  */
 public class Jpc {
 
+	private ConverterManager converterManager;
+	private TypeSolverManager typeSolverManager;
+	private InstantiationManager instantiationManager;
+	//private JpcPreferences preferences;
+	
+	public Jpc() {
+		this.converterManager = new DefaultConverterManager();
+		this.typeSolverManager = new DefaultTypeSolverManager();
+		this.instantiationManager = new DefaultInstantiationManager();
+	}
+	
+	public Jpc(ConverterManager converterManager, TypeSolverManager typeSolverManager, InstantiationManager instantiationManager) {
+		this.typeSolverManager = typeSolverManager;
+		this.converterManager = converterManager;
+		this.instantiationManager = instantiationManager;
+		//this.preferences = preferences;
+	}
+	
+	public Object fromTerm(Term term) {
+		return fromTerm(term, Object.class);
+	}
+	
+	public <T> T fromTerm(Term term, Type type) {
+		return (T) converterManager.fromTerm(term, type, this);
+	}
+	
 	public Term toTerm(Object object) {
-		return new DefaultToTermConverter().apply(object);
+		return converterManager.toTerm(object, this);
 	}
 	
-	public <T> T fromTerm(Term term, Class<T> clazz) {
-		return (T)new DefaultFromTermConverter().apply(term);
-	}
+//	public <T extends Term> T toTerm(Object object, Class<T> termType) {
+//		return null;
+//	}
 	
-	//TODO
-	public void registerTypeConverter(Type type, FromTermConverter converter) {
-		throw new NotImplementedException();
+	public <T> T instantiate(Type t) {
+		return instantiationManager.instantiate(t);
 	}
-	
-	//TODO
-	public void registerTypeConverter(Type type, ToTermConverter converter) {
-		throw new NotImplementedException();
+
+	public Type getType(Term term) {
+		return typeSolverManager.getType(term);
 	}
-	
+
 }

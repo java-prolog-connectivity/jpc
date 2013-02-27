@@ -9,6 +9,9 @@ import org.jpc.JpcException;
  */
 public class JpcConversionException extends JpcException {
 
+	public JpcConversionException() {
+	}
+	
 	public JpcConversionException(String from, String to) {
 		super(formatMessage(from, to));
 	}
@@ -20,6 +23,8 @@ public class JpcConversionException extends JpcException {
 	public JpcConversionException(String from, String to, Exception ex) {
 		super(formatMessage(from, to), ex);
 	}
+	
+	
 	
 	private static String formatMessage(String from, String to) {
 		return formatMessage(from, to, null);

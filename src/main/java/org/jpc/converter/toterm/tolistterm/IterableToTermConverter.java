@@ -1,23 +1,20 @@
 package org.jpc.converter.toterm.tolistterm;
 
-import org.jpc.converter.toterm.DefaultToTermConverter;
+import org.jpc.Jpc;
 import org.jpc.converter.toterm.ToTermConverter;
 import org.jpc.term.Term;
 
+import com.google.common.base.Predicate;
 
-public class IterableToTermConverter extends ObjectToListTermConverter<Iterable> {
+
+public class IterableToTermConverter extends ToTermConverter<Iterable<?>> {
 
 	public IterableToTermConverter() {
-		this(new DefaultToTermConverter());
-	}
-	
-	public IterableToTermConverter(ToTermConverter memberConverter) {
-		super(memberConverter);
 	}
 	
 	@Override
-	public Term apply(Iterable it) {
-		return new IteratorToTermConverter(getMemberConverter()).apply(it.iterator());
+	public Term convert(Iterable<?> it, Jpc context) {
+		return new IteratorToTermConverter().convert(it.iterator(), context);
 	}
 
 }

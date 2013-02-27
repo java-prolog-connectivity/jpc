@@ -3,7 +3,7 @@ package org.jpc.util.concurrent;
 import java.util.concurrent.Callable;
 
 import org.jpc.engine.prolog.PrologEngine;
-import org.jpc.engine.prolog.PrologEngineConfiguration;
+import org.jpc.engine.prolog.configuration.PrologEngineConfiguration;
 
 /**
  * Wraps a Callable that requires a prolog engine

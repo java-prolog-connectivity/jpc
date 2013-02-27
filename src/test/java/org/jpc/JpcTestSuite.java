@@ -1,5 +1,6 @@
 package org.jpc;
 
+import org.jpc.instantiationmanager.TestInstantiationManager;
 import org.jpc.salt.JpcTermWriterTest;
 import org.jpc.term.AbstractTermTest;
 import org.jpc.term.AtomTest;
@@ -22,6 +23,7 @@ import org.junit.runners.Suite;
 	CompoundTest.class,
 	ListTermTest.class,
 	AbstractTermTest.class,
+	TestInstantiationManager.class,
 	DefaultTermConverterTest.class,
 	LogicUtilTest.class,
 	JpcTermWriterTest.class

@@ -99,7 +99,7 @@ public final class Compound extends AbstractTerm {
 	 * @return the arguments (1..arity) of this Compound as an array[0..arity-1] of Term
 	 */
 	@Override
-	public List<Term> getArgs() {
+	public List<Term> args() {
 		return args;
 	}
 	
@@ -122,7 +122,7 @@ public final class Compound extends AbstractTerm {
 	
 	@Override
 	public int hashCode() {
-		List<Term> allFields = new ArrayList<Term>(getArgs());
+		List<Term> allFields = new ArrayList<Term>(args());
 		allFields.add(0, getName());
 		return Objects.hash(allFields.toArray());
 	}

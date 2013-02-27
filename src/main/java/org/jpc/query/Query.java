@@ -1,10 +1,11 @@
 package org.jpc.query;
 
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.jpc.converter.toterm.SolutionToTermConverter;
+import org.jpc.Jpc;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Term;
 import org.jpc.term.TermConvertable;
@@ -36,7 +37,7 @@ public abstract class Query extends Cursor<Map<String,Term>> implements TermConv
 		return prologEngine;
 	}
 
-	public synchronized Cursor<Term> select(String selector) {
+	synchronized Cursor<Term> select(String selector) {
 		return select(prologEngine.asTerm(selector));
 	}
 	
@@ -46,9 +47,42 @@ public abstract class Query extends Cursor<Map<String,Term>> implements TermConv
 	 * @return
 	 */
 	public synchronized Cursor<Term> select(Term selector) {
-		return adapt(new SolutionToTermConverter(selector));
+		return adapt(new QuerySolutionToTermFunction(selector));
 	}
 	
+	
+	public synchronized Cursor<?> selectObject(String selector) {
+		return selectObject(prologEngine.asTerm(selector), new Jpc(), Object.class);
+	}
+	
+	public synchronized Cursor<?> selectObject(String selector, Jpc context) {
+		return selectObject(prologEngine.asTerm(selector), context, Object.class);
+	}
+	
+	public synchronized Cursor<?> selectObject(String selector, Type targetType) {
+		return selectObject(prologEngine.asTerm(selector), new Jpc(), targetType);
+	}
+	
+	public synchronized Cursor<?> selectObject(String selector, Jpc context, Type targetType) {
+		return selectObject(prologEngine.asTerm(selector), context, targetType);
+	}
+	
+	public synchronized Cursor<?> selectObject(Term selector) {
+		return selectObject(selector, new Jpc(), Object.class);
+	}
+	
+	public synchronized Cursor<?> selectObject(Term selector, Jpc context) {
+		return selectObject(selector, context, Object.class);
+	}
+	
+	public synchronized Cursor<?> selectObject(Term selector, Type targetType) {
+		return selectObject(selector, new Jpc(), targetType);
+	}
+	
+	public synchronized Cursor<?> selectObject(Term selector, Jpc context, Type targetType) {
+		return select(selector).adapt(new TermToObjectFunction(context, targetType));
+	}
+
 	public synchronized ListMultimap<String, Term> allSolutionsMultimap() {
 		ListMultimap<String, Term> allSolutionsMultimap = ArrayListMultimap.create();
 		List<Map<String, Term>> allSolutions = allSolutions();

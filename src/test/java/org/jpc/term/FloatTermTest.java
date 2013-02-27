@@ -3,8 +3,6 @@ package org.jpc.term;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import org.jpc.term.FloatTerm;
-import org.jpc.term.IntegerTerm;
 import org.junit.Test;
 
 public class FloatTermTest {

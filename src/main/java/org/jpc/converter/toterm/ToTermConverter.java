@@ -1,9 +1,15 @@
 package org.jpc.converter.toterm;
 
+import org.jpc.Jpc;
+import org.jpc.converter.JpcConverter;
 import org.jpc.term.Term;
 
-import com.google.common.base.Function;
+public abstract class ToTermConverter<S> extends JpcConverter<S, Term> {
 
-public interface  ToTermConverter<O> extends Function<O, Term>{
+	public abstract Term convert(S source, Jpc context);
 
+	public boolean canConvert(Object object) {
+		return sourceTypeIsAssignableTo(object.getClass());
+	}
+	
 }

@@ -26,12 +26,11 @@ import org.jpc.term.Variable;
 public class LogicUtil {
 	
 	/**
-	 * Returns whether the term is an unification
-	 * A term is an unification if it is a compound with functor("=", 2)
+	 * Returns whether the term is a compound with functor("=", 2)
 	 * @param term
-	 * @return whether the term is an unification
+	 * @return whether the term has as functor ("=", 2)
 	 */
-	public static boolean isUnification(TermConvertable termConvertable) {
+	public static boolean isEquals(TermConvertable termConvertable) {
 		return termConvertable.asTerm().hasFunctor("=", 2);
 	}
 	
@@ -242,7 +241,7 @@ public class LogicUtil {
 		if(term.isList())
 			return term.asList();
 		else 
-			return term.getArgs();
+			return term.args();
 	}
 
 	/**

@@ -1,15 +1,17 @@
-package org.jpc.converter.toterm;
+package org.jpc.query;
 
 import java.util.Map;
+
 import org.jpc.term.Term;
 import org.jpc.term.TermConvertable;
+
 import com.google.common.base.Function;
 
-public class SolutionToTermConverter implements ToTermConverter<Map<String, Term>> {
+public class QuerySolutionToTermFunction implements Function<Map<String, Term>, Term> {
 
 	private Term term;
 	
-	public SolutionToTermConverter(TermConvertable<Term> termConvertable) {
+	public QuerySolutionToTermFunction(TermConvertable<Term> termConvertable) {
 		term = termConvertable.asTerm();
 	}
 	

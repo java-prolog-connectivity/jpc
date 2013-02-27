@@ -11,7 +11,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.jpc.engine.prolog.PrologEngineConfiguration;
+import org.jpc.engine.prolog.configuration.PrologEngineConfiguration;
 import org.minitoolbox.concurrent.DelegatedExecutorService;
 import org.minitoolbox.concurrent.ThreadFactoryObserver;
 

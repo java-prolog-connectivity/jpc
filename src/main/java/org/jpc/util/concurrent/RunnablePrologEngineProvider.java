@@ -1,7 +1,7 @@
 package org.jpc.util.concurrent;
 
 import org.jpc.engine.prolog.PrologEngine;
-import org.jpc.engine.prolog.PrologEngineConfiguration;
+import org.jpc.engine.prolog.configuration.PrologEngineConfiguration;
 
 /**
  * Wraps a Runnable that requires a prolog engine

@@ -1,6 +1,6 @@
 package org.jpc.util;
 
-import static org.jpc.util.JpcPreferences.JPC_BASE_PACKAGE;
+import static org.jpc.JpcPreferences.JPC_BASE_PACKAGE;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jpc.engine.prolog.PrologEngine;
-import org.jpc.engine.prolog.PrologEngineConfiguration;
+import org.jpc.engine.prolog.configuration.PrologEngineConfiguration;
 import org.minitoolbox.reflection.ReflectionUtil;
 import org.minitoolbox.reflection.googlereflections.GoogleReflectionsUtil;
 import org.reflections.Reflections;

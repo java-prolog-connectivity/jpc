@@ -2,7 +2,7 @@ package org.jpc.util.concurrent;
 
 import java.util.concurrent.Executors;
 
-import org.jpc.engine.prolog.PrologEngineConfiguration;
+import org.jpc.engine.prolog.configuration.PrologEngineConfiguration;
 import org.minitoolbox.concurrent.OneThreadFactory;
 
 public class OneThreadJpcExecutor extends JpcExecutor {

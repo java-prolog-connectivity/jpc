@@ -1,10 +1,12 @@
-package org.jpc.engine.prolog;
+package org.jpc.engine.prolog.configuration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.jpc.util.JpcPreferences;
+import org.jpc.JpcPreferences;
+import org.jpc.engine.prolog.BootstrapPrologEngine;
+import org.jpc.engine.prolog.PrologEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

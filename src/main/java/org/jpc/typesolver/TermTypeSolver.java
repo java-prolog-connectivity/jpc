@@ -1,0 +1,16 @@
+package org.jpc.typesolver;
+
+import java.lang.reflect.Type;
+
+import org.jpc.term.Term;
+
+/**
+ * Maps native Prolog terms to an "equivalent" Java type, given certain structural properties of a logic term.
+ * @author sergioc
+ *
+ */
+public abstract class TermTypeSolver {
+	
+	public abstract Type getType(Term term);
+	
+}

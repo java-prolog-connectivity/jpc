@@ -1,4 +1,4 @@
-package org.jpc.util;
+package org.jpc;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -29,7 +29,7 @@ public class JpcPreferences extends Preferences {
 		checkNotNull(engineName);
 		checkArgument(!engineName.isEmpty());
 		engineName = engineName.toLowerCase();
-		String logtalkHome = getVarOrDie(LOGTALK_HOME_ENV_VAR);
+		String logtalkHome = getVarOrThrow(LOGTALK_HOME_ENV_VAR);
 		String scriptPath = logtalkHome + "/integration/";
 		String fileName = "logtalk_" + engineName + ".pl";
 		scriptPath += fileName;

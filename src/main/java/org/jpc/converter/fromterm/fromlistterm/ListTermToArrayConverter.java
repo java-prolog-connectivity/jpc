@@ -1,36 +1,35 @@
 package org.jpc.converter.fromterm.fromlistterm;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
-import org.jpc.converter.fromterm.DefaultFromTermConverter;
+import org.jpc.Jpc;
+import org.jpc.converter.JpcConversionException;
 import org.jpc.converter.fromterm.FromTermConverter;
 import org.jpc.term.Term;
 import org.minitoolbox.reflection.ReflectionUtil;
+import org.minitoolbox.reflection.javatype.ParameterizedTypeImpl;
+import org.minitoolbox.reflection.wrappertype.ArrayTypeWrapper;
+import org.minitoolbox.reflection.wrappertype.TypeWrapper;
 
 
-public class ListTermToArrayConverter<T> extends ListTermToObjectConverter<T[]> {
-
-	private Class<T> arrayClass;
-	
-	public ListTermToArrayConverter() {
-		this((FromTermConverter<T>) new DefaultFromTermConverter());
-	}
-	
-	public ListTermToArrayConverter(FromTermConverter<T> memberConverter) {
-		this(memberConverter, (Class<T>) Object[].class);
-	}
-
-	public ListTermToArrayConverter(FromTermConverter<T> memberConverter, Class<T> arrayClass) {
-		super(memberConverter);
-		this.arrayClass = arrayClass;
-	}
+public class ListTermToArrayConverter<T> extends FromTermConverter<T[]> {
 
 	@Override
-	public T[] apply(Term term) {
-		List<T> collection = new ListTermToListConverter(getMemberConverter()).apply(term);
-		T[] array = (T[]) ReflectionUtil.createArray(arrayClass, collection.size());
-		for(int i=0; i<collection.size(); i++) {
-			array[i] = collection.get(i);
+	public T[] convert(Term term, Type type, Jpc context) {
+		TypeWrapper typeWrapper = TypeWrapper.wrap(type);
+		if(!( (typeWrapper instanceof ArrayTypeWrapper) && (targetTypeIsAssignableFrom(type) || targetTypeIsAssignableTo(type)) ))
+			throw new JpcConversionException();
+		
+		ArrayTypeWrapper arrayTypeWrapper = (ArrayTypeWrapper) typeWrapper;
+		Type arrayComponentType = arrayTypeWrapper.getComponentType();
+		Type listType = new ParameterizedTypeImpl(new Type[]{arrayComponentType}, null, List.class);
+		
+		List<T> list = context.fromTerm(term, listType);
+
+		T[] array = (T[]) ReflectionUtil.createArray(arrayComponentType, list.size());
+		for(int i=0; i<list.size(); i++) {
+			array[i] = list.get(i);
 		}
 		return array;
 	}
