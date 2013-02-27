@@ -54,6 +54,8 @@ public class ConverterManager {
 							continue; //try next converter
 						}
 					}
+				} else if(typeWrapper instanceof ArrayTypeWrapper) { //the current converter does not convert to arrays, but the desired type is an array
+					continue;
 				} else if(fromTermConverter.targetTypeIsAssignableTo(type)) {
 					bestTypeForConverter = typeWrapper.asType(converterTargetType);
 				} else if (fromTermConverter.targetTypeIsAssignableFrom(type)) {

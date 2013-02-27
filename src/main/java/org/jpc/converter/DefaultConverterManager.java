@@ -2,6 +2,7 @@ package org.jpc.converter;
 
 import org.jpc.converter.fromterm.TermToBooleanConverter;
 import org.jpc.converter.fromterm.TermToCalendarConverter;
+import org.jpc.converter.fromterm.TermToCharConverter;
 import org.jpc.converter.fromterm.TermToNumberConverter;
 import org.jpc.converter.fromterm.TermToStringConverter;
 import org.jpc.converter.fromterm.TermToXmlGregorianCalendarConverter;
@@ -55,6 +56,7 @@ public class DefaultConverterManager extends ConverterManager {
 		register(new TermToBooleanConverter());
 		register(new TermToCalendarConverter());
 		register(new TermToNumberConverter());
+		register(new TermToCharConverter());
 		register(new TermToStringConverter());
 		register(new TermToXmlGregorianCalendarConverter());
 		register(new VariableTermToObjectConverter());

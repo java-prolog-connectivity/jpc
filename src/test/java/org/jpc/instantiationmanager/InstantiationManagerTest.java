@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-public class TestInstantiationManager {
+public class InstantiationManagerTest {
 
 	@Test
 	public void testDefaultInstantiationManager() {
