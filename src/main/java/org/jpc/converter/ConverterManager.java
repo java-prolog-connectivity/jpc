@@ -43,7 +43,23 @@ public class ConverterManager {
 				FromTermConverter fromTermConverter = (FromTermConverter) converter;
 				Type converterTargetType = fromTermConverter.getTargetType();
 				TypeWrapper converterTargetTypeWrapper = TypeWrapper.wrap(fromTermConverter.getTargetType()); //a type wrapper over the target type (the destination type) of the converter
+				
+				
+				
+				
 				if(converterTargetTypeWrapper instanceof ArrayTypeWrapper) {//the converter converts to an array
+					
+					if(typeWrapper.isWeakAssignableFrom(converterTargetType)) {
+						Type baseTypeArray = TypeWrapper.wrap(converterTargetTypeWrapper.getBaseType()).asType(typeWrapper.getBaseType());
+						int typeArrayDimension = typeWrapper.getDimension();
+						int converterArrayDimension = converterTargetTypeWrapper.getDimension();
+						int dimension = typeArrayDimension<converterArrayDimension?converterArrayDimension:typeArrayDimension;
+						bestTypeForConverter = ArrayTypeWrapper.createArray(baseTypeArray, dimension);
+					} else
+						continue;
+					
+					
+					/*
 					if(type.equals(Object.class) || (typeWrapper instanceof VariableTypeWrapper)) { //the type requested is an Object, not an array. Anyway, all arrays extend from Object
 						bestTypeForConverter = fromTermConverter.getTargetType(); //then use the target type (an array type) of the converter
 					}
@@ -54,6 +70,7 @@ public class ConverterManager {
 							continue; //try next converter
 						}
 					}
+					*/
 				} else if(typeWrapper instanceof ArrayTypeWrapper) { //the current converter does not convert to arrays, but the desired type is an array
 					continue;
 				} else if(fromTermConverter.targetTypeIsAssignableTo(type)) {

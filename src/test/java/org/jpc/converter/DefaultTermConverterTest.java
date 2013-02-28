@@ -30,6 +30,7 @@ import org.jpc.term.Term;
 import org.jpc.term.TermConvertable;
 import org.jpc.term.Variable;
 import org.jpc.typesolver.MapTypeSolver;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class DefaultTermConverterTest {
@@ -226,7 +227,7 @@ public class DefaultTermConverterTest {
 	public void testTermToDouble() {
 		assertEquals(10.5, jpc.fromTerm(new FloatTerm(10.5)));
 	}
-	
+
 	@Test
 	public void testTermToEntry() {
 		Map.Entry<String, Long> entry = new AbstractMap.SimpleEntry<>("apple", 10L);
@@ -241,7 +242,7 @@ public class DefaultTermConverterTest {
 		} catch(Exception e){}
 		
 	}
-	
+
 	@Test
 	public void testTermToMap() {
 		Compound c1 = new Compound("-", asList(new Atom("apple"), new IntegerTerm(10)));
@@ -302,4 +303,34 @@ public class DefaultTermConverterTest {
 		assertEquals(array[1], null);
 	}
 	
+	@Test
+	public void testTermToObjectTable() {
+		Term term = new Compound(".", asList(
+				new Compound(".", asList(new Atom("apple"), 
+						new Compound(".", asList(new Variable("Var"), 
+							new Atom("[]"))))), 
+					new Compound(".", asList(
+						new Compound(".", asList(new Atom("pears"), 
+							new Compound(".", asList(new Variable("_"), 
+								new Atom("[]"))))), 
+					new Atom("[]")))));
+		Object[][] table = jpc.fromTerm(term, Object[][].class);
+		Assert.assertArrayEquals(table, new String[][]{new String[]{"apple", null}, new String[]{"pears", null}});
+	}
+
+	@Test
+	public void testTermToStringTable() {
+		Term term = new Compound(".", asList(
+				new Compound(".", asList(new Atom("apple"), 
+						new Compound(".", asList(new Variable("Var"), 
+							new Atom("[]"))))), 
+					new Compound(".", asList(
+						new Compound(".", asList(new Atom("pears"), 
+							new Compound(".", asList(new Variable("_"), 
+								new Atom("[]"))))), 
+					new Atom("[]")))));
+		String[][] table = jpc.fromTerm(term, String[][].class);
+		Assert.assertArrayEquals(table, new String[][]{new String[]{"apple", null}, new String[]{"pears", null}});
+	}
+
 }
