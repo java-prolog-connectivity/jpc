@@ -7,6 +7,12 @@ package org.jpc.engine.prolog;
  */
 public class PrologConstants {
 
+	public static final String TRUE = "true";
+	
+	public static final String FAIL = "fail";
+	
+	public static final String FALSE = "false";
+	
 	public static final String EMPTY_LIST_SYMBOL = "[]";
 	
 	public static final String CONS_FUNCTOR = ".";

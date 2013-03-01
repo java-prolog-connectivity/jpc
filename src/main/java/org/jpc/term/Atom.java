@@ -1,6 +1,9 @@
 package org.jpc.term;
 
 import static org.jpc.engine.prolog.PrologConstants.EMPTY_LIST_SYMBOL;
+import static org.jpc.engine.prolog.PrologConstants.FAIL;
+import static org.jpc.engine.prolog.PrologConstants.FALSE;
+import static org.jpc.engine.prolog.PrologConstants.TRUE;
 
 import org.jpc.JpcException;
 import org.jpc.engine.prolog.PrologEngine;
@@ -14,8 +17,8 @@ import org.jpc.term.visitor.TermVisitor;
  */
 public final class Atom extends AbstractTerm {
 
-	public static final Term TRUE_TERM = new Atom("true");
-	public static final Term FALSE_TERM = new Atom("false");
+	public static final Term TRUE_TERM = new Atom(TRUE);
+	public static final Term FALSE_TERM = new Atom(FAIL); //choosing 'fail' over 'false', since 'fail' is ISO
 	public static final Term EMPTY_LIST = new Atom(EMPTY_LIST_SYMBOL);
 	
 	private final String name;
@@ -61,7 +64,7 @@ public final class Atom extends AbstractTerm {
 	}
 	
 	public boolean isBoolean() {
-		return equals(TRUE_TERM) || equals(FALSE_TERM);
+		return getName().equals(TRUE) || getName().equals(FAIL) || getName().equals(FALSE);
 	}
 	
 	@Override

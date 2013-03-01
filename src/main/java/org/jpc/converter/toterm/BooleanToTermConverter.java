@@ -7,8 +7,11 @@ import org.jpc.term.Term;
 public class BooleanToTermConverter extends ToTermConverter<Boolean> {
 
 	@Override
-	public Term convert(Boolean source, Jpc context) {
-		return new Atom(source.toString());
+	public Term convert(Boolean bool, Jpc context) {
+		if(bool)
+			return Atom.TRUE_TERM;
+		else
+			return Atom.FALSE_TERM;
 	}
 
 }
