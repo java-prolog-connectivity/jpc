@@ -1,6 +1,9 @@
 package org.jpc.converter;
 
 import static java.util.Arrays.asList;
+import static org.jpc.engine.prolog.PrologConstants.FAIL;
+import static org.jpc.engine.prolog.PrologConstants.FALSE;
+import static org.jpc.engine.prolog.PrologConstants.TRUE;
 import static org.jpc.term.ListTerm.listTerm;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -8,6 +11,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.AbstractMap;
@@ -33,6 +37,8 @@ import org.jpc.typesolver.MapTypeSolver;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.google.common.reflect.TypeToken;
+
 public class DefaultTermConverterTest {
 
 	private Jpc jpc = new Jpc();
@@ -51,8 +57,8 @@ public class DefaultTermConverterTest {
 	
 	@Test
 	public void testBooleanToTerm() {
-		assertEquals(new Atom("true"), jpc.toTerm(true));
-		assertEquals(new Atom("false"), jpc.toTerm(false));
+		assertEquals(Atom.TRUE_TERM, jpc.toTerm(true));
+		assertEquals(Atom.FALSE_TERM, jpc.toTerm(false));
 	}
 	
 	@Test
@@ -186,8 +192,8 @@ public class DefaultTermConverterTest {
 	@Test
 	public void testTermToString() {
 		assertEquals("apple", jpc.fromTerm(new Atom("apple")));
-		assertFalse("true".equals(jpc.fromTerm(new Atom("true"))));
-		assertTrue("true".equals(jpc.fromTerm(new Atom("true"), String.class)));
+		assertFalse("true".equals(jpc.fromTerm(new Atom(TRUE))));
+		assertTrue("true".equals(jpc.fromTerm(new Atom(TRUE), String.class)));
 		assertEquals("123", jpc.fromTerm(new Atom("123")));
 		assertEquals(123, jpc.fromTerm(new Atom("123"), Integer.class));
 	}
@@ -205,12 +211,15 @@ public class DefaultTermConverterTest {
 	
 	@Test
 	public void testTermToBoolean() {
-		assertEquals(true, jpc.fromTerm(new Atom("true")));
-		assertEquals(false, jpc.fromTerm(new Atom("false")));
-		assertEquals(true, jpc.fromTerm(new Atom("true"), Boolean.class));
-		assertEquals(false, jpc.fromTerm(new Atom("false"), Boolean.class));
-		assertEquals(true, jpc.fromTerm(new Atom("true"), Object.class));
-		assertEquals(false, jpc.fromTerm(new Atom("false"), Object.class));
+		assertEquals(true, jpc.fromTerm(new Atom(TRUE)));
+		assertEquals(false, jpc.fromTerm(new Atom(FAIL)));
+		assertEquals(false, jpc.fromTerm(new Atom(FALSE)));
+		assertEquals(true, jpc.fromTerm(new Atom(TRUE), Boolean.class));
+		assertEquals(false, jpc.fromTerm(new Atom(FAIL), Boolean.class));
+		assertEquals(false, jpc.fromTerm(new Atom(FALSE), Boolean.class));
+		assertEquals(true, jpc.fromTerm(new Atom(TRUE), Object.class));
+		assertEquals(false, jpc.fromTerm(new Atom(FAIL), Object.class));
+		assertEquals(false, jpc.fromTerm(new Atom(FALSE), Object.class));
 	}
 	
 	@Test
@@ -218,7 +227,7 @@ public class DefaultTermConverterTest {
 		assertEquals(10L, jpc.fromTerm(new IntegerTerm(10)));
 		assertEquals(10, jpc.fromTerm(new IntegerTerm(10), Integer.class));
 		try{
-			jpc.fromTerm(new Atom("true"), Integer.class);
+			jpc.fromTerm(new Atom(TRUE), Integer.class);
 			fail();
 		} catch(Exception e){}
 	}
@@ -333,4 +342,21 @@ public class DefaultTermConverterTest {
 		Assert.assertArrayEquals(table, new String[][]{new String[]{"apple", null}, new String[]{"pears", null}});
 	}
 
+	@Test
+	public void testTermToListOfStringArray() {
+		Term term = new Compound(".", asList(
+				new Compound(".", asList(new Atom("apple"), 
+						new Compound(".", asList(new Variable("Var"), 
+							new Atom("[]"))))), 
+					new Compound(".", asList(
+						new Compound(".", asList(new Atom("pears"), 
+							new Compound(".", asList(new Variable("_"), 
+								new Atom("[]"))))), 
+					new Atom("[]")))));
+		Type type = new TypeToken<List<String[]>>(){}.getType();
+		List<String[]> list = jpc.fromTerm(term, type);
+		Assert.assertArrayEquals(list.get(0), new String[]{"apple", null});
+		Assert.assertArrayEquals(list.get(1), new String[]{"pears", null});
+	}
+	
 }
