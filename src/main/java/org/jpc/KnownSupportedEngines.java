@@ -1,5 +1,6 @@
-package org.jpc.engine.prolog;
+package org.jpc;
 
+//TODO delete
 public class KnownSupportedEngines {
 
 	public static final String SWI = "swi";

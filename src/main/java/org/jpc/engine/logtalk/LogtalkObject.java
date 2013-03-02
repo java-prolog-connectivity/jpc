@@ -20,14 +20,15 @@ import static org.jpc.engine.prolog.PrologConstants.RETRACT_ALL;
 
 import java.util.Arrays;
 
-import org.jpc.engine.prolog.DatabaseHandler;
+import org.jpc.engine.prolog.DefaultPrologEngine;
+import org.jpc.engine.prolog.PrologDatabase;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.query.Query;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
 import org.jpc.term.TermConvertable;
 
-public class LogtalkObject implements TermConvertable, DatabaseHandler {
+public class LogtalkObject implements TermConvertable, PrologDatabase {
 
 	public static Term logtalkMessage(TermConvertable receiver, TermConvertable message) {
 		return new Compound(LogtalkConstants.LOGTALK_OPERATOR, Arrays.asList(receiver, message));

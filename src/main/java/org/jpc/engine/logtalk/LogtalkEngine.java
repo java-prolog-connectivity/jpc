@@ -28,8 +28,6 @@ import static org.jpc.engine.logtalk.LogtalkConstants.OBJECT_PROPERTY;
 import static org.jpc.engine.logtalk.LogtalkConstants.PROTOCOL_PROPERTY;
 import static org.jpc.engine.logtalk.LogtalkConstants.SET_LOGTALK_FLAG;
 import static org.jpc.engine.logtalk.LogtalkConstants.SPECIALIZES_CLASS;
-import static org.jpc.engine.logtalk.LogtalkConstants.THREADED;
-import static org.jpc.engine.prolog.PrologConstants.CURRENT_PROLOG_FLAG;
 import static org.jpc.util.LogicUtil.forEachApplyFunctor;
 
 import java.util.ArrayList;
@@ -37,7 +35,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.jpc.engine.prolog.BootstrapPrologEngine;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.query.Query;
 import org.jpc.term.Atom;
@@ -47,10 +44,16 @@ import org.jpc.term.Term;
 import org.jpc.term.TermConvertable;
 import org.jpc.term.Variable;
 
-public class LogtalkEngine extends PrologEngine {
+public class LogtalkEngine implements PrologEngine {
 	
-	public LogtalkEngine(BootstrapPrologEngine bootstrapEngine) {
-		super(bootstrapEngine);
+	private PrologEngine prologEngine;
+	
+	public Query query(TermConvertable termConvertable) {
+		return prologEngine.query(termConvertable);
+	}
+
+	public LogtalkEngine(PrologEngine prologEngine) {
+		this.prologEngine = prologEngine;
 	}
 
 	public boolean logtalkLoad(String... resources) {
@@ -235,4 +238,183 @@ public class LogtalkEngine extends PrologEngine {
 		return query(new Compound(ABOLISH_EVENTS, asList(event, object, message, sender, monitor)));
 	}
 	
+	
+	/* ********************************************************************************************************************************
+	 * PROXY METHODS IMPLEMENTED IN LogtalkEngine
+     **********************************************************************************************************************************
+     */
+	
+	public LogtalkEngine asLogtalkEngine() {
+		return this;
+	}
+
+	public boolean stop() {
+		return prologEngine.stop();
+	}
+
+	public Query query(String termString) {
+		return prologEngine.query(termString);
+	}
+
+	public Query query(TermConvertable... termConvertables) {
+		return prologEngine.query(termConvertables);
+	}
+
+	public Query query(List<? extends TermConvertable> termConvertables) {
+		return prologEngine.query(termConvertables);
+	}
+
+	public Term asTerm(String termString) {
+		return prologEngine.asTerm(termString);
+	}
+
+	public Term asTerm(String termString, boolean force) {
+		return prologEngine.asTerm(termString, force);
+	}
+
+	public List<Term> asTerms(List<String> termsString) {
+		return prologEngine.asTerms(termsString);
+	}
+
+	public List<Term> asTerms(List<String> termsString, boolean force) {
+		return prologEngine.asTerms(termsString, force);
+	}
+
+	public String escape(String s) {
+		return prologEngine.escape(s);
+	}
+
+	public boolean setPrologFlag(TermConvertable flag, TermConvertable flagValue) {
+		return prologEngine.setPrologFlag(flag, flagValue);
+	}
+
+	public boolean setPrologFlag(TermConvertable flag, String flagValue) {
+		return prologEngine.setPrologFlag(flag, flagValue);
+	}
+
+	public Query currentPrologFlag(TermConvertable flag,
+			TermConvertable flagValue) {
+		return prologEngine.currentPrologFlag(flag, flagValue);
+	}
+
+	public String currentPrologFlag(TermConvertable flag) {
+		return prologEngine.currentPrologFlag(flag);
+	}
+
+	public String prologDialect() {
+		return prologEngine.prologDialect();
+	}
+
+	public Query currentOp(TermConvertable priority, TermConvertable specifier,
+			TermConvertable operator) {
+		return prologEngine.currentOp(priority, specifier, operator);
+	}
+
+	public boolean isBinaryOperator(String op) {
+		return prologEngine.isBinaryOperator(op);
+	}
+
+	public boolean isUnaryOperator(String op) {
+		return prologEngine.isUnaryOperator(op);
+	}
+
+	public boolean cd(TermConvertable path) {
+		return prologEngine.cd(path);
+	}
+
+	public boolean cd(String path) {
+		return prologEngine.cd(path);
+	}
+
+	public boolean asserta(TermConvertable termConvertable) {
+		return prologEngine.asserta(termConvertable);
+	}
+
+	public boolean assertz(TermConvertable termConvertable) {
+		return prologEngine.assertz(termConvertable);
+	}
+
+	public Query retract(TermConvertable termConvertable) {
+		return prologEngine.retract(termConvertable);
+	}
+
+	public boolean retractAll(TermConvertable termConvertable) {
+		return prologEngine.retractAll(termConvertable);
+	}
+
+	public boolean abolish(TermConvertable termConvertable) {
+		return prologEngine.abolish(termConvertable);
+	}
+
+	public Query clause(TermConvertable head, TermConvertable body) {
+		return prologEngine.clause(head, body);
+	}
+
+	public boolean asserta(List<? extends TermConvertable> termConvertables) {
+		return prologEngine.asserta(termConvertables);
+	}
+
+	public boolean assertz(List<? extends TermConvertable> termConvertables) {
+		return prologEngine.assertz(termConvertables);
+	}
+
+	public boolean ensureLoaded(List<? extends TermConvertable> termConvertables) {
+		return prologEngine.ensureLoaded(termConvertables);
+	}
+
+	public boolean ensureLoaded(TermConvertable... termConvertables) {
+		return prologEngine.ensureLoaded(termConvertables);
+	}
+
+	public boolean ensureLoaded(String... resources) {
+		return prologEngine.ensureLoaded(resources);
+	}
+
+	public Query bagof(TermConvertable select, TermConvertable exp,
+			TermConvertable all) {
+		return prologEngine.bagof(select, exp, all);
+	}
+
+	public Query findall(TermConvertable select, TermConvertable exp,
+			TermConvertable all) {
+		return prologEngine.findall(select, exp, all);
+	}
+
+	public Query setof(TermConvertable select, TermConvertable exp,
+			TermConvertable all) {
+		return prologEngine.setof(select, exp, all);
+	}
+
+	public Query forall(TermConvertable generator, TermConvertable test) {
+		return prologEngine.forall(generator, test);
+	}
+
+	public boolean flushOutput() {
+		return prologEngine.flushOutput();
+	}
+
+	public Term unify(TermConvertable... terms) {
+		return prologEngine.unify(terms);
+	}
+	
+	public Term unify(List<? extends TermConvertable> terms) {
+		return prologEngine.unify(terms);
+	}
+
+	public boolean allSucceed(List<? extends TermConvertable> termConvertables) {
+		return prologEngine.allSucceed(termConvertables);
+	}
+
+	public List<Term> asResourceTerms(List<String> resourceNames) {
+		return prologEngine.asResourceTerms(resourceNames);
+	}
+
+	public Term asResourceTerm(String resourceName) {
+		return prologEngine.asResourceTerm(resourceName);
+	}
+
+	public String termSequenceToString(TermConvertable sequenceTermConvertable) {
+		return prologEngine.termSequenceToString(sequenceTermConvertable);
+	}
+
 }

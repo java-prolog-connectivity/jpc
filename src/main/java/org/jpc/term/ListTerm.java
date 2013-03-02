@@ -3,15 +3,25 @@ package org.jpc.term;
 import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.jpc.Jpc;
 import org.jpc.salt.TermContentHandler;
 
 public class ListTerm<E extends TermConvertable> extends ArrayList<E> implements TermConvertable {
 	
-	public static <E extends TermConvertable> ListTerm listTerm(E ...terms) {
-		return new ListTerm(asList(terms));
+	public static ListTerm listTerm(Object ...objects) {
+		return listTerm(Arrays.asList(objects));
+	}
+	
+	public static ListTerm listTerm(List<? extends Object> objects) {
+		ListTerm listTerm = new ListTerm();
+		for(Object o : objects) {
+			listTerm.add(new Jpc().toTerm(o));
+		}
+		return listTerm;
 	}
 	
 	public ListTerm() {
@@ -21,6 +31,8 @@ public class ListTerm<E extends TermConvertable> extends ArrayList<E> implements
 	public ListTerm(Collection<? extends E> terms) {
 		super(terms);
 	}
+	
+
 	
 	public ListTerm(int initialCapacity) {
 		super(initialCapacity);
@@ -76,20 +88,4 @@ public class ListTerm<E extends TermConvertable> extends ArrayList<E> implements
 		}
 	}
 	
-	/**
-	 * 
-	 * @param term
-	 * @return a term convertable in the list with the same term representation of the object sent as parameter
-	 */
-	public E get(Term term) {
-		for(E termConvertable : this) {
-			if(termConvertable.asTerm().equals(term))
-				return termConvertable;
-		}
-		return null;
-	}
-	
-	public boolean containsTerm(Term term) {
-		return get(term) != null;
-	}
 }

@@ -1,13 +1,11 @@
 package org.jpc.term;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import org.jpc.JpcException;
-import org.jpc.engine.logtalk.LogtalkConstants;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.salt.JpcTermWriter;
 import org.jpc.util.salt.ChangeVariableNameAdapter;

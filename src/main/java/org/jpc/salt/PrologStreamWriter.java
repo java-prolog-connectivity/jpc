@@ -6,7 +6,6 @@ import static org.jpc.engine.prolog.PrologConstants.ASSERTZ;
 
 import java.io.PrintStream;
 
-import org.jpc.engine.logtalk.LogtalkObject;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;

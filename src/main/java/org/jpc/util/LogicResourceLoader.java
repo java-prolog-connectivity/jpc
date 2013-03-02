@@ -2,7 +2,6 @@ package org.jpc.util;
 
 import static java.util.Arrays.asList;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -10,7 +9,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.jpc.JpcException;
-import org.jpc.engine.logtalk.LogtalkEngine;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Atom;
 import org.jpc.term.Term;

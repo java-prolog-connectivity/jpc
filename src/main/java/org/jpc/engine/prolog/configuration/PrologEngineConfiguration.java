@@ -5,7 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.jpc.JpcPreferences;
-import org.jpc.engine.prolog.BootstrapPrologEngine;
+import org.jpc.engine.prolog.DefaultBootstrapPrologEngine;
+import org.jpc.engine.prolog.DefaultPrologEngine;
 import org.jpc.engine.prolog.PrologEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -126,7 +127,7 @@ public abstract class PrologEngineConfiguration {
 		if(!isConfigured()) {
 			configure();
 		}
-		PrologEngine newPrologEngine = new PrologEngine(createBootstrapEngine());
+		PrologEngine newPrologEngine = new DefaultPrologEngine(createBootstrapEngine());
 		if(isLogtalkRequired()) {
 			String prologDialect = newPrologEngine.prologDialect();
 			logger.info("Attempting to load logtalk in a " + prologDialect + " Prolog engine...");
@@ -185,7 +186,7 @@ public abstract class PrologEngineConfiguration {
 	 * The defaults configuration tasks of the engine
 	 * @return
 	 */
-	protected abstract BootstrapPrologEngine createBootstrapEngine();
+	protected abstract DefaultBootstrapPrologEngine createBootstrapEngine();
 	
 	public abstract String getLibraryName();
 	

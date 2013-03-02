@@ -2,6 +2,7 @@ package org.jpc.term;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.jpc.engine.prolog.PrologConstants.CONS_FUNCTOR;
+import static org.jpc.term.ListTerm.listTerm;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +21,9 @@ import org.jpc.term.visitor.TermVisitor;
  */
 public final class Compound extends AbstractTerm {
 	
+	public static Compound compound(String name, List<? extends Object> args) {
+		return new Compound(name, listTerm(args));
+	}
 	/**
 	 * the name of this Compound
 	 */
