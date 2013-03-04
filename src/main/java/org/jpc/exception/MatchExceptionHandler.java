@@ -66,12 +66,12 @@ private static final String EXCEPTION_VAR_PREFIX = "JPC_EXCEPTION_UNBOUND_VAR_";
 			if(unifiedExceptionTerm == null)
 				return false; //the goal does not unify with the handler exception term, so the handler cannot deal with the exception
 		}
-		onMatch(unifiedGoal, unifiedExceptionTerm);
+		onMatch(prologEngine, unifiedGoal, unifiedExceptionTerm);
 		return true;
 	}
 	
-	public void onMatch(Term goal, Term exceptionTerm) {
-		throw new PrologException(goal, exceptionTerm);
+	public void onMatch(PrologEngine prologEngine, Term unifiedGoal, Term unifiedExceptionTerm) {
+		throw new PrologException(unifiedGoal, unifiedExceptionTerm);
 	}
 	
 }

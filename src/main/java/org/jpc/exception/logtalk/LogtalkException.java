@@ -1,5 +1,6 @@
-package org.jpc.exception;
+package org.jpc.exception.logtalk;
 
+import org.jpc.exception.PrologException;
 import org.jpc.term.Term;
 
 public class LogtalkException extends PrologException {

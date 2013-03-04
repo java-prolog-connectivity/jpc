@@ -18,27 +18,15 @@ import com.google.common.collect.ListMultimap;
  * @author sergioc
  *
  */
+
 public abstract class Query extends Cursor<Map<String,Term>> implements TermConvertable<Term> {
 
-	private Term goal;
-	private PrologEngine prologEngine;
+	protected abstract Term asTerm(String termString);
 	
+	public abstract PrologEngine getPrologEngine();
 	
-	public Query(PrologEngine prologEngine, TermConvertable termConvertable) {
-		this.prologEngine = prologEngine;
-		this.goal = termConvertable.asTerm();
-	}
-
-	public Term asTerm() {
-		return goal;
-	}
-
-	protected PrologEngine getPrologEngine() {
-		return prologEngine;
-	}
-
-	synchronized Cursor<Term> select(String selector) {
-		return select(prologEngine.asTerm(selector));
+	public synchronized Cursor<Term> select(String selector) {
+		return select(asTerm(selector));
 	}
 	
 	/**
@@ -50,21 +38,20 @@ public abstract class Query extends Cursor<Map<String,Term>> implements TermConv
 		return adapt(new QuerySolutionToTermFunction(selector));
 	}
 	
-	
 	public synchronized Cursor<?> selectObject(String selector) {
-		return selectObject(prologEngine.asTerm(selector), new Jpc(), Object.class);
+		return selectObject(asTerm(selector), new Jpc(), Object.class);
 	}
 	
 	public synchronized Cursor<?> selectObject(String selector, Jpc context) {
-		return selectObject(prologEngine.asTerm(selector), context, Object.class);
+		return selectObject(asTerm(selector), context, Object.class);
 	}
 	
 	public synchronized Cursor<?> selectObject(String selector, Type targetType) {
-		return selectObject(prologEngine.asTerm(selector), new Jpc(), targetType);
+		return selectObject(asTerm(selector), new Jpc(), targetType);
 	}
 	
 	public synchronized Cursor<?> selectObject(String selector, Jpc context, Type targetType) {
-		return selectObject(prologEngine.asTerm(selector), context, targetType);
+		return selectObject(asTerm(selector), context, targetType);
 	}
 	
 	public synchronized Cursor<?> selectObject(Term selector) {
@@ -123,10 +110,5 @@ public abstract class Query extends Cursor<Map<String,Term>> implements TermConv
 	 */
 	@Override
 	public abstract Map<String, Term> next();
-
-	@Override
-	public String toString() {
-		return goal.toString();
-	}
 	
 }

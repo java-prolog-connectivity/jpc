@@ -24,12 +24,7 @@ public class ExceptionHandlerManager implements ExceptionHandler {
 			if(exceptionHandler.handle(prologEngine, goal, exceptionTerm))
 				return true;
 		}
-		defaultHandling(prologEngine, goal, exceptionTerm);
-		return true;
-	}
-
-	public void defaultHandling(PrologEngine prologEngine, Term goal, Term exceptionTerm) {
-		throw new PrologException(goal, exceptionTerm);
+		return false;
 	}
 
 }

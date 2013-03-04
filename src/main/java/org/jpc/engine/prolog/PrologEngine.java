@@ -7,16 +7,15 @@ import org.jpc.query.Query;
 import org.jpc.term.Term;
 import org.jpc.term.TermConvertable;
 
-public interface PrologEngine extends BootstrapPrologEngine, PrologDatabase {
+public interface PrologEngine extends PrologDatabase {
 
 	public LogtalkEngine asLogtalkEngine();
 	
 	/* ********************************************************************************************************************************
-	 * PROXY METHODS IMPLEMENTED IN THE BOOTSTRAP ENGINE (and overloaded variations of those methods)
+	 * CORE QUERY METHODS (and overloaded variations of those methods)
      **********************************************************************************************************************************
      */
 	
-	@Override
 	public boolean stop();
 	
 	public Query query(String termString);
@@ -25,7 +24,11 @@ public interface PrologEngine extends BootstrapPrologEngine, PrologDatabase {
 	
 	public Query query(List<? extends TermConvertable> termConvertables);
 	
-	@Override
+	/**
+	 * 
+	 * @param termString
+	 * @return the term representation of a String. Variable names should be preserved.
+	 */
 	public Term asTerm(String termString);
 	
 	public Term asTerm(String termString, boolean force);
@@ -34,7 +37,11 @@ public interface PrologEngine extends BootstrapPrologEngine, PrologDatabase {
 	
 	public List<Term> asTerms(List<String> termsString, boolean force);
 	
-	@Override
+	/**
+	 * escape the given string adding quotes and escaping characters if needed
+	 * @param s the string to escape
+	 * @return the escaped string
+	 */
 	public String escape(String s);
 	
 	

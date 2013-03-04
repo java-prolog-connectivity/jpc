@@ -20,7 +20,7 @@ import static org.jpc.engine.prolog.PrologConstants.RETRACT_ALL;
 
 import java.util.Arrays;
 
-import org.jpc.engine.prolog.DefaultPrologEngine;
+import org.jpc.engine.prolog.AbstractPrologEngine;
 import org.jpc.engine.prolog.PrologDatabase;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.query.Query;

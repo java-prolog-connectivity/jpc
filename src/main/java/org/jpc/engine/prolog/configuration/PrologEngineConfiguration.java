@@ -5,8 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.jpc.JpcPreferences;
-import org.jpc.engine.prolog.DefaultBootstrapPrologEngine;
-import org.jpc.engine.prolog.DefaultPrologEngine;
+import org.jpc.engine.prolog.AbstractPrologEngine;
 import org.jpc.engine.prolog.PrologEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,13 +120,13 @@ public abstract class PrologEngineConfiguration {
 		scope.addAll(Arrays.asList(newScopes));
 	}
 	
-	public PrologEngine createPrologEngine() {
+	public PrologEngine createAndConfigurePrologEngine() {
 		logger.info("Initializing logic engine");
 		long startTime = System.nanoTime();
 		if(!isConfigured()) {
 			configure();
 		}
-		PrologEngine newPrologEngine = new DefaultPrologEngine(createBootstrapEngine());
+		PrologEngine newPrologEngine = createPrologEngine();
 		if(isLogtalkRequired()) {
 			String prologDialect = newPrologEngine.prologDialect();
 			logger.info("Attempting to load logtalk in a " + prologDialect + " Prolog engine...");
@@ -167,7 +166,7 @@ public abstract class PrologEngineConfiguration {
 			prologEngine = cachedPrologEngine;
 		}
 		if(prologEngine == null) {
-			prologEngine = createPrologEngine();
+			prologEngine = createAndConfigurePrologEngine();
 		}
 		return prologEngine;
 	}
@@ -183,10 +182,10 @@ public abstract class PrologEngineConfiguration {
 	}
 	
 	/**
-	 * The defaults configuration tasks of the engine
-	 * @return
+	 * 
+	 * @return a instance of a Prolog engine. This instance has not been configured yet
 	 */
-	protected abstract DefaultBootstrapPrologEngine createBootstrapEngine();
+	protected abstract PrologEngine createPrologEngine();
 	
 	public abstract String getLibraryName();
 	

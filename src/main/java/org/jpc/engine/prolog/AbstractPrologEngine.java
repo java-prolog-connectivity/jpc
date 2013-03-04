@@ -6,7 +6,6 @@ import static org.jpc.engine.prolog.PrologConstants.ASSERTA;
 import static org.jpc.engine.prolog.PrologConstants.ASSERTZ;
 import static org.jpc.engine.prolog.PrologConstants.ATOM_CHARS;
 import static org.jpc.engine.prolog.PrologConstants.BAGOF;
-import static org.jpc.engine.prolog.PrologConstants.CATCH;
 import static org.jpc.engine.prolog.PrologConstants.CD;
 import static org.jpc.engine.prolog.PrologConstants.CLAUSE;
 import static org.jpc.engine.prolog.PrologConstants.CURRENT_OP;
@@ -28,7 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.jpc.engine.logtalk.LogtalkEngine;
+import org.jpc.exception.ExceptionHandledQuery;
 import org.jpc.exception.ExceptionHandlerManager;
 import org.jpc.query.Query;
 import org.jpc.query.QuerySolutionToTermFunction;
@@ -48,18 +47,11 @@ import org.jpc.util.LogicUtil;
  * @author sergioc
  *
  */
-public class DefaultPrologEngine implements PrologEngine {
+public abstract class AbstractPrologEngine implements PrologEngine {
 
-	private DefaultBootstrapPrologEngine bootstrapEngine;
 	private ExceptionHandlerManager exceptionHandler;
 	
-	private static final String EXCEPTION_VAR_NAME = "JPC_EXCEPTION_VAR";
-	private Term defaultCatch(Term term) {
-		return new Compound(CATCH, asList(term, new Variable(EXCEPTION_VAR_NAME), Atom.TRUE_TERM));
-	}
-	
-	public DefaultPrologEngine(DefaultBootstrapPrologEngine bootstrapEngine) {
-		this.bootstrapEngine = bootstrapEngine;
+	public AbstractPrologEngine() {
 		this.exceptionHandler = new ExceptionHandlerManager();
 	}
 	
@@ -67,34 +59,32 @@ public class DefaultPrologEngine implements PrologEngine {
 //		return bootstrapEngine;
 //	}
 	
-	public LogtalkEngine asLogtalkEngine() {
-		return new LogtalkEngine(this);
-	}
+//	public LogtalkEngine asLogtalkEngine() {
+//		return new LogtalkEngine(this);
+//	}
 	
 	/* ********************************************************************************************************************************
-	 * PROXY METHODS IMPLEMENTED IN THE BOOTSTRAP ENGINE (and overloaded variations of those methods)
+	 * CORE METHODS (and overloaded variations of those methods)
      **********************************************************************************************************************************
      */
 
-	public boolean stop() {
-		return bootstrapEngine.stop();
-	}
+	public abstract boolean stop();
 
-	public Query query(String termString) {
+	public abstract String escape(String s);
+	
+	protected abstract Query createQuery(TermConvertable termConvertable);
+	
+	public final Query query(String termString) {
 		return query(asTerm(termString));
 	}
-	
-	public Query query(TermConvertable termConvertable) {
-		return bootstrapEngine.query(termConvertable);
-	}
-	
-	public Query query(TermConvertable... termConvertables) {
+
+	public final Query query(TermConvertable... termConvertables) {
 		return query(Arrays.asList(termConvertables));
 	}
 	
-	public Query query(List<? extends TermConvertable> termConvertables) {
+	public final Query query(List<? extends TermConvertable> termConvertables) {
 		Term termSequence = LogicUtil.termsToSequence(termConvertables);
-		return query(termSequence);
+		return new ExceptionHandledQuery(createQuery(termSequence), exceptionHandler);
 	}
 	
 	public Term asTerm(String termString) {
@@ -103,7 +93,7 @@ public class DefaultPrologEngine implements PrologEngine {
 	
 	public Term asTerm(String termString, boolean force) {
 		try {
-			return bootstrapEngine.asTerm(termString);
+			return asTerm(termString);
 		} catch(Exception e) {
 			if(force)
 				return new Atom(termString);
@@ -121,10 +111,6 @@ public class DefaultPrologEngine implements PrologEngine {
 		for(String s : termsString)
 			terms.add(asTerm(s, force));
 		return terms;
-	}
-	
-	public String escape(String s) {
-		return bootstrapEngine.escape(s);
 	}
 	
 	
