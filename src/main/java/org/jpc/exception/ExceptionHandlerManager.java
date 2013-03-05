@@ -19,9 +19,9 @@ public class ExceptionHandlerManager implements ExceptionHandler {
 	}
 
 	@Override
-	public boolean handle(PrologEngine prologEngine, Term goal, Term exceptionTerm) {
+	public boolean handle(PrologEngine prologEngine, Term exceptionTerm, Term goal) {
 		for(ExceptionHandler exceptionHandler : exceptionHandlers) {
-			if(exceptionHandler.handle(prologEngine, goal, exceptionTerm))
+			if(exceptionHandler.handle(prologEngine, exceptionTerm, goal))
 				return true;
 		}
 		return false;

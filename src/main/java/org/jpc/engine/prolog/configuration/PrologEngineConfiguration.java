@@ -5,8 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.jpc.JpcPreferences;
-import org.jpc.engine.prolog.AbstractPrologEngine;
+import org.jpc.engine.logtalk.LogtalkEngine;
 import org.jpc.engine.prolog.PrologEngine;
+import org.jpc.exception.logtalk.LogtalkExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -132,22 +133,20 @@ public abstract class PrologEngineConfiguration {
 			logger.info("Attempting to load logtalk in a " + prologDialect + " Prolog engine...");
 			try {
 				String logtalkIntegrationScript = preferences.logtalkIntegrationScript(prologDialect); //will throw an exception if a logtalk integration script cannot be found for a given engine
-				try {
-					logtalkLoaded = newPrologEngine.ensureLoaded(logtalkIntegrationScript);
-				} catch(Exception ex) {
-					logger.error(ex.getMessage());
-				}
-				if(!logtalkLoaded) {
-					//throw new RuntimeException("Impossible to load Logtalk");
-					logger.warn("Impossible to load Logtalk. Some features may not be available. If Logtalk is not required change the \"logtalkRequired\" property "+
-							"for the configuration class " + this.getClass().getSimpleName());
-				}
-				else {
-					logger.info("Logtalk loaded successfully");
-				}
+				logtalkLoaded = newPrologEngine.ensureLoaded(logtalkIntegrationScript);
 			} catch(Exception ex) {
-				System.out.println(ex);
+				logger.error(ex.getMessage());
+			}
+			
+			if(logtalkLoaded) {
+				logger.info("Logtalk loaded successfully");
+				newPrologEngine.registerExceptionHandler(new LogtalkExceptionHandler());
+			}
+			else {
 				logger.warn("Impossible to load Logtalk in the " + newPrologEngine.prologDialect() + " Logic Engine");
+				logger.warn("Some features may not be available. If Logtalk is not required change the \"logtalkRequired\" property "+
+						"in the configuration class " + this.getClass().getSimpleName());
+				//throw new RuntimeException("Impossible to load Logtalk");
 			}
 			newPrologEngine.flushOutput();
 		}
@@ -174,7 +173,7 @@ public abstract class PrologEngineConfiguration {
 	private void loadPreloadedResources(PrologEngine prologEngine) {
 		prologEngine.ensureLoaded(preloadedPrologResources.toArray(new String[]{}));
 		if(isLogtalkRequired())
-			prologEngine.asLogtalkEngine().logtalkLoad(preloadedLogtalkResources.toArray(new String[]{}));
+			new LogtalkEngine(prologEngine).logtalkLoad(preloadedLogtalkResources.toArray(new String[]{}));
 	}
 
 	public void configure() {

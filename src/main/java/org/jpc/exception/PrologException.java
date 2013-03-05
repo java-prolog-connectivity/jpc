@@ -9,35 +9,34 @@ import org.jpc.term.Term;
  */
 public class PrologException extends RuntimeException {
 
-	protected Term goal;
 	protected Term exceptionTerm;
-	protected String message;
+	protected Term goal;
 	
-	public PrologException(Term goal, Term exceptionTerm) {
-		this.goal = goal;
-		this.exceptionTerm = exceptionTerm;
-	}
-	
-	public PrologException(Term goal, Term exceptionTerm, String message) {
-		this.goal = goal;
-		this.exceptionTerm = exceptionTerm;
-		this.message = message;
-	}
 
-	public Term getGoal() {
-		return goal;
+	public PrologException(Term exceptionTerm) {
+		this.exceptionTerm = exceptionTerm;
+	}
+	
+	public PrologException(Term exceptionTerm, Term goal) {
+		this.exceptionTerm = exceptionTerm;
+		this.goal = goal;
 	}
 
 	public Term getExceptionTerm() {
 		return exceptionTerm;
 	}
 	
+	public Term getGoal() {
+		return goal;
+	}
+
 	@Override
 	public String getMessage() {
-		if(message != null)
-			return message;
-		else
-			return super.getMessage();
+		StringBuilder sb = new StringBuilder("Exception Term: " + exceptionTerm);
+		if(goal != null)
+			sb.append(" while executing Goal: " + goal);
+		sb.append(". ");
+		return sb.toString();
 	}
 	
 }

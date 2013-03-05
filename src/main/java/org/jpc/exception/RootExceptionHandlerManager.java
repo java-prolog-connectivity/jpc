@@ -6,14 +6,14 @@ import org.jpc.term.Term;
 public class RootExceptionHandlerManager extends ExceptionHandlerManager {
 	
 	@Override
-	public boolean handle(PrologEngine prologEngine, Term goal, Term exceptionTerm) {
-		if(!super.handle(prologEngine, goal, exceptionTerm))
+	public boolean handle(PrologEngine prologEngine, Term exceptionTerm, Term goal) {
+		if(!super.handle(prologEngine, exceptionTerm, goal))
 			defaultHandling(prologEngine, goal, exceptionTerm);
 		return true;
 	}
 	
 	public void defaultHandling(PrologEngine prologEngine, Term goal, Term exceptionTerm) {
-		throw new PrologException(goal, exceptionTerm);
+		throw new PrologException(exceptionTerm, goal);
 	}
 	
 }

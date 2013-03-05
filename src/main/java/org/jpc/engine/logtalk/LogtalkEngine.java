@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jpc.engine.prolog.PrologEngine;
+import org.jpc.exception.ExceptionHandler;
 import org.jpc.query.Query;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
@@ -47,10 +48,6 @@ import org.jpc.term.Variable;
 public class LogtalkEngine implements PrologEngine {
 	
 	private PrologEngine prologEngine;
-	
-	public Query query(TermConvertable termConvertable) {
-		return prologEngine.query(termConvertable);
-	}
 
 	public LogtalkEngine(PrologEngine prologEngine) {
 		this.prologEngine = prologEngine;
@@ -243,11 +240,15 @@ public class LogtalkEngine implements PrologEngine {
 	 * PROXY METHODS IMPLEMENTED IN LogtalkEngine
      **********************************************************************************************************************************
      */
-	
-	public LogtalkEngine asLogtalkEngine() {
-		return this;
-	}
 
+//	public LogtalkEngine asLogtalkEngine() {
+//		return this;
+//	}
+
+	public void registerExceptionHandler(ExceptionHandler exceptionHandler) {
+		prologEngine.registerExceptionHandler(exceptionHandler);
+	}
+	
 	public boolean stop() {
 		return prologEngine.stop();
 	}

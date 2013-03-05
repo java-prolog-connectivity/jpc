@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.jpc.JpcException;
+import org.jpc.engine.logtalk.LogtalkEngine;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Atom;
 import org.jpc.term.Term;
@@ -49,11 +50,11 @@ public class LogicResourceLoader {
 	}
 
 	public boolean logtalkLoad(List<String> resources) {
-		return prologEngine.asLogtalkEngine().logtalkLoad(resolveResources(resources));
+		return new LogtalkEngine(prologEngine).logtalkLoad(resolveResources(resources));
 	}
 	
 	public boolean logtalkLoad(String... resources) {
-		return prologEngine.asLogtalkEngine().logtalkLoad(resolveResources(asList(resources)));
+		return new LogtalkEngine(prologEngine).logtalkLoad(resolveResources(asList(resources)));
 	}
 	
 	private List<Term> resolveResources(List<String> resources) {

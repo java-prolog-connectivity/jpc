@@ -28,7 +28,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.jpc.exception.ExceptionHandledQuery;
+import org.jpc.exception.ExceptionHandler;
 import org.jpc.exception.ExceptionHandlerManager;
+import org.jpc.exception.RootExceptionHandlerManager;
 import org.jpc.query.Query;
 import org.jpc.query.QuerySolutionToTermFunction;
 import org.jpc.term.AbstractTerm;
@@ -40,28 +42,22 @@ import org.jpc.term.TermConvertable;
 import org.jpc.term.Variable;
 import org.jpc.util.LogicUtil;
 
-/**
- * A utility class for interacting with a Prolog engine
- * Extends the BootstrapPrologEngine by composition
- * It also adds methods for facilitating querying of certain prolog predicates
- * @author sergioc
- *
- */
 public abstract class AbstractPrologEngine implements PrologEngine {
 
-	private ExceptionHandlerManager exceptionHandler;
+	private ExceptionHandlerManager exceptionHandlerManager;
 	
 	public AbstractPrologEngine() {
-		this.exceptionHandler = new ExceptionHandlerManager();
+		this.exceptionHandlerManager = new RootExceptionHandlerManager();
 	}
 	
-//	public DefaultBootstrapPrologEngine getBootstrapEngine() {
-//		return bootstrapEngine;
-//	}
 	
 //	public LogtalkEngine asLogtalkEngine() {
 //		return new LogtalkEngine(this);
 //	}
+	
+	public void registerExceptionHandler(ExceptionHandler exceptionHandler) {
+		exceptionHandlerManager.register(exceptionHandler);
+	}
 	
 	/* ********************************************************************************************************************************
 	 * CORE METHODS (and overloaded variations of those methods)
@@ -70,6 +66,11 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 
 	public abstract boolean stop();
 
+	/**
+	 * escape the given string adding quotes and escaping characters if needed
+	 * @param s the string to escape
+	 * @return the escaped string
+	 */
 	public abstract String escape(String s);
 	
 	protected abstract Query createQuery(TermConvertable termConvertable);
@@ -84,9 +85,14 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	
 	public final Query query(List<? extends TermConvertable> termConvertables) {
 		Term termSequence = LogicUtil.termsToSequence(termConvertables);
-		return new ExceptionHandledQuery(createQuery(termSequence), exceptionHandler);
+		return new ExceptionHandledQuery(createQuery(termSequence), exceptionHandlerManager);
 	}
 	
+	/**
+	 * 
+	 * @param termString
+	 * @return the term representation of a String. Variable names should be preserved.
+	 */
 	public Term asTerm(String termString) {
 		return asTerm(termString, false);
 	}
@@ -352,5 +358,4 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 		List<Term> terms = LogicUtil.sequenceAsTerms(sequenceTermConvertable);
 		return AbstractTerm.toString(this, terms);
 	}
-
 }

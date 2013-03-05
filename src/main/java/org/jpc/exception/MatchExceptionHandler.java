@@ -11,24 +11,8 @@ import org.jpc.term.Term;
 
 public class MatchExceptionHandler implements ExceptionHandler {
 
-private static final String EXCEPTION_VAR_PREFIX = "JPC_EXCEPTION_UNBOUND_VAR_";
-	
-	protected Term goal;
-	protected Term exceptionTerm;
-	
-	public MatchExceptionHandler(Term goal, Term exceptionTerm) {
-		this.goal = replaceVariables(goal);
-		this.exceptionTerm = replaceVariables(exceptionTerm);
-	}
-	
-	public Term getGoal() {
-		return goal;
-	}
+	private static final String EXCEPTION_VAR_PREFIX = "JPC_EXCEPTION_UNBOUND_VAR_";
 
-	public Term getExceptionTerm() {
-		return exceptionTerm;
-	}
-	
 	private static Term replaceVariables(Term term) {
 		JpcTermWriter termWriter = new JpcTermWriter();
 		TermAdapter variableAdapter = new TermAdapter(termWriter) {
@@ -49,16 +33,19 @@ private static final String EXCEPTION_VAR_PREFIX = "JPC_EXCEPTION_UNBOUND_VAR_";
 		term.read(variableAdapter);
 		return termWriter.getTerms().get(0);
 	}
+	
+	protected Term exceptionTerm;
+	
+	public MatchExceptionHandler(Term exceptionTerm) {
+		this.exceptionTerm = replaceVariables(exceptionTerm);
+	}
 
-	public boolean handle(PrologEngine prologEngine, Term goal, Term exceptionTerm) {
+	public Term getExceptionTerm() {
+		return exceptionTerm;
+	}
+
+	public boolean handle(PrologEngine prologEngine, Term exceptionTerm, Term goal) {
 		Term unifiedGoal,unifiedExceptionTerm;
-		if(this.goal == null) {
-			unifiedGoal = goal;
-		} else {
-			unifiedGoal = prologEngine.unify(this.goal, goal);
-			if(unifiedGoal == null)
-				return false; //the goal does not unify with the handler goal, so the handler cannot deal with the exception
-		}
 		if(this.exceptionTerm == null) {
 			unifiedExceptionTerm = exceptionTerm;
 		} else {
@@ -66,12 +53,12 @@ private static final String EXCEPTION_VAR_PREFIX = "JPC_EXCEPTION_UNBOUND_VAR_";
 			if(unifiedExceptionTerm == null)
 				return false; //the goal does not unify with the handler exception term, so the handler cannot deal with the exception
 		}
-		onMatch(prologEngine, unifiedGoal, unifiedExceptionTerm);
+		onMatch(prologEngine, unifiedExceptionTerm, goal);
 		return true;
 	}
 	
-	public void onMatch(PrologEngine prologEngine, Term unifiedGoal, Term unifiedExceptionTerm) {
-		throw new PrologException(unifiedGoal, unifiedExceptionTerm);
+	public void onMatch(PrologEngine prologEngine, Term unifiedExceptionTerm, Term goal) {
+		throw new PrologException(unifiedExceptionTerm, goal);
 	}
 	
 }

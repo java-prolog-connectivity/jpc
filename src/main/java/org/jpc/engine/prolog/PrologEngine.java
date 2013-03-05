@@ -2,14 +2,16 @@ package org.jpc.engine.prolog;
 
 import java.util.List;
 
-import org.jpc.engine.logtalk.LogtalkEngine;
+import org.jpc.exception.ExceptionHandler;
 import org.jpc.query.Query;
 import org.jpc.term.Term;
 import org.jpc.term.TermConvertable;
 
 public interface PrologEngine extends PrologDatabase {
 
-	public LogtalkEngine asLogtalkEngine();
+	//public LogtalkEngine asLogtalkEngine();
+	
+	public void registerExceptionHandler(ExceptionHandler exceptionHandler);
 	
 	/* ********************************************************************************************************************************
 	 * CORE QUERY METHODS (and overloaded variations of those methods)

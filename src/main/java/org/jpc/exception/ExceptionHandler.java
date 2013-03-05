@@ -5,6 +5,6 @@ import org.jpc.term.Term;
 
 public interface ExceptionHandler {
 	
-	public abstract boolean handle(PrologEngine prologEngine, Term goal, Term exceptionTerm);
+	public abstract boolean handle(PrologEngine prologEngine, Term exceptionTerm, Term goal);
 
 }

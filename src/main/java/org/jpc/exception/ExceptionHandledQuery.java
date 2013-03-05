@@ -23,12 +23,12 @@ public class ExceptionHandledQuery extends QueryAdapter {
 		return new Compound(CATCH, asList(term, new Variable(EXCEPTION_VAR_NAME), Atom.TRUE_TERM));
 	}
 	
-	private final Function<Map<String,Term>, Map<String,Term>> solutionAdapter = new Function<Map<String,Term>, Map<String,Term>>() {
+	private final Function<Map<String,Term>, Map<String,Term>> exceptionAdapterFunction = new Function<Map<String,Term>, Map<String,Term>>() {
 		@Override
 		public Map<String,Term> apply(Map<String,Term> solution) {
 			if(solution.containsKey(EXCEPTION_VAR_NAME)) {
 				Term exceptionTerm = solution.get(EXCEPTION_VAR_NAME);
-				exceptionHandler.handle(getPrologEngine(), asTerm(), exceptionTerm);
+				exceptionHandler.handle(getPrologEngine(), exceptionTerm, asTerm());
 			}
 			return solution;
 		}
@@ -36,7 +36,7 @@ public class ExceptionHandledQuery extends QueryAdapter {
 	
 	public ExceptionHandledQuery(Query query, ExceptionHandlerManager exceptionHandler) {
 		super(query);
-		adapterFunction = solutionAdapter;
+		adapterFunction = exceptionAdapterFunction;
 		this.exceptionHandler = exceptionHandler;
 	}
 
