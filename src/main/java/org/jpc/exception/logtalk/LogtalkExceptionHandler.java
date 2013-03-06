@@ -6,17 +6,17 @@ import static org.jpc.term.Variable.ANONYMOUS_VAR;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.exception.ExceptionHandlerManager;
 import org.jpc.exception.MatchExceptionHandler;
-import org.jpc.exception.logtalk.compiletime.LgtCompileTimeExceptionHandler;
-import org.jpc.exception.logtalk.runtime.LgtDomainError;
-import org.jpc.exception.logtalk.runtime.LgtEvaluationError;
-import org.jpc.exception.logtalk.runtime.LgtExistenceError;
-import org.jpc.exception.logtalk.runtime.LgtInstantiationError;
-import org.jpc.exception.logtalk.runtime.LgtPermissionError;
-import org.jpc.exception.logtalk.runtime.LgtRepresentationError;
-import org.jpc.exception.logtalk.runtime.LgtResourceError;
-import org.jpc.exception.logtalk.runtime.LgtSyntaxError;
-import org.jpc.exception.logtalk.runtime.LgtSystemError;
-import org.jpc.exception.logtalk.runtime.LgtTypeError;
+import org.jpc.exception.logtalk.compiletime.LogtalkCompileTimeExceptionHandler;
+import org.jpc.exception.logtalk.runtime.LogtalkDomainError;
+import org.jpc.exception.logtalk.runtime.LogtalkEvaluationError;
+import org.jpc.exception.logtalk.runtime.LogtalkExistenceError;
+import org.jpc.exception.logtalk.runtime.LogtalkInstantiationError;
+import org.jpc.exception.logtalk.runtime.LogtalkPermissionError;
+import org.jpc.exception.logtalk.runtime.LogtalkRepresentationError;
+import org.jpc.exception.logtalk.runtime.LogtalkResourceError;
+import org.jpc.exception.logtalk.runtime.LogtalkSyntaxError;
+import org.jpc.exception.logtalk.runtime.LogtalkSystemError;
+import org.jpc.exception.logtalk.runtime.LogtalkTypeError;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
@@ -37,79 +37,79 @@ public class LogtalkExceptionHandler extends ExceptionHandlerManager {
 	}
 	
 	private void registerCompileTimeExceptionHandlers() {
-		register(new LgtCompileTimeExceptionHandler(compileTimeExceptionFromCulprit(new Compound("clause", asList(ANONYMOUS_VAR)))));
-		register(new LgtCompileTimeExceptionHandler(compileTimeExceptionFromCulprit(new Compound("directive", asList(ANONYMOUS_VAR)))));
-		register(new LgtCompileTimeExceptionHandler(compileTimeExceptionFromCulprit(new Compound("term", asList(ANONYMOUS_VAR)))));
+		register(new LogtalkCompileTimeExceptionHandler(compileTimeExceptionFromCulprit(new Compound("clause", asList(ANONYMOUS_VAR)))));
+		register(new LogtalkCompileTimeExceptionHandler(compileTimeExceptionFromCulprit(new Compound("directive", asList(ANONYMOUS_VAR)))));
+		register(new LogtalkCompileTimeExceptionHandler(compileTimeExceptionFromCulprit(new Compound("term", asList(ANONYMOUS_VAR)))));
 	}
 
 	private void registerRunTimeExceptionHandlers() {
 		register(new MatchExceptionHandler(runTimeExceptionFromExceptionTerm(new Atom("instantiation_error"))) {
 			@Override
 			public void onMatch(PrologEngine prologEngine, Term unifiedExceptionTerm, Term goal) {
-				throw new LgtInstantiationError(unifiedExceptionTerm, goal);
+				throw new LogtalkInstantiationError(unifiedExceptionTerm, goal);
 			}
 		});
 		
 		register(new MatchExceptionHandler(runTimeExceptionFromExceptionTerm(new Atom("system_error"))) {
 			@Override
 			public void onMatch(PrologEngine prologEngine, Term unifiedExceptionTerm, Term goal) {
-				throw new LgtSystemError(unifiedExceptionTerm, goal);
+				throw new LogtalkSystemError(unifiedExceptionTerm, goal);
 			}
 		});
 		
 		register(new MatchExceptionHandler(runTimeExceptionFromExceptionTerm(new Compound("type_error", asList(ANONYMOUS_VAR,ANONYMOUS_VAR)))) {
 			@Override
 			public void onMatch(PrologEngine prologEngine, Term unifiedExceptionTerm, Term goal) {
-				throw new LgtTypeError(unifiedExceptionTerm, goal);
+				throw new LogtalkTypeError(unifiedExceptionTerm, goal);
 			}
 		});
 		
 		register(new MatchExceptionHandler(runTimeExceptionFromExceptionTerm(new Compound("domain_error", asList(ANONYMOUS_VAR,ANONYMOUS_VAR)))) {
 			@Override
 			public void onMatch(PrologEngine prologEngine, Term unifiedExceptionTerm, Term goal) {
-				throw new LgtDomainError(unifiedExceptionTerm, goal);
+				throw new LogtalkDomainError(unifiedExceptionTerm, goal);
 			}
 		});
 		
 		register(new MatchExceptionHandler(runTimeExceptionFromExceptionTerm(new Compound("permission_error", asList(ANONYMOUS_VAR,ANONYMOUS_VAR,ANONYMOUS_VAR)))) {
 			@Override
 			public void onMatch(PrologEngine prologEngine, Term unifiedExceptionTerm, Term goal) {
-				throw new LgtPermissionError(unifiedExceptionTerm, goal);
+				throw new LogtalkPermissionError(unifiedExceptionTerm, goal);
 			}
 		});
 		
 		register(new MatchExceptionHandler(runTimeExceptionFromExceptionTerm(new Compound("existence_error", asList(ANONYMOUS_VAR,ANONYMOUS_VAR)))) {
 			@Override
 			public void onMatch(PrologEngine prologEngine, Term unifiedExceptionTerm, Term goal) {
-				throw new LgtExistenceError(unifiedExceptionTerm, goal);
+				throw new LogtalkExistenceError(unifiedExceptionTerm, goal);
 			}
 		});
 		
 		register(new MatchExceptionHandler(runTimeExceptionFromExceptionTerm(new Compound("representation_error", asList(ANONYMOUS_VAR)))) {
 			@Override
 			public void onMatch(PrologEngine prologEngine, Term unifiedExceptionTerm, Term goal) {
-				throw new LgtRepresentationError(unifiedExceptionTerm, goal);
+				throw new LogtalkRepresentationError(unifiedExceptionTerm, goal);
 			}
 		});
 		
 		register(new MatchExceptionHandler(runTimeExceptionFromExceptionTerm(new Compound("evaluation_error", asList(ANONYMOUS_VAR)))) {
 			@Override
 			public void onMatch(PrologEngine prologEngine, Term unifiedExceptionTerm, Term goal) {
-				throw new LgtEvaluationError(unifiedExceptionTerm, goal);
+				throw new LogtalkEvaluationError(unifiedExceptionTerm, goal);
 			}
 		});
 		
 		register(new MatchExceptionHandler(runTimeExceptionFromExceptionTerm(new Compound("resource_error", asList(ANONYMOUS_VAR)))) {
 			@Override
 			public void onMatch(PrologEngine prologEngine, Term unifiedExceptionTerm, Term goal) {
-				throw new LgtResourceError(unifiedExceptionTerm, goal);
+				throw new LogtalkResourceError(unifiedExceptionTerm, goal);
 			}
 		});
 		
 		register(new MatchExceptionHandler(runTimeExceptionFromExceptionTerm(new Compound("syntax_error", asList(ANONYMOUS_VAR)))) {
 			@Override
 			public void onMatch(PrologEngine prologEngine, Term unifiedExceptionTerm, Term goal) {
-				throw new LgtSyntaxError(unifiedExceptionTerm, goal);
+				throw new LogtalkSyntaxError(unifiedExceptionTerm, goal);
 			}
 		});
 	}

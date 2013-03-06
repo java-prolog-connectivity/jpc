@@ -5,14 +5,14 @@ import org.jpc.exception.MatchExceptionHandler;
 import org.jpc.exception.PrologException;
 import org.jpc.term.Term;
 
-public class LgtCompileTimeExceptionHandler extends MatchExceptionHandler {
+public class LogtalkCompileTimeExceptionHandler extends MatchExceptionHandler {
 
-	public LgtCompileTimeExceptionHandler(Term exceptionTerm) {
+	public LogtalkCompileTimeExceptionHandler(Term exceptionTerm) {
 		super(exceptionTerm);
 	}
 
 	public void onMatch(PrologEngine prologEngine, Term unifiedExceptionTerm, Term goal) {
-		throw new LgtCompileTimeException(unifiedExceptionTerm, goal);
+		throw new LogtalkCompileTimeException(unifiedExceptionTerm, goal);
 	}
 	
 }
