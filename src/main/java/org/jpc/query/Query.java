@@ -38,35 +38,35 @@ public abstract class Query extends Cursor<Map<String,Term>> implements TermConv
 		return adapt(new QuerySolutionToTermFunction(selector));
 	}
 	
-	public synchronized Cursor<?> selectObject(String selector) {
+	public synchronized <O> Cursor<O> selectObject(String selector) {
 		return selectObject(asTerm(selector), new Jpc(), Object.class);
 	}
 	
-	public synchronized Cursor<?> selectObject(String selector, Jpc context) {
+	public synchronized <O> Cursor<O> selectObject(String selector, Jpc context) {
 		return selectObject(asTerm(selector), context, Object.class);
 	}
 	
-	public synchronized Cursor<?> selectObject(String selector, Type targetType) {
+	public synchronized <O> Cursor<O> selectObject(String selector, Type targetType) {
 		return selectObject(asTerm(selector), new Jpc(), targetType);
 	}
 	
-	public synchronized Cursor<?> selectObject(String selector, Jpc context, Type targetType) {
+	public synchronized <O> Cursor<O> selectObject(String selector, Jpc context, Type targetType) {
 		return selectObject(asTerm(selector), context, targetType);
 	}
 	
-	public synchronized Cursor<?> selectObject(Term selector) {
+	public synchronized <O> Cursor<O> selectObject(Term selector) {
 		return selectObject(selector, new Jpc(), Object.class);
 	}
 	
-	public synchronized Cursor<?> selectObject(Term selector, Jpc context) {
+	public synchronized <O> Cursor<O> selectObject(Term selector, Jpc context) {
 		return selectObject(selector, context, Object.class);
 	}
 	
-	public synchronized Cursor<?> selectObject(Term selector, Type targetType) {
+	public synchronized <O> Cursor<O> selectObject(Term selector, Type targetType) {
 		return selectObject(selector, new Jpc(), targetType);
 	}
 	
-	public synchronized Cursor<?> selectObject(Term selector, Jpc context, Type targetType) {
+	public synchronized <O> Cursor<O> selectObject(Term selector, Jpc context, Type targetType) {
 		return select(selector).adapt(new TermToObjectFunction(context, targetType));
 	}
 
