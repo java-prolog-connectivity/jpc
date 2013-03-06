@@ -36,7 +36,6 @@ import org.jpc.query.QuerySolutionToTermFunction;
 import org.jpc.term.AbstractTerm;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
-import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 import org.jpc.term.TermConvertable;
 import org.jpc.term.Variable;
@@ -256,7 +255,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
      */
 	
 	public boolean ensureLoaded(List<? extends TermConvertable> termConvertables) {
-		return query(new Compound(ENSURE_LOADED, asList(new ListTerm(termConvertables)))).hasSolution();
+		return query(new Compound(ENSURE_LOADED, asList(listTerm(termConvertables)))).hasSolution();
 	}
 	
 	public boolean ensureLoaded(TermConvertable... termConvertables) {

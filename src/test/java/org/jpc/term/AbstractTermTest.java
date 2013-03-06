@@ -6,16 +6,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jpc.salt.JpcTermWriter;
-import org.jpc.term.Atom;
-import org.jpc.term.Compound;
-import org.jpc.term.ListTerm;
-import org.jpc.term.Term;
-import org.jpc.term.TermConvertable;
-import org.jpc.term.Variable;
 import org.junit.Test;
 
 /**

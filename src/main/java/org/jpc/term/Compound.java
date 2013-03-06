@@ -47,7 +47,7 @@ public final class Compound extends AbstractTerm {
 	public Compound(TermConvertable name, List<? extends TermConvertable> args) {
 		checkArgument(!args.isEmpty(), "A compound term must have at least one argument");
 		this.name = name.asTerm();
-		this.args = new ListTerm(args).asTerms();
+		this.args = listTerm(args);
 	}
 	
 	

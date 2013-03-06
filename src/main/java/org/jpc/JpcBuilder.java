@@ -26,16 +26,19 @@ public class JpcBuilder {
 		return new Jpc(converterManager, typeSolverManager, instantiationManager);
 	}
 
-	public void registerConverter(JpcConverter<?,?> converter) {
+	public JpcBuilder registerConverter(JpcConverter<?,?> converter) {
 		converterManager.register(converter);
+		return this;
 	}
 	
-	public void registerTypeSolver(TermTypeSolver typeSolver) {
+	public JpcBuilder registerTypeSolver(TermTypeSolver typeSolver) {
 		typeSolverManager.register(typeSolver);
+		return this;
 	}
 	
-	public <CT> void registerInstantiationManager(Class<CT> clazz, Factory<CT> factory) {
+	public <CT> JpcBuilder registerInstantiationManager(Class<CT> clazz, Factory<CT> factory) {
 		instantiationManager.register(clazz, factory);
+		return this;
 	}
 	
 //	//TODO

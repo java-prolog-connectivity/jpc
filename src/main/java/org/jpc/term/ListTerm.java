@@ -10,7 +10,7 @@ import java.util.List;
 import org.jpc.Jpc;
 import org.jpc.salt.TermContentHandler;
 
-public class ListTerm<E extends TermConvertable> extends ArrayList<E> implements TermConvertable {
+public class ListTerm extends ArrayList<Term> implements TermConvertable {
 	
 	public static ListTerm listTerm(Object ...objects) {
 		return listTerm(Arrays.asList(objects));
@@ -25,10 +25,9 @@ public class ListTerm<E extends TermConvertable> extends ArrayList<E> implements
 	}
 	
 	public ListTerm() {
-		super();
 	}
 	
-	public ListTerm(Collection<? extends E> terms) {
+	public ListTerm(Collection<? extends Term> terms) {
 		super(terms);
 	}
 	
@@ -51,13 +50,13 @@ public class ListTerm<E extends TermConvertable> extends ArrayList<E> implements
 	 * Transforms this list of TermConvertables to a list of Terms
 	 * @return
 	 */
-	public List<Term> asTerms() {
-		List<Term> terms = new ArrayList<>();
-		for(TermConvertable termConvertable : this) {
-			terms.add(termConvertable.asTerm());
-		}
-		return terms;
-	}
+//	public List<Term> asTerms() {
+//		List<Term> terms = new ArrayList<>();
+//		for(TermConvertable termConvertable : this) {
+//			terms.add(termConvertable.asTerm());
+//		}
+//		return terms;
+//	}
 	
 	@Override
 	public int hashCode() {
@@ -73,7 +72,7 @@ public class ListTerm<E extends TermConvertable> extends ArrayList<E> implements
 	public String toString() {
 		StringBuilder sb = new StringBuilder("[");
 		for(int i=0; i<size(); i++) {
-			E item = get(i);
+			Term item = get(i);
 			sb.append(item == this?"(this List)":item.asTerm().toString());
 			if(i<size()-1)
 				sb.append(", ");
@@ -83,8 +82,8 @@ public class ListTerm<E extends TermConvertable> extends ArrayList<E> implements
 	}
 
 	public void readEach(TermContentHandler contentHandler) {
-		for(TermConvertable each : this) {
-			each.asTerm().read(contentHandler);
+		for(Term each : this) {
+			each.read(contentHandler);
 		}
 	}
 	

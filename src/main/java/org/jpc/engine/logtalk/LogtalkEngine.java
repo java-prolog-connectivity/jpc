@@ -40,7 +40,6 @@ import org.jpc.exception.ExceptionHandler;
 import org.jpc.query.Query;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
-import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 import org.jpc.term.TermConvertable;
 import org.jpc.term.Variable;
@@ -80,8 +79,8 @@ public class LogtalkEngine implements PrologEngine {
 		return query(new Compound(CURRENT_OBJECT, asList(term)));
 	}
 	
-	public ListTerm<LogtalkObject> currentObjects() {
-		ListTerm<LogtalkObject> currentObjects = new ListTerm<>();
+	public List<LogtalkObject> currentObjects() {
+		List<LogtalkObject> currentObjects = new ArrayList<>();
 		Variable logtalkObjectVar = new Variable("LogtalkObject");
 		Compound compound = new Compound(CURRENT_OBJECT, asList(logtalkObjectVar));
 		for(Map<String, Term> solution : query(compound).allSolutions()) {
