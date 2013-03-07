@@ -1,6 +1,5 @@
 package org.jpc.query;
 
-import org.jpc.converter.TermConvertable;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Term;
 
@@ -10,9 +9,9 @@ public abstract class PrologEngineQuery extends Query {
 	private PrologEngine prologEngine;
 	
 	
-	public PrologEngineQuery(PrologEngine prologEngine, TermConvertable termConvertable) {
+	public PrologEngineQuery(PrologEngine prologEngine, Term term) {
 		this.prologEngine = prologEngine;
-		this.goal = termConvertable.asTerm();
+		this.goal = term;
 	}
 	
 	@Override
