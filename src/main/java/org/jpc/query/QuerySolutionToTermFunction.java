@@ -2,8 +2,8 @@ package org.jpc.query;
 
 import java.util.Map;
 
+import org.jpc.converter.TermConvertable;
 import org.jpc.term.Term;
-import org.jpc.term.TermConvertable;
 
 import com.google.common.base.Function;
 
@@ -11,8 +11,8 @@ public class QuerySolutionToTermFunction implements Function<Map<String, Term>, 
 
 	private Term term;
 	
-	public QuerySolutionToTermFunction(TermConvertable<Term> termConvertable) {
-		term = termConvertable.asTerm();
+	public QuerySolutionToTermFunction(Term term) {
+		this.term = term;
 	}
 	
 	@Override

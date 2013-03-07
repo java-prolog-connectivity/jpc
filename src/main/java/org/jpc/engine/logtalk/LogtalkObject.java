@@ -1,6 +1,5 @@
 package org.jpc.engine.logtalk;
 
-import static java.util.Arrays.asList;
 import static org.jpc.engine.logtalk.LogtalkConstants.CURRENT_PREDICATE;
 import static org.jpc.engine.logtalk.LogtalkConstants.PREDICATE_PROPERTY;
 import static org.jpc.engine.logtalk.LogtalkConstants.THREADED;
@@ -20,21 +19,20 @@ import static org.jpc.engine.prolog.PrologConstants.RETRACT_ALL;
 
 import java.util.Arrays;
 
+import org.jpc.converter.TermConvertable;
 import org.jpc.engine.prolog.PrologDatabase;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.query.Query;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
-import org.jpc.term.TermConvertable;
 
 public class LogtalkObject implements TermConvertable, PrologDatabase {
 
-	public static Term logtalkMessage(TermConvertable receiver, TermConvertable message) {
+	public static Term logtalkMessage(Term receiver, Term message) {
 		return new Compound(LogtalkConstants.LOGTALK_OPERATOR, Arrays.asList(receiver, message));
 	}
 	
-	public static boolean isLogtalkMessage(TermConvertable termConvertable) {
-		Term term = termConvertable.asTerm();
+	public static boolean isLogtalkMessage(Term term) {
 		return term instanceof Compound && 
 				((Compound)term).hasFunctor(LogtalkConstants.LOGTALK_OPERATOR, 2);
 	}
@@ -42,16 +40,16 @@ public class LogtalkObject implements TermConvertable, PrologDatabase {
 	private PrologEngine prologEngine;
 	private Term term;
 	
-	public LogtalkObject(TermConvertable termConvertable, PrologEngine prologEngine) {
+	public LogtalkObject(Term term, PrologEngine prologEngine) {
+		this.term = term;
 		this.prologEngine = prologEngine;
-		this.term = termConvertable.asTerm();
 	}
 	
-	public Term message(TermConvertable message) {
-		return logtalkMessage(this, message);
+	public Term message(Term message) {
+		return logtalkMessage(this.asTerm(), message);
 	}
 	
-	public Query perform(TermConvertable message) {
+	public Query perform(Term message) {
 		return prologEngine.query(message(message));
 	}
 	
@@ -78,88 +76,88 @@ public class LogtalkObject implements TermConvertable, PrologDatabase {
 	}
 	
 	@Override
-	public boolean asserta(TermConvertable termConvertable) {
-		return perform(new Compound(ASSERTA, asList(termConvertable))).hasSolution();
+	public boolean asserta(Term term) {
+		return perform(new Compound(ASSERTA, Arrays.asList(term))).hasSolution();
 	}
 
 	@Override
-	public boolean assertz(TermConvertable termConvertable) {
-		return perform(new Compound(ASSERTZ, asList(termConvertable))).hasSolution();
+	public boolean assertz(Term term) {
+		return perform(new Compound(ASSERTZ, Arrays.asList(term))).hasSolution();
 	}
 
 	@Override
-	public Query retract(TermConvertable termConvertable) {
-		return perform(new Compound(RETRACT, asList(termConvertable)));
+	public Query retract(Term term) {
+		return perform(new Compound(RETRACT, Arrays.asList(term)));
 	}
 
 	@Override
-	public boolean retractAll(TermConvertable termConvertable) {
-		return perform(new Compound(RETRACT_ALL, asList(termConvertable))).hasSolution();
+	public boolean retractAll(Term term) {
+		return perform(new Compound(RETRACT_ALL, Arrays.asList(term))).hasSolution();
 	}
 
 	@Override
-	public boolean abolish(TermConvertable termConvertable) {
-		return perform(new Compound(ABOLISH, asList(termConvertable))).hasSolution();
+	public boolean abolish(Term term) {
+		return perform(new Compound(ABOLISH, Arrays.asList(term))).hasSolution();
 	}
 	
-	public Query clause(TermConvertable head, TermConvertable body)  {
-		return perform(new Compound(CLAUSE, asList(head, body)));
+	public Query clause(Term head, Term body)  {
+		return perform(new Compound(CLAUSE, Arrays.asList(head, body)));
 	}
 	
-	public Query currentOp(TermConvertable priority, TermConvertable specifier, TermConvertable operator) {
-		return perform(new Compound(CURRENT_OP, asList(priority, specifier, operator)));
+	public Query currentOp(Term priority, Term specifier, Term operator) {
+		return perform(new Compound(CURRENT_OP, Arrays.asList(priority, specifier, operator)));
 	}
 	
-	public Query predicateProperty(TermConvertable predicate, TermConvertable property) {
-		return perform(new Compound(PREDICATE_PROPERTY, asList(predicate, property)));
+	public Query predicateProperty(Term predicate, Term property) {
+		return perform(new Compound(PREDICATE_PROPERTY, Arrays.asList(predicate, property)));
 	}
 	
-	public Query currentPredicate(TermConvertable predicate) {
-		return perform(new Compound(CURRENT_PREDICATE, asList(predicate)));
+	public Query currentPredicate(Term predicate) {
+		return perform(new Compound(CURRENT_PREDICATE, Arrays.asList(predicate)));
 	}
 	
-	public Query threaded(TermConvertable goals) {
-		return perform(new Compound(THREADED, asList(goals)));
+	public Query threaded(Term goals) {
+		return perform(new Compound(THREADED, Arrays.asList(goals)));
 	}
 	
-	public boolean threadedCall(TermConvertable goal) {
-		return perform(new Compound(THREADED_CALL, asList(goal))).hasSolution();
+	public boolean threadedCall(Term goal) {
+		return perform(new Compound(THREADED_CALL, Arrays.asList(goal))).hasSolution();
 	}
 	
-	public boolean threadedCall(TermConvertable goal, TermConvertable tag) {
-		return perform(new Compound(THREADED_CALL, asList(goal, tag))).hasSolution();
+	public boolean threadedCall(Term goal, Term tag) {
+		return perform(new Compound(THREADED_CALL, Arrays.asList(goal, tag))).hasSolution();
 	}
 	
-	public boolean threadedOnce(TermConvertable goal) {
-		return perform(new Compound(THREADED_ONCE, asList(goal))).hasSolution();
+	public boolean threadedOnce(Term goal) {
+		return perform(new Compound(THREADED_ONCE, Arrays.asList(goal))).hasSolution();
 	}
 	
-	public boolean threadedOnce(TermConvertable goal, TermConvertable tag) {
-		return perform(new Compound(THREADED_ONCE, asList(goal, tag))).hasSolution();
+	public boolean threadedOnce(Term goal, Term tag) {
+		return perform(new Compound(THREADED_ONCE, Arrays.asList(goal, tag))).hasSolution();
 	}
 	
-	public boolean threadedPeek(TermConvertable goal) {
-		return perform(new Compound(THREADED_PEEK, asList(goal))).hasSolution();
+	public boolean threadedPeek(Term goal) {
+		return perform(new Compound(THREADED_PEEK, Arrays.asList(goal))).hasSolution();
 	}
 	
-	public boolean threadedPeek(TermConvertable goal, TermConvertable tag) {
-		return perform(new Compound(THREADED_PEEK, asList(goal, tag))).hasSolution();
+	public boolean threadedPeek(Term goal, Term tag) {
+		return perform(new Compound(THREADED_PEEK, Arrays.asList(goal, tag))).hasSolution();
 	}
 	
-	public Query threadedExit(TermConvertable goal) {
-		return perform(new Compound(THREADED_EXIT, asList(goal)));
+	public Query threadedExit(Term goal) {
+		return perform(new Compound(THREADED_EXIT, Arrays.asList(goal)));
 	}
 	
-	public Query threadedExit(TermConvertable goal, TermConvertable tag) {
-		return perform(new Compound(THREADED_EXIT, asList(goal, tag)));
+	public Query threadedExit(Term goal, Term tag) {
+		return perform(new Compound(THREADED_EXIT, Arrays.asList(goal, tag)));
 	}
 	
-	public boolean threadedIgnore(TermConvertable goal) {
-		return perform(new Compound(THREADED_IGNORE, asList(goal))).hasSolution();
+	public boolean threadedIgnore(Term goal) {
+		return perform(new Compound(THREADED_IGNORE, Arrays.asList(goal))).hasSolution();
 	}
 
-	public Query threadedNotify(TermConvertable termConvertable) {
-		return perform(new Compound(THREADED_NOTIFY, asList(termConvertable)));
+	public Query threadedNotify(Term term) {
+		return perform(new Compound(THREADED_NOTIFY, Arrays.asList(term)));
 	}
 	
 }

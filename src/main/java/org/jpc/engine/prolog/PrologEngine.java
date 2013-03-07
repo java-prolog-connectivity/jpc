@@ -2,10 +2,11 @@ package org.jpc.engine.prolog;
 
 import java.util.List;
 
+import org.jpc.converter.TermConvertable;
+import org.jpc.engine.Flag;
 import org.jpc.exception.ExceptionHandler;
 import org.jpc.query.Query;
 import org.jpc.term.Term;
-import org.jpc.term.TermConvertable;
 
 public interface PrologEngine extends PrologDatabase {
 
@@ -22,9 +23,9 @@ public interface PrologEngine extends PrologDatabase {
 	
 	public Query query(String termString);
 	
-	public Query query(TermConvertable... termConvertables);
+	public Query query(Term... terms);
 	
-	public Query query(List<? extends TermConvertable> termConvertables);
+	public Query query(List<? extends Term> terms);
 	
 	/**
 	 * 
@@ -52,13 +53,15 @@ public interface PrologEngine extends PrologDatabase {
      **********************************************************************************************************************************
      */
 	
-	public boolean setPrologFlag(TermConvertable flag, TermConvertable flagValue);
+	public boolean setPrologFlag(Term flag, Term flagValue);
 	
-	public boolean setPrologFlag(TermConvertable flag, String flagValue);
+	public boolean setPrologFlag(Flag flag, String flagValue);
 	
-	public Query currentPrologFlag(TermConvertable flag, TermConvertable flagValue);
+	public Query currentPrologFlag(Term flag, Term flagValue);
 	
-	public String currentPrologFlag(TermConvertable flag);
+	public Query currentPrologFlag(Flag flag, String flagValue);
+	
+	public String currentPrologFlag(Flag flag);
 	
 	public String prologDialect();
 	
@@ -68,7 +71,7 @@ public interface PrologEngine extends PrologDatabase {
      **********************************************************************************************************************************
      */
 	
-	public Query currentOp(TermConvertable priority, TermConvertable specifier, TermConvertable operator);
+	public Query currentOp(Term priority, Term specifier, Term operator);
 
 	public boolean isBinaryOperator(String op);
 	
@@ -80,7 +83,7 @@ public interface PrologEngine extends PrologDatabase {
      **********************************************************************************************************************************
      */
 	
-	public boolean cd(TermConvertable path);
+	public boolean cd(Term path);
 	
 	public boolean cd(String path);
 	
@@ -91,36 +94,36 @@ public interface PrologEngine extends PrologDatabase {
      */
 	
 	@Override
-	public boolean asserta(TermConvertable termConvertable);
+	public boolean asserta(Term term);
 	
 	@Override
-	public boolean assertz(TermConvertable termConvertable);
+	public boolean assertz(Term term);
 
 	@Override
-	public Query retract(TermConvertable termConvertable);
+	public Query retract(Term term);
 	
 	@Override
-	public boolean retractAll(TermConvertable termConvertable);
+	public boolean retractAll(Term term);
 
 	@Override
-	public boolean abolish(TermConvertable termConvertable);
+	public boolean abolish(Term term);
 	
 	@Override
-	public Query clause(TermConvertable head, TermConvertable body);
+	public Query clause(Term head, Term body);
 	
 	/**
 	 * Assert a list of clauses in the logic database. Terms are asserted as the first facts or rules of the corresponding predicate.
 	 * @param terms the terms to assert
 	 * @return
 	 */
-	public boolean asserta(List<? extends TermConvertable> termConvertables);
+	public boolean asserta(List<? extends Term> terms);
 	
 	/**
 	 * Assert a list of clauses in the logic database. Term are asserted as the last facts or rules of the corresponding predicate.
 	 * @param terms the terms to assert
 	 * @return
 	 */
-	public boolean assertz(List<? extends TermConvertable> termConvertables);
+	public boolean assertz(List<? extends Term> terms);
 	
 	
 	/* ********************************************************************************************************************************
@@ -128,9 +131,9 @@ public interface PrologEngine extends PrologDatabase {
      **********************************************************************************************************************************
      */
 	
-	public boolean ensureLoaded(List<? extends TermConvertable> termConvertables);
+	public boolean ensureLoaded(List<? extends Term> terms);
 	
-	public boolean ensureLoaded(TermConvertable... termConvertables);
+	public boolean ensureLoaded(Term... terms);
 
 	public boolean ensureLoaded(String... resources);
 	
@@ -139,13 +142,13 @@ public interface PrologEngine extends PrologDatabase {
 	 * HIGH ORDER PREDICATES
      **********************************************************************************************************************************
      */
-	public Query bagof(TermConvertable select, TermConvertable exp, TermConvertable all);
+	public Query bagof(Term select, Term exp, Term all);
 	
-	public Query findall(TermConvertable select, TermConvertable exp, TermConvertable all);
+	public Query findall(Term select, Term exp, Term all);
 	
-	public Query setof(TermConvertable select, TermConvertable exp, TermConvertable all);
+	public Query setof(Term select, Term exp, Term all);
 	
-	public Query forall(TermConvertable generator, TermConvertable test);
+	public Query forall(Term generator, Term test);
 
 
 	/* ********************************************************************************************************************************
@@ -160,9 +163,9 @@ public interface PrologEngine extends PrologDatabase {
      **********************************************************************************************************************************
      */
 	
-	public Term unify(TermConvertable... terms);
+	public Term unify(Term... terms);
 	
-	public Term unify(List<? extends TermConvertable> terms);
+	public Term unify(List<? extends Term> terms);
 
 
 	
@@ -172,11 +175,11 @@ public interface PrologEngine extends PrologDatabase {
      */
 	
 	
-	public boolean allSucceed(List<? extends TermConvertable> termConvertables);
+	public boolean allSucceed(List<? extends Term> terms);
 	
 	public List<Term> asResourceTerms(List<String> resourceNames);
 	
 	public Term asResourceTerm(String resourceName);
 	
-	public String termSequenceToString(TermConvertable sequenceTermConvertable);
+	public String termSequenceToString(Term sequenceTerm);
 }

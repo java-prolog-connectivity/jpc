@@ -41,7 +41,7 @@ public final class Atom extends AbstractTerm {
 
 
 	@Override
-	public boolean hasFunctor(TermConvertable nameTermObject, int arity) {
+	public boolean hasFunctor(Term nameTermObject, int arity) {
 		return termEquals(nameTermObject) && arity == 0;
 	}
 	

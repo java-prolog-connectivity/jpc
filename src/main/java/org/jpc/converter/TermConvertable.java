@@ -1,4 +1,6 @@
-package org.jpc.term;
+package org.jpc.converter;
+
+import org.jpc.term.Term;
 
 /**
  * Implementors can be adapted to terms

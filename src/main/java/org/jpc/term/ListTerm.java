@@ -3,25 +3,28 @@ package org.jpc.term;
 import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.jpc.Jpc;
+import org.jpc.converter.TermConvertable;
 import org.jpc.salt.TermContentHandler;
 
 public class ListTerm extends ArrayList<Term> implements TermConvertable {
 	
-	public static ListTerm listTerm(Object ...objects) {
-		return listTerm(Arrays.asList(objects));
+	public static Term listTerm(Term... terms) {
+		return create(terms).asTerm();
+	}
+
+	public static Term listTerm(List<? extends Term> terms) {
+		return create(terms).asTerm();
 	}
 	
-	public static ListTerm listTerm(List<? extends Object> objects) {
-		ListTerm listTerm = new ListTerm();
-		for(Object o : objects) {
-			listTerm.add(new Jpc().toTerm(o));
-		}
-		return listTerm;
+	public static ListTerm create(Term... terms) {
+		return new ListTerm(asList(terms));
+	}
+	
+	public static ListTerm create(List<? extends Term> terms) {
+		return new ListTerm(terms);
 	}
 	
 	public ListTerm() {
@@ -73,7 +76,7 @@ public class ListTerm extends ArrayList<Term> implements TermConvertable {
 		StringBuilder sb = new StringBuilder("[");
 		for(int i=0; i<size(); i++) {
 			Term item = get(i);
-			sb.append(item == this?"(this List)":item.asTerm().toString());
+			sb.append(item == this?"(this List)":item.toString());
 			if(i<size()-1)
 				sb.append(", ");
 		}

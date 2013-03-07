@@ -1,8 +1,8 @@
 package org.jpc.query;
 
+import org.jpc.converter.TermConvertable;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Term;
-import org.jpc.term.TermConvertable;
 
 public abstract class PrologEngineQuery extends Query {
 

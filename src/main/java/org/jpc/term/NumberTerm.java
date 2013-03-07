@@ -40,8 +40,8 @@ public abstract class NumberTerm extends AbstractTerm {
 	}
 	
 	@Override
-	public boolean hasFunctor(TermConvertable nameTerm, int arity) {
-		return termEquals(nameTerm) && arity == 0;
+	public boolean hasFunctor(Term nameTerm, int arity) {
+		return equals(nameTerm) && arity == 0;
 	}
 
 	@Override

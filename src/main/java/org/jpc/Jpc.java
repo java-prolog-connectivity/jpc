@@ -1,11 +1,15 @@
 package org.jpc;
 
 import java.lang.reflect.Type;
+import java.util.Arrays;
+import java.util.List;
 
 import org.jpc.converter.ConverterManager;
 import org.jpc.converter.DefaultConverterManager;
 import org.jpc.instantiationmanager.DefaultInstantiationManager;
 import org.jpc.instantiationmanager.InstantiationManager;
+import org.jpc.term.Compound;
+import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 import org.jpc.typesolver.DefaultTypeSolverManager;
 import org.jpc.typesolver.TypeSolverManager;
@@ -34,6 +38,22 @@ public class Jpc {
 		this.converterManager = converterManager;
 		this.instantiationManager = instantiationManager;
 		//this.preferences = preferences;
+	}
+	
+	public Compound compound(String name, List<? extends Object> args) {
+		return new Compound(name, listTerm(args));
+	}
+	
+	public ListTerm listTerm(Object ...objects) {
+		return listTerm(Arrays.asList(objects));
+	}
+	
+	public ListTerm listTerm(List<? extends Object> objects) {
+		ListTerm listTerm = new ListTerm();
+		for(Object o : objects) {
+			listTerm.add(toTerm(o));
+		}
+		return listTerm;
 	}
 	
 	public Object fromTerm(Term term) {

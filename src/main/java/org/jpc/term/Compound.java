@@ -2,7 +2,6 @@ package org.jpc.term;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.jpc.engine.prolog.PrologConstants.CONS_FUNCTOR;
-import static org.jpc.term.ListTerm.listTerm;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,10 +19,7 @@ import org.jpc.term.visitor.TermVisitor;
  *
  */
 public final class Compound extends AbstractTerm {
-	
-	public static Compound compound(String name, List<? extends Object> args) {
-		return new Compound(name, listTerm(args));
-	}
+
 	/**
 	 * the name of this Compound
 	 */
@@ -34,7 +30,7 @@ public final class Compound extends AbstractTerm {
 	private final List<Term> args;
 
 	
-	public Compound(String name, List<? extends TermConvertable> args) {
+	public Compound(String name, List<? extends Term> args) {
 		this(new Atom(name), args);
 	}
 	
@@ -44,10 +40,10 @@ public final class Compound extends AbstractTerm {
 	 * @param   name   the name of this Compound
 	 * @param   args   the (one or more) arguments of this Compound
 	 */
-	public Compound(TermConvertable name, List<? extends TermConvertable> args) {
+	public Compound(Term name, List<? extends Term> args) {
 		checkArgument(!args.isEmpty(), "A compound term must have at least one argument");
-		this.name = name.asTerm();
-		this.args = listTerm(args);
+		this.name = name;
+		this.args = (List<Term>) args;
 	}
 	
 	
@@ -82,8 +78,8 @@ public final class Compound extends AbstractTerm {
 	 */
 	
 	//@Override
-	public boolean hasFunctor(TermConvertable nameTermObject, int arity) {
-		return name.asTerm().termEquals(nameTermObject) && args.size() == arity;
+	public boolean hasFunctor(Term nameTermObject, int arity) {
+		return name.termEquals(nameTermObject) && args.size() == arity;
 	}
 	
 	
@@ -146,8 +142,7 @@ public final class Compound extends AbstractTerm {
 	}
 	
 	@Override
-	public boolean termEquals(TermConvertable termConvertable) {
-		Term term = termConvertable.asTerm();
+	public boolean termEquals(Term term) {
 		if(term instanceof Compound) {
 			Compound compound = (Compound) term;
 			return this.name.termEquals(compound.name) && termEquals(args, compound.args);

@@ -30,8 +30,8 @@ import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
+import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
-import org.jpc.term.TermConvertable;
 import org.jpc.term.Variable;
 import org.jpc.typesolver.MapTypeSolver;
 import org.junit.Assert;
@@ -256,8 +256,8 @@ public class DefaultTermConverterTest {
 	public void testTermToMap() {
 		Compound c1 = new Compound("-", asList(new Atom("apple"), new IntegerTerm(10)));
 		Compound c2 = new Compound("-", asList(new Atom("orange"), new IntegerTerm(20)));
-		TermConvertable list = listTerm(c1, c2);
-		Map map = (Map) jpc.fromTerm(list.asTerm());
+		Term listTerm = listTerm(c1, c2);
+		Map map = (Map) jpc.fromTerm(listTerm);
 		assertEquals(2, map.size());
 		assertEquals(map.get("apple"), 10L);
 		assertEquals(map.get("orange"), 20L);
@@ -267,8 +267,8 @@ public class DefaultTermConverterTest {
 	public void testTermToMap2() {
 		Compound c1 = new Compound("=", asList(new Atom("apple"), new IntegerTerm(10)));
 		Compound c2 = new Compound("=", asList(new Atom("orange"), new IntegerTerm(20)));
-		TermConvertable list = listTerm(c1, c2);
-		Map map = (Map) jpc.fromTerm(list.asTerm());
+		Term listTerm = listTerm(c1, c2);
+		Map map = (Map) jpc.fromTerm(listTerm);
 		assertEquals(2, map.size());
 		assertEquals(map.get("apple"), 10L);
 		assertEquals(map.get("orange"), 20L);
@@ -278,17 +278,17 @@ public class DefaultTermConverterTest {
 	public void testTermToMap3() {
 		Compound c1 = new Compound("#", asList(new Atom("apple"), new IntegerTerm(10)));
 		Compound c2 = new Compound("#", asList(new Atom("orange"), new IntegerTerm(20)));
-		TermConvertable list = listTerm(c1, c2);
+		Term listTerm = listTerm(c1, c2);
 		try {
-			jpc.fromTerm(list.asTerm());
+			jpc.fromTerm(listTerm);
 			fail();
 		} catch(Exception e) {}
 	}
 	
 	@Test
 	public void testTermToList() {
-		TermConvertable listTerm = listTerm(new Atom("apple"), new Variable("X"));
-		List list = (List) jpc.fromTerm(listTerm.asTerm());
+		Term listTerm = listTerm(new Atom("apple"), new Variable("X"));
+		List list = (List) jpc.fromTerm(listTerm);
 		assertEquals(2, list.size());
 		assertEquals(list.get(0), "apple");
 		assertEquals(list.get(1), null);
@@ -296,8 +296,8 @@ public class DefaultTermConverterTest {
 	
 	@Test
 	public void testTermToObjectArray() {
-		TermConvertable listTerm = listTerm(new Atom("apple"), new Variable("X"));
-		Object[] array = jpc.fromTerm(listTerm.asTerm(), Object[].class);
+		Term listTerm = listTerm(new Atom("apple"), new Variable("X"));
+		Object[] array = jpc.fromTerm(listTerm, Object[].class);
 		assertEquals(2, array.length);
 		assertEquals(array[0], "apple");
 		assertEquals(array[1], null);
@@ -305,8 +305,8 @@ public class DefaultTermConverterTest {
 	
 	@Test
 	public void testTermToStringArray() {
-		TermConvertable listTerm = listTerm(new Atom("apple"), new Variable("X"));
-		String[] array = jpc.fromTerm(listTerm.asTerm(), String[].class);
+		Term listTerm = listTerm(new Atom("apple"), new Variable("X"));
+		String[] array = jpc.fromTerm(listTerm, String[].class);
 		assertEquals(2, array.length);
 		assertEquals(array[0], "apple");
 		assertEquals(array[1], null);

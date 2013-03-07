@@ -6,9 +6,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.jpc.Jpc;
+import org.jpc.converter.TermConvertable;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Term;
-import org.jpc.term.TermConvertable;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;

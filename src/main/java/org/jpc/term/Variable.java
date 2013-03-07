@@ -81,13 +81,12 @@ public final class Variable extends AbstractTerm {
 	}
 	
 	@Override
-	public final boolean termEquals(TermConvertable o) {
-		Term term = o.asTerm();
-		return term instanceof Variable && this.name.equals(((Variable) term).name);
+	public final boolean termEquals(Term term) {
+		return (term instanceof Variable) && this.name.equals(((Variable) term).name);
 	}
 	
 	@Override
-	public boolean hasFunctor(TermConvertable nameTerm, int arity) {
+	public boolean hasFunctor(Term nameTerm, int arity) {
 		return termEquals(nameTerm) && arity == 0;
 	}
 

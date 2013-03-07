@@ -27,6 +27,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.jpc.converter.TermConvertable;
+import org.jpc.engine.Flag;
 import org.jpc.exception.ExceptionHandledQuery;
 import org.jpc.exception.ExceptionHandler;
 import org.jpc.exception.ExceptionHandlerManager;
@@ -37,7 +39,6 @@ import org.jpc.term.AbstractTerm;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
-import org.jpc.term.TermConvertable;
 import org.jpc.term.Variable;
 import org.jpc.util.LogicUtil;
 
@@ -72,18 +73,18 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	 */
 	public abstract String escape(String s);
 	
-	protected abstract Query createQuery(TermConvertable termConvertable);
+	protected abstract Query createQuery(Term term);
 	
 	public final Query query(String termString) {
 		return query(asTerm(termString));
 	}
 
-	public final Query query(TermConvertable... termConvertables) {
-		return query(Arrays.asList(termConvertables));
+	public final Query query(Term... terms) {
+		return query(Arrays.asList(terms));
 	}
 	
-	public final Query query(List<? extends TermConvertable> termConvertables) {
-		Term termSequence = LogicUtil.termsToSequence(termConvertables);
+	public final Query query(List<? extends Term> terms) {
+		Term termSequence = LogicUtil.termsToSequence(terms);
 		return new ExceptionHandledQuery(createQuery(termSequence), exceptionHandlerManager);
 	}
 	
@@ -124,22 +125,26 @@ public abstract class AbstractPrologEngine implements PrologEngine {
      **********************************************************************************************************************************
      */
 	
-	public boolean setPrologFlag(TermConvertable flag, TermConvertable flagValue) {
+	public boolean setPrologFlag(Term flag, Term flagValue) {
 		return query(new Compound(SET_PROLOG_FLAG, asList(flag, flagValue))).hasSolution();
 	}
 	
-	public boolean setPrologFlag(TermConvertable flag, String flagValue) {
-		return setPrologFlag(flag, new Atom(flagValue));
+	public boolean setPrologFlag(Flag flag, String flagValue) {
+		return setPrologFlag(flag.asTerm(), new Atom(flagValue));
 	}
 	
-	public Query currentPrologFlag(TermConvertable flag, TermConvertable flagValue) {
+	public Query currentPrologFlag(Term flag, Term flagValue) {
 		return query(new Compound(CURRENT_PROLOG_FLAG, asList(flag, flagValue)));
 	}
 	
-	public String currentPrologFlag(TermConvertable flag) {
+	public Query currentPrologFlag(Flag flag, String flagValue) {
+		return currentPrologFlag(flag.asTerm(), new Atom(flagValue));
+	}
+	
+	public String currentPrologFlag(Flag flag) {
 		String flagValue = null;
 		Variable varFlagValue = new Variable("Var");
-		Map<String, Term> solutions = currentPrologFlag(flag, varFlagValue).oneSolution();
+		Map<String, Term> solutions = currentPrologFlag(flag.asTerm(), varFlagValue).oneSolution();
 		if(solutions!=null) {
 			Atom flagValueTerm = (Atom) solutions.get(varFlagValue.name());
 			flagValue = flagValueTerm.getName();
@@ -157,12 +162,12 @@ public abstract class AbstractPrologEngine implements PrologEngine {
      **********************************************************************************************************************************
      */
 	
-	public Query currentOp(TermConvertable priority, TermConvertable specifier, TermConvertable operator) {
+	public Query currentOp(Term priority, Term specifier, Term operator) {
 		return query(new Compound(CURRENT_OP, asList(priority, specifier, operator)));
 	}
 
 	public boolean isBinaryOperator(String op) {
-		return query(new Compound(CURRENT_OP, asList(ANONYMOUS_VAR, new Variable("Type"), new Atom(op))), new Compound(ATOM_CHARS, asList(new Variable("Type"), listTerm(ANONYMOUS_VAR, new Atom("f"), ANONYMOUS_VAR)))).hasSolution();
+		return query(new Compound(CURRENT_OP, asList(ANONYMOUS_VAR, new Variable("Type"), new Atom(op))), new Compound(ATOM_CHARS, Arrays.<Term>asList(new Variable("Type"), listTerm(ANONYMOUS_VAR, new Atom("f"), ANONYMOUS_VAR)))).hasSolution();
 		//return createQuery("current_op(_, Type, '" + op + "'), atom_chars(Type, [_, f, _])").hasSolution();
 	}
 	
@@ -177,7 +182,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
      **********************************************************************************************************************************
      */
 	
-	public boolean cd(TermConvertable path) {
+	public boolean cd(Term path) {
 		Compound compound = new Compound(CD, asList(path));
 		return query(compound).hasSolution();
 	}
@@ -198,8 +203,8 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	 * @return
 	 */
 	@Override
-	public boolean asserta(TermConvertable termConvertable) {
-		return query(new Compound(ASSERTA, asList(termConvertable))).hasSolution();
+	public boolean asserta(Term term) {
+		return query(new Compound(ASSERTA, asList(term))).hasSolution();
 	}
 	
 	/**
@@ -208,26 +213,26 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	 * @return
 	 */
 	@Override
-	public boolean assertz(TermConvertable termConvertable) {
-		return query(new Compound(ASSERTZ, asList(termConvertable))).hasSolution();
+	public boolean assertz(Term term) {
+		return query(new Compound(ASSERTZ, asList(term))).hasSolution();
 	}
 
 	@Override
-	public Query retract(TermConvertable termConvertable)  {
-		return query(new Compound(RETRACT, asList(termConvertable)));
+	public Query retract(Term term)  {
+		return query(new Compound(RETRACT, asList(term)));
 	}
 	
 	@Override
-	public boolean retractAll(TermConvertable termConvertable)  {
-		return query(new Compound(RETRACT_ALL, asList(termConvertable))).hasSolution();
+	public boolean retractAll(Term term)  {
+		return query(new Compound(RETRACT_ALL, asList(term))).hasSolution();
 	}
 
 	@Override
-	public boolean abolish(TermConvertable termConvertable)  {
-		return query(new Compound(ABOLISH, asList(termConvertable))).hasSolution();
+	public boolean abolish(Term term)  {
+		return query(new Compound(ABOLISH, asList(term))).hasSolution();
 	}
 	
-	public Query clause(TermConvertable head, TermConvertable body)  {
+	public Query clause(Term head, Term body)  {
 		return query(new Compound(CLAUSE, asList(head, body)));
 	}
 	/**
@@ -235,8 +240,8 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	 * @param terms the terms to assert
 	 * @return
 	 */
-	public boolean asserta(List<? extends TermConvertable> termConvertables) {
-		return allSucceed(LogicUtil.forEachApplyFunctor(ASSERTA, termConvertables));
+	public boolean asserta(List<? extends Term> terms) {
+		return allSucceed(LogicUtil.forEachApplyFunctor(ASSERTA, terms));
 	}
 	
 	/**
@@ -244,8 +249,8 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	 * @param terms the terms to assert
 	 * @return
 	 */
-	public boolean assertz(List<? extends TermConvertable> termConvertables) {
-		return allSucceed(LogicUtil.forEachApplyFunctor(ASSERTZ, termConvertables));
+	public boolean assertz(List<? extends Term> terms) {
+		return allSucceed(LogicUtil.forEachApplyFunctor(ASSERTZ, terms));
 	}	
 	
 	
@@ -254,12 +259,12 @@ public abstract class AbstractPrologEngine implements PrologEngine {
      **********************************************************************************************************************************
      */
 	
-	public boolean ensureLoaded(List<? extends TermConvertable> termConvertables) {
-		return query(new Compound(ENSURE_LOADED, asList(listTerm(termConvertables)))).hasSolution();
+	public boolean ensureLoaded(List<? extends Term> terms) {
+		return query(new Compound(ENSURE_LOADED, asList(listTerm(terms)))).hasSolution();
 	}
 	
-	public boolean ensureLoaded(TermConvertable... termConvertables) {
-		return ensureLoaded(asList(termConvertables));
+	public boolean ensureLoaded(Term... terms) {
+		return ensureLoaded(asList(terms));
 	}
 
 	public boolean ensureLoaded(String... resources) {
@@ -271,19 +276,19 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	 * HIGH ORDER PREDICATES
      **********************************************************************************************************************************
      */
-	public Query bagof(TermConvertable select, TermConvertable exp, TermConvertable all) {
+	public Query bagof(Term select, Term exp, Term all) {
 		return query(new Compound(BAGOF, asList(select, exp, all)));
 	}
 	
-	public Query findall(TermConvertable select, TermConvertable exp, TermConvertable all) {
+	public Query findall(Term select, Term exp, Term all) {
 		return query(new Compound(FINDALL, asList(select, exp, all)));
 	}
 	
-	public Query setof(TermConvertable select, TermConvertable exp, TermConvertable all) {
+	public Query setof(Term select, Term exp, Term all) {
 		return query(new Compound(SETOF, asList(select, exp, all)));
 	}
 	
-	public Query forall(TermConvertable generator, TermConvertable test) {
+	public Query forall(Term generator, Term test) {
 		return query(new Compound(FORALL, asList(generator, test)));
 	}
 
@@ -302,15 +307,15 @@ public abstract class AbstractPrologEngine implements PrologEngine {
      **********************************************************************************************************************************
      */
 	
-	public Term unify(TermConvertable... terms) {
+	public Term unify(Term... terms) {
 		return unify(asList(terms));
 	}
 	
-	public Term unify(List<? extends TermConvertable> terms) {
+	public Term unify(List<? extends Term> terms) {
 		if(terms.isEmpty())
 			throw new RuntimeException("The list of terms to unify cannot be empty");
 		if(terms.size() == 1)
-			return terms.get(0).asTerm();
+			return terms.get(0);
 		List<Term> unifications = new ArrayList<>();
 		for(int i=0; i<terms.size()-1; i++) {
 			unifications.add(new Compound("=", asList(terms.get(i), terms.get(i+1))));
@@ -330,10 +335,10 @@ public abstract class AbstractPrologEngine implements PrologEngine {
      */
 	
 	
-	public boolean allSucceed(List<? extends TermConvertable> termConvertables) {
+	public boolean allSucceed(List<? extends Term> terms) {
 		boolean success = true;
-		for(TermConvertable termConvertable: termConvertables) {
-			if(!query(termConvertable).hasSolution())
+		for(Term term: terms) {
+			if(!query(term).hasSolution())
 				success = false;
 		}
 		return success;
@@ -353,8 +358,8 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 			return new Atom(resourceName);
 	}
 	
-	public String termSequenceToString(TermConvertable sequenceTermConvertable) {
-		List<Term> terms = LogicUtil.sequenceAsTerms(sequenceTermConvertable);
+	public String termSequenceToString(Term sequenceTerm) {
+		List<Term> terms = LogicUtil.sequenceAsTerms(sequenceTerm);
 		return AbstractTerm.toString(this, terms);
 	}
 }

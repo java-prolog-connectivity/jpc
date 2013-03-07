@@ -35,13 +35,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.jpc.engine.Flag;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.exception.ExceptionHandler;
 import org.jpc.query.Query;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
-import org.jpc.term.TermConvertable;
 import org.jpc.term.Variable;
 
 public class LogtalkEngine implements PrologEngine {
@@ -56,14 +56,14 @@ public class LogtalkEngine implements PrologEngine {
 		return logtalkLoad(asResourceTerms(asList(resources)));
 	}
 	
-	public boolean logtalkLoad(List<? extends TermConvertable> termConvertables) {
-		return allSucceed(forEachApplyFunctor(LOGTALK_LOAD, termConvertables));
+	public boolean logtalkLoad(List<? extends Term> Terms) {
+		return allSucceed(forEachApplyFunctor(LOGTALK_LOAD, Terms));
 	}
 	
 	public String currentLogtalkFlag(LogtalkFlag flag) {
 		String flagValue = null;
 		Variable varFlag = new Variable("Var");
-		Map<String, Term> solutions = query(new Compound(CURRENT_LOGTALK_FLAG, Arrays.asList(flag, varFlag))).oneSolution();
+		Map<String, Term> solutions = query(new Compound(CURRENT_LOGTALK_FLAG, Arrays.asList(flag.asTerm(), varFlag.asTerm()))).oneSolution();
 		if(solutions!=null) {
 			Atom flagValueTerm = (Atom) solutions.get(varFlag.name());
 			flagValue = flagValueTerm.getName();
@@ -75,7 +75,7 @@ public class LogtalkEngine implements PrologEngine {
 		return query(new Compound(SET_LOGTALK_FLAG, asList(new Atom(flag.toString()), new Atom(value)))).hasSolution();
 	}
 	
-	public Query currentObject(TermConvertable term) {
+	public Query currentObject(Term term) {
 		return query(new Compound(CURRENT_OBJECT, asList(term)));
 	}
 	
@@ -108,129 +108,129 @@ public class LogtalkEngine implements PrologEngine {
 		return arities;
 	}
 
-	public Query createObject(TermConvertable object, TermConvertable relations, TermConvertable directives, TermConvertable Clauses) {
+	public Query createObject(Term object, Term relations, Term directives, Term Clauses) {
 		return query(new Compound(CREATE_OBJECT, asList(object, relations, directives, Clauses)));
 	}
 	
-	public Query abolishObject(TermConvertable object) {
+	public Query abolishObject(Term object) {
 		return query(new Compound(ABOLISH_OBJECT, asList(object)));
 	}
 	
-	public Query instantiatesClass(TermConvertable instance, TermConvertable clazz) {
+	public Query instantiatesClass(Term instance, Term clazz) {
 		return query(new Compound(INSTANTIATES_CLASS, asList(instance, clazz)));
 	}
 	
-	public Query instantiatesClass(TermConvertable instance, TermConvertable clazz, TermConvertable scope) {
+	public Query instantiatesClass(Term instance, Term clazz, Term scope) {
 		return query(new Compound(INSTANTIATES_CLASS, asList(instance, clazz, scope)));
 	}
 	
-	public Query specializesClass(TermConvertable clazz, TermConvertable superClass) {
+	public Query specializesClass(Term clazz, Term superClass) {
 		return query(new Compound(SPECIALIZES_CLASS, asList(clazz, superClass)));
 	}
 	
-	public Query specializesClass(TermConvertable clazz, TermConvertable superClass, TermConvertable scope) {
+	public Query specializesClass(Term clazz, Term superClass, Term scope) {
 		return query(new Compound(SPECIALIZES_CLASS, asList(clazz, superClass, scope)));
 	}
 	
-	public Query extendsObject(TermConvertable child, TermConvertable parent) {
+	public Query extendsObject(Term child, Term parent) {
 		return query(new Compound(EXTENDS_OBJECTS, asList(child, parent)));
 	}
 	
-	public Query extendsObject(TermConvertable child, TermConvertable parent, TermConvertable scope) {
+	public Query extendsObject(Term child, Term parent, Term scope) {
 		return query(new Compound(EXTENDS_OBJECTS, asList(child, parent, scope)));
 	}
 	
-	public Query importsCategory(TermConvertable object, TermConvertable category) {
+	public Query importsCategory(Term object, Term category) {
 		return query(new Compound(IMPORTS_CATEGORY, asList(object, category)));
 	}
 	
-	public Query importsCategory(TermConvertable object, TermConvertable category, TermConvertable scope) {
+	public Query importsCategory(Term object, Term category, Term scope) {
 		return query(new Compound(IMPORTS_CATEGORY, asList(object, category, scope)));
 	}
 	
-	public Query implementsProtocol(TermConvertable object, TermConvertable protocol) {
+	public Query implementsProtocol(Term object, Term protocol) {
 		return query(new Compound(IMPLEMENTS_PROTOCOL, asList(object, protocol)));
 	}
 	
-	public Query implementsProtocol(TermConvertable object, TermConvertable protocol, TermConvertable scope) {
+	public Query implementsProtocol(Term object, Term protocol, Term scope) {
 		return query(new Compound(IMPLEMENTS_PROTOCOL, asList(object, protocol, scope)));
 	}
 	
-	public Query conformsToProtocol(TermConvertable object, TermConvertable protocol) {
+	public Query conformsToProtocol(Term object, Term protocol) {
 		return query(new Compound(CONFORMS_TO_PROTOCOL, asList(object, protocol)));
 	}
 	
-	public Query conformsToProtocol(TermConvertable object, TermConvertable protocol, TermConvertable scope) {
+	public Query conformsToProtocol(Term object, Term protocol, Term scope) {
 		return query(new Compound(CONFORMS_TO_PROTOCOL, asList(object, protocol, scope)));
 	}
 	
-	public Query complementsObject(TermConvertable category, TermConvertable object) {
+	public Query complementsObject(Term category, Term object) {
 		return query(new Compound(COMPLEMENTS_OBJECT, asList(category, object)));
 	}
 	
-	public Query objectProperty(TermConvertable object, TermConvertable property) {
+	public Query objectProperty(Term object, Term property) {
 		return query(new Compound(OBJECT_PROPERTY, asList(object, property)));
 	}
 	
 	
-	public Query currentProtocol(TermConvertable protocol) {
+	public Query currentProtocol(Term protocol) {
 		return query(new Compound(CURRENT_PROTOCOL, asList(protocol)));
 	}
 	
-	public Query createProtocol(TermConvertable protocol, TermConvertable relations, TermConvertable directives) {
+	public Query createProtocol(Term protocol, Term relations, Term directives) {
 		return query(new Compound(CREATE_PROTOCOL, asList(protocol, relations, directives)));
 	}
 	
-	public Query abolishProtocol(TermConvertable protocol) {
+	public Query abolishProtocol(Term protocol) {
 		return query(new Compound(ABOLISH_PROTOCOL, asList(protocol)));
 	}
 	
-	public Query extendsProtocol(TermConvertable child, TermConvertable parent) {
+	public Query extendsProtocol(Term child, Term parent) {
 		return query(new Compound(EXTENDS_PROTOCOL, asList(child, parent)));
 	}
 	
-	public Query extendsProtocol(TermConvertable child, TermConvertable parent, TermConvertable scope) {
+	public Query extendsProtocol(Term child, Term parent, Term scope) {
 		return query(new Compound(EXTENDS_PROTOCOL, asList(child, parent, scope)));
 	}
 	
-	public Query protocolProperty(TermConvertable protocol, TermConvertable property) {
+	public Query protocolProperty(Term protocol, Term property) {
 		return query(new Compound(PROTOCOL_PROPERTY, asList(protocol, property)));
 	}
 	
 	
-	public Query currentCategory(TermConvertable category) {
+	public Query currentCategory(Term category) {
 		return query(new Compound(CURRENT_CATEGORY, asList(category)));
 	}
 	
-	public Query createCategory(TermConvertable category, TermConvertable relations, TermConvertable directives, TermConvertable Clauses) {
+	public Query createCategory(Term category, Term relations, Term directives, Term Clauses) {
 		return query(new Compound(CREATE_CATEGORY, asList(category, relations, directives, Clauses)));
 	}
 	
-	public Query abolishCategory(TermConvertable category) {
+	public Query abolishCategory(Term category) {
 		return query(new Compound(ABOLISH_CATEGORY, asList(category)));
 	}
 
-	public Query extendsCategory(TermConvertable child, TermConvertable parent) {
+	public Query extendsCategory(Term child, Term parent) {
 		return query(new Compound(EXTENDS_CATEGORY, asList(child, parent)));
 	}
 	
-	public Query extendsCategory(TermConvertable child, TermConvertable parent, TermConvertable scope) {
+	public Query extendsCategory(Term child, Term parent, Term scope) {
 		return query(new Compound(EXTENDS_CATEGORY, asList(child, parent, scope)));
 	}
 	
-	public Query categoryProperty(TermConvertable category, TermConvertable property) {
+	public Query categoryProperty(Term category, Term property) {
 		return query(new Compound(CATEGORY_PROPERTY, asList(category, property)));
 	}
 	
-	public Query currentEvent(TermConvertable event, TermConvertable object, TermConvertable message, TermConvertable sender, TermConvertable monitor) {
+	public Query currentEvent(Term event, Term object, Term message, Term sender, Term monitor) {
 		return query(new Compound(CURRENT_EVENT, asList(event, object, message, sender, monitor)));
 	}
 	
-	public Query defineEvents(TermConvertable event, TermConvertable object, TermConvertable message, TermConvertable sender, TermConvertable monitor) {
+	public Query defineEvents(Term event, Term object, Term message, Term sender, Term monitor) {
 		return query(new Compound(DEFINE_EVENTS, asList(event, object, message, sender, monitor)));
 	}
 	
-	public Query abolishEvents(TermConvertable event, TermConvertable object, TermConvertable message, TermConvertable sender, TermConvertable monitor) {
+	public Query abolishEvents(Term event, Term object, Term message, Term sender, Term monitor) {
 		return query(new Compound(ABOLISH_EVENTS, asList(event, object, message, sender, monitor)));
 	}
 	
@@ -256,12 +256,12 @@ public class LogtalkEngine implements PrologEngine {
 		return prologEngine.query(termString);
 	}
 
-	public Query query(TermConvertable... termConvertables) {
-		return prologEngine.query(termConvertables);
+	public Query query(Term... Terms) {
+		return prologEngine.query(Terms);
 	}
 
-	public Query query(List<? extends TermConvertable> termConvertables) {
-		return prologEngine.query(termConvertables);
+	public Query query(List<? extends Term> Terms) {
+		return prologEngine.query(Terms);
 	}
 
 	public Term asTerm(String termString) {
@@ -284,20 +284,23 @@ public class LogtalkEngine implements PrologEngine {
 		return prologEngine.escape(s);
 	}
 
-	public boolean setPrologFlag(TermConvertable flag, TermConvertable flagValue) {
+	public boolean setPrologFlag(Term flag, Term flagValue) {
 		return prologEngine.setPrologFlag(flag, flagValue);
 	}
 
-	public boolean setPrologFlag(TermConvertable flag, String flagValue) {
+	public boolean setPrologFlag(Flag flag, String flagValue) {
 		return prologEngine.setPrologFlag(flag, flagValue);
 	}
 
-	public Query currentPrologFlag(TermConvertable flag,
-			TermConvertable flagValue) {
+	public Query currentPrologFlag(Term flag, Term flagValue) {
 		return prologEngine.currentPrologFlag(flag, flagValue);
 	}
 
-	public String currentPrologFlag(TermConvertable flag) {
+	public Query currentPrologFlag(Flag flag, String flagValue) {
+		return prologEngine.currentPrologFlag(flag, flagValue);
+	}
+	
+	public String currentPrologFlag(Flag flag) {
 		return prologEngine.currentPrologFlag(flag);
 	}
 
@@ -305,8 +308,8 @@ public class LogtalkEngine implements PrologEngine {
 		return prologEngine.prologDialect();
 	}
 
-	public Query currentOp(TermConvertable priority, TermConvertable specifier,
-			TermConvertable operator) {
+	public Query currentOp(Term priority, Term specifier,
+			Term operator) {
 		return prologEngine.currentOp(priority, specifier, operator);
 	}
 
@@ -318,7 +321,7 @@ public class LogtalkEngine implements PrologEngine {
 		return prologEngine.isUnaryOperator(op);
 	}
 
-	public boolean cd(TermConvertable path) {
+	public boolean cd(Term path) {
 		return prologEngine.cd(path);
 	}
 
@@ -326,66 +329,66 @@ public class LogtalkEngine implements PrologEngine {
 		return prologEngine.cd(path);
 	}
 
-	public boolean asserta(TermConvertable termConvertable) {
-		return prologEngine.asserta(termConvertable);
+	public boolean asserta(Term Term) {
+		return prologEngine.asserta(Term);
 	}
 
-	public boolean assertz(TermConvertable termConvertable) {
-		return prologEngine.assertz(termConvertable);
+	public boolean assertz(Term Term) {
+		return prologEngine.assertz(Term);
 	}
 
-	public Query retract(TermConvertable termConvertable) {
-		return prologEngine.retract(termConvertable);
+	public Query retract(Term Term) {
+		return prologEngine.retract(Term);
 	}
 
-	public boolean retractAll(TermConvertable termConvertable) {
-		return prologEngine.retractAll(termConvertable);
+	public boolean retractAll(Term Term) {
+		return prologEngine.retractAll(Term);
 	}
 
-	public boolean abolish(TermConvertable termConvertable) {
-		return prologEngine.abolish(termConvertable);
+	public boolean abolish(Term Term) {
+		return prologEngine.abolish(Term);
 	}
 
-	public Query clause(TermConvertable head, TermConvertable body) {
+	public Query clause(Term head, Term body) {
 		return prologEngine.clause(head, body);
 	}
 
-	public boolean asserta(List<? extends TermConvertable> termConvertables) {
-		return prologEngine.asserta(termConvertables);
+	public boolean asserta(List<? extends Term> Terms) {
+		return prologEngine.asserta(Terms);
 	}
 
-	public boolean assertz(List<? extends TermConvertable> termConvertables) {
-		return prologEngine.assertz(termConvertables);
+	public boolean assertz(List<? extends Term> Terms) {
+		return prologEngine.assertz(Terms);
 	}
 
-	public boolean ensureLoaded(List<? extends TermConvertable> termConvertables) {
-		return prologEngine.ensureLoaded(termConvertables);
+	public boolean ensureLoaded(List<? extends Term> Terms) {
+		return prologEngine.ensureLoaded(Terms);
 	}
 
-	public boolean ensureLoaded(TermConvertable... termConvertables) {
-		return prologEngine.ensureLoaded(termConvertables);
+	public boolean ensureLoaded(Term... Terms) {
+		return prologEngine.ensureLoaded(Terms);
 	}
 
 	public boolean ensureLoaded(String... resources) {
 		return prologEngine.ensureLoaded(resources);
 	}
 
-	public Query bagof(TermConvertable select, TermConvertable exp,
-			TermConvertable all) {
+	public Query bagof(Term select, Term exp,
+			Term all) {
 		return prologEngine.bagof(select, exp, all);
 	}
 
-	public Query findall(TermConvertable select, TermConvertable exp,
-			TermConvertable all) {
+	public Query findall(Term select, Term exp,
+			Term all) {
 		return prologEngine.findall(select, exp, all);
 	}
 
-	public Query setof(TermConvertable select, TermConvertable exp,
-			TermConvertable all) {
+	public Query setof(Term select, Term exp,
+			Term all) {
 		return prologEngine.setof(select, exp, all);
 	}
 
-	public Query forall(TermConvertable generator, TermConvertable test) {
+	public Query forall(Term generator, Term test) {
 		return prologEngine.forall(generator, test);
 	}
 
@@ -393,16 +396,16 @@ public class LogtalkEngine implements PrologEngine {
 		return prologEngine.flushOutput();
 	}
 
-	public Term unify(TermConvertable... terms) {
+	public Term unify(Term... terms) {
 		return prologEngine.unify(terms);
 	}
 	
-	public Term unify(List<? extends TermConvertable> terms) {
+	public Term unify(List<? extends Term> terms) {
 		return prologEngine.unify(terms);
 	}
 
-	public boolean allSucceed(List<? extends TermConvertable> termConvertables) {
-		return prologEngine.allSucceed(termConvertables);
+	public boolean allSucceed(List<? extends Term> Terms) {
+		return prologEngine.allSucceed(Terms);
 	}
 
 	public List<Term> asResourceTerms(List<String> resourceNames) {
@@ -413,8 +416,8 @@ public class LogtalkEngine implements PrologEngine {
 		return prologEngine.asResourceTerm(resourceName);
 	}
 
-	public String termSequenceToString(TermConvertable sequenceTermConvertable) {
-		return prologEngine.termSequenceToString(sequenceTermConvertable);
+	public String termSequenceToString(Term sequenceTerm) {
+		return prologEngine.termSequenceToString(sequenceTerm);
 	}
 
 }

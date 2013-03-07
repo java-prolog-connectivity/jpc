@@ -8,7 +8,6 @@ import org.jpc.Jpc;
 import org.jpc.converter.fromterm.FromTermConverter;
 import org.jpc.converter.toterm.ToTermConverter;
 import org.jpc.term.Term;
-import org.jpc.term.TermConvertable;
 import org.jpc.term.Variable;
 import org.minitoolbox.reflection.wrappertype.ArrayTypeWrapper;
 import org.minitoolbox.reflection.wrappertype.TypeWrapper;

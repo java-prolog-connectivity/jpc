@@ -13,7 +13,7 @@ import org.jpc.term.visitor.TermVisitor;
  * @author scastro
  *
  */
-public interface Term extends TermConvertable {
+public interface Term /*extends TermConvertable*/ {
 
 	/**
 	 * Returns the ith argument (if any) of this Term.
@@ -46,7 +46,7 @@ public interface Term extends TermConvertable {
 	 * @param arity the arity of this term
 	 * @return true if the term has the given name and arity. False otherwise
 	 */
-	public abstract boolean hasFunctor(TermConvertable nameTermObject, int arity);
+	public abstract boolean hasFunctor(Term nameTermObject, int arity);
 
 
 	/**
@@ -86,14 +86,14 @@ public interface Term extends TermConvertable {
 	 * @param termAdaptable
 	 * @return
 	 */
-	public abstract boolean termEquals(TermConvertable o);
+	public abstract boolean termEquals(Term t);
 
 	/**
 	 * Returns a term with all the occurrences of the variables in the parameter map replaced with its associated value (converted to a term)
 	 * @param map maps variable names to values.
 	 * @return a new term with its variables replaced according to the map
 	 */
-	public abstract Term replaceVariables(Map<String, ? extends TermConvertable> map);
+	public abstract Term replaceVariables(Map<String, ? extends Term> map);
 
 	/**
 	 * Replace all the variable names according to the map parameter

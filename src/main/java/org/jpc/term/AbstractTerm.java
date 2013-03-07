@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jpc.JpcException;
+import org.jpc.converter.TermConvertable;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.salt.JpcTermWriter;
 import org.jpc.util.salt.ChangeVariableNameAdapter;
@@ -17,7 +18,7 @@ import org.jpc.util.salt.VariableNamesCollectorHandler;
  * @author scastro
  *
  */
-public abstract class AbstractTerm implements Term {
+public abstract class AbstractTerm implements Term, TermConvertable {
 	
 	/* (non-Javadoc)
 	 * @see org.jpc.term.Term#arg(int)
@@ -67,7 +68,7 @@ public abstract class AbstractTerm implements Term {
 	 * @see org.jpc.term.Term#hasFunctor(org.jpc.term.TermAdaptable, int)
 	 */
 	@Override
-	public abstract boolean hasFunctor(TermConvertable nameTermObject, int arity);
+	public abstract boolean hasFunctor(Term nameTermObject, int arity);
 
 	
 	/* (non-Javadoc)
@@ -111,7 +112,7 @@ public abstract class AbstractTerm implements Term {
 	 * @see org.jpc.term.Term#replaceVariables(java.util.Map)
 	 */
 	@Override
-	public Term replaceVariables(Map<String, ? extends TermConvertable> map) {
+	public Term replaceVariables(Map<String, ? extends Term> map) {
 		JpcTermWriter termWriter = new JpcTermWriter();
 		ReplaceVariableAdapter replaceVariableAdapter = new ReplaceVariableAdapter(termWriter, map);
 		read(replaceVariableAdapter);
@@ -172,26 +173,26 @@ public abstract class AbstractTerm implements Term {
 	 * @see org.jpc.term.Term#termEquivalent(org.jpc.term.TermAdaptable)
 	 */
 	@Override
-	public boolean termEquals(TermConvertable o) {
-		return equals(o.asTerm());
+	public boolean termEquals(Term t) {
+		return equals(t);
 	}
 	
 	public abstract String toString(PrologEngine prologEngine);
 	
 	
 	/**
-	 * @param   t1  a list of Terms
-	 * @param   t2  another list of Terms
+	 * @param   list1  a list of Terms
+	 * @param   list2  another list of Terms
 	 * @return  true if all of the Terms in the (same-length) lists are pairwise term equivalent
 	 */
-	protected static <T extends TermConvertable> boolean termEquals(List<T> t1, List<T> t2) {
-		if (t1.size() != t2.size()) {
+	public static boolean termEquals(List<? extends Term> list1, List<? extends Term> list2) {
+		if (list1.size() != list2.size()) {
 			return false;
 		}
-		for (int i = 0; i < t1.size(); ++i) {
-			TermConvertable o1 = t1.get(i);
-			TermConvertable o2 = t2.get(i);
-			if(!o1.asTerm().termEquals(o2.asTerm()))
+		for (int i = 0; i < list1.size(); ++i) {
+			Term term1 = list1.get(i);
+			Term term2 = list2.get(i);
+			if(!term1.termEquals(term2))
 				return false;
 		}
 		return true;
@@ -203,10 +204,10 @@ public abstract class AbstractTerm implements Term {
 	 * @param   args    an array of Terms to convert
 	 * @return  String representation of an array of Terms
 	 */
-	public static <T extends TermConvertable> String toString(T... termObjects) {
+	public static <T extends Term> String toString(T... termObjects) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < termObjects.length; ++i) {
-			sb.append(termObjects[i].asTerm().toString());
+			sb.append(termObjects[i].toString());
 			if (i != termObjects.length - 1) {
 				sb.append(", ");
 			}
@@ -220,14 +221,14 @@ public abstract class AbstractTerm implements Term {
 	 * @param termAdapters
 	 * @return String representation of a list of Terms
 	 */
-	public static <T extends TermConvertable> String toString(List<T> termObjects) {
-		return toString(termObjects.toArray(new TermConvertable[]{}));
+	public static <T extends Term> String toString(List<T> termObjects) {
+		return toString(termObjects.toArray(new Term[]{}));
 	}
 	
-	public static <T extends TermConvertable> String toString(PrologEngine prologEngine, T... termObjects) {
+	public static <T extends Term> String toString(PrologEngine prologEngine, T... termObjects) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < termObjects.length; ++i) {
-			sb.append(termObjects[i].asTerm().toString(prologEngine));
+			sb.append(termObjects[i].toString(prologEngine));
 			if (i != termObjects.length - 1) {
 				sb.append(", ");
 			}
@@ -235,8 +236,8 @@ public abstract class AbstractTerm implements Term {
 		return sb.toString();
 	}
 	
-	public static <T extends TermConvertable> String toString(PrologEngine prologEngine, List<T> termObjects) {
-		return toString(prologEngine, termObjects.toArray(new TermConvertable[]{}));
+	public static <T extends Term> String toString(PrologEngine prologEngine, List<T> termObjects) {
+		return toString(prologEngine, termObjects.toArray(new Term[]{}));
 	}
 
 }

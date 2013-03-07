@@ -1,8 +1,8 @@
 package org.jpc.engine;
 
+import org.jpc.converter.TermConvertable;
 import org.jpc.term.Atom;
 import org.jpc.term.Term;
-import org.jpc.term.TermConvertable;
 
 public abstract class Flag implements TermConvertable {
 

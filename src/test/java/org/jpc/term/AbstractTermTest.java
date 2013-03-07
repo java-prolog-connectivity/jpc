@@ -1,6 +1,7 @@
 package org.jpc.term;
 
 import static java.util.Arrays.asList;
+import static org.jpc.term.ListTerm.listTerm;
 import static org.jpc.term.Variable.ANONYMOUS_VAR;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -10,6 +11,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jpc.converter.TermConvertable;
 import org.junit.Test;
 
 /**
@@ -26,9 +28,9 @@ public class AbstractTermTest {
 	Term t0 = new Compound(aAtom, asList(ANONYMOUS_VAR));
 	Term t1 = new Compound(aAtom, asList(new Compound(ANONYMOUS_VAR, asList(aVar))));
 	Term t2 = new Compound(aAtom, asList(new Compound(ANONYMOUS_VAR, asList(
-			new ListTerm(asList(aVar, aVar))))));
+			listTerm(asList(aVar, aVar))))));
 	Term t3 = new Compound(aAtom, asList(new Compound(ANONYMOUS_VAR, asList(
-			new ListTerm(asList(aAtom, aVar, bVar, namedAnonVar, ANONYMOUS_VAR))))));
+			listTerm(asList(aAtom, aVar, bVar, namedAnonVar, ANONYMOUS_VAR))))));
 	
 	
 	@Test
@@ -97,9 +99,9 @@ public class AbstractTermTest {
 				t0.changeVariablesNames(map));
 		assertEquals(new Compound(aAtom, asList(new Compound(newAnon, asList(newAVar)))), 
 				t1.changeVariablesNames(map));
-		assertEquals(new Compound(aAtom, asList(new Compound(newAnon, asList(new ListTerm(asList(newAVar, newAVar)))))), 
+		assertEquals(new Compound(aAtom, asList(new Compound(newAnon, asList(listTerm(asList(newAVar, newAVar)))))), 
 				t2.changeVariablesNames(map));
-		assertEquals(new Compound(aAtom, asList(new Compound(newAnon, asList(new ListTerm(asList(aAtom, newAVar, bVar, namedAnonVar, newAnon)))))), 
+		assertEquals(new Compound(aAtom, asList(new Compound(newAnon, asList(listTerm(asList(aAtom, newAVar, bVar, namedAnonVar, newAnon)))))), 
 				t3.changeVariablesNames(map));
 	}
 	
@@ -107,7 +109,7 @@ public class AbstractTermTest {
 	public void testReplaceVariables() {
 		final Variable newAVar = new Variable("NewA");
 		final Variable newAnon = new Variable("ANONYMOUS");
-		Map<String, TermConvertable> map = new HashMap<String, TermConvertable>(){{
+		Map<String, Term> map = new HashMap<String, Term>(){{
 			put("_", newAnon);
 			put("A", newAVar);
 		}};
@@ -120,9 +122,9 @@ public class AbstractTermTest {
 				t0.replaceVariables(map));
 		assertEquals(new Compound(aAtom, asList(new Compound(newAnon, asList(newAVar)))), 
 				t1.replaceVariables(map));
-		assertEquals(new Compound(aAtom, asList(new Compound(newAnon, asList(new ListTerm(asList(newAVar, newAVar)))))), 
+		assertEquals(new Compound(aAtom, asList(new Compound(newAnon, asList(listTerm(asList(newAVar, newAVar)))))), 
 				t2.replaceVariables(map));
-		assertEquals(new Compound(aAtom, asList(new Compound(newAnon, asList(new ListTerm(asList(aAtom, newAVar, bVar, namedAnonVar, newAnon)))))), 
+		assertEquals(new Compound(aAtom, asList(new Compound(newAnon, asList(listTerm(asList(aAtom, newAVar, bVar, namedAnonVar, newAnon)))))), 
 				t3.replaceVariables(map));
 	}
 	
