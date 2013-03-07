@@ -23,12 +23,17 @@ public final class Atom extends AbstractTerm {
 	
 	private final String name;
 	
+	public Atom(Boolean bool) {
+		this(bool.toString());
+	}
+	
 	/**
 	 * @param   name   the Atom's name (unquoted)
 	 */
 	public Atom(String name) {
 		this.name = name;
 	}
+
 	
 	public String getName() {
 		return name;
