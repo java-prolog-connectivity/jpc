@@ -11,8 +11,8 @@ public class LogicUtilTest {
 
 	@Test
 	public void testTermsToSequence() {
-		assertEquals(new Atom("a"), LogicUtil.termsToSequence(asList(new Atom("a"))));
-		assertEquals(new Compound(",", asList(new Atom("a"), new Compound(",", asList(new Atom("b"), new Atom("c"))))), LogicUtil.termsToSequence(asList(new Atom("a"), new Atom("b"), new Atom("c"))));
+		assertEquals(new Atom("a"), LogicUtil.termSequence(asList(new Atom("a"))));
+		assertEquals(new Compound(",", asList(new Atom("a"), new Compound(",", asList(new Atom("b"), new Atom("c"))))), LogicUtil.termSequence(asList(new Atom("a"), new Atom("b"), new Atom("c"))));
 	}
 	
 }

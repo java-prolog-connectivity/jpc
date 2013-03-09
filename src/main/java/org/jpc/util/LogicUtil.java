@@ -51,11 +51,11 @@ public class LogicUtil {
 	}
 	
 
-	public static Term termsToSequence(Term... terms) {
-		return termsToSequence(asList(terms));
+	public static Term termSequence(Term... terms) {
+		return termSequence(asList(terms));
 	}
 	
-	public static Term termsToSequence(List<? extends Term> terms) {
+	public static Term termSequence(List<? extends Term> terms) {
 		checkArgument(!terms.isEmpty());
 		Term termSequence = terms.get(terms.size()-1);
 		for(int i = terms.size()-2; i>=0; i--) {

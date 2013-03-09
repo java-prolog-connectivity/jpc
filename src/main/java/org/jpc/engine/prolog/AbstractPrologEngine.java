@@ -21,18 +21,19 @@ import static org.jpc.engine.prolog.PrologConstants.SET_PROLOG_FLAG;
 import static org.jpc.term.ListTerm.listTerm;
 import static org.jpc.term.Variable.ANONYMOUS_VAR;
 import static org.jpc.util.LogicUtil.isResourceAlias;
+import static org.jpc.util.LogicUtil.termSequence;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.jpc.converter.TermConvertable;
+import org.jpc.Jpc;
 import org.jpc.engine.Flag;
-import org.jpc.exception.ExceptionHandledQuery;
 import org.jpc.exception.ExceptionHandler;
 import org.jpc.exception.ExceptionHandlerManager;
 import org.jpc.exception.RootExceptionHandlerManager;
+import org.jpc.query.ExceptionHandledQuery;
 import org.jpc.query.Query;
 import org.jpc.query.QuerySolutionToTermFunction;
 import org.jpc.term.AbstractTerm;
@@ -55,6 +56,10 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 //		return new LogtalkEngine(this);
 //	}
 	
+	public ExceptionHandler getExceptionHandler() {
+		return exceptionHandlerManager;
+	}
+	
 	public void registerExceptionHandler(ExceptionHandler exceptionHandler) {
 		exceptionHandlerManager.register(exceptionHandler);
 	}
@@ -73,19 +78,28 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	 */
 	public abstract String escape(String s);
 	
-	protected abstract Query createQuery(Term term);
+	/**
+	 * 
+	 * @param term
+	 * @param context
+	 * @return A query without automatic exception handling
+	 */
+	public abstract Query simpleQuery(Term term, Jpc context);
 	
 	public final Query query(String termString) {
-		return query(asTerm(termString));
-	}
-
-	public final Query query(Term... terms) {
-		return query(Arrays.asList(terms));
+		return query(termString, new Jpc());
 	}
 	
-	public final Query query(List<? extends Term> terms) {
-		Term termSequence = LogicUtil.termsToSequence(terms);
-		return new ExceptionHandledQuery(createQuery(termSequence), exceptionHandlerManager);
+	public final Query query(String termString, Jpc context) {
+		return query(asTerm(termString), context);
+	}
+
+	public final Query query(Term terms) {
+		return query(terms, new Jpc());
+	}
+	
+	public final Query query(Term term, Jpc context) {
+		return ExceptionHandledQuery.create(this, term, context);
 	}
 	
 	/**
@@ -167,12 +181,18 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	}
 
 	public boolean isBinaryOperator(String op) {
-		return query(new Compound(CURRENT_OP, asList(ANONYMOUS_VAR, new Variable("Type"), new Atom(op))), new Compound(ATOM_CHARS, Arrays.<Term>asList(new Variable("Type"), listTerm(ANONYMOUS_VAR, new Atom("f"), ANONYMOUS_VAR)))).hasSolution();
+		return query(termSequence(
+				new Compound(CURRENT_OP, asList(ANONYMOUS_VAR, new Variable("Type"), new Atom(op))), 
+				new Compound(ATOM_CHARS, Arrays.<Term>asList(new Variable("Type"), listTerm(ANONYMOUS_VAR, new Atom("f"), ANONYMOUS_VAR)))
+			)).hasSolution();
 		//return createQuery("current_op(_, Type, '" + op + "'), atom_chars(Type, [_, f, _])").hasSolution();
 	}
 	
 	public boolean isUnaryOperator(String op) {
-		return query(new Compound(CURRENT_OP, asList(ANONYMOUS_VAR, new Variable("Type"), new Atom(op))), new Compound(ATOM_CHARS, asList(new Variable("Type"), listTerm(new Atom("f"), ANONYMOUS_VAR)))).hasSolution();
+		return query(termSequence(
+				new Compound(CURRENT_OP, asList(ANONYMOUS_VAR, new Variable("Type"), 
+				new Atom(op))), new Compound(ATOM_CHARS, asList(new Variable("Type"), listTerm(new Atom("f"), ANONYMOUS_VAR)))
+			)).hasSolution();
 		//return createQuery("current_op(_, Type, '" + op + "'), atom_chars(Type, [f, _])").hasSolution();
 	}
 	
@@ -320,7 +340,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 		for(int i=0; i<terms.size()-1; i++) {
 			unifications.add(new Compound("=", asList(terms.get(i), terms.get(i+1))));
 		}
-		List<Map<String, Term>> solutions = query(unifications).allSolutions();
+		List<Map<String, Term>> solutions = query(termSequence(unifications)).allSolutions();
 		if(solutions.isEmpty())
 			return null;
 		Map<String, Term> solution = solutions.get(0);

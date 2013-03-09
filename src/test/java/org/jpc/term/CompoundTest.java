@@ -48,7 +48,7 @@ public class CompoundTest {
 		assertEquals(3, LogicUtil.sequenceLength(sequence));
 		List<Term> terms = LogicUtil.sequenceAsTerms(sequence);
 		assertEquals(asList(new Atom("a"), new Atom("b"), new Atom("c")), terms);
-		assertEquals(sequence, LogicUtil.termsToSequence(terms));
+		assertEquals(sequence, LogicUtil.termSequence(terms));
 	}
 
 }

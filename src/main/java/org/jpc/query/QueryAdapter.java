@@ -1,5 +1,6 @@
 package org.jpc.query;
 
+import java.lang.reflect.Type;
 import java.util.Map;
 
 import org.jpc.engine.prolog.PrologEngine;
@@ -10,7 +11,7 @@ import com.google.common.base.Function;
 public class QueryAdapter extends Query {
 
 	protected Function<Map<String,Term>, Map<String,Term>> adapterFunction;
-	private Query query;
+	protected Query query;
 	
 	public QueryAdapter(Query query) {
 		this(query, (Function<Map<String, Term>, Map<String, Term>>) CursorAdapter.defaultAdapterFunction);
@@ -27,8 +28,13 @@ public class QueryAdapter extends Query {
 	}
 	
 	@Override
-	public Term asTerm() {
-		return query.asTerm();
+	public Term goal() {
+		return query.goal();
+	}
+	
+	@Override
+	protected Term getDefaultSelectedTerm() {
+		return query.getDefaultSelectedTerm();
 	}
 	
 	@Override
@@ -61,6 +67,9 @@ public class QueryAdapter extends Query {
 		 query.close();
 	}
 
-
-
+	@Override
+	protected TermToObjectFunction getTermToObjectFunction(Type targetType) {
+		return query.getTermToObjectFunction(targetType);
+	}
+	
 }

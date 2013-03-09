@@ -35,6 +35,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.jpc.Jpc;
 import org.jpc.engine.Flag;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.exception.ExceptionHandler;
@@ -244,6 +245,10 @@ public class LogtalkEngine implements PrologEngine {
 //		return this;
 //	}
 
+	public ExceptionHandler getExceptionHandler() {
+		return prologEngine.getExceptionHandler();
+	}
+	
 	public void registerExceptionHandler(ExceptionHandler exceptionHandler) {
 		prologEngine.registerExceptionHandler(exceptionHandler);
 	}
@@ -252,18 +257,26 @@ public class LogtalkEngine implements PrologEngine {
 		return prologEngine.stop();
 	}
 
+	public Query simpleQuery(Term terms, Jpc context) {
+		return prologEngine.simpleQuery(terms, context);
+	}
+	
 	public Query query(String termString) {
 		return prologEngine.query(termString);
 	}
 
-	public Query query(Term... Terms) {
-		return prologEngine.query(Terms);
+	public Query query(String termString, Jpc context) {
+		return prologEngine.query(termString, context);
+	}
+	
+	public Query query(Term terms) {
+		return prologEngine.query(terms);
 	}
 
-	public Query query(List<? extends Term> Terms) {
-		return prologEngine.query(Terms);
+	public Query query(Term terms, Jpc context) {
+		return prologEngine.query(terms, context);
 	}
-
+	
 	public Term asTerm(String termString) {
 		return prologEngine.asTerm(termString);
 	}
@@ -308,8 +321,7 @@ public class LogtalkEngine implements PrologEngine {
 		return prologEngine.prologDialect();
 	}
 
-	public Query currentOp(Term priority, Term specifier,
-			Term operator) {
+	public Query currentOp(Term priority, Term specifier, Term operator) {
 		return prologEngine.currentOp(priority, specifier, operator);
 	}
 
@@ -329,62 +341,59 @@ public class LogtalkEngine implements PrologEngine {
 		return prologEngine.cd(path);
 	}
 
-	public boolean asserta(Term Term) {
-		return prologEngine.asserta(Term);
+	public boolean asserta(Term term) {
+		return prologEngine.asserta(term);
 	}
 
-	public boolean assertz(Term Term) {
-		return prologEngine.assertz(Term);
+	public boolean assertz(Term term) {
+		return prologEngine.assertz(term);
 	}
 
-	public Query retract(Term Term) {
-		return prologEngine.retract(Term);
+	public Query retract(Term term) {
+		return prologEngine.retract(term);
 	}
 
-	public boolean retractAll(Term Term) {
-		return prologEngine.retractAll(Term);
+	public boolean retractAll(Term term) {
+		return prologEngine.retractAll(term);
 	}
 
-	public boolean abolish(Term Term) {
-		return prologEngine.abolish(Term);
+	public boolean abolish(Term term) {
+		return prologEngine.abolish(term);
 	}
 
 	public Query clause(Term head, Term body) {
 		return prologEngine.clause(head, body);
 	}
 
-	public boolean asserta(List<? extends Term> Terms) {
-		return prologEngine.asserta(Terms);
+	public boolean asserta(List<? extends Term> terms) {
+		return prologEngine.asserta(terms);
 	}
 
-	public boolean assertz(List<? extends Term> Terms) {
-		return prologEngine.assertz(Terms);
+	public boolean assertz(List<? extends Term> terms) {
+		return prologEngine.assertz(terms);
 	}
 
-	public boolean ensureLoaded(List<? extends Term> Terms) {
-		return prologEngine.ensureLoaded(Terms);
+	public boolean ensureLoaded(List<? extends Term> terms) {
+		return prologEngine.ensureLoaded(terms);
 	}
 
-	public boolean ensureLoaded(Term... Terms) {
-		return prologEngine.ensureLoaded(Terms);
+	public boolean ensureLoaded(Term... terms) {
+		return prologEngine.ensureLoaded(terms);
 	}
 
 	public boolean ensureLoaded(String... resources) {
 		return prologEngine.ensureLoaded(resources);
 	}
 
-	public Query bagof(Term select, Term exp,
-			Term all) {
+	public Query bagof(Term select, Term exp, Term all) {
 		return prologEngine.bagof(select, exp, all);
 	}
 
-	public Query findall(Term select, Term exp,
-			Term all) {
+	public Query findall(Term select, Term exp, Term all) {
 		return prologEngine.findall(select, exp, all);
 	}
 
-	public Query setof(Term select, Term exp,
-			Term all) {
+	public Query setof(Term select, Term exp, Term all) {
 		return prologEngine.setof(select, exp, all);
 	}
 

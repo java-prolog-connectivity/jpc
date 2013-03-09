@@ -1,17 +1,21 @@
 package org.jpc.query;
 
+import java.lang.reflect.Type;
+
+import org.jpc.Jpc;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Term;
 
 public abstract class PrologEngineQuery extends Query {
 
-	private Term goal;
 	private PrologEngine prologEngine;
+	private Term goal;
+	private Jpc context;
 	
-	
-	public PrologEngineQuery(PrologEngine prologEngine, Term term) {
+	public PrologEngineQuery(PrologEngine prologEngine, Term term, Jpc context) {
 		this.prologEngine = prologEngine;
 		this.goal = term;
+		this.context = context;
 	}
 	
 	@Override
@@ -20,8 +24,13 @@ public abstract class PrologEngineQuery extends Query {
 	}
 	
 	@Override
-	public Term asTerm() {
+	public Term goal() {
 		return goal;
+	}
+	
+	@Override
+	protected Term getDefaultSelectedTerm() {
+		return goal();
 	}
 	
 	protected Term asTerm(String termString) {
@@ -32,5 +41,10 @@ public abstract class PrologEngineQuery extends Query {
 	public String toString() {
 		return goal.toString();
 	}
-	
+
+	@Override
+	protected TermToObjectFunction getTermToObjectFunction(Type targetType) {
+		return new TermToObjectFunction(context, targetType);
+	}
+
 }

@@ -2,7 +2,7 @@ package org.jpc.engine.prolog;
 
 import java.util.List;
 
-import org.jpc.converter.TermConvertable;
+import org.jpc.Jpc;
 import org.jpc.engine.Flag;
 import org.jpc.exception.ExceptionHandler;
 import org.jpc.query.Query;
@@ -11,6 +11,8 @@ import org.jpc.term.Term;
 public interface PrologEngine extends PrologDatabase {
 
 	//public LogtalkEngine asLogtalkEngine();
+	
+	public ExceptionHandler getExceptionHandler();
 	
 	public void registerExceptionHandler(ExceptionHandler exceptionHandler);
 	
@@ -21,12 +23,16 @@ public interface PrologEngine extends PrologDatabase {
 	
 	public boolean stop();
 	
+	public Query simpleQuery(Term term, Jpc context);
+	
 	public Query query(String termString);
 	
-	public Query query(Term... terms);
+	public Query query(String termString, Jpc context);
 	
-	public Query query(List<? extends Term> terms);
+	public Query query(Term terms);
 	
+	public Query query(Term terms, Jpc context);
+
 	/**
 	 * 
 	 * @param termString

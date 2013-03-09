@@ -19,9 +19,11 @@ import static org.jpc.engine.prolog.PrologConstants.RETRACT_ALL;
 
 import java.util.Arrays;
 
+import org.jpc.Jpc;
 import org.jpc.converter.TermConvertable;
 import org.jpc.engine.prolog.PrologDatabase;
 import org.jpc.engine.prolog.PrologEngine;
+import org.jpc.query.LogtalkQuery;
 import org.jpc.query.Query;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
@@ -37,12 +39,19 @@ public class LogtalkObject implements TermConvertable, PrologDatabase {
 				((Compound)term).hasFunctor(LogtalkConstants.LOGTALK_OPERATOR, 2);
 	}
 	
+	
 	private PrologEngine prologEngine;
 	private Term term;
+	private Jpc context;
 	
-	public LogtalkObject(Term term, PrologEngine prologEngine) {
-		this.term = term;
+	public LogtalkObject(Object object, PrologEngine prologEngine) {
+		this(object, prologEngine, new Jpc());
+	}
+	
+	public LogtalkObject(Object object, PrologEngine prologEngine, Jpc context) {
+		this.term = context.toTerm(object);
 		this.prologEngine = prologEngine;
+		this.context = context;
 	}
 	
 	public Term message(Term message) {
@@ -50,7 +59,7 @@ public class LogtalkObject implements TermConvertable, PrologDatabase {
 	}
 	
 	public Query perform(Term message) {
-		return prologEngine.query(message(message));
+		return new LogtalkQuery(prologEngine.query(message(message), context));
 	}
 	
 	@Override
