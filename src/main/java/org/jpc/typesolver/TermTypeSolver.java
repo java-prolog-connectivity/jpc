@@ -9,7 +9,7 @@ import org.jpc.term.Term;
  * @author sergioc
  *
  */
-public abstract class TermTypeSolver {
+public interface TermTypeSolver {
 	
 	public abstract Type getType(Term term);
 	

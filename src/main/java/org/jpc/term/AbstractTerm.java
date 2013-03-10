@@ -204,11 +204,11 @@ public abstract class AbstractTerm implements Term, TermConvertable {
 	 * @param   args    an array of Terms to convert
 	 * @return  String representation of an array of Terms
 	 */
-	public static <T extends Term> String toString(T... termObjects) {
+	public static <T extends Term> String toString(T... terms) {
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < termObjects.length; ++i) {
-			sb.append(termObjects[i].toString());
-			if (i != termObjects.length - 1) {
+		for (int i = 0; i < terms.length; ++i) {
+			sb.append(terms[i].toString());
+			if (i != terms.length - 1) {
 				sb.append(", ");
 			}
 		}
@@ -221,23 +221,23 @@ public abstract class AbstractTerm implements Term, TermConvertable {
 	 * @param termAdapters
 	 * @return String representation of a list of Terms
 	 */
-	public static <T extends Term> String toString(List<T> termObjects) {
-		return toString(termObjects.toArray(new Term[]{}));
+	public static <T extends Term> String toString(List<T> terms) {
+		return toString(terms.toArray(new Term[]{}));
 	}
 	
-	public static <T extends Term> String toString(PrologEngine prologEngine, T... termObjects) {
+	public static <T extends Term> String toString(PrologEngine prologEngine, T... terms) {
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < termObjects.length; ++i) {
-			sb.append(termObjects[i].toString(prologEngine));
-			if (i != termObjects.length - 1) {
+		for (int i = 0; i < terms.length; ++i) {
+			sb.append(terms[i].toString(prologEngine));
+			if (i != terms.length - 1) {
 				sb.append(", ");
 			}
 		}
 		return sb.toString();
 	}
 	
-	public static <T extends Term> String toString(PrologEngine prologEngine, List<T> termObjects) {
-		return toString(prologEngine, termObjects.toArray(new Term[]{}));
+	public static <T extends Term> String toString(PrologEngine prologEngine, List<T> terms) {
+		return toString(prologEngine, terms.toArray(new Term[]{}));
 	}
 
 }

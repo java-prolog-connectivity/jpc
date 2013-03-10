@@ -1,4 +1,4 @@
-package org.jpc.converter.fromterm;
+package org.jpc.converter.catalog;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -8,15 +8,41 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.jpc.Jpc;
 import org.jpc.converter.JpcConversionException;
+import org.jpc.converter.JpcConverter;
 import org.jpc.term.Atom;
+import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
 import org.jpc.term.NumberTerm;
 import org.jpc.term.Term;
+import org.minitoolbox.reflection.ReflectionUtil;
 
-public class TermToNumberConverter extends FromTermConverter<Number> {
+public class NumberConverter extends JpcConverter<Number, Term> {
 
 	@Override
-	public Number convert(Term term, Type type, Jpc context) {
+	public <T extends Term> T toTerm(Number number, Class<T> termClass, Jpc context) {
+		Term term = null;
+		if(termClass.isAssignableFrom(NumberTerm.class)) {
+			if(ReflectionUtil.isFloatingPoint(number))
+				term = new FloatTerm(number.doubleValue());
+			else
+				term = new IntegerTerm(number.longValue());
+		} else if(termClass.equals(FloatTerm.class)) {
+			term = new FloatTerm(number.doubleValue());
+		} else if(termClass.equals(IntegerTerm.class)) {
+			term = new IntegerTerm(number.longValue());
+		} else if(termClass.equals(Atom.class)) {
+			if(ReflectionUtil.isFloatingPoint(number))
+				term = new Atom(String.valueOf(number.doubleValue()));
+			else
+				term = new Atom(String.valueOf(number.longValue()));
+		} else
+			throw new JpcConversionException();
+		return (T) term;
+	}
+
+
+	@Override
+	public Number fromTerm(Term term, Type type, Jpc context) {
 		Double number = null;
 		if(term instanceof NumberTerm)
 			number = ((NumberTerm)term).doubleValue();
@@ -54,9 +80,6 @@ public class TermToNumberConverter extends FromTermConverter<Number> {
 			else
 				throw new JpcConversionException();
 		}
-		
 	}
-
-	
 	
 }

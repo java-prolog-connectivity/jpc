@@ -249,7 +249,6 @@ public class DefaultTermConverterTest {
 			assertEquals(entry, jpc.fromTerm(entryTerm, Entry.class));
 			fail();
 		} catch(Exception e){}
-		
 	}
 
 	@Test

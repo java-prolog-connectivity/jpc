@@ -1,28 +1,20 @@
 package org.jpc.converter;
 
-import org.jpc.converter.fromterm.TermToBooleanConverter;
-import org.jpc.converter.fromterm.TermToCalendarConverter;
-import org.jpc.converter.fromterm.TermToCharConverter;
-import org.jpc.converter.fromterm.TermToNumberConverter;
-import org.jpc.converter.fromterm.TermToStringConverter;
-import org.jpc.converter.fromterm.TermToXmlGregorianCalendarConverter;
-import org.jpc.converter.fromterm.VariableTermToObjectConverter;
-import org.jpc.converter.fromterm.fromlistterm.ListTermToArrayConverter;
-import org.jpc.converter.fromterm.fromlistterm.ListTermToCollectionConverter;
-import org.jpc.converter.fromterm.fromlistterm.ListTermToEnumerationConverter;
-import org.jpc.converter.fromterm.fromlistterm.ListTermToMapConverter;
-import org.jpc.converter.fromterm.fromlistterm.ListTermToMapConverter.TermToMapEntryConverter;
-import org.jpc.converter.toterm.BooleanToTermConverter;
-import org.jpc.converter.toterm.CalendarToTermConverter;
-import org.jpc.converter.toterm.NumberToTermConverter;
-import org.jpc.converter.toterm.StringToTermConverter;
-import org.jpc.converter.toterm.XmlGregorianCalendarToTermConverter;
-import org.jpc.converter.toterm.tolistterm.ArrayToTermConverter;
-import org.jpc.converter.toterm.tolistterm.EnumerationToTermConverter;
-import org.jpc.converter.toterm.tolistterm.IterableToTermConverter;
-import org.jpc.converter.toterm.tolistterm.IteratorToTermConverter;
-import org.jpc.converter.toterm.tolistterm.MapToTermConverter;
-import org.jpc.converter.toterm.tolistterm.MapToTermConverter.MapEntryToTermConverter;
+import org.jpc.converter.catalog.BooleanConverter;
+import org.jpc.converter.catalog.CalendarConverter;
+import org.jpc.converter.catalog.CharacterConverter;
+import org.jpc.converter.catalog.NumberConverter;
+import org.jpc.converter.catalog.StringConverter;
+import org.jpc.converter.catalog.XmlGregorianCalendarConverter;
+import org.jpc.converter.catalog.listterm.ArrayConverter;
+import org.jpc.converter.catalog.listterm.CollectionConverter;
+import org.jpc.converter.catalog.listterm.EnumerationConverter;
+import org.jpc.converter.catalog.listterm.IterableConverter;
+import org.jpc.converter.catalog.listterm.IteratorConverter;
+import org.jpc.converter.catalog.listterm.MapConverter.MapEntryConverter.MapEntryToTermConverter;
+import org.jpc.converter.catalog.listterm.MapConverter.MapEntryConverter.TermToMapEntryConverter;
+import org.jpc.converter.catalog.listterm.MapConverter.MapToTermConverter;
+import org.jpc.converter.catalog.listterm.MapConverter.TermToMapConverter;
 import org.jpc.typesolver.MapTypeSolver;
 
 public class DefaultConverterManager extends ConverterManager {
@@ -32,34 +24,23 @@ public class DefaultConverterManager extends ConverterManager {
 	}
 	
 	private void registerDefaultConverters() {
-		register(new ArrayToTermConverter());
-		register(new EnumerationToTermConverter());
-		register(new IterableToTermConverter());
-		register(new IteratorToTermConverter());
+		register(new ArrayConverter());
+		register(new CollectionConverter());
+		register(new EnumerationConverter());
+		register(new IterableConverter());
+		register(new IteratorConverter());
 		register(new MapToTermConverter(MapTypeSolver.DEFAULT_MAP_ENTRY_SEPARATOR));
 		register(new MapEntryToTermConverter(MapTypeSolver.DEFAULT_MAP_ENTRY_SEPARATOR));
-		register(new BooleanToTermConverter());
-		register(new CalendarToTermConverter());
-		register(new NumberToTermConverter());
-		register(new StringToTermConverter());
-		register(new XmlGregorianCalendarToTermConverter());
-		
-		register(new ListTermToArrayConverter());
-		register(new ListTermToCollectionConverter());
-		register(new ListTermToEnumerationConverter());
-		for(String mapEntrySeparator : MapTypeSolver.MAP_ENTRY_SEPARATORS) {
-			register(new ListTermToMapConverter(mapEntrySeparator)); 
+		for(String mapEntrySeparator : MapTypeSolver.ALL_MAP_ENTRY_SEPARATORS) {
+			register(new TermToMapConverter(mapEntrySeparator));
 			register(new TermToMapEntryConverter(mapEntrySeparator));
 		}
-		register(new ListTermToMapConverter("=")); 
-		register(new TermToMapEntryConverter("="));
-		register(new TermToBooleanConverter());
-		register(new TermToCalendarConverter());
-		register(new TermToNumberConverter());
-		register(new TermToCharConverter());
-		register(new TermToStringConverter());
-		register(new TermToXmlGregorianCalendarConverter());
-		register(new VariableTermToObjectConverter());
+		register(new BooleanConverter());
+		register(new CalendarConverter());
+		register(new CharacterConverter());
+		register(new NumberConverter());
+		register(new StringConverter());
+		register(new XmlGregorianCalendarConverter());
 	}
 	
 }

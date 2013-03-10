@@ -65,12 +65,14 @@ public class Jpc {
 	}
 	
 	public Term toTerm(Object object) {
-		return converterManager.toTerm(object, this);
+		return toTerm(object, Term.class);
 	}
 	
-//	public <T extends Term> T toTerm(Object object, Class<T> termType) {
-//		return null;
-//	}
+	public <T extends Term> T toTerm(Object object, Class<T> termClass) {
+		return converterManager.toTerm(object, termClass, this);
+	}
+	
+
 	
 	public <T> T instantiate(Type t) {
 		return instantiationManager.instantiate(t);

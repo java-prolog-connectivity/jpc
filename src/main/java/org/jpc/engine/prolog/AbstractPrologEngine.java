@@ -377,9 +377,4 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 		else
 			return new Atom(resourceName);
 	}
-	
-	public String termSequenceToString(Term sequenceTerm) {
-		List<Term> terms = LogicUtil.sequenceAsTerms(sequenceTerm);
-		return AbstractTerm.toString(this, terms);
-	}
 }

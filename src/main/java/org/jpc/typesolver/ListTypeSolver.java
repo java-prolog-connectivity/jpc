@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.jpc.term.Term;
 
-public class ListTypeSolver extends TermTypeSolver {
+public class ListTypeSolver implements TermTypeSolver {
 
 	@Override
 	public Type getType(Term term) {

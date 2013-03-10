@@ -17,9 +17,9 @@ import org.jpc.term.visitor.TermVisitor;
  */
 public final class Atom extends AbstractTerm {
 
-	public static final Term TRUE_TERM = new Atom(TRUE);
-	public static final Term FALSE_TERM = new Atom(FAIL); //choosing 'fail' over 'false', since 'fail' is ISO
-	public static final Term EMPTY_LIST = new Atom(EMPTY_LIST_SYMBOL);
+	public static final Atom TRUE_TERM = new Atom(TRUE);
+	public static final Atom FALSE_TERM = new Atom(FAIL); //choosing 'fail' over 'false', since 'fail' is ISO
+	public static final Atom EMPTY_LIST = new Atom(EMPTY_LIST_SYMBOL);
 	
 	private final String name;
 	

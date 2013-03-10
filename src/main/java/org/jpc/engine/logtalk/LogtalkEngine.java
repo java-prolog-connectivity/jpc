@@ -425,8 +425,4 @@ public class LogtalkEngine implements PrologEngine {
 		return prologEngine.asResourceTerm(resourceName);
 	}
 
-	public String termSequenceToString(Term sequenceTerm) {
-		return prologEngine.termSequenceToString(sequenceTerm);
-	}
-
 }

@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.jpc.term.Term;
 
-public class TypeSolverManager {
+public class TypeSolverManager implements TermTypeSolver {
 
 	List<TermTypeSolver> typeSolvers;
 	

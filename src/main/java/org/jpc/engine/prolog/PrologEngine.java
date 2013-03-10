@@ -186,6 +186,5 @@ public interface PrologEngine extends PrologDatabase {
 	public List<Term> asResourceTerms(List<String> resourceNames);
 	
 	public Term asResourceTerm(String resourceName);
-	
-	public String termSequenceToString(Term sequenceTerm);
+
 }

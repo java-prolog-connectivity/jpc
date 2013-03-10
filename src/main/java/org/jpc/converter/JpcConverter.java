@@ -2,46 +2,85 @@ package org.jpc.converter;
 
 import java.lang.reflect.Type;
 
+import org.jpc.Jpc;
+import org.jpc.term.Term;
 import org.minitoolbox.reflection.wrappertype.TypeWrapper;
+import org.minitoolbox.reflection.wrappertype.VariableTypeWrapper;
 
 import com.google.common.reflect.TypeToken;
 
-public abstract class JpcConverter<S,T> {
+public abstract class JpcConverter<ObjectType,TermType extends Term> {
 
-	protected Type sourceType;
-	protected Type targetType;
+	private Type objectType;
+	private Type termType;
 	
 	public JpcConverter() {
-		sourceType = new TypeToken<S>(getClass()){}.getType();
-		targetType = new TypeToken<T>(getClass()){}.getType();
+		objectType = new TypeToken<ObjectType>(getClass()){}.getType();
+		termType = new TypeToken<TermType>(getClass()){}.getType();
 	}
 
-	public Type getSourceType() {
-		return sourceType;
+	public Type getObjectTypeOrThrow() {
+		TypeWrapper typeWrapper = TypeWrapper.wrap(termType);
+		if(typeWrapper instanceof VariableTypeWrapper)
+			throw new RuntimeException("Object type not available. Converters should not be instantiated as raw classes.");
+		return objectType;
 	}
 	
-	public Type getTargetType() {
-		return targetType;
+	public Class getTermClassOrThrow() {
+		TypeWrapper typeWrapper = TypeWrapper.wrap(termType);
+		if(typeWrapper instanceof VariableTypeWrapper)
+			throw new RuntimeException("Term type not available. Converters should not be instantiated as raw classes.");
+		return typeWrapper.getRawClass();
 	}
 
-	public boolean targetTypeIsEquals(Type type) {
-		return TypeWrapper.wrap(targetType).equals(type);
+	public boolean termClassIsEquals(Type type) {
+		return getTermClassOrThrow().equals(type);
 	}
 	
-	public boolean targetTypeIsAssignableTo(Type type) {
-		return TypeWrapper.wrap(type).isWeakAssignableFrom(targetType);
+	public boolean termClassIsAssignableTo(Type type) {
+		return TypeWrapper.wrap(type).isWeakAssignableFrom(getTermClassOrThrow());
 	}
 
-	public boolean targetTypeIsAssignableFrom(Type type) {
-		return TypeWrapper.wrap(targetType).isWeakAssignableFrom(type);
+	public boolean termClassIsAssignableFrom(Type type) {
+		return TypeWrapper.wrap(getTermClassOrThrow()).isWeakAssignableFrom(type);
 	}
 	
-	public boolean sourceTypeIsEquals(Type type) {
-		return TypeWrapper.wrap(sourceType).equals(type);
+	public boolean objectTypeIsEquals(Type type) {
+		return getObjectTypeOrThrow().equals(type);
 	}
 	
-	public boolean sourceTypeIsAssignableTo(Type type) {
-		return TypeWrapper.wrap(sourceType).isWeakAssignableFrom(type);
+	public boolean objectTypeIsAssignableTo(Type type) {
+		return TypeWrapper.wrap(type).isWeakAssignableFrom(getObjectTypeOrThrow());
+	}
+
+	public boolean objectTypeIsAssignableFrom(Type type) {
+		return TypeWrapper.wrap(getObjectTypeOrThrow()).isWeakAssignableFrom(type);
+	}
+	
+	public <T extends Term> boolean canConvertToTerm(Object object, Class<T> termClass) {
+		return termClassIsAssignableTo(termClass) &&
+				objectTypeIsAssignableFrom(object.getClass());
+	}
+	
+	public boolean canConvertFromTerm(Term term, Type toType) {
+		return termClassIsAssignableFrom(term.getClass()) && 
+				objectTypeIsAssignableFrom(toType); //the desired type can be a subtype of the type declared by the converter
+	}
+	
+	public ObjectType fromTerm(TermType term, Jpc context) {
+		return fromTerm(term, getObjectTypeOrThrow(), context);
+	}
+	
+	public ObjectType fromTerm(TermType term, Type type, Jpc context) {
+		throw new UnsupportedOperationException();
+	}
+	
+	public TermType toTerm(ObjectType object, Jpc context) {
+		return (TermType) toTerm(object, getTermClassOrThrow(), context);
+	}
+	
+	public <T extends TermType>T toTerm(ObjectType object, Class<T> termClass, Jpc context) {
+		throw new UnsupportedOperationException();
 	}
 
 }

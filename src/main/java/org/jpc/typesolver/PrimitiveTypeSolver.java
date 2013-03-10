@@ -9,7 +9,7 @@ import org.jpc.term.Term;
 import org.jpc.term.Variable;
 
 
-public class PrimitiveTypeSolver extends TermTypeSolver {
+public class PrimitiveTypeSolver implements TermTypeSolver {
 
 	@Override
 	public Type getType(Term term) {
