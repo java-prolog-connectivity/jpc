@@ -2,6 +2,8 @@ package org.jpc.util;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Arrays.asList;
+import static org.jpc.engine.prolog.PrologConstants.ANONYMOUS_VAR_NAME;
+import static org.jpc.engine.prolog.PrologConstants.ANONYMOUS_VAR_PREFIX;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +11,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jpc.JpcException;
-import org.jpc.converter.TermConvertable;
+import org.jpc.salt.JpcTermWriter;
+import org.jpc.salt.TermAdapter;
+import org.jpc.salt.TermContentHandler;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.FloatTerm;
@@ -248,6 +252,39 @@ public class LogicUtil {
 			variablesList.add(Variable.ANONYMOUS_VAR);
 		}
 		return variablesList;
+	}
+	
+
+	public static final String RENAMED_VAR_PREFIX = "JPC_RENAMED_VAR_";
+
+	public static Term replaceVariables(Term term) {
+		return replaceVariables(term, RENAMED_VAR_PREFIX);
+	}
+	/**
+	 * Renames the vars of a term adding a prefix
+	 * Useful to avoid unexpected results when unifying two terms that do not share the same variable namespace
+	 * @param term
+	 * @return
+	 */
+	public static Term replaceVariables(Term term, final String prefix) {
+		JpcTermWriter termWriter = new JpcTermWriter();
+		TermAdapter variableAdapter = new TermAdapter(termWriter) {
+			@Override
+			public TermContentHandler startVariable(String name) {
+				String newName = null;
+				if(name.equals(ANONYMOUS_VAR_NAME)) {
+					newName = ANONYMOUS_VAR_NAME;
+				} else if(name.substring(0, 1).equals(ANONYMOUS_VAR_PREFIX)) {
+					newName = ANONYMOUS_VAR_PREFIX + prefix + name;
+				} else {
+					newName = prefix + name;
+				}
+				super.startVariable(newName);
+				return this;
+			}
+		};
+		term.read(variableAdapter);
+		return termWriter.getTerms().get(0);
 	}
 	
 }

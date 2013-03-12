@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.jpc.Jpc;
 import org.jpc.engine.prolog.PrologEngine;
-import org.jpc.exception.ExceptionHandler;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
@@ -24,7 +23,8 @@ public class ExceptionHandledQuery extends QueryAdapter {
 	}
 
 	public static ExceptionHandledQuery create(PrologEngine prologEngine, Term term, Jpc context) {
-		return new ExceptionHandledQuery(prologEngine.simpleQuery(exceptionHandledQueryTerm(term), context), prologEngine.getExceptionHandler());
+		Query basicQuery = prologEngine.basicQuery(exceptionHandledQueryTerm(term), context);
+		return new ExceptionHandledQuery(basicQuery, context);
 	}
 	
 
@@ -35,18 +35,18 @@ public class ExceptionHandledQuery extends QueryAdapter {
 			if(solution.containsKey(EXCEPTION_VAR_NAME)) {
 				Term exceptionTerm = solution.get(EXCEPTION_VAR_NAME);
 				if(!(exceptionTerm instanceof Variable))
-					exceptionHandler.handle(getPrologEngine(), exceptionTerm, goal());
+					context.handleError(getPrologEngine(), exceptionTerm, goal());
 			}
 			return solution;
 		}
 	};
 	
-	private final ExceptionHandler exceptionHandler;
+	private final Jpc context;
 	
-	public ExceptionHandledQuery(Query query, ExceptionHandler exceptionHandler) {
+	public ExceptionHandledQuery(Query query, Jpc context) {
 		super(query);
 		adapterFunction = exceptionAdapterFunction;
-		this.exceptionHandler = exceptionHandler;
+		this.context = context;
 	}
 
 	@Override

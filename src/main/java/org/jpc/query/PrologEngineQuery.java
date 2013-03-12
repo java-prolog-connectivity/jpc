@@ -28,6 +28,10 @@ public abstract class PrologEngineQuery extends Query {
 		return goal;
 	}
 	
+	public Jpc getJpcContext() {
+		return context;
+	}
+	
 	@Override
 	protected Term getDefaultSelectedTerm() {
 		return goal();

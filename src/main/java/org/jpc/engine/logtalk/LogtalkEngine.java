@@ -38,7 +38,6 @@ import java.util.Map;
 import org.jpc.Jpc;
 import org.jpc.engine.Flag;
 import org.jpc.engine.prolog.PrologEngine;
-import org.jpc.exception.ExceptionHandler;
 import org.jpc.query.Query;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
@@ -245,20 +244,13 @@ public class LogtalkEngine implements PrologEngine {
 //		return this;
 //	}
 
-	public ExceptionHandler getExceptionHandler() {
-		return prologEngine.getExceptionHandler();
-	}
-	
-	public void registerExceptionHandler(ExceptionHandler exceptionHandler) {
-		prologEngine.registerExceptionHandler(exceptionHandler);
-	}
 	
 	public boolean stop() {
 		return prologEngine.stop();
 	}
 
-	public Query simpleQuery(Term terms, Jpc context) {
-		return prologEngine.simpleQuery(terms, context);
+	public Query basicQuery(Term terms, Jpc context) {
+		return prologEngine.basicQuery(terms, context);
 	}
 	
 	public Query query(String termString) {

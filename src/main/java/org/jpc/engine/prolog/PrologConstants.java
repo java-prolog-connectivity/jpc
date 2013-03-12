@@ -6,7 +6,7 @@ package org.jpc.engine.prolog;
  *
  */
 public class PrologConstants {
-
+	
 	public static final String ANONYMOUS_VAR_NAME = "_";
 	
 	public static final String ANONYMOUS_VAR_PREFIX = "_";
@@ -20,6 +20,8 @@ public class PrologConstants {
 	public static final String EMPTY_LIST_SYMBOL = "[]";
 	
 	public static final String CONS_FUNCTOR = ".";
+	
+	public static final String PROLOG_ERROR_FUNCTOR = "error";
 	
 	public static final String CATCH = "catch";
 	

@@ -58,7 +58,7 @@ public abstract class JpcConverter<ObjectType,TermType extends Term> {
 	}
 	
 	public <T extends Term> boolean canConvertToTerm(Object object, Class<T> termClass) {
-		return termClassIsAssignableTo(termClass) &&
+		return termClassIsAssignableFrom(termClass) &&
 				objectTypeIsAssignableFrom(object.getClass());
 	}
 	

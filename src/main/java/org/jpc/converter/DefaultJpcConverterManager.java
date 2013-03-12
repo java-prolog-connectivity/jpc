@@ -6,6 +6,16 @@ import org.jpc.converter.catalog.CharacterConverter;
 import org.jpc.converter.catalog.NumberConverter;
 import org.jpc.converter.catalog.StringConverter;
 import org.jpc.converter.catalog.XmlGregorianCalendarConverter;
+import org.jpc.converter.catalog.error.DomainErrorConverter;
+import org.jpc.converter.catalog.error.EvaluationErrorConverter;
+import org.jpc.converter.catalog.error.ExistenceErrorConverter;
+import org.jpc.converter.catalog.error.InstantiationErrorConverter;
+import org.jpc.converter.catalog.error.PermissionErrorConverter;
+import org.jpc.converter.catalog.error.RepresentationErrorConverter;
+import org.jpc.converter.catalog.error.ResourceErrorConverter;
+import org.jpc.converter.catalog.error.SyntaxErrorConverter;
+import org.jpc.converter.catalog.error.SystemErrorConverter;
+import org.jpc.converter.catalog.error.TypeErrorConverter;
 import org.jpc.converter.catalog.listterm.ArrayConverter;
 import org.jpc.converter.catalog.listterm.CollectionConverter;
 import org.jpc.converter.catalog.listterm.EnumerationConverter;
@@ -17,13 +27,15 @@ import org.jpc.converter.catalog.listterm.MapConverter.MapToTermConverter;
 import org.jpc.converter.catalog.listterm.MapConverter.TermToMapConverter;
 import org.jpc.typesolver.MapTypeSolver;
 
-public class DefaultConverterManager extends ConverterManager {
+public class DefaultJpcConverterManager extends ConverterManager {
 
-	public DefaultConverterManager() {
-		registerDefaultConverters();
+	public DefaultJpcConverterManager() {
+		registerDefaultExceptionConverters();
+		registerDefaultObjectConverters();
 	}
 	
-	private void registerDefaultConverters() {
+	
+	private void registerDefaultObjectConverters() {
 		register(new ArrayConverter());
 		register(new CollectionConverter());
 		register(new EnumerationConverter());
@@ -43,4 +55,17 @@ public class DefaultConverterManager extends ConverterManager {
 		register(new XmlGregorianCalendarConverter());
 	}
 	
+	
+	private void registerDefaultExceptionConverters() {
+		register(new DomainErrorConverter());
+		register(new EvaluationErrorConverter());
+		register(new ExistenceErrorConverter());
+		register(new InstantiationErrorConverter());
+		register(new PermissionErrorConverter());
+		register(new RepresentationErrorConverter());
+		register(new ResourceErrorConverter());
+		register(new SyntaxErrorConverter());
+		register(new SystemErrorConverter());
+		register(new TypeErrorConverter());
+	}
 }

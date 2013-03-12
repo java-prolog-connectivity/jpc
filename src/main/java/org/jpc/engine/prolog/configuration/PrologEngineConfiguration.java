@@ -7,7 +7,6 @@ import java.util.List;
 import org.jpc.JpcPreferences;
 import org.jpc.engine.logtalk.LogtalkEngine;
 import org.jpc.engine.prolog.PrologEngine;
-import org.jpc.exception.logtalk.LogtalkExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +15,6 @@ public abstract class PrologEngineConfiguration {
 	private static Logger logger = LoggerFactory.getLogger(PrologEngineConfiguration.class);
 	
 	protected JpcPreferences preferences;
-	private PrologEngine cachedPrologEngine;
 	protected boolean enabled = true;
 	private boolean configured = false;
 	
@@ -25,7 +23,6 @@ public abstract class PrologEngineConfiguration {
 	protected List<String> scope;
 	protected boolean logtalkRequired = true;
 	protected boolean logtalkLoaded = false;
-	private boolean caching;
 	
 	public PrologEngineConfiguration() {
 		this(new JpcPreferences()); //default preferences
@@ -39,15 +36,6 @@ public abstract class PrologEngineConfiguration {
 		addScope(""); //the root package
 	}
 
-	public boolean isCaching() {
-		return caching;
-	}
-
-	public void setCaching(boolean caching) {
-		this.caching = caching;
-		if(!caching)
-			cachedPrologEngine = null;
-	}
 
 	public JpcPreferences getPreferences() {
 		return preferences;
@@ -121,13 +109,15 @@ public abstract class PrologEngineConfiguration {
 		scope.addAll(Arrays.asList(newScopes));
 	}
 	
-	public PrologEngine createAndConfigurePrologEngine() {
+
+	
+	public PrologEngine createPrologEngine() {
 		logger.info("Initializing logic engine");
 		long startTime = System.nanoTime();
 		if(!isConfigured()) {
 			configure();
 		}
-		PrologEngine newPrologEngine = createPrologEngine();
+		PrologEngine newPrologEngine = basicCreatePrologEngine();
 		if(isLogtalkRequired()) {
 			String prologDialect = newPrologEngine.prologDialect();
 			logger.info("Attempting to load logtalk in a " + prologDialect + " Prolog engine...");
@@ -140,7 +130,6 @@ public abstract class PrologEngineConfiguration {
 			
 			if(logtalkLoaded) {
 				logger.info("Logtalk loaded successfully");
-				newPrologEngine.registerExceptionHandler(new LogtalkExceptionHandler());
 			}
 			else {
 				logger.warn("Impossible to load Logtalk in the " + newPrologEngine.prologDialect() + " Logic Engine");
@@ -154,20 +143,7 @@ public abstract class PrologEngineConfiguration {
 		long endTime = System.nanoTime();
 		long total = (endTime - startTime)/1000000;
 		logger.info("A " + newPrologEngine.prologDialect() + " logic engine has been initialized in " + total + " milliseconds");
-		if(caching)
-			cachedPrologEngine = newPrologEngine;
 		return newPrologEngine;
-	}
-	
-	public PrologEngine getEngine() {
-		PrologEngine prologEngine = null;
-		if(caching) {
-			prologEngine = cachedPrologEngine;
-		}
-		if(prologEngine == null) {
-			prologEngine = createAndConfigurePrologEngine();
-		}
-		return prologEngine;
 	}
 
 	private void loadPreloadedResources(PrologEngine prologEngine) {
@@ -184,7 +160,7 @@ public abstract class PrologEngineConfiguration {
 	 * 
 	 * @return a instance of a Prolog engine. This instance has not been configured yet
 	 */
-	protected abstract PrologEngine createPrologEngine();
+	protected abstract PrologEngine basicCreatePrologEngine();
 	
 	public abstract String getLibraryName();
 	

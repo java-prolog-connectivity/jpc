@@ -5,7 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.jpc.converter.ConverterManager;
-import org.jpc.converter.DefaultConverterManager;
+import org.jpc.converter.DefaultJpcConverterManager;
+import org.jpc.engine.prolog.PrologEngine;
+import org.jpc.error.handling.DefaultJpcErrorHandler;
+import org.jpc.error.handling.ErrorHandler;
 import org.jpc.instantiationmanager.DefaultInstantiationManager;
 import org.jpc.instantiationmanager.InstantiationManager;
 import org.jpc.term.Compound;
@@ -25,18 +28,21 @@ public class Jpc {
 	private ConverterManager converterManager;
 	private TypeSolverManager typeSolverManager;
 	private InstantiationManager instantiationManager;
+	private ErrorHandler errorHandler;
 	//private JpcPreferences preferences;
 	
 	public Jpc() {
-		this.converterManager = new DefaultConverterManager();
+		this.converterManager = new DefaultJpcConverterManager();
 		this.typeSolverManager = new DefaultTypeSolverManager();
 		this.instantiationManager = new DefaultInstantiationManager();
+		this.errorHandler = new DefaultJpcErrorHandler();
 	}
 	
-	public Jpc(ConverterManager converterManager, TypeSolverManager typeSolverManager, InstantiationManager instantiationManager) {
+	public Jpc(ConverterManager converterManager, TypeSolverManager typeSolverManager, InstantiationManager instantiationManager, ErrorHandler errorHandler) {
 		this.typeSolverManager = typeSolverManager;
 		this.converterManager = converterManager;
 		this.instantiationManager = instantiationManager;
+		this.errorHandler = errorHandler;
 		//this.preferences = preferences;
 	}
 	
@@ -82,4 +88,8 @@ public class Jpc {
 		return typeSolverManager.getType(term);
 	}
 
+	public boolean handleError(PrologEngine prologEngine, Term errorTerm, Term goal) {
+		return errorHandler.handle(prologEngine, errorTerm, goal, this);
+	}
+	
 }

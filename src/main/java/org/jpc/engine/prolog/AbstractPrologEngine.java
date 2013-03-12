@@ -30,13 +30,9 @@ import java.util.Map;
 
 import org.jpc.Jpc;
 import org.jpc.engine.Flag;
-import org.jpc.exception.ExceptionHandler;
-import org.jpc.exception.ExceptionHandlerManager;
-import org.jpc.exception.RootExceptionHandlerManager;
 import org.jpc.query.ExceptionHandledQuery;
 import org.jpc.query.Query;
 import org.jpc.query.QuerySolutionToTermFunction;
-import org.jpc.term.AbstractTerm;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
@@ -44,26 +40,14 @@ import org.jpc.term.Variable;
 import org.jpc.util.LogicUtil;
 
 public abstract class AbstractPrologEngine implements PrologEngine {
-
-	private ExceptionHandlerManager exceptionHandlerManager;
 	
 	public AbstractPrologEngine() {
-		this.exceptionHandlerManager = new RootExceptionHandlerManager();
 	}
-	
-	
+
 //	public LogtalkEngine asLogtalkEngine() {
 //		return new LogtalkEngine(this);
 //	}
-	
-	public ExceptionHandler getExceptionHandler() {
-		return exceptionHandlerManager;
-	}
-	
-	public void registerExceptionHandler(ExceptionHandler exceptionHandler) {
-		exceptionHandlerManager.register(exceptionHandler);
-	}
-	
+
 	/* ********************************************************************************************************************************
 	 * CORE METHODS (and overloaded variations of those methods)
      **********************************************************************************************************************************
@@ -78,42 +62,47 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	 */
 	public abstract String escape(String s);
 	
+	
+	public final Query basicQuery(String termString) {
+		return basicQuery(termString, new Jpc());
+	}
+	
+	public final Query basicQuery(Term terms) {
+		return basicQuery(terms, new Jpc());
+	}
+	
+	public final Query basicQuery(String termString, Jpc context) {
+		return basicQuery(asTerm(termString), context);
+	}
+	
 	/**
 	 * 
 	 * @param term
 	 * @param context
 	 * @return A query without automatic exception handling
 	 */
-	public abstract Query simpleQuery(Term term, Jpc context);
+	public abstract Query basicQuery(Term term, Jpc context);
+	
 	
 	public final Query query(String termString) {
 		return query(termString, new Jpc());
+	}
+	
+	public final Query query(Term terms) {
+		return query(terms, new Jpc());
 	}
 	
 	public final Query query(String termString, Jpc context) {
 		return query(asTerm(termString), context);
 	}
 
-	public final Query query(Term terms) {
-		return query(terms, new Jpc());
-	}
-	
 	public final Query query(Term term, Jpc context) {
 		return ExceptionHandledQuery.create(this, term, context);
 	}
 	
-	/**
-	 * 
-	 * @param termString
-	 * @return the term representation of a String. Variable names should be preserved.
-	 */
-	public Term asTerm(String termString) {
-		return asTerm(termString, false);
-	}
-	
 	public Term asTerm(String termString, boolean force) {
 		try {
-			return asTerm(termString);
+			return asTerm(termString); //to be provided by subclasses
 		} catch(Exception e) {
 			if(force)
 				return new Atom(termString);
@@ -280,6 +269,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
      */
 	
 	public boolean ensureLoaded(List<? extends Term> terms) {
+		Compound c = new Compound(ENSURE_LOADED, asList(listTerm(terms)));
 		return query(new Compound(ENSURE_LOADED, asList(listTerm(terms)))).hasSolution();
 	}
 	
@@ -288,6 +278,8 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	}
 
 	public boolean ensureLoaded(String... resources) {
+		String r = resources[0];
+		//return query(new Compound(ENSURE_LOADED, asList(new Atom(r)))).hasSolution();
 		return ensureLoaded(asResourceTerms(asList(resources)));
 	}
 	

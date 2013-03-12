@@ -100,7 +100,8 @@ public class PrologEngineManager {
 	 * @return
 	 */
 	public PrologEngine getPrologEngine(Class<? extends PrologEngineConfiguration> prologEngineConfigurationClass) {
-		return register(prologEngineConfigurationClass).getEngine();
+		return null; //TODO fix it
+		//return register(prologEngineConfigurationClass).getEngine();
 	}
 	
 	public List<PrologEngineConfiguration> getAllConfigurations() {

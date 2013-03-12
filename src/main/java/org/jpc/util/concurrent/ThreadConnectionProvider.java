@@ -14,7 +14,7 @@ public class ThreadConnectionProvider {
 	public PrologEngine getPrologEngine() {
     	PrologEngine prologEngine = ThreadLocalPrologEngine.getPrologEngine();
     	if(prologEngine == null) {
-    		prologEngine = prologEngineConfiguration.getEngine();
+    		//prologEngine = prologEngineConfiguration.getEngine(); //TODO fix it
     		ThreadLocalPrologEngine.setPrologEngine(prologEngine);
     	}
     	return prologEngine;

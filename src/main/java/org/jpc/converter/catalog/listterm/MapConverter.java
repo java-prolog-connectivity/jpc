@@ -32,7 +32,40 @@ public abstract class MapConverter<K,V> extends JpcConverter<Map<K,V>, Term> {
 		this.entrySeparator = entrySeparator;
 	}
 	
-
+	@Override
+	public Map<K,V> fromTerm(Term term, Type type, Jpc context) {
+		Map<K,V> map = null;
+		List<Term> listMembers = null;
+		try {
+			map = context.instantiate(type); //will throw an exception if the type is not compatible with map
+			listMembers = term.asList(); //will throw an exception if the term is not a list term
+		}catch(Exception e) {
+			throw new JpcConversionException();
+		}
+		Type[] mapTypes = TypeWrapper.wrap(type).as(Map.class).getActualTypeArgumentsOrUpperBounds();
+		Type entryType = new ParameterizedTypeImpl(mapTypes, Map.class, Map.Entry.class);
+		
+		for(Term termMember : listMembers) {
+			Entry<K,V> entry = new TermToMapEntryConverter<K,V>(entrySeparator).fromTerm((Compound)termMember, entryType, context);
+			map.put(entry.getKey(), entry.getValue());
+		}
+		return map;
+	}
+	
+	@Override
+	public <T extends Term> T toTerm(Map<K,V> map, Class<T> termClass, Jpc context) {
+		if(!Term.class.isAssignableFrom(termClass))
+			throw new JpcConversionException();
+		ListTerm terms = new ListTerm();
+		for(Entry<K,V> entry : map.entrySet()) {
+			Term entryTerm = new MapEntryToTermConverter<K,V>(entrySeparator).toTerm(entry, Compound.class, context);
+			terms.add(entryTerm);
+		}
+		return (T) terms.asTerm();
+	}
+	
+	
+	
 	public static class MapToTermConverter<K,V> extends MapConverter<K,V> {
 		
 		public MapToTermConverter() {
@@ -44,17 +77,12 @@ public abstract class MapConverter<K,V> extends JpcConverter<Map<K,V>, Term> {
 		}
 		
 		@Override
-		public <T extends Term> T toTerm(Map<K,V> map, Class<T> termClass, Jpc context) {
-			if(!Term.class.isAssignableFrom(termClass))
-				throw new JpcConversionException();
-			ListTerm terms = new ListTerm();
-			for(Entry<K,V> entry : map.entrySet()) {
-				Term entryTerm = new MapEntryToTermConverter<K,V>(entrySeparator).toTerm(entry, context);
-				terms.add(entryTerm);
-			}
-			return (T) terms.asTerm();
+		public Map<K,V> fromTerm(Term term, Type type, Jpc context) {
+			throw new UnsupportedOperationException();
 		}
+		
 	}
+	
 	
 	public static class TermToMapConverter<K,V> extends MapConverter<K,V> {
 		
@@ -67,23 +95,8 @@ public abstract class MapConverter<K,V> extends JpcConverter<Map<K,V>, Term> {
 		}
 		
 		@Override
-		public Map<K,V> fromTerm(Term term, Type type, Jpc context) {
-			Map<K,V> map = null;
-			List<Term> listMembers = null;
-			try {
-				map = context.instantiate(type); //will throw an exception if the type is not compatible with map
-				listMembers = term.asList(); //will throw an exception if the term is not a list term
-			}catch(Exception e) {
-				throw new JpcConversionException();
-			}
-			Type[] mapTypes = TypeWrapper.wrap(type).as(Map.class).getActualTypeArgumentsOrUpperBounds();
-			Type entryType = new ParameterizedTypeImpl(mapTypes, Map.class, Map.Entry.class);
-			
-			for(Term termMember : listMembers) {
-				Entry<K,V> entry = new TermToMapEntryConverter<K,V>(entrySeparator).fromTerm((Compound)termMember, entryType, context);
-				map.put(entry.getKey(), entry.getValue());
-			}
-			return map;
+		public <T extends Term> T toTerm(Map<K,V> map, Class<T> termClass, Jpc context) {
+			throw new UnsupportedOperationException();
 		}
 		
 	}
@@ -104,6 +117,34 @@ public abstract class MapConverter<K,V> extends JpcConverter<Map<K,V>, Term> {
 			this.entrySeparator = entrySeparator;
 		}
 		
+		@Override
+		public Entry<K,V> fromTerm(Compound term, Type type, Jpc context) {
+			if(!term.hasFunctor(entrySeparator, 2)) //verify the term structure
+				throw new JpcConversionException();
+			TypeWrapper typeWrapper = TypeWrapper.wrap(type);
+			if(!(typeWrapper.getRawClass().equals(Entry.class) || typeWrapper.getRawClass().equals(AbstractMap.SimpleEntry.class))) //verify the type
+				throw new JpcConversionException();
+			
+			Term keyTerm = term.arg(1);
+			Term valueTerm = term.arg(2);
+			Type[] entryTypes = TypeWrapper.wrap(type).as(Entry.class).getActualTypeArgumentsOrUpperBounds();
+			Type keyType = entryTypes[0];
+			Type valueType = entryTypes[1];
+			Object key = context.fromTerm(keyTerm, keyType);
+			Object value = context.fromTerm(valueTerm, valueType);
+			return new AbstractMap.SimpleEntry(key, value);
+		}
+		
+		@Override
+		public <T extends Compound> T toTerm(Entry<K,V> entry, Class<T> termClass, Jpc context) {
+			Term key = context.toTerm(entry.getKey());
+			Term value = context.toTerm(entry.getValue());
+			Compound term = new Compound(entrySeparator, asList(key, value));
+			return (T) term;
+		}
+		
+		
+		
 		
 		public static class MapEntryToTermConverter<K,V> extends MapEntryConverter<K,V> {
 			
@@ -116,13 +157,10 @@ public abstract class MapConverter<K,V> extends JpcConverter<Map<K,V>, Term> {
 			}
 			
 			@Override
-			public <T extends Compound> T toTerm(Entry<K,V> entry, Class<T> termClass, Jpc context) {
-				Term key = context.toTerm(entry.getKey());
-				Term value = context.toTerm(entry.getValue());
-				Compound term = new Compound(entrySeparator, asList(key, value));
-				return (T) term;
+			public Entry<K,V> fromTerm(Compound term, Type type, Jpc context) {
+				throw new UnsupportedOperationException();
 			}
-			
+
 		}
 		
 		
@@ -135,26 +173,14 @@ public abstract class MapConverter<K,V> extends JpcConverter<Map<K,V>, Term> {
 			public TermToMapEntryConverter(String entrySeparator) {
 				super(entrySeparator);
 			}
-			
+
 			@Override
-			public Entry<K,V> fromTerm(Compound term, Type type, Jpc context) {
-				if(!term.hasFunctor(entrySeparator, 2)) //verify the term structure
-					throw new JpcConversionException();
-				TypeWrapper typeWrapper = TypeWrapper.wrap(type);
-				if(!(typeWrapper.getRawClass().equals(Entry.class) || typeWrapper.getRawClass().equals(AbstractMap.SimpleEntry.class))) //verify the type
-					throw new JpcConversionException();
-				
-				Term keyTerm = term.arg(1);
-				Term valueTerm = term.arg(2);
-				Type[] entryTypes = TypeWrapper.wrap(type).as(Entry.class).getActualTypeArgumentsOrUpperBounds();
-				Type keyType = entryTypes[0];
-				Type valueType = entryTypes[1];
-				Object key = context.fromTerm(keyTerm, keyType);
-				Object value = context.fromTerm(valueTerm, valueType);
-				return new AbstractMap.SimpleEntry(key, value);
+			public <T extends Compound> T toTerm(Entry<K,V> entry, Class<T> termClass, Jpc context) {
+				throw new UnsupportedOperationException();
 			}
+			
 		}
-		
+
 	}
 
 }

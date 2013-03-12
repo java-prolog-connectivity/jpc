@@ -30,7 +30,6 @@ import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
-import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Variable;
 import org.jpc.typesolver.MapTypeSolver;
@@ -66,6 +65,10 @@ public class DefaultTermConverterTest {
 		assertEquals(new Atom("apple"), jpc.toTerm("apple"));
 		assertEquals(new Atom("apple"), jpc.toTerm(new StringBuffer("apple")));
 		assertEquals(new Atom("apple"), jpc.toTerm(new StringBuilder("apple")));
+		assertEquals(new Atom("1"), jpc.toTerm("1"));
+		assertEquals(new Atom("1"), jpc.toTerm("1", Atom.class));
+		assertEquals(new IntegerTerm(1), jpc.toTerm("1", IntegerTerm.class));
+		assertEquals(new FloatTerm(1), jpc.toTerm("1", FloatTerm.class));
 	}
 	
 

@@ -4,17 +4,12 @@ import java.util.List;
 
 import org.jpc.Jpc;
 import org.jpc.engine.Flag;
-import org.jpc.exception.ExceptionHandler;
 import org.jpc.query.Query;
 import org.jpc.term.Term;
 
 public interface PrologEngine extends PrologDatabase {
 
 	//public LogtalkEngine asLogtalkEngine();
-	
-	public ExceptionHandler getExceptionHandler();
-	
-	public void registerExceptionHandler(ExceptionHandler exceptionHandler);
 	
 	/* ********************************************************************************************************************************
 	 * CORE QUERY METHODS (and overloaded variations of those methods)
@@ -23,7 +18,7 @@ public interface PrologEngine extends PrologDatabase {
 	
 	public boolean stop();
 	
-	public Query simpleQuery(Term term, Jpc context);
+	public Query basicQuery(Term term, Jpc context);
 	
 	public Query query(String termString);
 	

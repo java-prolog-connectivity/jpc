@@ -70,6 +70,13 @@ public final class Compound extends AbstractTerm {
 			throw new JpcException("The term " + this + " is not a list");
 	}
 	
+	public boolean hasName(String name) {
+		return hasName(new Atom(name));
+	}
+	
+	public boolean hasName(Term term) {
+		return name.termEquals(term);
+	}
 
 	/**
 	 * Tests whether this Compound's functor has (String) 'name' and 'arity'.

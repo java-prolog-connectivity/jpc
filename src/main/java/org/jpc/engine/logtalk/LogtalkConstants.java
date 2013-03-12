@@ -122,4 +122,8 @@ public class LogtalkConstants {
 	public static final String EXCEPTIONS = "exceptions";
 	
 	public static final String EXAMPLES = "examples";
+	
+	
+	//ERRORS
+	public static final String LOGTALK_ERROR_CONTEXT_FUNCTOR = "error";
 }
