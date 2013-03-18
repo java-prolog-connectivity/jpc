@@ -16,6 +16,12 @@ import org.jpc.term.visitor.TermVisitor;
 public interface Term /*extends TermConvertable*/ {
 
 	/**
+	 * 
+	 * @return true if the term is a proper Hilog term (i.e., a Hilog term that is not a Prolog term)
+	 */
+	public abstract boolean isHilog();
+	
+	/**
 	 * Returns the ith argument (if any) of this Term.
 	 * Arguments are counted from 1.
 	 * throws an ArrayIndexOutOfBoundsException if i is inappropriate.
@@ -48,6 +54,12 @@ public interface Term /*extends TermConvertable*/ {
 	 */
 	public abstract boolean hasFunctor(Term nameTermObject, int arity);
 
+	public abstract boolean hasFunctor(boolean nameTermObject, int arity);
+
+	public abstract boolean hasFunctor(double nameTermObject, int arity);
+
+	public abstract boolean hasFunctor(long nameTermObject, int arity);
+	
 
 	/**
 	 * whether this Term is a list
@@ -121,12 +133,6 @@ public interface Term /*extends TermConvertable*/ {
 	 */
 	public abstract List<String> nonAnonymousVariablesNames();
 
-	public abstract boolean hasFunctor(boolean nameTermObject, int arity);
-
-	public boolean hasFunctor(double nameTermObject, int arity);
-
-	public boolean hasFunctor(long nameTermObject, int arity);
-
 	/**
 	 * Accepts a Jpc term visitor.
 	 * @param termVisitor the accepted visitor
@@ -140,5 +146,6 @@ public interface Term /*extends TermConvertable*/ {
 	public abstract void read(TermContentHandler contentHandler);
 	
 	public abstract String toString(PrologEngine prologEngine);
+	
 
 }

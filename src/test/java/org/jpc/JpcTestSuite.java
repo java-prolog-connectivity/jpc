@@ -7,6 +7,7 @@ import org.jpc.term.AbstractTermTest;
 import org.jpc.term.AtomTest;
 import org.jpc.term.CompoundTest;
 import org.jpc.term.FloatTermTest;
+import org.jpc.term.HilogTermTest;
 import org.jpc.term.IntegerTermTest;
 import org.jpc.term.ListTermTest;
 import org.jpc.term.VariableTest;
@@ -23,6 +24,7 @@ import org.junit.runners.Suite;
 	CompoundTest.class,
 	ListTermTest.class,
 	AbstractTermTest.class,
+	HilogTermTest.class,
 	InstantiationManagerTest.class,
 	DefaultTermConverterTest.class,
 	LogicUtilTest.class,

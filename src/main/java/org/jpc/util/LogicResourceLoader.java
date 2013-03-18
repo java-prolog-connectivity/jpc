@@ -19,6 +19,11 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Joiner;
 
+/**
+ * A utility class for loading resources in the classpath
+ * @author sergioc
+ *
+ */
 public class LogicResourceLoader {
 	private static Logger logger = LoggerFactory.getLogger(LogicResourceLoader.class);
 	
@@ -65,6 +70,52 @@ public class LogicResourceLoader {
 		return resourceTerms;
 	}
 	
+	
+	/**
+	 * Given a resource name (possibly inside a jar) answers a Term that represents the resource in the file system. The resource will be copied to a tmp location
+	 * @param resource
+	 * @return
+	 */
+	public Term resolveResource(String resource) {
+		resource = resource.trim();
+		if(resource.isEmpty())
+			throw new JpcException("Invalid resource: empty string");
+		Term resourceTerm = new Atom(resource);
+		if(resource.substring(resource.length()-1).equals("/")) {
+			throw new JpcException("The resource to load is not a file"); //TODO maybe a smart default could be implemented when attempting to load a package/directory instead of a concrete file, for example, try to look for a file in such directory called "load_all"
+		}
+		URL resourceUrl = getResourceUrl(resource); 
+		if(resourceUrl == null) { //null means that a resource with that exact name does not exist
+			Set<String> resourcesWithAnyExtension = ReflectionUtil.resourcesWithAnyExtension(resource, classLoaders); //try to find resources with the given name and any file extension
+			if(resourcesWithAnyExtension.isEmpty())
+				throw new RuntimeException("Impossible to locate resource " + resource);
+			resource = resourcesWithAnyExtension.iterator().next();
+			if(resourcesWithAnyExtension.size() > 1)
+				logger.warn("Multiple resources with the same name but different extensions: " + Joiner.on(", ").join(resourcesWithAnyExtension) + ". Trying with this: " + resource);
+			resourceUrl = getResourceUrl(resource);
+		}
+		URL baseUrl = null;
+		try {
+			baseUrl = new URL(resourceUrl.toExternalForm().substring(0, resourceUrl.toExternalForm().lastIndexOf(resource))); //the base URL of the resource
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		}
+		resourceTerm = resolveResource(resource, baseUrl);
+		return resourceTerm;
+	}
+
+
+	public Term resolveResource(String resourceName, URL url) {
+		resourceManager.process(url); //will copy the logic files in the url in a temporary location (the resource manager remembers which urls have been processed before)
+		String fileSystemPath = resourceManager.getResourcePath(resourceName, url);
+		return new Atom(fileSystemPath);
+	}
+	
+	/**
+	 * The full URL of a resource
+	 * @param resource
+	 * @return
+	 */
 	private URL getResourceUrl(String resource) {
 		URL url = null;
 		Set<URL> urls = ReflectionUtil.getResources(resource, classLoaders);
@@ -74,50 +125,6 @@ public class LogicResourceLoader {
 				logger.warn("Resource " + resource + " found in multiple locations: " + Joiner.on(", ").join(urls) +". Chosen the one in: " + url);
 		} 
 		return url;
-	}
-	
-	
-	/**
-	 * Given a resource name (possibly inside a jar) answers a Term that represents the resource in the file system. If the resource is not a library (i.e., with the form 'library(lib_name)'), it will be copied to a tmp location
-	 * @param resource
-	 * @return
-	 */
-	public Term resolveResource(String resource) {
-		resource = resource.trim();
-		if(resource.isEmpty())
-			throw new JpcException("Invalid resource: empty string");
-		Term resourceTerm = prologEngine.asResourceTerm(resource);
-		if(resourceTerm instanceof Atom) { //it is not an alias but a concrete path
-			//TODO maybe a smart default could be implemented when attempting to load a package/directory instead of a concrete file, for example, try to load a file in the directory called "load_all"
-			if(resource.substring(resource.length()-1).equals("/")) {
-				throw new JpcException("The resource to load is not a file");
-			}
-			URL resourceUrl = getResourceUrl(resource);
-			if(resourceUrl == null) {
-				Set<String> resourcesWithAnyExtension = ReflectionUtil.resourcesWithAnyExtension(resource, classLoaders);
-				if(resourcesWithAnyExtension.isEmpty())
-					throw new RuntimeException("Impossible to locate resource " + resource);
-				resource = resourcesWithAnyExtension.iterator().next();
-				if(resourcesWithAnyExtension.size() > 1)
-					logger.warn("Multiple resources with the same name but different extensions: " + Joiner.on(", ").join(resourcesWithAnyExtension) + ". Trying with this: " + resource);
-				resourceUrl = getResourceUrl(resource);
-			}
-			URL baseUrl = null;
-			try {
-				baseUrl = new URL(resourceUrl.toExternalForm().substring(0, resourceUrl.toExternalForm().lastIndexOf(resource)));
-			} catch (MalformedURLException e) {
-				throw new RuntimeException(e);
-			}
-			resourceTerm = resolveResource(resource, baseUrl);
-		}
-		return resourceTerm;
-	}
-
-
-	public Term resolveResource(String resourceName, URL url) {
-		resourceManager.process(url); //will copy the logic files in the url in a temporary location (the resource manager remembers which urls have been processed before)
-		String fileSystemPath = resourceManager.getResourcePath(resourceName, url);
-		return new Atom(fileSystemPath);
 	}
 	
 }

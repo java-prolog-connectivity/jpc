@@ -1,5 +1,7 @@
 package org.jpc.util;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -14,17 +16,26 @@ import org.reflections.scanners.ResourcesScanner;
 import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static com.google.common.base.Preconditions.*;
+
+import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.io.Resources;
 
+/**
+ * A utility class for copying all the logic resources in a given url to a tmp location
+ * Answers the path of any given resource, given the base url of the resource
+ * @author sergioc
+ *
+ */
 public class ResourceManager {
 
 	private static Logger logger = LoggerFactory.getLogger(ResourceManager.class);
 	
-	private static ResourceManager defaultResourceManager = new ResourceManager(new JpcPreferences());
+	private static ResourceManager defaultResourceManager;
 
 	public static ResourceManager getDefaultResourceManager() {
+		if(defaultResourceManager == null)
+			defaultResourceManager = new ResourceManager(new JpcPreferences()); //initialize the resource manager according to the default preferences
 		return defaultResourceManager;
 	}
 
@@ -35,19 +46,29 @@ public class ResourceManager {
 	private final String tmpDirPath; // the root temporary directory 
 	private final File jpcTmpDir; //a File object representing a folder in the tmp directory where logic files or similar resources can be unzipped if required
 
-	private Set<URL> processedURLs;
+	private Set<URL> processedURLs; //remember which URLs have been processed already (i.e., tmp files have already been created for logic files in such url)
+	private JpcPreferences preferences;
 	
-	
-	public ResourceManager(JpcPreferences prefecences) {
-		this.tmpDirPath = prefecences.getTmpDirectory(); //the system tmp directory
-		checkNotNull(tmpDirPath, "No tmp directory has been defined in the preferences");
+	public ResourceManager(JpcPreferences preferences) {
+		this.preferences = preferences;
 		processedURLs = new HashSet<>();
-		String tmpSubdirectoryPath = prefecences.getTmpSubdirectoryName(); //the tmp subdirectory to be created in the tmp directory
+		this.tmpDirPath = preferences.getTmpDirectory(); //the system tmp directory
+		checkNotNull(tmpDirPath, "No tmp directory has been defined in the preferences");
+		String tmpSubdirectoryPath = preferences.getTmpSubdirectoryName(); //the tmp subdirectory to be created in the tmp directory
 		checkNotNull(tmpSubdirectoryPath, "No tmp subdirectory has been defined in the preferences");
 		jpcTmpDir = new File(tmpDirPath, tmpSubdirectoryPath);
 		jpcTmpDir.mkdirs(); //creating all the directories needed to locate the tmp logic files
 	}
 	
+	public void reset() {
+		processedURLs = new HashSet<>();
+	}
+	
+	/**
+	 * 
+	 * @param url
+	 * @return true if the url has already been processed (i.e., tmp files for all logic files have been copied in a tmp location). false otherwise
+	 */
 	public synchronized boolean hasBeenProcessed(URL url) {
 		return processedURLs.contains(url);
 	}
@@ -93,6 +114,10 @@ public class ResourceManager {
 	}
 	
 	
+	private String regExpPrologExtensions() {
+		return Joiner.on("|").join(preferences.prologExtensionFiles());
+	}
+	
 	public void createTmpLogicFiles(URL url) throws IOException {
 		File tmpDirForUrl = getTmpDir(url);
 		if(tmpDirForUrl.exists()) {
@@ -105,7 +130,7 @@ public class ResourceManager {
 		
 		Predicate<String> predicate = new Predicate<String>() {
 			  public boolean apply(String string) {
-				return string.matches(".*\\.(lgt|pl)$");  //matching resources names ending in "lgt" or "pl" (the default Logtalk and Prolog extensions)
+				return string.matches(".*\\.(" + regExpPrologExtensions() + ")$");  //matching resources names ending  with the default Logtalk and Prolog extensions pl|P|lgt
 			  }
 			};
 			
@@ -146,9 +171,6 @@ public class ResourceManager {
 		}
 	}
 
-
-
-
 	
 	/**
 	 * 
@@ -170,7 +192,6 @@ public class ResourceManager {
 	}
 	
 
-	
-
 
 }
+

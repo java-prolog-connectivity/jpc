@@ -20,25 +20,21 @@ import org.jpc.util.salt.VariableNamesCollectorHandler;
  */
 public abstract class AbstractTerm implements Term, TermConvertable {
 	
-	/* (non-Javadoc)
-	 * @see org.jpc.term.Term#arg(int)
-	 */
+	@Override
+	public boolean isHilog() {
+		return false;
+	}
+	
 	@Override
 	public Term arg(int i) {
 		return args().get(i-1);
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.jpc.term.Term#args()
-	 */
 	@Override
 	public List<Term> args() {
 		return Collections.emptyList();//assuming no arguments by default
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.jpc.term.Term#arity()
-	 */
 	@Override
 	public int arity() {
 		return args().size();
@@ -84,17 +80,11 @@ public abstract class AbstractTerm implements Term, TermConvertable {
 		throw new UnsupportedOperationException();
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.jpc.term.Term#bound()
-	 */
 	@Override
 	public boolean isBound() {
 		return getVariablesNames().isEmpty();
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.jpc.term.Term#listLength()
-	 */
 	@Override
 	public int listLength() {
 		Compound compound = (Compound) this;
@@ -107,10 +97,6 @@ public abstract class AbstractTerm implements Term, TermConvertable {
 		}
 	}
 
-
-	/* (non-Javadoc)
-	 * @see org.jpc.term.Term#replaceVariables(java.util.Map)
-	 */
 	@Override
 	public Term replaceVariables(Map<String, ? extends Term> map) {
 		JpcTermWriter termWriter = new JpcTermWriter();
@@ -119,9 +105,6 @@ public abstract class AbstractTerm implements Term, TermConvertable {
 		return termWriter.getTerms().get(0);
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.jpc.term.Term#changeVariablesNames(java.util.Map)
-	 */
 	@Override
 	public Term changeVariablesNames(Map<String, String> map) {
 		JpcTermWriter termWriter = new JpcTermWriter();
@@ -130,9 +113,6 @@ public abstract class AbstractTerm implements Term, TermConvertable {
 		return termWriter.getTerms().get(0);
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.jpc.term.Term#getVariablesNames()
-	 */
 	@Override
 	public List<String> getVariablesNames() {
 		VariableNamesCollectorHandler variableNamesCollector = new VariableNamesCollectorHandler();
@@ -140,17 +120,11 @@ public abstract class AbstractTerm implements Term, TermConvertable {
 		return variableNamesCollector.getVariableNames();
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.jpc.term.Term#hasVariable(java.lang.String)
-	 */
 	@Override
 	public boolean hasVariable(String variableName) {
 		return getVariablesNames().contains(variableName);
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.jpc.term.Term#nonAnonymousVariablesNames()
-	 */
+
 	@Override
 	public List<String> nonAnonymousVariablesNames() {
 		List<String> nonAnonymousVariablesNames = new ArrayList<>();
@@ -161,17 +135,11 @@ public abstract class AbstractTerm implements Term, TermConvertable {
 		return nonAnonymousVariablesNames;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.jpc.term.Term#asTerm()
-	 */
 	@Override
 	public AbstractTerm asTerm() {
 		return this;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.jpc.term.Term#termEquivalent(org.jpc.term.TermAdaptable)
-	 */
 	@Override
 	public boolean termEquals(Term t) {
 		return equals(t);

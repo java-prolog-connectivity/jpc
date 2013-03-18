@@ -20,7 +20,6 @@ import static org.jpc.engine.prolog.PrologConstants.SETOF;
 import static org.jpc.engine.prolog.PrologConstants.SET_PROLOG_FLAG;
 import static org.jpc.term.ListTerm.listTerm;
 import static org.jpc.term.Variable.ANONYMOUS_VAR;
-import static org.jpc.util.LogicUtil.isResourceAlias;
 import static org.jpc.util.LogicUtil.termSequence;
 
 import java.util.ArrayList;
@@ -35,6 +34,7 @@ import org.jpc.query.Query;
 import org.jpc.query.QuerySolutionToTermFunction;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
+import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Variable;
 import org.jpc.util.LogicUtil;
@@ -53,7 +53,9 @@ public abstract class AbstractPrologEngine implements PrologEngine {
      **********************************************************************************************************************************
      */
 
-	public abstract boolean stop();
+	public abstract boolean interrupt();
+	
+	public abstract boolean shutdown();
 
 	/**
 	 * escape the given string adding quotes and escaping characters if needed
@@ -100,27 +102,30 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 		return ExceptionHandledQuery.create(this, term, context);
 	}
 	
-	public Term asTerm(String termString, boolean force) {
-		try {
-			return asTerm(termString); //to be provided by subclasses
-		} catch(Exception e) {
-			if(force)
-				return new Atom(termString);
-			else
-				throw e;
-		}
-	}
+//	public Term asTerm(String termString, boolean force) {
+//		try {
+//			return asTerm(termString); //to be provided by subclasses
+//		} catch(Exception e) {
+//			if(force)
+//				return new Atom(termString);
+//			else
+//				throw e;
+//		}
+//	}
 	
 	public List<Term> asTerms(List<String> termsString) {
-		return asTerms(termsString, false);
-	}
-	
-	public List<Term> asTerms(List<String> termsString, boolean force) {
 		List<Term> terms = new ArrayList<>();
 		for(String s : termsString)
-			terms.add(asTerm(s, force));
+			terms.add(asTerm(s));
 		return terms;
 	}
+	
+//	public List<Term> asTerms(List<String> termsString, boolean force) {
+//		List<Term> terms = new ArrayList<>();
+//		for(String s : termsString)
+//			terms.add(asTerm(s, force));
+//		return terms;
+//	}
 	
 	
 	/* ********************************************************************************************************************************
@@ -269,7 +274,6 @@ public abstract class AbstractPrologEngine implements PrologEngine {
      */
 	
 	public boolean ensureLoaded(List<? extends Term> terms) {
-		Compound c = new Compound(ENSURE_LOADED, asList(listTerm(terms)));
 		return query(new Compound(ENSURE_LOADED, asList(listTerm(terms)))).hasSolution();
 	}
 	
@@ -278,9 +282,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	}
 
 	public boolean ensureLoaded(String... resources) {
-		String r = resources[0];
-		//return query(new Compound(ENSURE_LOADED, asList(new Atom(r)))).hasSolution();
-		return ensureLoaded(asResourceTerms(asList(resources)));
+		return query(new Compound(ENSURE_LOADED, asList(new Jpc().toTerm(resources)))).hasSolution();
 	}
 	
 
@@ -356,17 +358,5 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 		return success;
 	}
 	
-	public List<Term> asResourceTerms(List<String> resourceNames) {
-		List<Term> terms = new ArrayList<>();
-		for(String s : resourceNames)
-			terms.add(asResourceTerm(s));
-		return terms;
-	}
-	
-	public Term asResourceTerm(String resourceName) {
-		if(isResourceAlias(resourceName)) //it is a resource alias of the form library(lib_name)
-			return asTerm(resourceName);
-		else
-			return new Atom(resourceName);
-	}
+
 }

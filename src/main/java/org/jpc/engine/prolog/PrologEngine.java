@@ -16,7 +16,24 @@ public interface PrologEngine extends PrologDatabase {
      **********************************************************************************************************************************
      */
 	
-	public boolean stop();
+	/**
+	 * Simulates a Ctrl C
+	 * @return
+	 */
+	public boolean interrupt();
+	
+	/**
+	 * Interrupt the logic engine
+	 * @return
+	 */
+	public boolean shutdown();
+	
+	
+	public Query basicQuery(String termString);
+	
+	public Query basicQuery(Term terms);
+	
+	public Query basicQuery(String termString, Jpc context);
 	
 	public Query basicQuery(Term term, Jpc context);
 	
@@ -35,11 +52,11 @@ public interface PrologEngine extends PrologDatabase {
 	 */
 	public Term asTerm(String termString);
 	
-	public Term asTerm(String termString, boolean force);
+	//public Term asTerm(String termString, boolean force);
 	
 	public List<Term> asTerms(List<String> termsString);
 	
-	public List<Term> asTerms(List<String> termsString, boolean force);
+	//public List<Term> asTerms(List<String> termsString, boolean force);
 	
 	/**
 	 * escape the given string adding quotes and escaping characters if needed
@@ -177,9 +194,5 @@ public interface PrologEngine extends PrologDatabase {
 	
 	
 	public boolean allSucceed(List<? extends Term> terms);
-	
-	public List<Term> asResourceTerms(List<String> resourceNames);
-	
-	public Term asResourceTerm(String resourceName);
 
 }

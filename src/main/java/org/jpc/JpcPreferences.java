@@ -2,8 +2,12 @@ package org.jpc;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Arrays.asList;
+
 import java.io.File;
+import java.util.List;
 import java.util.Properties;
+
 import org.minitoolbox.Preferences;
 
 public class JpcPreferences extends Preferences {
@@ -48,6 +52,10 @@ public class JpcPreferences extends Preferences {
 	
 	public String getTmpSubdirectoryName() {
 		return JPC_SHORT_NAME;
+	}
+	
+	public List<String> prologExtensionFiles() {
+		return asList("pl", "P", "lgt");
 	}
 	
 }

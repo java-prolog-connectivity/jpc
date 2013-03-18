@@ -46,6 +46,10 @@ public final class Compound extends AbstractTerm {
 		this.args = (List<Term>) args;
 	}
 	
+	@Override
+	public boolean isHilog() {
+		return !(name instanceof Atom);
+	}
 	
 	@Override
 	public boolean isList() {

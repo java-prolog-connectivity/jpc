@@ -28,6 +28,7 @@ import static org.jpc.engine.logtalk.LogtalkConstants.OBJECT_PROPERTY;
 import static org.jpc.engine.logtalk.LogtalkConstants.PROTOCOL_PROPERTY;
 import static org.jpc.engine.logtalk.LogtalkConstants.SET_LOGTALK_FLAG;
 import static org.jpc.engine.logtalk.LogtalkConstants.SPECIALIZES_CLASS;
+import static org.jpc.term.ListTerm.listTerm;
 import static org.jpc.util.LogicUtil.forEachApplyFunctor;
 
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.query.Query;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
+import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Variable;
 
@@ -51,13 +53,17 @@ public class LogtalkEngine implements PrologEngine {
 	public LogtalkEngine(PrologEngine prologEngine) {
 		this.prologEngine = prologEngine;
 	}
-
-	public boolean logtalkLoad(String... resources) {
-		return logtalkLoad(asResourceTerms(asList(resources)));
+	
+	public boolean logtalkLoad(List<? extends Term> terms) {
+		return query(new Compound(LOGTALK_LOAD, asList(listTerm(terms)))).hasSolution(); 
 	}
 	
-	public boolean logtalkLoad(List<? extends Term> Terms) {
-		return allSucceed(forEachApplyFunctor(LOGTALK_LOAD, Terms));
+	public boolean logtalkLoad(Term... terms) {
+		return logtalkLoad(asList(terms));
+	}
+	
+	public boolean logtalkLoad(String... resources) {
+		return query(new Compound(LOGTALK_LOAD, asList(new Jpc().toTerm(resources)))).hasSolution(); 
 	}
 	
 	public String currentLogtalkFlag(LogtalkFlag flag) {
@@ -244,11 +250,26 @@ public class LogtalkEngine implements PrologEngine {
 //		return this;
 //	}
 
+	public boolean interrupt() {
+		return prologEngine.interrupt();
+	}
 	
-	public boolean stop() {
-		return prologEngine.stop();
+	public boolean shutdown() {
+		return prologEngine.shutdown();
 	}
 
+	public Query basicQuery(String termString) {
+		return prologEngine.basicQuery(termString);
+	}
+	
+	public Query basicQuery(Term terms) {
+		return prologEngine.basicQuery(terms);
+	}
+	
+	public Query basicQuery(String termString, Jpc context) {
+		return prologEngine.basicQuery(termString, context);
+	}
+	
 	public Query basicQuery(Term terms, Jpc context) {
 		return prologEngine.basicQuery(terms, context);
 	}
@@ -273,17 +294,17 @@ public class LogtalkEngine implements PrologEngine {
 		return prologEngine.asTerm(termString);
 	}
 
-	public Term asTerm(String termString, boolean force) {
-		return prologEngine.asTerm(termString, force);
-	}
+//	public Term asTerm(String termString, boolean force) {
+//		return prologEngine.asTerm(termString, force);
+//	}
 
 	public List<Term> asTerms(List<String> termsString) {
 		return prologEngine.asTerms(termsString);
 	}
 
-	public List<Term> asTerms(List<String> termsString, boolean force) {
-		return prologEngine.asTerms(termsString, force);
-	}
+//	public List<Term> asTerms(List<String> termsString, boolean force) {
+//		return prologEngine.asTerms(termsString, force);
+//	}
 
 	public String escape(String s) {
 		return prologEngine.escape(s);
@@ -407,14 +428,6 @@ public class LogtalkEngine implements PrologEngine {
 
 	public boolean allSucceed(List<? extends Term> Terms) {
 		return prologEngine.allSucceed(Terms);
-	}
-
-	public List<Term> asResourceTerms(List<String> resourceNames) {
-		return prologEngine.asResourceTerms(resourceNames);
-	}
-
-	public Term asResourceTerm(String resourceName) {
-		return prologEngine.asResourceTerm(resourceName);
 	}
 
 }
