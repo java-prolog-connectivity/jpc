@@ -37,9 +37,12 @@ public class StringConverter extends JpcConverter<Object, Term> {
 	public String fromTerm(Term term, Type type, Jpc context) {
 		if(!String.class.equals(type))
 			throw new JpcConversionException();
-		if(term instanceof Atom || term instanceof NumberTerm)
+		if(term instanceof Atom)
+			return ((Atom) term).getName();
+		else if(term instanceof NumberTerm)
 			return term.toString();
-		throw new JpcConversionException();
+		else
+			throw new JpcConversionException();
 	}
 	
 }

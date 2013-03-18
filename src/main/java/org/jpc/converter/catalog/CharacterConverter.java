@@ -18,9 +18,13 @@ public class CharacterConverter extends JpcConverter<Character, Term> {
 	
 	@Override
 	public Character fromTerm(Term term, Type type, Jpc context) {
-		if(!(term instanceof Atom || term instanceof NumberTerm))
+		String s;
+		if(term instanceof Atom)
+			s = ((Atom) term).getName();
+		else if(term instanceof NumberTerm)
+			s = term.toString();
+		else
 			throw new JpcConversionException();
-		String s = term.toString();
 		if(s.length() > 1)
 			throw new JpcConversionException();
 		return s.charAt(0);

@@ -1,4 +1,4 @@
-package org.jpc.instantiationmanager;
+package org.jpc.converter.instantiation;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;

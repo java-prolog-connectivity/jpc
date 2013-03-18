@@ -26,13 +26,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.jpc.Jpc;
+import org.jpc.converter.typesolver.MapTypeSolver;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Variable;
-import org.jpc.typesolver.MapTypeSolver;
 import org.junit.Assert;
 import org.junit.Test;
 

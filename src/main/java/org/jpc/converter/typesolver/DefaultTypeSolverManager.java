@@ -1,4 +1,4 @@
-package org.jpc.typesolver;
+package org.jpc.converter.typesolver;
 
 public class DefaultTypeSolverManager extends TypeSolverManager {
 

@@ -25,7 +25,7 @@ import org.jpc.converter.catalog.listterm.MapConverter.MapEntryConverter.MapEntr
 import org.jpc.converter.catalog.listterm.MapConverter.MapEntryConverter.TermToMapEntryConverter;
 import org.jpc.converter.catalog.listterm.MapConverter.MapToTermConverter;
 import org.jpc.converter.catalog.listterm.MapConverter.TermToMapConverter;
-import org.jpc.typesolver.MapTypeSolver;
+import org.jpc.converter.typesolver.MapTypeSolver;
 
 public class DefaultJpcConverterManager extends ConverterManager {
 

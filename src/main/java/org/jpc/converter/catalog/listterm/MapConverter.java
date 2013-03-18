@@ -13,10 +13,10 @@ import org.jpc.converter.JpcConversionException;
 import org.jpc.converter.JpcConverter;
 import org.jpc.converter.catalog.listterm.MapConverter.MapEntryConverter.MapEntryToTermConverter;
 import org.jpc.converter.catalog.listterm.MapConverter.MapEntryConverter.TermToMapEntryConverter;
+import org.jpc.converter.typesolver.MapTypeSolver;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
-import org.jpc.typesolver.MapTypeSolver;
 import org.minitoolbox.reflection.javatype.ParameterizedTypeImpl;
 import org.minitoolbox.reflection.wrappertype.TypeWrapper;
 

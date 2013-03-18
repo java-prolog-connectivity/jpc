@@ -1,4 +1,4 @@
-package org.jpc.instantiationmanager;
+package org.jpc.converter.instantiation;
 
 import java.lang.reflect.Type;
 import java.util.AbstractMap;

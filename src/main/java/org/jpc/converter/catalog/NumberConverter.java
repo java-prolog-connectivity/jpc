@@ -47,7 +47,7 @@ public class NumberConverter extends JpcConverter<Number, Term> {
 		if(term instanceof NumberTerm)
 			number = ((NumberTerm)term).doubleValue();
 		else if(term instanceof Atom)
-			number = Double.parseDouble(term.toString());
+			number = Double.parseDouble(((Atom) term).getName());
 		else
 			throw new JpcConversionException();
 		
