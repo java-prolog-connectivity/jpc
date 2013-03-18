@@ -6,6 +6,8 @@ import static junit.framework.Assert.fail;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jpc.converter.instantiation.DefaultInstantiationManager;
+import org.jpc.converter.instantiation.InstantiationManager;
 import org.junit.Test;
 
 public class InstantiationManagerTest {

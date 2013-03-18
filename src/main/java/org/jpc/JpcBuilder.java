@@ -3,14 +3,14 @@ package org.jpc;
 import org.jpc.converter.ConverterManager;
 import org.jpc.converter.DefaultJpcConverterManager;
 import org.jpc.converter.JpcConverter;
+import org.jpc.converter.instantiation.DefaultInstantiationManager;
+import org.jpc.converter.instantiation.InstantiationManager;
+import org.jpc.converter.typesolver.DefaultTypeSolverManager;
+import org.jpc.converter.typesolver.TermTypeSolver;
+import org.jpc.converter.typesolver.TypeSolverManager;
 import org.jpc.error.handling.DefaultJpcErrorHandler;
 import org.jpc.error.handling.ErrorHandler;
 import org.jpc.error.handling.ErrorHandlerManager;
-import org.jpc.instantiationmanager.DefaultInstantiationManager;
-import org.jpc.instantiationmanager.InstantiationManager;
-import org.jpc.typesolver.DefaultTypeSolverManager;
-import org.jpc.typesolver.TermTypeSolver;
-import org.jpc.typesolver.TypeSolverManager;
 import org.minitoolbox.pattern.Factory;
 
 public class JpcBuilder {

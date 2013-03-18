@@ -6,16 +6,16 @@ import java.util.List;
 
 import org.jpc.converter.ConverterManager;
 import org.jpc.converter.DefaultJpcConverterManager;
+import org.jpc.converter.instantiation.DefaultInstantiationManager;
+import org.jpc.converter.instantiation.InstantiationManager;
+import org.jpc.converter.typesolver.DefaultTypeSolverManager;
+import org.jpc.converter.typesolver.TypeSolverManager;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.error.handling.DefaultJpcErrorHandler;
 import org.jpc.error.handling.ErrorHandler;
-import org.jpc.instantiationmanager.DefaultInstantiationManager;
-import org.jpc.instantiationmanager.InstantiationManager;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
-import org.jpc.typesolver.DefaultTypeSolverManager;
-import org.jpc.typesolver.TypeSolverManager;
 
 /**
  * A class providing an interface for the main JPC functionality (such as converting between terms and Java objects)
