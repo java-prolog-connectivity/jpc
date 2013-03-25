@@ -19,33 +19,33 @@ public class PrologEngineWriter extends PrologWriter {
 
 	public void writePrologDirective(Term directive) {
 		if(!getPrologEngine().query(directive).hasSolution())
-			logger.error("The directive: " + directive.toString(getPrologEngine()) + "cannot be executed");
+			logger.error("The directive: " + directive.toEscapedString() + "cannot be executed");
 		else
-			logger.trace("The directive: " + directive.toString(getPrologEngine()) + " has been executed");
+			logger.trace("The directive: " + directive.toEscapedString() + " has been executed");
 	}
 	
 	public void writeLogtalkObjectDirective(Term directive) {
 		LogtalkObject logtalkObject = new LogtalkObject(getCurrentLogtalkObjectTerm(), getPrologEngine());
 		if(!logtalkObject.perform(directive).hasSolution())
-			logger.error("The logtalk object: " + logtalkObject.asTerm().toString(getPrologEngine()) + " cannot execute the directive: " + directive.toString(getPrologEngine()));
+			logger.error("The logtalk object: " + logtalkObject.asTerm().toEscapedString() + " cannot execute the directive: " + directive.toEscapedString());
 		else
-			logger.trace("The logtalk object: " + logtalkObject.asTerm().toString(getPrologEngine()) + " has executed the directive: " + directive.toString(getPrologEngine()));
+			logger.trace("The logtalk object: " + logtalkObject.asTerm().toEscapedString() + " has executed the directive: " + directive.toEscapedString());
 	}
 	
 	public void writePrologClause(Term clause) {
 		if(!getPrologEngine().assertz(clause))
-			logger.error("Impossible to assert the clause: " + clause.toString(getPrologEngine()) + " in the logic database");
+			logger.error("Impossible to assert the clause: " + clause.toEscapedString() + " in the logic database");
 		else
-			logger.trace("The clause: " + clause.toString(getPrologEngine()) + " has been asserted in the logic database");
+			logger.trace("The clause: " + clause.toEscapedString() + " has been asserted in the logic database");
 	}
 	
 	public void writeLogtalkObjectClause(Term clause) {
 		try {
 			LogtalkObject logtalkObject = new LogtalkObject(getCurrentLogtalkObjectTerm(), getPrologEngine());
 			if(!logtalkObject.assertz(clause))
-				logger.error("Impossible to assert the clause: " + clause.toString(getPrologEngine()) + " in the logtalk object: " + logtalkObject.asTerm().toString(getPrologEngine()));
+				logger.error("Impossible to assert the clause: " + clause.toEscapedString() + " in the logtalk object: " + logtalkObject.asTerm().toEscapedString());
 			else
-				logger.trace("The clause: " + clause.toString(getPrologEngine()) + " has been asserted in the logtalk object: " + logtalkObject.asTerm().toString(getPrologEngine()));
+				logger.trace("The clause: " + clause.toEscapedString() + " has been asserted in the logtalk object: " + logtalkObject.asTerm().toEscapedString());
 		} catch(Exception e) {
 			//System.out.println(e);
 		}

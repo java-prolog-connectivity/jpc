@@ -4,7 +4,6 @@ import com.google.common.base.Predicate;
 
 public class CursorFilter<T> extends Cursor<T> {
 
-	private T cachedNext;
 	private Cursor<T> cursor;
 	private Predicate<T> predicate;
 	
@@ -12,41 +11,31 @@ public class CursorFilter<T> extends Cursor<T> {
 		this.cursor = cursor;
 		this.predicate = predicate;
 	}
-	
-	@Override
-	public boolean isOpen() {
-		return cursor.isOpen();
-	}
 
 	@Override
-	public void abort() {
+	protected void basicAbort() {
 		cursor.abort();
 	}
 
 	@Override
-	public void close() {
+	protected void basicClose() {
 		cursor.close();
 	}
 
 	@Override
-	public boolean hasNext() {
-		while(cursor.hasNext()) {
-			cachedNext = cursor.next();
-			if(predicate.apply(cachedNext))
-				return true;
-		}
-		cachedNext = null;
-		return false;
+	protected void basicRewind() {
+		cursor.rewind();
 	}
 
 	@Override
-	public T next() {
-		return cachedNext;
+	protected T basicNext() {
+		while(cursor.hasNext()) {
+			T t = cursor.next();
+			if(predicate.apply(t))
+				return t;
+			
+		}
+		return null;
 	}
-	
-	@Override
-	public void remove() {
-		cursor.remove();
-	}
-	
+
 }

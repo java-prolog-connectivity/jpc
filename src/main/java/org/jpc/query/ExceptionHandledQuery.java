@@ -24,7 +24,7 @@ public class ExceptionHandledQuery extends QueryAdapter {
 
 	public static ExceptionHandledQuery create(PrologEngine prologEngine, Term term, Jpc context) {
 		Query basicQuery = prologEngine.basicQuery(exceptionHandledQueryTerm(term), context);
-		return new ExceptionHandledQuery(basicQuery, context);
+		return new ExceptionHandledQuery(basicQuery);
 	}
 	
 
@@ -35,28 +35,25 @@ public class ExceptionHandledQuery extends QueryAdapter {
 			if(solution.containsKey(EXCEPTION_VAR_NAME)) {
 				Term exceptionTerm = solution.get(EXCEPTION_VAR_NAME);
 				if(!(exceptionTerm instanceof Variable))
-					context.handleError(getPrologEngine(), exceptionTerm, goal());
+					getJpcContext().handleError(getPrologEngine(), exceptionTerm, getGoal());
 			}
 			return solution;
 		}
 	};
-	
-	private final Jpc context;
-	
-	public ExceptionHandledQuery(Query query, Jpc context) {
+
+	public ExceptionHandledQuery(Query query) {
 		super(query);
 		adapterFunction = exceptionAdapterFunction;
-		this.context = context;
 	}
 
 	@Override
-	public Term goal() {
-		return ((Compound)query.goal()).arg(1);
+	public Term getGoal() {
+		return ((Compound)query.getGoal()).arg(1);
 	}
 	
 	@Override
 	protected Term getDefaultSelectedTerm() {
-		return ((Compound)query.goal()).arg(1);
+		return ((Compound)query.getGoal()).arg(1);
 	}
 	
 }

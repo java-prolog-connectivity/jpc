@@ -58,13 +58,6 @@ public interface PrologEngine extends PrologDatabase {
 	
 	//public List<Term> asTerms(List<String> termsString, boolean force);
 	
-	/**
-	 * escape the given string adding quotes and escaping characters if needed
-	 * @param s the string to escape
-	 * @return the escaped string
-	 */
-	public String escape(String s);
-	
 	
 	/* ********************************************************************************************************************************
 	 * FLAGS

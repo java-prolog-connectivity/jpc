@@ -5,8 +5,9 @@ import static org.jpc.engine.prolog.PrologConstants.FAIL;
 import static org.jpc.engine.prolog.PrologConstants.FALSE;
 import static org.jpc.engine.prolog.PrologConstants.TRUE;
 
+import java.util.regex.Matcher;
+
 import org.jpc.JpcException;
-import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.salt.TermContentHandler;
 import org.jpc.term.visitor.TermVisitor;
 
@@ -22,6 +23,7 @@ public final class Atom extends AbstractTerm {
 	public static final Atom EMPTY_LIST = new Atom(EMPTY_LIST_SYMBOL);
 	
 	private final String name;
+	private final String escapedName;
 	
 	public Atom(Boolean bool) {
 		this(bool.toString());
@@ -32,40 +34,19 @@ public final class Atom extends AbstractTerm {
 	 */
 	public Atom(String name) {
 		this.name = name;
+		String escapedName = name;
+		escapedName = escapedName.replaceAll("\\\\", Matcher.quoteReplacement("\\\\"));
+		escapedName = escapedName.replaceAll("'", Matcher.quoteReplacement("\\'"));
+		this.escapedName = "'" + escapedName + "'";
 	}
 
-	
 	public String getName() {
 		return name;
 	}
-
-
+	
 	@Override
 	public boolean hasFunctor(Term nameTermObject, int arity) {
 		return termEquals(nameTermObject) && arity == 0;
-	}
-	
-	@Override
-	public int hashCode() {
-		return name.hashCode();
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		return (this == obj || (obj instanceof Atom && name.equals(((Atom)obj).name)));
-	}
-	
-	/**
-	 * Note: This method does not escape or quote the name
-	 */
-	@Override
-	public String toString() {
-		return "'" + getName() + "'";
-	}
-	
-	@Override
-	public String toString(PrologEngine prologEngine) {
-		return prologEngine.escape(getName());
 	}
 	
 	public boolean isBoolean() {
@@ -95,4 +76,19 @@ public final class Atom extends AbstractTerm {
 		contentHandler.startAtom(name);
 	}
 	
+	@Override
+	public String toEscapedString() {
+		return escapedName;
+	}
+	
+	@Override
+	public int hashCode() {
+		return name.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		return (this == obj || (obj instanceof Atom && name.equals(((Atom)obj).name)));
+	}
+
 }

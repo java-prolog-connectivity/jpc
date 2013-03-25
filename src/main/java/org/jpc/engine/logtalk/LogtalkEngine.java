@@ -306,10 +306,6 @@ public class LogtalkEngine implements PrologEngine {
 //		return prologEngine.asTerms(termsString, force);
 //	}
 
-	public String escape(String s) {
-		return prologEngine.escape(s);
-	}
-
 	public boolean setPrologFlag(Term flag, Term flagValue) {
 		return prologEngine.setPrologFlag(flag, flagValue);
 	}

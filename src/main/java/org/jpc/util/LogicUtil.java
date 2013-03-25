@@ -101,7 +101,7 @@ public class LogicUtil {
 		if(term.isList())
 			return term.asList();
 		else 
-			return term.args();
+			return term.getArgs();
 	}
 
 	/**

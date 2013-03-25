@@ -6,13 +6,13 @@ import org.jpc.Jpc;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Term;
 
-public abstract class PrologEngineQuery extends Query {
+public abstract class PrologQuery extends Query {
 
 	private PrologEngine prologEngine;
 	private Term goal;
 	private Jpc context;
 	
-	public PrologEngineQuery(PrologEngine prologEngine, Term term, Jpc context) {
+	public PrologQuery(PrologEngine prologEngine, Term term, Jpc context) {
 		this.prologEngine = prologEngine;
 		this.goal = term;
 		this.context = context;
@@ -24,7 +24,7 @@ public abstract class PrologEngineQuery extends Query {
 	}
 	
 	@Override
-	public Term goal() {
+	public Term getGoal() {
 		return goal;
 	}
 	
@@ -34,21 +34,12 @@ public abstract class PrologEngineQuery extends Query {
 	
 	@Override
 	protected Term getDefaultSelectedTerm() {
-		return goal();
-	}
-	
-	protected Term asTerm(String termString) {
-		return prologEngine.asTerm(termString);
+		return getGoal();
 	}
 	
 	@Override
 	public String toString() {
 		return goal.toString();
-	}
-
-	@Override
-	protected TermToObjectFunction getTermToObjectFunction(Type targetType) {
-		return new TermToObjectFunction(context, targetType);
 	}
 
 }

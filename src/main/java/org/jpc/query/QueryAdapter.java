@@ -1,8 +1,8 @@
 package org.jpc.query;
 
-import java.lang.reflect.Type;
 import java.util.Map;
 
+import org.jpc.Jpc;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Term;
 
@@ -23,53 +23,44 @@ public class QueryAdapter extends Query {
 	}
 
 	@Override
+	public Jpc getJpcContext() {
+		return query.getJpcContext();
+	}
+	
+	@Override
 	public PrologEngine getPrologEngine() {
 		return query.getPrologEngine();
 	}
 	
 	@Override
-	public Term goal() {
-		return query.goal();
+	public Term getGoal() {
+		return query.getGoal();
 	}
 	
 	@Override
 	protected Term getDefaultSelectedTerm() {
 		return query.getDefaultSelectedTerm();
 	}
+
 	
 	@Override
-	protected Term asTerm(String termString) {
-		return query.asTerm(termString);
-	}
-
-	@Override
-	public boolean hasNext() {
-		return query.hasNext();
-	}
-
-	@Override
-	public Map<String, Term> next() {
-		return adapterFunction.apply(query.next());
-	}
-
-	@Override
-	public boolean isOpen() {
-		return query.isOpen();
-	}
-
-	@Override
-	public void abort() {
+	protected void basicAbort() {
 		query.abort();
 	}
 
 	@Override
-	public void close() {
-		 query.close();
+	protected void basicClose() {
+		query.close();
 	}
 
 	@Override
-	protected TermToObjectFunction getTermToObjectFunction(Type targetType) {
-		return query.getTermToObjectFunction(targetType);
+	protected void basicRewind() {
+		query.rewind();
 	}
-	
+
+	@Override
+	protected Map<String,Term> basicNext() {
+		Map<String,Term> adaptee = query.next();
+		return adaptee != null?adapterFunction.apply(adaptee):null;
+	}
 }

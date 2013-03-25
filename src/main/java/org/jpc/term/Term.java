@@ -35,7 +35,7 @@ public interface Term /*extends TermConvertable*/ {
 	 * If the term has no arguments will return an empty list
 	 * @return the arguments of this term
 	 */
-	public abstract List<Term> args();
+	public abstract List<Term> getArgs();
 
 	/**
 	 * Returns the arity (i.e., number of arguments) of this Term.
@@ -144,8 +144,7 @@ public interface Term /*extends TermConvertable*/ {
 	 * @param contentHandler the content handler that will receive the events describing the structure of this term
 	 */
 	public abstract void read(TermContentHandler contentHandler);
-	
-	public abstract String toString(PrologEngine prologEngine);
+	public abstract String toEscapedString();
 	
 
 }

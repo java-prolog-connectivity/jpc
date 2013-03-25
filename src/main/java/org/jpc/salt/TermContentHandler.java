@@ -1,6 +1,10 @@
 package org.jpc.salt;
 
-
+/**
+ * The interface of objects interested in listening to the description of logic terms as a stream of events
+ * @author sergioc
+ *
+ */
 public interface TermContentHandler {
 
 	public abstract TermContentHandler startIntegerTerm(long value);

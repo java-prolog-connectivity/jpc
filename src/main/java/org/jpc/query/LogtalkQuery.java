@@ -9,11 +9,11 @@ public class LogtalkQuery extends QueryAdapter {
 	}
 
 	public Term getObjectTerm() {
-		return query.goal().arg(1);
+		return query.getGoal().arg(1);
 	}
 	
 	public Term getMethodTerm() {
-		return query.goal().arg(2);
+		return query.getGoal().arg(2);
 	}
 	
 	@Override

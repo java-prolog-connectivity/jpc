@@ -20,10 +20,6 @@ public abstract class TermReader {
 	public TermContentHandler getContentHandler() {
 		return contentHandler;
 	}
-
-	public void setContentHandler(TermContentHandler contentHandler) {
-		this.contentHandler = contentHandler;
-	}
 	
 	public abstract void read();
 

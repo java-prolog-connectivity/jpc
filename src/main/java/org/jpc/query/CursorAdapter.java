@@ -23,36 +23,25 @@ public class CursorAdapter<AdapterType, AdapteeType> extends Cursor<AdapterType>
 		this.adapterFunction = adapterFunction;
 	}
 
-
-	
 	@Override
-	public boolean isOpen() {
-		return cursor.isOpen();
-	}
-
-	@Override
-	public void abort() {
+	protected void basicAbort() {
 		cursor.abort();
 	}
 
 	@Override
-	public void close() {
+	protected void basicClose() {
 		cursor.close();
 	}
 
 	@Override
-	public boolean hasNext() {
-		return cursor.hasNext();
+	protected void basicRewind() {
+		cursor.rewind();
 	}
 
 	@Override
-	public AdapterType next() {
+	protected AdapterType basicNext() {
 		AdapteeType adaptee = cursor.next();
 		return adaptee != null?adapterFunction.apply(adaptee):null;
 	}
 	
-	@Override
-	public void remove() {
-		cursor.remove();
-	}
 }

@@ -30,13 +30,8 @@ public abstract class NumberTerm extends AbstractTerm {
 	}
 	
 	@Override
-	public String toString() {
+	public String toEscapedString() {
 		return value.toString();
-	}
-	
-	@Override
-	public String toString(PrologEngine prologEngine) {
-		return toString();
 	}
 	
 	@Override

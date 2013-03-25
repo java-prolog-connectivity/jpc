@@ -40,26 +40,5 @@ public class DefaultTermContentHandler implements TermContentHandler {
 		return this;
 	}
 	
-	
-//	@Override
-//	public TermContentHandler startDirective() {
-//		return this;
-//	}
-//
-//	@Override
-//	public TermContentHandler startClause() {
-//		return this;
-//	}
-//	
-//	
-//	@Override
-//	public TermContentHandler startLogtalkObjectContext() {
-//		return this;
-//	}
-//
-//	@Override
-//	public TermContentHandler endLogtalkObjectContext() {
-//		return this;
-//	}
 
 }

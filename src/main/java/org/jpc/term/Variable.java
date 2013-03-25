@@ -46,7 +46,7 @@ public final class Variable extends AbstractTerm {
 	}
 	
 	@Override
-	public String toString(PrologEngine prologEngine) {
+	public String toEscapedString() {
 		return toString();
 	}
 	

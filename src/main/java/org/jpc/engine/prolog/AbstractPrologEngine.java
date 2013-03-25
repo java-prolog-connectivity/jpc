@@ -57,26 +57,18 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	
 	public abstract boolean shutdown();
 
-	/**
-	 * escape the given string adding quotes and escaping characters if needed
-	 * @param s the string to escape
-	 * @return the escaped string
-	 */
-	public abstract String escape(String s);
-	
-	
 	public final Query basicQuery(String termString) {
 		return basicQuery(termString, new Jpc());
-	}
-	
-	public final Query basicQuery(Term terms) {
-		return basicQuery(terms, new Jpc());
 	}
 	
 	public final Query basicQuery(String termString, Jpc context) {
 		return basicQuery(asTerm(termString), context);
 	}
 	
+	public final Query basicQuery(Term terms) {
+		return basicQuery(terms, new Jpc());
+	}
+
 	/**
 	 * 
 	 * @param term
@@ -97,7 +89,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	public final Query query(String termString, Jpc context) {
 		return query(asTerm(termString), context);
 	}
-
+ 
 	public final Query query(Term term, Jpc context) {
 		return ExceptionHandledQuery.create(this, term, context);
 	}

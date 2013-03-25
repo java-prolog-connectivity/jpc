@@ -110,30 +110,24 @@ public final class Compound extends AbstractTerm {
 	 * @return the arguments (1..arity) of this Compound as an array[0..arity-1] of Term
 	 */
 	@Override
-	public List<Term> args() {
+	public List<Term> getArgs() {
 		return args;
 	}
 	
 	
 	/**
 	 * Returns a prefix functional representation of a Compound of the form name(arg1,...),
-	 * and each argument is represented according to its toString() method.
 	 * 
 	 * @return  string representation of an Compound
 	 */
 	@Override
-	public String toString() {
-		return getName().toString() + "(" + AbstractTerm.toString(args) + ")";
-	}
-	
-	@Override
-	public String toString(PrologEngine prologEngine) {
-		return getName().toString(prologEngine) + "(" + AbstractTerm.toString(prologEngine, args) + ")";
+	public String toEscapedString() {
+		return getName().toEscapedString() + "(" + AbstractTerm.toEscapedString(args) + ")";
 	}
 	
 	@Override
 	public int hashCode() {
-		List<Term> allFields = new ArrayList<Term>(args());
+		List<Term> allFields = new ArrayList<Term>(getArgs());
 		allFields.add(0, getName());
 		return Objects.hash(allFields.toArray());
 	}

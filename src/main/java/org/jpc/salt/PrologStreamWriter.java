@@ -26,27 +26,27 @@ public class PrologStreamWriter extends PrologWriter {
 
 	@Override
 	public void writePrologDirective(Term directive) {
-		String termString = directive.toString(getPrologEngine());
+		String termString = directive.toEscapedString();
 		out.println(DIRECTIVE_PREFIX + termString+".");
 		
 	}
 
 	@Override
 	public void writeLogtalkObjectDirective(Term directive) {
-		String termString = logtalkMessage(getCurrentLogtalkObjectTerm(), directive).toString(getPrologEngine());
+		String termString = logtalkMessage(getCurrentLogtalkObjectTerm(), directive).toEscapedString();
 		out.println(DIRECTIVE_PREFIX + termString+".");
 	}
 
 	@Override
 	public void writePrologClause(Term clause) {
-		String termString = clause.toString(getPrologEngine());
+		String termString = clause.toEscapedString();
 		out.println(termString+".");
 	}
 
 	@Override
 	public void writeLogtalkObjectClause(Term clause) {
 		Term assertTerm = new Compound(ASSERTZ, asList(clause));
-		String termString = logtalkMessage(getCurrentLogtalkObjectTerm(), assertTerm).toString(getPrologEngine());
+		String termString = logtalkMessage(getCurrentLogtalkObjectTerm(), assertTerm).toEscapedString();
 		out.println(DIRECTIVE_PREFIX + termString+".");
 	}
 

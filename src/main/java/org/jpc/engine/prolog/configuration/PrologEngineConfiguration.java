@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.jpc.JpcException;
 import org.jpc.JpcPreferences;
 import org.jpc.engine.logtalk.LogtalkEngine;
 import org.jpc.engine.prolog.PrologEngine;
@@ -17,9 +18,7 @@ public abstract class PrologEngineConfiguration {
 	protected JpcPreferences preferences;
 	protected boolean enabled = true;
 	private boolean configured = false;
-	
-	protected List<String> preloadedPrologResources;
-	protected List<String> preloadedLogtalkResources;
+
 	protected List<String> scope;
 	protected boolean logtalkRequired = true;
 	protected boolean logtalkLoaded = false;
@@ -30,8 +29,6 @@ public abstract class PrologEngineConfiguration {
 	
 	public PrologEngineConfiguration(JpcPreferences preferences) {
 		this.preferences = preferences;
-		preloadedPrologResources = new ArrayList<String>();
-		preloadedLogtalkResources = new ArrayList<String>();
 		scope = new ArrayList<String>();
 		addScope(""); //the root package
 	}
@@ -69,30 +66,6 @@ public abstract class PrologEngineConfiguration {
 		this.configured = configured;
 	}
 
-	public List<String> getPreloadedPrologResources() {
-		return preloadedPrologResources;
-	}
-
-	public void setPreloadedPrologResources(List<String> preloadedPrologResources) {
-		this.preloadedPrologResources = preloadedPrologResources;
-	}
-
-	public void addPreloadedPrologResources(String ...newPreloadedPrologResources) {
-		preloadedPrologResources.addAll(Arrays.asList(newPreloadedPrologResources));
-	}
-	
-	public List<String> getPreloadedLogtalkResources() {
-		return preloadedLogtalkResources;
-	}
-
-	public void setPreloadedLogtalkResources(List<String> preloadedLogtalkResources) {
-		this.preloadedLogtalkResources = preloadedLogtalkResources;
-	}
-
-	public void addPreloadedLogtalkResources(String ...newPreloadedLogtalkResources) {
-		preloadedLogtalkResources.addAll(Arrays.asList(newPreloadedLogtalkResources));
-	}
-
 	public List<String> getScope() {
 		return scope;
 	}
@@ -110,12 +83,14 @@ public abstract class PrologEngineConfiguration {
 	}
 	
 
-	
 	public PrologEngine createPrologEngine() {
 		logger.info("Initializing logic engine");
 		long startTime = System.nanoTime();
 		if(!isConfigured()) {
-			configure();
+			if(configure())
+				setConfigured(true);
+			else
+				throw new JpcException("Impossible to configure the logic engine: " + getEngineName() + " using: " + getLibraryName());
 		}
 		PrologEngine newPrologEngine = basicCreatePrologEngine();
 		if(isLogtalkRequired()) {
@@ -139,21 +114,24 @@ public abstract class PrologEngineConfiguration {
 			}
 			newPrologEngine.flushOutput();
 		}
-		loadPreloadedResources(newPrologEngine);
+		onCreate(newPrologEngine);
 		long endTime = System.nanoTime();
 		long total = (endTime - startTime)/1000000;
 		logger.info("A " + newPrologEngine.prologDialect() + " logic engine has been initialized in " + total + " milliseconds");
 		return newPrologEngine;
 	}
 
-	private void loadPreloadedResources(PrologEngine prologEngine) {
-		prologEngine.ensureLoaded(preloadedPrologResources.toArray(new String[]{}));
-		if(isLogtalkRequired())
-			new LogtalkEngine(prologEngine).logtalkLoad(preloadedLogtalkResources.toArray(new String[]{}));
+	public void onCreate(PrologEngine prologEngine) {
+		//nothing by default, to be overridden if needed
 	}
-
-	public void configure() {
+	
+	public boolean configure() {
 		//empty by default
+		return true;
+	}
+	
+	public String getDescription() {
+		return "A " + getEngineName() + " Prolog engine connected by means of the " + getLibraryName() +" library";
 	}
 	
 	/**
@@ -166,4 +144,5 @@ public abstract class PrologEngineConfiguration {
 	
 	public abstract String getEngineName();
 
+	
 }

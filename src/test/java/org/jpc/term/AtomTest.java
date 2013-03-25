@@ -27,5 +27,13 @@ public class AtomTest {
 	public void testHasFunctor() {
 		assertTrue(new Atom("hello").hasFunctor(new Atom("hello"), 0));
 	}
+	
+	@Test
+	public void testToEscapedString() {
+		assertEquals("'hello'", new Atom("hello").toEscapedString());
+		assertEquals("'hello world'", new Atom("hello world").toEscapedString());
+		assertEquals("'hello \\'world\\''", new Atom("hello 'world'").toEscapedString());
+		assertEquals("'hello\\\\world'", new Atom("hello\\world").toEscapedString());
+	}
 
 }

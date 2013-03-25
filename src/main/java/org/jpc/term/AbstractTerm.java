@@ -27,17 +27,17 @@ public abstract class AbstractTerm implements Term, TermConvertable {
 	
 	@Override
 	public Term arg(int i) {
-		return args().get(i-1);
+		return getArgs().get(i-1);
 	}
 	
 	@Override
-	public List<Term> args() {
+	public List<Term> getArgs() {
 		return Collections.emptyList();//assuming no arguments by default
 	}
 	
 	@Override
 	public int arity() {
-		return args().size();
+		return getArgs().size();
 	}
 	
 	@Override
@@ -145,7 +145,11 @@ public abstract class AbstractTerm implements Term, TermConvertable {
 		return equals(t);
 	}
 	
-	public abstract String toString(PrologEngine prologEngine);
+	@Override
+	public String toString() {
+		return toEscapedString();
+	}
+	
 	
 	
 	/**
@@ -167,15 +171,15 @@ public abstract class AbstractTerm implements Term, TermConvertable {
 	}
 
 	/**
-	 * Converts an array of Terms to a String.
+	 * Converts an array of Terms to its escaped String representation.
 	 * 
-	 * @param   args    an array of Terms to convert
+	 * @param   terms    an array of Terms to convert
 	 * @return  String representation of an array of Terms
 	 */
-	public static <T extends Term> String toString(T... terms) {
+	public static <T extends Term> String toEscapedString(T... terms) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < terms.length; ++i) {
-			sb.append(terms[i].toString());
+			sb.append(terms[i].toEscapedString());
 			if (i != terms.length - 1) {
 				sb.append(", ");
 			}
@@ -186,26 +190,11 @@ public abstract class AbstractTerm implements Term, TermConvertable {
 	/**
 	 * Converts a list of Terms to a String.
 	 * 
-	 * @param termAdapters
+	 * @param terms
 	 * @return String representation of a list of Terms
 	 */
-	public static <T extends Term> String toString(List<T> terms) {
-		return toString(terms.toArray(new Term[]{}));
-	}
-	
-	public static <T extends Term> String toString(PrologEngine prologEngine, T... terms) {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < terms.length; ++i) {
-			sb.append(terms[i].toString(prologEngine));
-			if (i != terms.length - 1) {
-				sb.append(", ");
-			}
-		}
-		return sb.toString();
-	}
-	
-	public static <T extends Term> String toString(PrologEngine prologEngine, List<T> terms) {
-		return toString(prologEngine, terms.toArray(new Term[]{}));
+	public static <T extends Term> String toEscapedString(List<T> terms) {
+		return toEscapedString(terms.toArray(new Term[]{}));
 	}
 
 }
