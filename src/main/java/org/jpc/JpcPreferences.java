@@ -16,11 +16,14 @@ public class JpcPreferences extends Preferences {
 	public static final String JPC_SHORT_NAME = "JPC";
 	public static final String JPC_BASE_PACKAGE = "org.jpc";
 	
+	public static final String JPC_VAR_PREFIX = "JPC_VAR_"; //prefix for all the variables exclusive to JPC (used by the library in certain cases, not directly written by the user)
 	
 	//Properties configuring the behaviour of JPC
 	public final static String LOGTALK_HOME_ENV_VAR = "LOGTALKHOME";  //needed by the framework to find the integration scripts with Logtalk
 	public final static String LOGTALK_USER_ENV_VAR = "LOGTALKUSER"; //logtalk user directory environment variable (used as a tmp directory if available)
 	public final static String SYSTEM_TEMP_DIRECTORY_ENV_VAR = "tmp"; //the tmp environment variable
+	
+	
 	
 	public JpcPreferences() {
 	}
