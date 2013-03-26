@@ -31,6 +31,13 @@ public class Jpc {
 	private ErrorHandler errorHandler;
 	//private JpcPreferences preferences;
 	
+	
+	private static final Version version = new Version();
+	public static Version version() {
+		return version;
+	}
+	
+	
 	public Jpc() {
 		this.converterManager = new DefaultJpcConverterManager();
 		this.typeSolverManager = new DefaultTypeSolverManager();
@@ -77,9 +84,7 @@ public class Jpc {
 	public <T extends Term> T toTerm(Object object, Class<T> termClass) {
 		return converterManager.toTerm(object, termClass, this);
 	}
-	
 
-	
 	public <T> T instantiate(Type t) {
 		return instantiationManager.instantiate(t);
 	}
