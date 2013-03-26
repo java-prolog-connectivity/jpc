@@ -1,6 +1,7 @@
 package org.jpc.engine.prolog;
 
 import static java.util.Arrays.asList;
+import static org.jpc.JpcPreferences.JPC_VAR_PREFIX;
 import static org.jpc.engine.prolog.PrologConstants.ABOLISH;
 import static org.jpc.engine.prolog.PrologConstants.ASSERTA;
 import static org.jpc.engine.prolog.PrologConstants.ASSERTZ;
@@ -34,12 +35,13 @@ import org.jpc.query.Query;
 import org.jpc.query.QuerySolutionToTermFunction;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
-import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Variable;
 import org.jpc.util.LogicUtil;
 
 public abstract class AbstractPrologEngine implements PrologEngine {
+	
+	private static final String ALL_RESULTS_VAR = JPC_VAR_PREFIX + "ALL_RESULTS";
 	
 	public AbstractPrologEngine() {
 	}
@@ -286,12 +288,24 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 		return query(new Compound(BAGOF, asList(select, exp, all)));
 	}
 	
+	public Term bagof(Term select, Term exp) {
+		return bagof(select, exp, new Variable(ALL_RESULTS_VAR)).oneSolution().get(ALL_RESULTS_VAR);
+	}
+	
 	public Query findall(Term select, Term exp, Term all) {
 		return query(new Compound(FINDALL, asList(select, exp, all)));
 	}
 	
+	public Term findall(Term select, Term exp) {
+		return findall(select, exp, new Variable(ALL_RESULTS_VAR)).oneSolution().get(ALL_RESULTS_VAR);
+	}
+	
 	public Query setof(Term select, Term exp, Term all) {
 		return query(new Compound(SETOF, asList(select, exp, all)));
+	}
+	
+	public Term setof(Term select, Term exp) {
+		return setof(select, exp, new Variable(ALL_RESULTS_VAR)).oneSolution().get(ALL_RESULTS_VAR);
 	}
 	
 	public Query forall(Term generator, Term test) {

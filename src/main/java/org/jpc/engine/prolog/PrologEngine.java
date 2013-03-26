@@ -155,9 +155,15 @@ public interface PrologEngine extends PrologDatabase {
      */
 	public Query bagof(Term select, Term exp, Term all);
 	
+	public Term bagof(Term select, Term exp);
+	
 	public Query findall(Term select, Term exp, Term all);
 	
+	public Term findall(Term select, Term exp);
+	
 	public Query setof(Term select, Term exp, Term all);
+	
+	public Term setof(Term select, Term exp);
 	
 	public Query forall(Term generator, Term test);
 

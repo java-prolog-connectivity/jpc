@@ -398,14 +398,26 @@ public class LogtalkEngine implements PrologEngine {
 		return prologEngine.bagof(select, exp, all);
 	}
 
+	public Term bagof(Term select, Term exp) {
+		return prologEngine.bagof(select, exp);
+	}
+	
 	public Query findall(Term select, Term exp, Term all) {
 		return prologEngine.findall(select, exp, all);
 	}
 
+	public Term findall(Term select, Term exp) {
+		return prologEngine.findall(select, exp);
+	}
+	
 	public Query setof(Term select, Term exp, Term all) {
 		return prologEngine.setof(select, exp, all);
 	}
 
+	public Term setof(Term select, Term exp) {
+		return prologEngine.setof(select, exp);
+	}
+	
 	public Query forall(Term generator, Term test) {
 		return prologEngine.forall(generator, test);
 	}
