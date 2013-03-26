@@ -3,7 +3,6 @@ package org.jpc.term;
 import java.util.List;
 import java.util.Map;
 
-import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.salt.TermContentHandler;
 import org.jpc.term.visitor.TermVisitor;
 
@@ -131,8 +130,14 @@ public interface Term /*extends TermConvertable*/ {
 	 * Returns a list with all the non anonymous variables names
 	 * @return a list with all the non anonymous variables names
 	 */
-	public abstract List<String> nonAnonymousVariablesNames();
+	public abstract List<String> getNonAnonymousVariablesNames();
 
+	/**
+	 * Returns a list with all the non anonymous variables
+	 * @return a list with all the non anonymous variables
+	 */
+	public abstract List<Variable> getNonAnonymousVariables();
+	
 	/**
 	 * Accepts a Jpc term visitor.
 	 * @param termVisitor the accepted visitor

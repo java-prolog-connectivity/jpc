@@ -1,5 +1,7 @@
 package org.jpc.term;
 
+import static org.jpc.engine.prolog.PrologConstants.ANONYMOUS_VAR_NAME;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -7,7 +9,6 @@ import java.util.Map;
 
 import org.jpc.JpcException;
 import org.jpc.converter.TermConvertable;
-import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.salt.JpcTermWriter;
 import org.jpc.util.salt.ChangeVariableNameAdapter;
 import org.jpc.util.salt.ReplaceVariableAdapter;
@@ -114,25 +115,34 @@ public abstract class AbstractTerm implements Term, TermConvertable {
 	}
 	
 	@Override
+	public boolean hasVariable(String variableName) {
+		return getVariablesNames().contains(variableName);
+	}
+	
+	@Override
 	public List<String> getVariablesNames() {
 		VariableNamesCollectorHandler variableNamesCollector = new VariableNamesCollectorHandler();
 		read(variableNamesCollector);
 		return variableNamesCollector.getVariableNames();
 	}
-	
-	@Override
-	public boolean hasVariable(String variableName) {
-		return getVariablesNames().contains(variableName);
-	}
 
 	@Override
-	public List<String> nonAnonymousVariablesNames() {
+	public List<String> getNonAnonymousVariablesNames() {
 		List<String> nonAnonymousVariablesNames = new ArrayList<>();
 		for(String variableName : getVariablesNames()) {
-			if(!Variable.isAnonymousVariableName(variableName))
+			if(!variableName.equals(ANONYMOUS_VAR_NAME))
 				nonAnonymousVariablesNames.add(variableName);
 		}
 		return nonAnonymousVariablesNames;
+	}
+	
+	@Override
+	public List<Variable> getNonAnonymousVariables() {
+		List<Variable> variables = new ArrayList<>();
+		for(String varName : getNonAnonymousVariablesNames()) {
+			variables.add(new Variable(varName));
+		}
+		return variables;
 	}
 	
 	@Override

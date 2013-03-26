@@ -148,7 +148,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 		Variable varFlagValue = new Variable("Var");
 		Map<String, Term> solutions = currentPrologFlag(flag.asTerm(), varFlagValue).oneSolution();
 		if(solutions!=null) {
-			Atom flagValueTerm = (Atom) solutions.get(varFlagValue.name());
+			Atom flagValueTerm = (Atom) solutions.get(varFlagValue.getName());
 			flagValue = flagValueTerm.getName();
 		}
 		return flagValue;

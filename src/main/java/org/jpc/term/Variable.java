@@ -1,8 +1,8 @@
 package org.jpc.term;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.jpc.engine.prolog.PrologConstants.ANONYMOUS_VAR_NAME;
 
-import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.salt.TermContentHandler;
 import org.jpc.term.visitor.TermVisitor;
 
@@ -14,11 +14,12 @@ import org.jpc.term.visitor.TermVisitor;
  */
 public final class Variable extends AbstractTerm {
 
-	public static final Variable ANONYMOUS_VAR = new Variable("_");
+	public static final Variable ANONYMOUS_VAR = new Variable(ANONYMOUS_VAR_NAME);
 	
-	public static boolean isAnonymousVariableName(String variableName) {
-		return variableName.substring(0, 1).equals("_"); //the variable name is equals to "_" or starts with "_"
-	}
+	
+//	public static boolean isAnonymousVariableName(String variableName) {
+//		return variableName.substring(0, 1).equals("_"); //the variable name is equals to "_" or starts with "_"
+//	}
 	
 	private final String name; // the name of this Variable
 	
@@ -27,12 +28,16 @@ public final class Variable extends AbstractTerm {
 		this.name = name;
 	}
 	
+	public boolean isAnonymous() {
+		return termEquals(ANONYMOUS_VAR);
+	}
+	
 	/**
 	 * returns the lexical name of this Variable
 	 * 
 	 * @return the lexical name of this Variable
 	 */
-	public final String name() {
+	public final String getName() {
 		return this.name;
 	}
 	

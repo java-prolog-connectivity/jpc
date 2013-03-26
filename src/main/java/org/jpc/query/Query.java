@@ -1,13 +1,17 @@
 package org.jpc.query;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.jpc.Jpc;
 import org.jpc.engine.prolog.PrologEngine;
+import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
+import org.jpc.term.Variable;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
@@ -42,6 +46,24 @@ public abstract class Query extends Cursor<Map<String,Term>> {
 	public abstract Term getGoal();
 	
 	public abstract Jpc getJpcContext();
+	
+	@Override
+	protected synchronized List<Map<String,Term>> basicAllSolutions() {
+		ListTerm goalVariables = new ListTerm(getGoal().getNonAnonymousVariables());
+		
+		Term allSolutionsFindAllTerm = getPrologEngine().findall(goalVariables.asTerm(), getGoal());
+		ListTerm allSolutionsFindAll = allSolutionsFindAllTerm.asList();
+		List<Map<String,Term>> allSolutionsBindings = new ArrayList<>();
+		for(Term oneSolutionFindAllTerm : allSolutionsFindAll) {
+			ListTerm oneSolutionFindAll = oneSolutionFindAllTerm.asList();
+			Map<String,Term> solutionBindings = new HashMap<>();
+			for(int i=0; i<goalVariables.size(); i++) {
+				solutionBindings.put(((Variable)goalVariables.get(i)).getName(), oneSolutionFindAll.get(i));
+			}
+			allSolutionsBindings.add(solutionBindings);
+		}
+		return allSolutionsBindings;
+	}
 	
 	public synchronized ListMultimap<String, Term> allSolutionsMultimap() {
 		ListMultimap<String, Term> allSolutionsMultimap = ArrayListMultimap.create();

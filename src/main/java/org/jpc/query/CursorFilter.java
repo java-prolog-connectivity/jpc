@@ -1,5 +1,8 @@
 package org.jpc.query;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.common.base.Predicate;
 
 public class CursorFilter<T> extends Cursor<T> {
@@ -12,6 +15,22 @@ public class CursorFilter<T> extends Cursor<T> {
 		this.predicate = predicate;
 	}
 
+	/**
+	 * The filtered cursor could have optimized its basicAllSolutions method
+	 * For example, it could have brought all the results at once instead of lazily asking for them
+	 * Therefore, this method is overridden to profit from such optimization if existing
+	 * 
+	 */
+	@Override
+	protected List<T> basicAllSolutions() {
+		List<T> allSolutions = new ArrayList<>();
+		for(T t : cursor.allSolutions()) {
+			if(predicate.apply(t))
+				allSolutions.add(t);
+		}
+		return allSolutions;
+	}
+	
 	@Override
 	protected void basicAbort() {
 		cursor.abort();

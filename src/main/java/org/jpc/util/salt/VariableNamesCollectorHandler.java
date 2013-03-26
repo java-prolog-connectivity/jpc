@@ -10,7 +10,7 @@ import org.jpc.salt.DefaultTermContentHandler;
 
 public class VariableNamesCollectorHandler extends DefaultTermContentHandler {
 	
-	Set<String> variableNames;
+	Set<String> variableNames; //set no avoid duplicated entries
 	
 	public VariableNamesCollectorHandler() {
 		variableNames = new LinkedHashSet<String>(); //LinkedHashSet to preserve insertion order

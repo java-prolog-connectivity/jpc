@@ -1,7 +1,5 @@
 package org.jpc.query;
 
-import java.lang.reflect.Type;
-
 import org.jpc.Jpc;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Term;
@@ -12,9 +10,10 @@ public abstract class PrologQuery extends Query {
 	private Term goal;
 	private Jpc context;
 	
-	public PrologQuery(PrologEngine prologEngine, Term term, Jpc context) {
+	
+	public PrologQuery(PrologEngine prologEngine, Term goal, Jpc context) {
 		this.prologEngine = prologEngine;
-		this.goal = term;
+		this.goal = goal;
 		this.context = context;
 	}
 	

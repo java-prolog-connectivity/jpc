@@ -1,6 +1,5 @@
 package org.jpc.term;
 
-import org.jpc.engine.prolog.PrologEngine;
 
 public abstract class NumberTerm extends AbstractTerm {
 

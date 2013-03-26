@@ -11,8 +11,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.jpc.JpcException;
-
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
@@ -82,27 +80,23 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 		checkArgument(from >= 0);
 		checkArgument(to > from);
 		List<T> solutions = new ArrayList<>();
-		if (isOpen()) {
-			throw new JpcException("Cursor is already open");
-		} else {
-			try (Cursor cursorToClose = this) {
-				long count = 0;
-				while(count<to) {
-					T solution = null;
-					if(hasNext()) {
-						solution = next();
-						if(count >= from)
-							solutions.add(solution);
-						count++;
-					} else {
-						break;
-						//throw new IndexOutOfBoundsException("The cursor " + this + "has only " + count + " solutions");
-					}
+		try (Cursor cursorToClose = this) {
+			long count = 0;
+			while(count<to) {
+				T solution = null;
+				if(hasNext()) {
+					solution = next();
+					if(count >= from)
+						solutions.add(solution);
+					count++;
+				} else {
+					break;
+					//throw new IndexOutOfBoundsException("The cursor " + this + "has only " + count + " solutions");
 				}
 			}
-			rewind();
-			return solutions;
 		}
+		rewind();
+		return solutions;
 	}
 	
 	/**
@@ -115,15 +109,25 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 		if(!isReady()) {
 			throw new InvalidCursorStateException();
 		} else {
-			List<T> allSolutions = new ArrayList<>();
-			while (hasNext()) { 
-				allSolutions.add(next());
-			}
+			List<T> allSolutions = basicAllSolutions();
 			rewind();
 			return allSolutions;
 		}
 	}
 
+	/**
+	 * The default implementation for obtaining all the solutions consists on just making use of the existing next() method
+	 * However, children could override this in case many calls to next() are more expensive that obtaining all the results of the query at once (e.g., a findall/3 query in Prolog)
+	 * @return
+	 */
+	protected List<T> basicAllSolutions() {
+		List<T> allSolutions = new ArrayList<>();
+		while (hasNext()) { 
+			allSolutions.add(next());
+		}
+		return allSolutions;
+	}
+	
 	public synchronized Cursor<T> filter(Predicate<T> predicate) {
 		return new CursorFilter<>(this, predicate);
 	}

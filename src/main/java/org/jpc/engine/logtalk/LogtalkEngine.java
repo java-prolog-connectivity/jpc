@@ -71,7 +71,7 @@ public class LogtalkEngine implements PrologEngine {
 		Variable varFlag = new Variable("Var");
 		Map<String, Term> solutions = query(new Compound(CURRENT_LOGTALK_FLAG, Arrays.asList(flag.asTerm(), varFlag.asTerm()))).oneSolution();
 		if(solutions!=null) {
-			Atom flagValueTerm = (Atom) solutions.get(varFlag.name());
+			Atom flagValueTerm = (Atom) solutions.get(varFlag.getName());
 			flagValue = flagValueTerm.getName();
 		}
 		return flagValue;
@@ -90,7 +90,7 @@ public class LogtalkEngine implements PrologEngine {
 		Variable logtalkObjectVar = new Variable("LogtalkObject");
 		Compound compound = new Compound(CURRENT_OBJECT, asList(logtalkObjectVar));
 		for(Map<String, Term> solution : query(compound).allSolutions()) {
-			Term currentObjectTerm = solution.get(logtalkObjectVar.name());
+			Term currentObjectTerm = solution.get(logtalkObjectVar.getName());
 			currentObjects.add(new LogtalkObject(currentObjectTerm, this));
 		}
 		return currentObjects;

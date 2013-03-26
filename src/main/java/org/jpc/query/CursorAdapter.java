@@ -1,5 +1,8 @@
 package org.jpc.query;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.common.base.Function;
 
 public class CursorAdapter<AdapterType, AdapteeType> extends Cursor<AdapterType> {
@@ -23,6 +26,21 @@ public class CursorAdapter<AdapterType, AdapteeType> extends Cursor<AdapterType>
 		this.adapterFunction = adapterFunction;
 	}
 
+	/**
+	 * The adaptee cursor could have optimized its basicAllSolutions method
+	 * For example, it could have brought all the results at once instead of lazily asking for them
+	 * Therefore, this method is overridden to profit from such optimization if existing
+	 * 
+	 */
+	@Override
+	protected List<AdapterType> basicAllSolutions() {
+		List<AdapterType> allSolutions = new ArrayList<>();
+		for(AdapteeType adaptee : cursor.allSolutions()) {
+			allSolutions.add(adapterFunction.apply(adaptee));
+		}
+		return allSolutions;
+	}
+	
 	@Override
 	protected void basicAbort() {
 		cursor.abort();
