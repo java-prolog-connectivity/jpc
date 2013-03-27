@@ -50,7 +50,6 @@ public abstract class Query extends Cursor<Map<String,Term>> {
 	@Override
 	protected synchronized List<Map<String,Term>> basicAllSolutions() {
 		ListTerm goalVariables = new ListTerm(getGoal().getNonAnonymousVariables());
-		
 		Term allSolutionsFindAllTerm = getPrologEngine().findall(goalVariables.asTerm(), getGoal());
 		ListTerm allSolutionsFindAll = allSolutionsFindAllTerm.asList();
 		List<Map<String,Term>> allSolutionsBindings = new ArrayList<>();
