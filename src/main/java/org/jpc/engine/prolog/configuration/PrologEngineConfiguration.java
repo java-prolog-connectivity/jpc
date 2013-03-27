@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.jpc.JpcException;
 import org.jpc.JpcPreferences;
-import org.jpc.engine.logtalk.LogtalkEngine;
 import org.jpc.engine.prolog.PrologEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,10 +12,8 @@ import org.slf4j.LoggerFactory;
 public abstract class PrologEngineConfiguration {
 
 	private static Logger logger = LoggerFactory.getLogger(PrologEngineConfiguration.class);
-	
+
 	protected JpcPreferences preferences;
-	protected boolean enabled = true;
-	private boolean configured = false;
 
 	protected List<String> scope;
 	protected boolean logtalkRequired = true;
@@ -30,16 +26,18 @@ public abstract class PrologEngineConfiguration {
 	public PrologEngineConfiguration(JpcPreferences preferences) {
 		this.preferences = preferences;
 		scope = new ArrayList<String>();
-		addScope(""); //the root package
+		//addScope(""); //the root package
+		try {
+			configure(); //attempting to configure the environment in the constructor
+		} catch(EngineConfigurationException e) {
+			//Do nothing.
+			//In the current implementation we allow a PrologEngineConfiguration with missing information. 
+			//This is with the intention to allow this data to be added later (e.g., with a GUI)
+		}
 	}
-
 
 	public JpcPreferences getPreferences() {
 		return preferences;
-	}
-
-	public void setPreferences(JpcPreferences preferences) {
-		this.preferences = preferences;
 	}
 
 	public boolean isLogtalkLoaded() {
@@ -55,16 +53,10 @@ public abstract class PrologEngineConfiguration {
 	}
 
 	public boolean isEnabled() {
-		return enabled;
+		return true;
 	}
 	
-	public boolean isConfigured() {
-		return configured;
-	}
-
-	public void setConfigured(boolean configured) {
-		this.configured = configured;
-	}
+	public abstract boolean isConfigured();
 
 	public List<String> getScope() {
 		return scope;
@@ -81,16 +73,12 @@ public abstract class PrologEngineConfiguration {
 	public void addScope(String ...newScopes) {
 		scope.addAll(Arrays.asList(newScopes));
 	}
-	
 
 	public PrologEngine createPrologEngine() {
 		logger.info("Initializing logic engine");
 		long startTime = System.nanoTime();
 		if(!isConfigured()) {
-			if(configure())
-				setConfigured(true);
-			else
-				throw new JpcException("Impossible to configure the logic engine: " + getEngineName() + " using: " + getLibraryName());
+			configure();
 		}
 		PrologEngine newPrologEngine = basicCreatePrologEngine();
 		if(isLogtalkRequired()) {
@@ -125,9 +113,12 @@ public abstract class PrologEngineConfiguration {
 		//nothing by default, to be overridden if needed
 	}
 	
-	public boolean configure() {
+	/**
+	 * 
+	 * @return
+	 */
+	public void configure() {
 		//empty by default
-		return true;
 	}
 	
 	public String getDescription() {
