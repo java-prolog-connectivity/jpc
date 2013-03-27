@@ -13,4 +13,6 @@ public class JpcException extends RuntimeException {
 	
 	public JpcException(String message, Exception cause) {super(message, cause);}
 	
+	public JpcException(Exception cause) {super(cause);}
+
 }
