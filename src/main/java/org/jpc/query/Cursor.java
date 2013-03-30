@@ -1,7 +1,6 @@
 package org.jpc.query;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.jpc.query.CursorState.CLOSED;
 import static org.jpc.query.CursorState.EXHAUSTED;
 import static org.jpc.query.CursorState.OPEN;
 import static org.jpc.query.CursorState.READY;
@@ -13,7 +12,12 @@ import java.util.NoSuchElementException;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-
+/**
+ * Note: The ugly class hierarchy of class Cursor will be redesigned after the coming release of Java8 supporting virtual extension methods
+ * @author sergioc
+ *
+ * @param <T>
+ */
 public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 
 	private CursorState state = READY;
@@ -45,14 +49,20 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 * will throw an exception if the cursor state is not READY
 	 * @return
 	 */
-	public synchronized T oneSolution() { 
-		try {
-			return nSolutions(1).get(0);
-		} catch(IndexOutOfBoundsException e) {
-			return null;
-		}
+	public synchronized T oneSolution() {
+		if(!isReady())
+			throw new InvalidCursorStateException();
+		T oneSolution = basicOneSolution();
+		close();
+		return oneSolution;
 	}
 
+	protected T basicOneSolution() {
+		if(hasNext())
+			return next();
+		return null;
+	}
+	
 	/**
 	 * @precondition state = READY
 	 * @postcondition state = READY
@@ -80,7 +90,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 		checkArgument(from >= 0);
 		checkArgument(to > from);
 		List<T> solutions = new ArrayList<>();
-		try (Cursor cursorToClose = this) {
+		try (Cursor<T> cursorToClose = this) {
 			long count = 0;
 			while(count<to) {
 				T solution = null;
@@ -95,7 +105,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 				}
 			}
 		}
-		rewind();
+		close();
 		return solutions;
 	}
 	
@@ -110,7 +120,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 			throw new InvalidCursorStateException();
 		} else {
 			List<T> allSolutions = basicAllSolutions();
-			rewind();
+			close();
 			return allSolutions;
 		}
 	}
@@ -150,13 +160,6 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 		return state.equals(OPEN);
 	}
 
-	/**
-	 * @return	true if the cursor is closed, otherwise false.
-	 */
-	public boolean isClosed() {
-		return state.equals(CLOSED);
-	}
-
 	public boolean isExhausted() {
 		return state.equals(EXHAUSTED);
 	}
@@ -169,26 +172,19 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	}
 	
 	public synchronized void close() {
-		basicClose();
-		next = null;
-		state = CLOSED;
-	}
-	
-	public synchronized void rewind() {
-		basicRewind();
-		next = null;
-		state = READY;
+		if(!isReady()) { //there is no need to close if the state is READY
+			basicClose();
+			next = null;
+			state = READY;
+		}
 	}
 	
 	/**
-	 * @precondition state != CLOSED
 	 * Answers if there are still rows in the cursor
 	 * In case there are no more solutions, the cursor will be closed by this method
 	 * @return true if there are more solutions to the query
 	 */
 	public synchronized boolean hasNext() {
-		if(isClosed())
-			throw new InvalidCursorStateException();
 		if(isExhausted())
 			return false;
 		if(next == null) {
@@ -208,8 +204,6 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 * @return the next solution
 	 */
 	public synchronized T next() {
-		if(isClosed())
-			throw new InvalidCursorStateException();
 		if(isExhausted())
 			throw new NoSuchElementException();
 		if(isReady())
@@ -233,8 +227,6 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	protected abstract void basicAbort();
 	
 	protected abstract void basicClose();
-	
-	protected abstract void basicRewind();
 
 	protected abstract T basicNext();
 

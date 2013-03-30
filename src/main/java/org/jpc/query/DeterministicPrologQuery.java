@@ -10,8 +10,8 @@ import org.jpc.term.Term;
 
 public class DeterministicPrologQuery extends PrologQuery {
 
-	public DeterministicPrologQuery(PrologEngine prologEngine, Term goal, Jpc context) {
-		super(prologEngine, goal, context);
+	public DeterministicPrologQuery(PrologEngine prologEngine, Term goal, boolean errorHandledQuery, Jpc context) {
+		super(prologEngine, goal, errorHandledQuery, context);
 	}
 
 	private List<Map<String, Term>> allSolutions;
@@ -34,14 +34,9 @@ public class DeterministicPrologQuery extends PrologQuery {
 	}
 
 	@Override
-	protected void basicRewind() {
-		reset();
-	}
-
-	@Override
 	protected Map<String, Term> basicNext() {
 		if(allSolutions == null)
-			allSolutions = allSolutions();
+			allSolutions = basicAllSolutions();
 		if(index == allSolutions.size())
 			throw new NoSuchElementException();
 		return allSolutions.get(index++);

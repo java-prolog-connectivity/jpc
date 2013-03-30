@@ -14,7 +14,7 @@ public class CursorFilter<T> extends Cursor<T> {
 		this.cursor = cursor;
 		this.predicate = predicate;
 	}
-
+	
 	/**
 	 * The filtered cursor could have optimized its basicAllSolutions method
 	 * For example, it could have brought all the results at once instead of lazily asking for them
@@ -39,11 +39,6 @@ public class CursorFilter<T> extends Cursor<T> {
 	@Override
 	protected void basicClose() {
 		cursor.close();
-	}
-
-	@Override
-	protected void basicRewind() {
-		cursor.rewind();
 	}
 
 	@Override

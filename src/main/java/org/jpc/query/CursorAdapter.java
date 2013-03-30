@@ -27,8 +27,20 @@ public class CursorAdapter<AdapterType, AdapteeType> extends Cursor<AdapterType>
 	}
 
 	/**
-	 * The adaptee cursor could have optimized its basicAllSolutions method
-	 * For example, it could have brought all the results at once instead of lazily asking for them
+	 * The adaptee cursor could have optimized its basicOneSolution method.
+	 * For example, a deterministic query can only open a cursor (i.e., with invocations to hasNext() and next()) bringing eagerly all the results.
+	 * Therefore, this method overrides the default implementation of basicOneSolution() that makes use of hasNext() and next() and prefers to use 
+	 * whatever mechanism is implemented by the adaptee cursor for bringing one solution.
+	 */
+	@Override
+	protected AdapterType basicOneSolution() {
+		AdapteeType adaptee = cursor.oneSolution();
+		return adaptee != null?adapterFunction.apply(adaptee):null;
+	}
+	
+	/**
+	 * The adaptee cursor could have optimized its basicAllSolutions method.
+	 * For example, it could have brought all the results at once instead of lazily asking for them.
 	 * Therefore, this method is overridden to profit from such optimization if existing
 	 * 
 	 */
@@ -49,11 +61,6 @@ public class CursorAdapter<AdapterType, AdapteeType> extends Cursor<AdapterType>
 	@Override
 	protected void basicClose() {
 		cursor.close();
-	}
-
-	@Override
-	protected void basicRewind() {
-		cursor.rewind();
 	}
 
 	@Override

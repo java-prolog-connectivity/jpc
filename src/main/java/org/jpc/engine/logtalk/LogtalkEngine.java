@@ -29,7 +29,6 @@ import static org.jpc.engine.logtalk.LogtalkConstants.PROTOCOL_PROPERTY;
 import static org.jpc.engine.logtalk.LogtalkConstants.SET_LOGTALK_FLAG;
 import static org.jpc.engine.logtalk.LogtalkConstants.SPECIALIZES_CLASS;
 import static org.jpc.term.ListTerm.listTerm;
-import static org.jpc.util.LogicUtil.forEachApplyFunctor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,7 +41,6 @@ import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.query.Query;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
-import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Variable;
 
@@ -258,36 +256,49 @@ public class LogtalkEngine implements PrologEngine {
 		return prologEngine.shutdown();
 	}
 
-	public Query basicQuery(String termString) {
-		return prologEngine.basicQuery(termString);
+	
+	public boolean command(String termString) {
+		return prologEngine.command(termString);
+	}
+
+	public boolean command(String termString, boolean errorHandledQuery) {
+		return prologEngine.command(termString, errorHandledQuery);
 	}
 	
-	public Query basicQuery(Term terms) {
-		return prologEngine.basicQuery(terms);
-	}
-	
-	public Query basicQuery(String termString, Jpc context) {
-		return prologEngine.basicQuery(termString, context);
-	}
-	
-	public Query basicQuery(Term terms, Jpc context) {
-		return prologEngine.basicQuery(terms, context);
+	public boolean command(String termString, Jpc context) {
+		return prologEngine.command(termString, context);
 	}
 	
 	public Query query(String termString) {
 		return prologEngine.query(termString);
 	}
 
+	public Query query(Term term) {
+		return prologEngine.query(term);
+	}
+	
+	public Query query(String termString, boolean errorHandledQuery) {
+		return prologEngine.query(termString, errorHandledQuery);
+	}
+	
+	public Query query(Term term, boolean errorHandledQuery) {
+		return prologEngine.query(term, errorHandledQuery);
+	}
+	
 	public Query query(String termString, Jpc context) {
 		return prologEngine.query(termString, context);
 	}
-	
-	public Query query(Term terms) {
-		return prologEngine.query(terms);
-	}
 
-	public Query query(Term terms, Jpc context) {
-		return prologEngine.query(terms, context);
+	public Query query(Term term, Jpc context) {
+		return prologEngine.query(term, context);
+	}
+	
+	public Query query(String termString, boolean errorHandledQuery, Jpc context) {
+		return prologEngine.query(termString, errorHandledQuery, context);
+	}
+	
+	public Query query(Term term, boolean errorHandledQuery, Jpc context) {
+		return prologEngine.query(term, errorHandledQuery, context);
 	}
 	
 	public Term asTerm(String termString) {

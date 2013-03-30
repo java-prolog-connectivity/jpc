@@ -1,20 +1,42 @@
 package org.jpc.query;
 
+import static java.util.Arrays.asList;
+import static org.jpc.engine.prolog.PrologConstants.CATCH;
+
 import org.jpc.Jpc;
 import org.jpc.engine.prolog.PrologEngine;
+import org.jpc.term.Atom;
+import org.jpc.term.Compound;
 import org.jpc.term.Term;
+import org.jpc.term.Variable;
 
 public abstract class PrologQuery extends Query {
 
 	private PrologEngine prologEngine;
+	private boolean errorHandledQuery;
 	private Term goal;
+	private Term instrumentedGoal;
 	private Jpc context;
 	
 	
-	public PrologQuery(PrologEngine prologEngine, Term goal, Jpc context) {
+	public PrologQuery(PrologEngine prologEngine, Term goal, boolean errorHandledQuery, Jpc context) {
 		this.prologEngine = prologEngine;
-		this.goal = goal;
 		this.context = context;
+		this.goal = goal;
+		this.errorHandledQuery = errorHandledQuery;
+		instrumentedGoal = instrumentGoal(goal, errorHandledQuery);
+	}
+	
+	public static Term exceptionHandledQueryTerm(Term term) {
+		return new Compound(CATCH, asList(term, new Variable(ExceptionHandledQuery.EXCEPTION_VAR_NAME), Atom.TRUE_TERM));
+	}
+	
+	protected Term instrumentGoal(Term goal, boolean errorHandledQuery) {
+		if(errorHandledQuery) {
+			return exceptionHandledQueryTerm(goal);
+		} else {
+			return goal;
+		}
 	}
 	
 	@Override
@@ -25,6 +47,10 @@ public abstract class PrologQuery extends Query {
 	@Override
 	public Term getGoal() {
 		return goal;
+	}
+	
+	public Term getInstrumentedGoal() {
+		return instrumentedGoal;
 	}
 	
 	public Jpc getJpcContext() {

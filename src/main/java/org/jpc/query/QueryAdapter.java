@@ -1,5 +1,7 @@
 package org.jpc.query;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.jpc.Jpc;
@@ -42,6 +44,20 @@ public class QueryAdapter extends Query {
 		return query.getDefaultSelectedTerm();
 	}
 
+	@Override
+	protected Map<String,Term> basicOneSolution() {
+		Map<String,Term> adaptee = query.oneSolution();
+		return adaptee != null?adapterFunction.apply(adaptee):null;
+	}
+	
+	@Override
+	protected List<Map<String,Term>> basicAllSolutions() {
+		List<Map<String,Term>> allSolutions = new ArrayList<>();
+		for(Map<String,Term> adaptee : query.allSolutions()) {
+			allSolutions.add(adapterFunction.apply(adaptee));
+		}
+		return allSolutions;
+	}
 	
 	@Override
 	protected void basicAbort() {
@@ -54,13 +70,9 @@ public class QueryAdapter extends Query {
 	}
 
 	@Override
-	protected void basicRewind() {
-		query.rewind();
-	}
-
-	@Override
 	protected Map<String,Term> basicNext() {
 		Map<String,Term> adaptee = query.next();
 		return adaptee != null?adapterFunction.apply(adaptee):null;
 	}
+
 }

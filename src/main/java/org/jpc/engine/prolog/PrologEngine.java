@@ -27,24 +27,31 @@ public interface PrologEngine extends PrologDatabase {
 	 * @return
 	 */
 	public boolean shutdown();
+
 	
+	public boolean command(String command);
 	
-	public Query basicQuery(String termString);
+	public boolean command(String command, boolean errorHandledQuery);
 	
-	public Query basicQuery(Term terms);
-	
-	public Query basicQuery(String termString, Jpc context);
-	
-	public Query basicQuery(Term term, Jpc context);
+	public boolean command(String command, Jpc context);
 	
 	public Query query(String termString);
 	
-	public Query query(String termString, Jpc context);
-	
 	public Query query(Term terms);
 	
+	public Query query(String termString, boolean errorHandledQuery);
+	
+	public Query query(Term terms, boolean errorHandledQuery);
+
+	public Query query(String termString, Jpc context);
+
 	public Query query(Term terms, Jpc context);
 
+	public Query query(String termString, boolean errorHandledQuery, Jpc context);
+	
+	public Query query(Term term, boolean errorHandledQuery, Jpc context);
+	
+	
 	/**
 	 * 
 	 * @param termString

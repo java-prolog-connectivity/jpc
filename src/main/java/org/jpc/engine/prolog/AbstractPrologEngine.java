@@ -55,46 +55,73 @@ public abstract class AbstractPrologEngine implements PrologEngine {
      **********************************************************************************************************************************
      */
 
+	@Override
 	public abstract boolean interrupt();
 	
+	@Override
 	public abstract boolean shutdown();
 
-	public final Query basicQuery(String termString) {
-		return basicQuery(termString, new Jpc());
+	@Override
+	public boolean command(String command) {
+		return query(command).hasSolution();
 	}
 	
-	public final Query basicQuery(String termString, Jpc context) {
-		return basicQuery(asTerm(termString), context);
+	@Override
+	public boolean command(String command, boolean errorHandledQuery) {
+		return query(command, errorHandledQuery).hasSolution();
 	}
 	
-	public final Query basicQuery(Term terms) {
-		return basicQuery(terms, new Jpc());
+	@Override
+	public boolean command(String command, Jpc context) {
+		return query(command, context).hasSolution();
 	}
-
-	/**
-	 * 
-	 * @param term
-	 * @param context
-	 * @return A query without automatic exception handling
-	 */
-	public abstract Query basicQuery(Term term, Jpc context);
 	
-	
+	@Override
 	public final Query query(String termString) {
 		return query(termString, new Jpc());
 	}
 	
+	@Override
 	public final Query query(Term terms) {
 		return query(terms, new Jpc());
 	}
 	
+	@Override
+	public final Query query(String termString, boolean errorHandledQuery) {
+		return query(termString, errorHandledQuery, new Jpc());
+	}
+	
+	@Override
+	public final Query query(Term terms, boolean errorHandledQuery) {
+		return query(terms, errorHandledQuery, new Jpc());
+	}
+	
+	@Override
 	public final Query query(String termString, Jpc context) {
-		return query(asTerm(termString), context);
+		return query(termString, true, context);
+	}
+	
+	@Override
+	public final Query query(Term terms, Jpc context) {
+		return query(terms, true, context);
+	}
+	
+	@Override
+	public final Query query(String termString, boolean errorHandledQuery, Jpc context) {
+		return query(asTerm(termString), errorHandledQuery, context);
 	}
  
-	public final Query query(Term term, Jpc context) {
-		return ExceptionHandledQuery.create(this, term, context);
+	@Override
+	public Query query(Term term, boolean errorHandledQuery, Jpc context) {
+		Query query;
+		if(errorHandledQuery)
+			query = new ExceptionHandledQuery(basicQuery(term, true, context));
+		else
+			query = basicQuery(term, false, context);
+		return query;
 	}
+	
+	protected abstract Query basicQuery(Term term, boolean errorHandledQuery, Jpc context);
 	
 //	public Term asTerm(String termString, boolean force) {
 //		try {
@@ -107,6 +134,8 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 //		}
 //	}
 	
+
+	@Override
 	public List<Term> asTerms(List<String> termsString) {
 		List<Term> terms = new ArrayList<>();
 		for(String s : termsString)
@@ -127,22 +156,27 @@ public abstract class AbstractPrologEngine implements PrologEngine {
      **********************************************************************************************************************************
      */
 	
+	@Override
 	public boolean setPrologFlag(Term flag, Term flagValue) {
 		return query(new Compound(SET_PROLOG_FLAG, asList(flag, flagValue))).hasSolution();
 	}
 	
+	@Override
 	public boolean setPrologFlag(Flag flag, String flagValue) {
 		return setPrologFlag(flag.asTerm(), new Atom(flagValue));
 	}
 	
+	@Override
 	public Query currentPrologFlag(Term flag, Term flagValue) {
 		return query(new Compound(CURRENT_PROLOG_FLAG, asList(flag, flagValue)));
 	}
 	
+	@Override
 	public Query currentPrologFlag(Flag flag, String flagValue) {
 		return currentPrologFlag(flag.asTerm(), new Atom(flagValue));
 	}
 	
+	@Override
 	public String currentPrologFlag(Flag flag) {
 		String flagValue = null;
 		Variable varFlagValue = new Variable("Var");
@@ -154,6 +188,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 		return flagValue;
 	}
 	
+	@Override
 	public String prologDialect() {
 		return currentPrologFlag(PrologFlag.DIALECT);
 	}
@@ -164,10 +199,12 @@ public abstract class AbstractPrologEngine implements PrologEngine {
      **********************************************************************************************************************************
      */
 	
+	@Override
 	public Query currentOp(Term priority, Term specifier, Term operator) {
 		return query(new Compound(CURRENT_OP, asList(priority, specifier, operator)));
 	}
 
+	@Override
 	public boolean isBinaryOperator(String op) {
 		return query(termSequence(
 				new Compound(CURRENT_OP, asList(ANONYMOUS_VAR, new Variable("Type"), new Atom(op))), 
@@ -176,6 +213,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 		//return createQuery("current_op(_, Type, '" + op + "'), atom_chars(Type, [_, f, _])").hasSolution();
 	}
 	
+	@Override
 	public boolean isUnaryOperator(String op) {
 		return query(termSequence(
 				new Compound(CURRENT_OP, asList(ANONYMOUS_VAR, new Variable("Type"), 
@@ -190,11 +228,13 @@ public abstract class AbstractPrologEngine implements PrologEngine {
      **********************************************************************************************************************************
      */
 	
+	@Override
 	public boolean cd(Term path) {
 		Compound compound = new Compound(CD, asList(path));
 		return query(compound).hasSolution();
 	}
 	
+	@Override
 	public boolean cd(String path) {
 		return cd(new Atom(path));
 	}
@@ -240,6 +280,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 		return query(new Compound(ABOLISH, asList(term))).hasSolution();
 	}
 	
+	@Override
 	public Query clause(Term head, Term body)  {
 		return query(new Compound(CLAUSE, asList(head, body)));
 	}
@@ -248,6 +289,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	 * @param terms the terms to assert
 	 * @return
 	 */
+	@Override
 	public boolean asserta(List<? extends Term> terms) {
 		return allSucceed(LogicUtil.forEachApplyFunctor(ASSERTA, terms));
 	}
@@ -257,6 +299,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	 * @param terms the terms to assert
 	 * @return
 	 */
+	@Override
 	public boolean assertz(List<? extends Term> terms) {
 		return allSucceed(LogicUtil.forEachApplyFunctor(ASSERTZ, terms));
 	}	
@@ -266,15 +309,17 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	 * FILE LOADER PREDICATES
      **********************************************************************************************************************************
      */
-	
+	@Override
 	public boolean ensureLoaded(List<? extends Term> terms) {
 		return query(new Compound(ENSURE_LOADED, asList(listTerm(terms)))).hasSolution();
 	}
 	
+	@Override
 	public boolean ensureLoaded(Term... terms) {
 		return ensureLoaded(asList(terms));
 	}
 
+	@Override
 	public boolean ensureLoaded(String... resources) {
 		return query(new Compound(ENSURE_LOADED, asList(new Jpc().toTerm(resources)))).hasSolution();
 	}
@@ -284,30 +329,37 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	 * HIGH ORDER PREDICATES
      **********************************************************************************************************************************
      */
+	@Override
 	public Query bagof(Term select, Term exp, Term all) {
 		return query(new Compound(BAGOF, asList(select, exp, all)));
 	}
 	
+	@Override
 	public Term bagof(Term select, Term exp) {
 		return bagof(select, exp, new Variable(ALL_RESULTS_VAR)).oneSolution().get(ALL_RESULTS_VAR);
 	}
 	
+	@Override
 	public Query findall(Term select, Term exp, Term all) {
 		return query(new Compound(FINDALL, asList(select, exp, all)));
 	}
 	
+	@Override
 	public Term findall(Term select, Term exp) {
 		return findall(select, exp, new Variable(ALL_RESULTS_VAR)).oneSolution().get(ALL_RESULTS_VAR);
 	}
 	
+	@Override
 	public Query setof(Term select, Term exp, Term all) {
 		return query(new Compound(SETOF, asList(select, exp, all)));
 	}
 	
+	@Override
 	public Term setof(Term select, Term exp) {
 		return setof(select, exp, new Variable(ALL_RESULTS_VAR)).oneSolution().get(ALL_RESULTS_VAR);
 	}
 	
+	@Override
 	public Query forall(Term generator, Term test) {
 		return query(new Compound(FORALL, asList(generator, test)));
 	}
@@ -317,7 +369,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	 * OTHER PREDICATES
      **********************************************************************************************************************************
      */
-	
+	@Override
 	public boolean flushOutput() {
 		return query(new Atom(FLUSH_OUTPUT)).hasSolution();
 	}
@@ -326,11 +378,12 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	 * UNIFICATION
      **********************************************************************************************************************************
      */
-	
+	@Override
 	public Term unify(Term... terms) {
 		return unify(asList(terms));
 	}
 	
+	@Override
 	public Term unify(List<? extends Term> terms) {
 		if(terms.isEmpty())
 			throw new RuntimeException("The list of terms to unify cannot be empty");
@@ -354,7 +407,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
      **********************************************************************************************************************************
      */
 	
-	
+	@Override
 	public boolean allSucceed(List<? extends Term> terms) {
 		boolean success = true;
 		for(Term term: terms) {
@@ -364,5 +417,4 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 		return success;
 	}
 	
-
 }
