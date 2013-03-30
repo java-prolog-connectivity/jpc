@@ -23,7 +23,7 @@ public final class Atom extends AbstractTerm {
 	public static final Atom EMPTY_LIST = new Atom(EMPTY_LIST_SYMBOL);
 	
 	private final String name;
-	private final String escapedName;
+	private final String escapedName; //for efficiency sake this is calculated once at instantiation time
 	
 	public Atom(Boolean bool) {
 		this(bool.toString());
@@ -36,7 +36,7 @@ public final class Atom extends AbstractTerm {
 		this.name = name;
 		String escapedName = name;
 		escapedName = escapedName.replaceAll("\\\\", Matcher.quoteReplacement("\\\\"));
-		escapedName = escapedName.replaceAll("'", Matcher.quoteReplacement("\\'"));
+		escapedName = escapedName.replaceAll("'", Matcher.quoteReplacement("''")); //escaping ' with \' does not work correctly in XSB, therefore it is escaped with the alternative ''
 		this.escapedName = "'" + escapedName + "'";
 	}
 
