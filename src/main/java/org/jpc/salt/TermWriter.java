@@ -27,6 +27,10 @@ public abstract class TermWriter<TermType> extends DefaultTermContentHandler {
 		return new ArrayList<>(terms);
 	}
 
+	public TermType getFirst() {
+		return getTerms().get(0);
+	}
+	
 	protected void write(TermType term) {
 		addLast(term);
 	}
