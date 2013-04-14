@@ -24,14 +24,14 @@ import com.google.common.base.Joiner;
  * @author sergioc
  *
  */
-public class LogicResourceLoader {
-	private static Logger logger = LoggerFactory.getLogger(LogicResourceLoader.class);
+public class PrologResourceLoader {
+	private static Logger logger = LoggerFactory.getLogger(PrologResourceLoader.class);
 	
 	private PrologEngine prologEngine;
 	private ResourceManager resourceManager;
 	private ClassLoader[] classLoaders;
 	
-	public LogicResourceLoader(PrologEngine prologEngine, ClassLoader... classLoaders) {
+	public PrologResourceLoader(PrologEngine prologEngine, ClassLoader... classLoaders) {
 		this(prologEngine, ResourceManager.getDefaultResourceManager(), classLoaders); //use the default resource manager if no one is provided
 	}
 	
@@ -40,7 +40,7 @@ public class LogicResourceLoader {
 	 * @param prologEngine the logic engine where the resources will be loaded
 	 * @param jpcPreferences the preferences defining (among other things) where logic tmp files will be copied before being loaded in the logic engine
 	 */
-	public LogicResourceLoader(PrologEngine prologEngine, ResourceManager resourceManager, ClassLoader... classLoaders) {
+	public PrologResourceLoader(PrologEngine prologEngine, ResourceManager resourceManager, ClassLoader... classLoaders) {
 		this.prologEngine = prologEngine;
 		this.resourceManager = resourceManager;
 		this.classLoaders = classLoaders;

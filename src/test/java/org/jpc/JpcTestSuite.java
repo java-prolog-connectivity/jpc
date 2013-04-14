@@ -11,7 +11,7 @@ import org.jpc.term.HilogTermTest;
 import org.jpc.term.IntegerTermTest;
 import org.jpc.term.ListTermTest;
 import org.jpc.term.VariableTest;
-import org.jpc.util.LogicUtilTest;
+import org.jpc.util.PrologUtilTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -27,7 +27,7 @@ import org.junit.runners.Suite;
 	HilogTermTest.class,
 	InstantiationManagerTest.class,
 	DefaultTermConverterTest.class,
-	LogicUtilTest.class,
+	PrologUtilTest.class,
 	JpcTermWriterTest.class
 	})
 public class JpcTestSuite {}

@@ -32,7 +32,7 @@ public class AtomTest {
 	public void testToEscapedString() {
 		assertEquals("'hello'", new Atom("hello").toEscapedString());
 		assertEquals("'hello world'", new Atom("hello world").toEscapedString());
-		assertEquals("'hello \\'world\\''", new Atom("hello 'world'").toEscapedString());
+		assertEquals("'hello ''world'''", new Atom("hello 'world'").toEscapedString());
 		assertEquals("'hello\\\\world'", new Atom("hello\\world").toEscapedString());
 	}
 

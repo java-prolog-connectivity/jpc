@@ -73,13 +73,13 @@ public class AbstractTermTest {
 	public void testNonAnonymousVariablesNames() {
 		assertEquals(asList(), aAtom.getNonAnonymousVariablesNames());
 		assertEquals(asList("A"), aVar.getNonAnonymousVariablesNames());
-		assertEquals(asList(), namedAnonVar.getNonAnonymousVariablesNames());
+		assertEquals(asList("_A"), namedAnonVar.getNonAnonymousVariablesNames());
 		assertEquals(asList(), ANONYMOUS_VAR.getNonAnonymousVariablesNames());
 		
 		assertEquals(asList(), t0.getNonAnonymousVariablesNames());
 		assertEquals(asList("A"), t1.getNonAnonymousVariablesNames());
 		assertEquals(asList("A"), t2.getNonAnonymousVariablesNames());
-		assertEquals(asList("A", "B"), t3.getNonAnonymousVariablesNames());
+		assertEquals(asList("A", "B", "_A"), t3.getNonAnonymousVariablesNames());
 	}
 	
 	@Test

@@ -20,14 +20,18 @@ public class JpcBuilder {
 	private InstantiationManager instantiationManager;
 	private ErrorHandlerManager errorHandlerManager;
 	
-	public JpcBuilder() {
+	public static JpcBuilder create() {
+		return new JpcBuilder();
+	}
+	
+	private JpcBuilder() {
 		this.converterManager = new DefaultJpcConverterManager();
 		this.typeSolverManager = new DefaultTypeSolverManager();
 		this.instantiationManager = new DefaultInstantiationManager();
 		this.errorHandlerManager = new DefaultJpcErrorHandler();
 	}
 	
-	public Jpc create() {
+	public Jpc build() {
 		return new Jpc(converterManager, typeSolverManager, instantiationManager, errorHandlerManager);
 	}
 
@@ -46,8 +50,9 @@ public class JpcBuilder {
 		return this;
 	}
 	
-	public void registerErrorHandler(ErrorHandler errorHandler) {
+	public JpcBuilder registerErrorHandler(ErrorHandler errorHandler) {
 		errorHandlerManager.register(errorHandler);
+		return this;
 	}
 	
 //	//TODO

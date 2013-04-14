@@ -21,7 +21,7 @@ import static org.jpc.engine.prolog.PrologConstants.SETOF;
 import static org.jpc.engine.prolog.PrologConstants.SET_PROLOG_FLAG;
 import static org.jpc.term.ListTerm.listTerm;
 import static org.jpc.term.Variable.ANONYMOUS_VAR;
-import static org.jpc.util.LogicUtil.termSequence;
+import static org.jpc.util.PrologUtil.termSequence;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.jpc.Jpc;
-import org.jpc.engine.Flag;
 import org.jpc.query.ExceptionHandledQuery;
 import org.jpc.query.Query;
 import org.jpc.query.QuerySolutionToTermFunction;
@@ -37,19 +36,31 @@ import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
 import org.jpc.term.Variable;
-import org.jpc.util.LogicUtil;
+import org.jpc.util.PrologUtil;
 
 public abstract class AbstractPrologEngine implements PrologEngine {
 	
 	private static final String ALL_RESULTS_VAR = JPC_VAR_PREFIX + "ALL_RESULTS";
+	private String name; //This optional attribute is intended to be used for GUI development in a multi-engine environment.
 	
 	public AbstractPrologEngine() {
+		name = "";
 	}
 
 //	public LogtalkEngine asLogtalkEngine() {
 //		return new LogtalkEngine(this);
 //	}
 
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 	/* ********************************************************************************************************************************
 	 * CORE METHODS (and overloaded variations of those methods)
      **********************************************************************************************************************************
@@ -57,7 +68,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 
 	@Override
 	public abstract boolean interrupt();
-	
+
 	@Override
 	public abstract boolean shutdown();
 
@@ -291,7 +302,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	 */
 	@Override
 	public boolean asserta(List<? extends Term> terms) {
-		return allSucceed(LogicUtil.forEachApplyFunctor(ASSERTA, terms));
+		return allSucceed(PrologUtil.forEachApplyFunctor(ASSERTA, terms));
 	}
 	
 	/**
@@ -301,7 +312,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	 */
 	@Override
 	public boolean assertz(List<? extends Term> terms) {
-		return allSucceed(LogicUtil.forEachApplyFunctor(ASSERTZ, terms));
+		return allSucceed(PrologUtil.forEachApplyFunctor(ASSERTZ, terms));
 	}	
 	
 	

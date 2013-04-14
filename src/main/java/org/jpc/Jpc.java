@@ -19,7 +19,7 @@ import org.jpc.term.Term;
 
 /**
  * A class providing an interface for the main JPC functionality (such as converting between terms and Java objects)
- * This class is inspired by the Gson and GsonBuilder class from the Gson library (http://code.google.com/p/google-gson/)
+ * This class is inspired by the Gson class from the Gson library (http://code.google.com/p/google-gson/)
  * @author sergioc
  *
  */

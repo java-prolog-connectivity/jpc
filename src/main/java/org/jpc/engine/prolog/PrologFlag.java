@@ -1,6 +1,5 @@
 package org.jpc.engine.prolog;
 
-import org.jpc.engine.Flag;
 
 public abstract class PrologFlag extends Flag {
 

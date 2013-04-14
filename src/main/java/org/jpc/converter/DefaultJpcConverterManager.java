@@ -21,10 +21,10 @@ import org.jpc.converter.catalog.listterm.CollectionConverter;
 import org.jpc.converter.catalog.listterm.EnumerationConverter;
 import org.jpc.converter.catalog.listterm.IterableConverter;
 import org.jpc.converter.catalog.listterm.IteratorConverter;
-import org.jpc.converter.catalog.listterm.MapConverter.MapEntryConverter.MapEntryToTermConverter;
-import org.jpc.converter.catalog.listterm.MapConverter.MapEntryConverter.TermToMapEntryConverter;
 import org.jpc.converter.catalog.listterm.MapConverter.MapToTermConverter;
 import org.jpc.converter.catalog.listterm.MapConverter.TermToMapConverter;
+import org.jpc.converter.catalog.listterm.MapEntryConverter.MapEntryToTermConverter;
+import org.jpc.converter.catalog.listterm.MapEntryConverter.TermToMapEntryConverter;
 import org.jpc.converter.typesolver.MapTypeSolver;
 
 public class DefaultJpcConverterManager extends ConverterManager {

@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.List;
 
-import org.jpc.util.LogicUtil;
+import org.jpc.util.PrologUtil;
 import org.junit.Test;
 
 public class CompoundTest {
@@ -45,10 +45,10 @@ public class CompoundTest {
 	@Test
 	public void sequence() {
 		Term sequence = new Compound(",", asList(new Atom("a"), new Compound(",", asList(new Atom("b"), new Atom("c")))));
-		assertEquals(3, LogicUtil.sequenceLength(sequence));
-		List<Term> terms = LogicUtil.sequenceAsTerms(sequence);
+		assertEquals(3, PrologUtil.sequenceLength(sequence));
+		List<Term> terms = PrologUtil.sequenceAsTerms(sequence);
 		assertEquals(asList(new Atom("a"), new Atom("b"), new Atom("c")), terms);
-		assertEquals(sequence, LogicUtil.termSequence(terms));
+		assertEquals(sequence, PrologUtil.termSequence(terms));
 	}
 
 }

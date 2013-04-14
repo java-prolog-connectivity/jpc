@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jpc.Jpc;
-import org.jpc.engine.Flag;
+import org.jpc.engine.prolog.Flag;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.query.Query;
 import org.jpc.term.Atom;
@@ -248,6 +248,14 @@ public class LogtalkEngine implements PrologEngine {
 //		return this;
 //	}
 
+	public String getName() {
+		return prologEngine.getName();
+	}
+	
+	public void setName(String name) {
+		prologEngine.setName(name);
+	}
+	
 	public boolean interrupt() {
 		return prologEngine.interrupt();
 	}

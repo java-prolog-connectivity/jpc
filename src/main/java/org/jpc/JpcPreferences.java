@@ -32,16 +32,38 @@ public class JpcPreferences extends Preferences {
 		super(properties);
 	}
 	
-	public String logtalkIntegrationScript(String engineName) {
+//	public boolean isLogtalkSupported(String engineName) {
+//		try {
+//			logtalkIntegrationScriptOrThrow(engineName);
+//			return true;
+//		} catch(Exception e) {
+//			return false;
+//		}
+//	}
+	
+	/**
+	 * Answers a Logtalk integration script for a given Prolog engine name.
+	 * This method should always return the valid path of an integration script.
+	 * If it is not possible to find the integration script for a given engine, the method should thrown an exception detailing the reason of the failure.
+	 * @param engineName the target engine name
+	 * @return a full path of a Logtalk integration script for the given Prolog engine name.
+	 */
+	public String logtalkIntegrationScriptOrThrow(String engineName) {
 		checkNotNull(engineName);
 		checkArgument(!engineName.isEmpty());
 		engineName = engineName.toLowerCase();
 		String logtalkHome = getVarOrThrow(LOGTALK_HOME_ENV_VAR);
+		File logtalkHomeFile = new File(logtalkHome);
+		if(!logtalkHomeFile.exists())
+			throw new RuntimeException("Logtalk is not installed at " + logtalkHome + ". Please configure the " + LOGTALK_HOME_ENV_VAR + " environment variable or install Logtalk.");
 		String scriptPath = logtalkHome + "/integration/";
+		File scriptFolderFile = new File(scriptPath);
+		if(!scriptFolderFile.exists())
+			throw new RuntimeException("The " + LOGTALK_HOME_ENV_VAR + " environment variable does not seem to be pointing to a valid Logtalk installation. Please check that variable before attempting to load Logtalk.");
 		String fileName = "logtalk_" + engineName + ".pl";
 		scriptPath += fileName;
-		File file = new File(scriptPath);
-		if(!file.exists())
+		File integrationScriptfile = new File(scriptPath);
+		if(!integrationScriptfile.exists())
 			throw new RuntimeException("The Logtalk installation at " + logtalkHome + " does not support the Prolog engine " + engineName);
 		return scriptPath;
 	}

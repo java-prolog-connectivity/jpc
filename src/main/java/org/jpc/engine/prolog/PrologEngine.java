@@ -3,13 +3,15 @@ package org.jpc.engine.prolog;
 import java.util.List;
 
 import org.jpc.Jpc;
-import org.jpc.engine.Flag;
 import org.jpc.query.Query;
 import org.jpc.term.Term;
+import org.jpc.util.naming.Nameable;
 
-public interface PrologEngine extends PrologDatabase {
+public interface PrologEngine extends Nameable, PrologDatabase {
+
 
 	//public LogtalkEngine asLogtalkEngine();
+	
 	
 	/* ********************************************************************************************************************************
 	 * CORE QUERY METHODS (and overloaded variations of those methods)

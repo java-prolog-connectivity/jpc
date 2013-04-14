@@ -1,4 +1,4 @@
-package org.jpc.engine;
+package org.jpc.engine.prolog;
 
 import org.jpc.converter.TermConvertable;
 import org.jpc.term.Atom;

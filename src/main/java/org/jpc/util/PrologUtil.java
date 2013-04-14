@@ -22,7 +22,7 @@ import org.jpc.term.Variable;
  * @author scastro
  *
  */
-public class LogicUtil {
+public class PrologUtil {
 	
 	/**
 	 * Returns whether the term is a compound with functor("=", 2)

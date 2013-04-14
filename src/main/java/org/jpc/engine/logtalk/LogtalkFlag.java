@@ -1,6 +1,6 @@
 package org.jpc.engine.logtalk;
 
-import org.jpc.engine.Flag;
+import org.jpc.engine.prolog.Flag;
 
 
 /**
