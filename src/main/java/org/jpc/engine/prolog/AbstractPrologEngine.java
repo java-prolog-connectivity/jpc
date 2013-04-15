@@ -70,7 +70,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	public abstract boolean interrupt();
 
 	@Override
-	public abstract boolean shutdown();
+	public abstract boolean close();
 
 	@Override
 	public boolean command(String command) {

@@ -7,6 +7,12 @@ import org.jpc.query.Query;
 import org.jpc.term.Term;
 import org.jpc.util.naming.Nameable;
 
+/**
+ * An abstract interface for a Prolog engine session.
+ * Depending on the underlying driver library, multiple sessions can be spawned in the JVM (e.g., InterProlog), or only one (e.g., JPL). 
+ * @author sergioc
+ *
+ */
 public interface PrologEngine extends Nameable, PrologDatabase {
 
 
@@ -26,10 +32,16 @@ public interface PrologEngine extends Nameable, PrologDatabase {
 	
 	/**
 	 * Interrupt the logic engine
+	 * Once the session is not required it can be closed. However, some drivers do not allow this and will throw an UnsupportedOperationException instead
 	 * @return
 	 */
-	public boolean shutdown();
+	public boolean close();
 
+	/**
+	 * Answers if a Prolog engine can be closed
+	 * @return
+	 */
+	public boolean isCloseable();
 	
 	public boolean command(String command);
 	

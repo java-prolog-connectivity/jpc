@@ -8,7 +8,7 @@ import org.jpc.engine.prolog.PrologEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PrologEngineProfile implements PrologEngineFactory{
+public class PrologEngineProfile implements PrologEngineFactory {
 
 	private static Logger logger = LoggerFactory.getLogger(PrologEngineProfile.class);
 	
@@ -21,7 +21,6 @@ public class PrologEngineProfile implements PrologEngineFactory{
 	protected List<String> scope; 
 	
 
-	
 	public PrologEngineProfile(PrologEngineFactory prologEngineFactory) {
 		this.prologEngineFactory = prologEngineFactory;
 		scope = new ArrayList<String>();
