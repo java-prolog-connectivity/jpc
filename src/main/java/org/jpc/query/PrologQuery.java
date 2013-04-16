@@ -24,14 +24,14 @@ public abstract class PrologQuery extends Query {
 		this.context = context;
 		this.goal = goal;
 		this.errorHandledQuery = errorHandledQuery;
-		instrumentedGoal = instrumentGoal(goal, errorHandledQuery);
+		instrumentedGoal = instrumentGoal(goal);
 	}
 	
 	public static Term exceptionHandledQueryTerm(Term term) {
 		return new Compound(CATCH, asList(term, new Variable(ExceptionHandledQuery.EXCEPTION_VAR_NAME), Atom.TRUE_TERM));
 	}
 	
-	protected Term instrumentGoal(Term goal, boolean errorHandledQuery) {
+	protected Term instrumentGoal(Term goal) {
 		if(errorHandledQuery) {
 			return exceptionHandledQueryTerm(goal);
 		} else {

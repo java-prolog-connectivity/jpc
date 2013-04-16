@@ -20,8 +20,20 @@ import com.google.common.base.Predicate;
  */
 public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 
-	private CursorState state = READY;
+	private CursorState state;
 	private T next;
+	
+	public Cursor() {
+		setState(READY);
+	}
+	
+	public CursorState getState() {
+		return state;
+	}
+	
+	protected void setState(CursorState state) {
+		this.state = state;
+	}
 	
 	/**
 	 * @precondition state = READY
@@ -119,6 +131,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 		if(!isReady()) {
 			throw new InvalidCursorStateException();
 		} else {
+			setState(OPEN);
 			List<T> allSolutions = basicAllSolutions();
 			close();
 			return allSolutions;
@@ -138,11 +151,11 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 		return allSolutions;
 	}
 	
-	public synchronized Cursor<T> filter(Predicate<T> predicate) {
+	public Cursor<T> filter(Predicate<T> predicate) {
 		return new CursorFilter<>(this, predicate);
 	}
 	
-	public synchronized <T2>Cursor<T2> adapt(Function<T,T2> converter) {
+	public <T2>Cursor<T2> adapt(Function<T,T2> converter) {
 		return new CursorAdapter<>(this, converter);
 	}
 
@@ -150,18 +163,18 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 * @return	true if the cursor is ready, otherwise false.
 	 */
 	public boolean isReady() {
-		return state.equals(READY);
+		return getState().equals(READY);
 	}
 	
 	/**
 	 * @return	true if the cursor is open, otherwise false.
 	 */
 	public boolean isOpen() {
-		return state.equals(OPEN);
+		return getState().equals(OPEN);
 	}
 
 	public boolean isExhausted() {
-		return state.equals(EXHAUSTED);
+		return getState().equals(EXHAUSTED);
 	}
 	
 	public synchronized void abort() {
@@ -175,7 +188,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 		if(!isReady()) { //there is no need to close if the state is READY
 			basicClose();
 			next = null;
-			state = READY;
+			setState(READY);
 		}
 	}
 	
@@ -207,7 +220,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 		if(isExhausted())
 			throw new NoSuchElementException();
 		if(isReady())
-			state = OPEN;
+			setState(OPEN);
 		T t;
 		if(next != null) {
 			t = next;
@@ -216,7 +229,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 			try {
 				t = basicNext();
 			} catch(NoSuchElementException e) {
-				state = EXHAUSTED;
+				setState(EXHAUSTED);
 				throw e;
 			}	
 		}
