@@ -8,7 +8,7 @@ import org.jpc.Jpc;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Term;
 
-public class DeterministicPrologQuery extends PrologQuery {
+public abstract class DeterministicPrologQuery extends PrologQuery {
 
 	public DeterministicPrologQuery(PrologEngine prologEngine, Term goal, boolean errorHandledQuery, Jpc context) {
 		super(prologEngine, goal, errorHandledQuery, context);
@@ -25,7 +25,6 @@ public class DeterministicPrologQuery extends PrologQuery {
 	@Override
 	protected void basicAbort() {
 		reset();
-		getPrologEngine().interrupt();
 	}
 
 	@Override

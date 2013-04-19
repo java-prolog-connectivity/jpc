@@ -26,6 +26,11 @@ public class CursorAdapter<AdapterType, AdapteeType> extends Cursor<AdapterType>
 		this.adapterFunction = adapterFunction;
 	}
 
+	@Override
+	public boolean isAbortable() {
+		return cursor.isAbortable();
+	}
+	
 	/**
 	 * The adaptee cursor could have optimized its basicOneSolution method.
 	 * For example, a deterministic query can only open a cursor (i.e., with invocations to hasNext() and next()) bringing eagerly all the results.

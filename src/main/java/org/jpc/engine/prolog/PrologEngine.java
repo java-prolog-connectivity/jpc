@@ -3,9 +3,9 @@ package org.jpc.engine.prolog;
 import java.util.List;
 
 import org.jpc.Jpc;
+import org.jpc.engine.logtalk.LogtalkEngine;
 import org.jpc.query.Query;
 import org.jpc.term.Term;
-import org.jpc.util.naming.Nameable;
 
 /**
  * An abstract interface for a Prolog engine session.
@@ -13,11 +13,9 @@ import org.jpc.util.naming.Nameable;
  * @author sergioc
  *
  */
-public interface PrologEngine extends Nameable, PrologDatabase {
+public interface PrologEngine extends PrologDatabase {
 
-
-	//public LogtalkEngine asLogtalkEngine();
-	
+	public LogtalkEngine asLogtalkEngine();
 	
 	/* ********************************************************************************************************************************
 	 * CORE QUERY METHODS (and overloaded variations of those methods)
@@ -25,17 +23,11 @@ public interface PrologEngine extends Nameable, PrologDatabase {
      */
 	
 	/**
-	 * Simulates a Ctrl C
-	 * @return
-	 */
-	public boolean interrupt();
-	
-	/**
-	 * Interrupt the logic engine
+	 * Close the logic engine and free associated resources.
 	 * Once the session is not required it can be closed. However, some drivers do not allow this and will throw an UnsupportedOperationException instead
 	 * @return
 	 */
-	public boolean close();
+	public void close();
 
 	/**
 	 * Answers if a Prolog engine can be closed

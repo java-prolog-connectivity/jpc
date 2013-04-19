@@ -24,6 +24,10 @@ public class QueryAdapter extends Query {
 		this.adapterFunction = adapterFunction;
 	}
 
+	public boolean isAbortable() {
+		return query.isAbortable();
+	}
+	
 	@Override
 	public Jpc getJpcContext() {
 		return query.getJpcContext();

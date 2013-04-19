@@ -1,13 +1,14 @@
 package org.jpc.engine.logtalk.driver;
 
 import org.jpc.JpcPreferences;
+import org.jpc.engine.logtalk.LogtalkEngine;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.engine.prolog.driver.PrologEngineFactory;
 import org.jpc.engine.prolog.driver.PrologEngineProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LogtalkEngineProfile extends PrologEngineProfile {
+public class LogtalkEngineProfile extends PrologEngineProfile<LogtalkEngine> {
 
 	private static Logger logger = LoggerFactory.getLogger(LogtalkEngineProfile.class);
 	private JpcPreferences preferences;
@@ -25,13 +26,8 @@ public class LogtalkEngineProfile extends PrologEngineProfile {
 		return preferences;
 	}
 	
-//	@Override
-//	public LogtalkEngine createPrologEngine() {
-//		return new LogtalkEngine(super.createPrologEngine());
-//	}
-	
 	@Override
-	public PrologEngine basicCreatePrologEngine() {
+	public LogtalkEngine basicCreatePrologEngine() {
 		PrologEngine newPrologEngine = super.basicCreatePrologEngine();
 		boolean logtalkLoaded = false;
 		String prologDialect = newPrologEngine.prologDialect();
@@ -58,7 +54,7 @@ public class LogtalkEngineProfile extends PrologEngineProfile {
 			logger.warn("Some features may not be available.");
 			//throw new PrologEngineInitializationException("Impossible to load Logtalk in " + newPrologEngine.prologDialect());
 		}
-		return newPrologEngine;
+		return new LogtalkEngine(newPrologEngine);
 	}
 	
 }

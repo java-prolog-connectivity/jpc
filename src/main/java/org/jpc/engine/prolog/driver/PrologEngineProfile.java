@@ -8,12 +8,11 @@ import org.jpc.engine.prolog.PrologEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PrologEngineProfile implements PrologEngineFactory {
+public class PrologEngineProfile<T extends PrologEngine> implements PrologEngineFactory<T> {
 
 	private static Logger logger = LoggerFactory.getLogger(PrologEngineProfile.class);
 	
-	
-	private PrologEngineFactory prologEngineFactory;
+	private PrologEngineFactory<T> prologEngineFactory;
 	private String name; //This optional attribute is intended to be used for GUI development in a multi-engine environment.
 	
 	//the scope (packages) where this logic engine should be applied. This attribute may be used for automatic configuration of Prolog Engines 
@@ -21,16 +20,20 @@ public class PrologEngineProfile implements PrologEngineFactory {
 	protected List<String> scope; 
 	
 
-	public PrologEngineProfile(PrologEngineFactory prologEngineFactory) {
+	public PrologEngineProfile(PrologEngineFactory<T> prologEngineFactory) {
 		this.prologEngineFactory = prologEngineFactory;
 		scope = new ArrayList<String>();
 		//addScope(""); //the root package
 	}
 
-	public PrologEngineFactory getPrologEngineFactory() {
+	public PrologEngineFactory<T> getPrologEngineFactory() {
 		return prologEngineFactory;
 	}
 
+	public boolean isEnabled() {
+		return prologEngineFactory.isEnabled();
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -56,8 +59,8 @@ public class PrologEngineProfile implements PrologEngineFactory {
 	}
 	
 	@Override
-	public PrologEngine createPrologEngine() {
-		PrologEngine prologEngine = basicCreatePrologEngine();
+	public T createPrologEngine() {
+		T prologEngine = basicCreatePrologEngine();
 		onCreate(prologEngine);
 		return prologEngine;
 	}
@@ -67,7 +70,7 @@ public class PrologEngineProfile implements PrologEngineFactory {
 	 * 
 	 * @return a instance of a Prolog engine.
 	 */
-	protected PrologEngine basicCreatePrologEngine() {
+	protected T basicCreatePrologEngine() {
 		return prologEngineFactory.createPrologEngine();
 	}
 	

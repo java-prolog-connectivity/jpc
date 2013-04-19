@@ -8,16 +8,16 @@ import org.jpc.engine.prolog.driver.PrologEngineFactory;
  * @author sergioc
  *
  */
-public class LazyEngineProvider implements PrologEngineProvider {
+public class LazyEngineProvider<T extends PrologEngine> implements PrologEngineProvider<T> {
 
-	private PrologEngineFactory prologEngineFactory;
-	private PrologEngine prologEngine;
+	private PrologEngineFactory<T> prologEngineFactory;
+	private T prologEngine;
 	
-	public LazyEngineProvider(PrologEngineFactory prologEngineFactory) {
+	public LazyEngineProvider(PrologEngineFactory<T> prologEngineFactory) {
 		this.prologEngineFactory = prologEngineFactory;
 	}
 	
-	public PrologEngine getPrologEngine() {
+	public T getPrologEngine() {
 		if(prologEngine == null)
 			prologEngine = prologEngineFactory.createPrologEngine();
 		return prologEngine;

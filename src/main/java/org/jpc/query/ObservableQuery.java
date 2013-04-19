@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.jpc.term.Term;
 import org.minitoolbox.CollectionsUtil;
@@ -17,7 +16,7 @@ public class ObservableQuery extends QueryAdapter {
 		this(query, new HashSet<QueryListener>());
 	}
 	
-	public ObservableQuery(Query query, Set<QueryListener> listeners) {
+	public ObservableQuery(Query query, Iterable<QueryListener> listeners) {
 		super(query);
 		this.listeners = CollectionsUtil.createWeakSet(listeners);
 	}
@@ -26,27 +25,86 @@ public class ObservableQuery extends QueryAdapter {
 	protected void setState(CursorState state) {
 		super.setState(state);
 		if(state.equals(CursorState.READY))
-			notifyOnQueryReady();
+			notifyQueryReady();
 		else if(state.equals(CursorState.OPEN))
-			notifyOnQueryOpened();
+			notifyQueryOpened();
 		else if(state.equals(CursorState.EXHAUSTED))
-			notifyOnQueryExhausted();
+			notifyQueryExhausted();
+	}
+	
+	@Override
+	public synchronized boolean hasNext() {
+		Boolean hasNext = null;
+		try {
+			notifyQueryInProgress();
+			hasNext = super.hasNext();
+			notifyQueryFinished();
+		} catch(Exception e) {
+			notifyException(e);
+			throw e;
+		}
+		return hasNext;
 	}
 	
 	@Override
 	public synchronized Map<String,Term> next() {
-		Map<String,Term> next = super.next();
-		notifyOnNextSolution(next);
+		Map<String,Term> next = null;
+		try {
+			notifyQueryInProgress();
+			next = super.next();
+			notifyQueryFinished();
+		} catch(Exception e) {
+			notifyException(e);
+			throw e;
+		}
+		notifyNextSolutionFound(next);
 		return next;
 	}
 	
 	@Override
-	public synchronized List<Map<String,Term>> allSolutions() {
-		List<Map<String,Term>> allSolutions = super.allSolutions();
-		notifyOnAllSolutions(allSolutions);
+	public synchronized Map<String,Term> oneSolution() {
+		Map<String,Term> next = null;
+		try {
+			notifyQueryInProgress();
+			next = super.oneSolution();
+			notifyQueryFinished();
+		} catch(Exception e) {
+			notifyException(e);
+			throw e;
+		}
+		notifyNextSolutionFound(next);
+		return next;
+	}
+	
+	@Override
+	public synchronized List<Map<String,Term>> solutionsRange(long from, long to) {
+		List<Map<String,Term>> allSolutions = null;
+		try {
+			notifyQueryInProgress();
+			allSolutions = super.solutionsRange(from, to);
+			notifyQueryFinished();
+		} catch(Exception e) {
+			notifyException(e);
+			throw e;
+		}
+		notifySolutionsFound(allSolutions);
 		return allSolutions;
 	}
 	
+	@Override
+	public synchronized List<Map<String,Term>> allSolutions() {
+		List<Map<String,Term>> allSolutions = null;
+		try {
+			notifyQueryInProgress();
+			allSolutions = super.allSolutions();
+			notifyQueryFinished();
+		} catch(Exception e) {
+			notifyException(e);
+			throw e;
+		}
+		notifySolutionsFound(allSolutions);
+		return allSolutions;
+	}
 	
 	public void addQueryListener(QueryListener listener) {
 		listeners.add(listener);
@@ -56,33 +114,53 @@ public class ObservableQuery extends QueryAdapter {
 		listeners.remove(listener);
 	}
 	
-	private void notifyOnQueryReady() {
+	
+	
+	private void notifyQueryReady() {
 		for(QueryListener listener : listeners) {
 			listener.onQueryReady();
 		}
 	}
 	
-	private void notifyOnQueryOpened() {
+	private void notifyQueryOpened() {
 		for(QueryListener listener : listeners) {
 			listener.onQueryOpened();
 		}
 	}
 	
-	private void notifyOnQueryExhausted() {
+	private void notifyQueryExhausted() {
 		for(QueryListener listener : listeners) {
 			listener.onQueryExhausted();
 		}
 	}
 	
-	private void notifyOnNextSolution(Map<String,Term> solution) {
+	private void notifyQueryInProgress() {
 		for(QueryListener listener : listeners) {
-			listener.onNextSolution(solution);
+			listener.onQueryInProgress();
 		}
 	}
 	
-	private void notifyOnAllSolutions(List<Map<String,Term>> solutions) {
+	private void notifyQueryFinished() {
 		for(QueryListener listener : listeners) {
-			listener.onAllSolutions(solutions);
+			listener.onQueryFinished();
+		}
+	}
+	
+	private void notifyException(Exception e) {
+		for(QueryListener listener : listeners) {
+			listener.onException(e);
+		}
+	}
+	
+	private void notifyNextSolutionFound(Map<String,Term> solution) {
+		for(QueryListener listener : listeners) {
+			listener.onNextSolutionFound(solution);
+		}
+	}
+	
+	private void notifySolutionsFound(List<Map<String,Term>> solutions) {
+		for(QueryListener listener : listeners) {
+			listener.onSolutionsFound(solutions);
 		}
 	}
 

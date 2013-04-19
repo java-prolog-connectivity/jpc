@@ -15,6 +15,11 @@ public class CursorFilter<T> extends Cursor<T> {
 		this.predicate = predicate;
 	}
 	
+	@Override
+	public boolean isAbortable() {
+		return cursor.isAbortable();
+	}
+	
 	/**
 	 * The filtered cursor could have optimized its basicAllSolutions method
 	 * For example, it could have brought all the results at once instead of lazily asking for them

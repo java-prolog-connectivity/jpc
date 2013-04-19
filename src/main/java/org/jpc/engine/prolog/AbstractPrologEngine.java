@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jpc.Jpc;
+import org.jpc.engine.logtalk.LogtalkEngine;
 import org.jpc.query.ExceptionHandledQuery;
 import org.jpc.query.Query;
 import org.jpc.query.QuerySolutionToTermFunction;
@@ -41,24 +42,12 @@ import org.jpc.util.PrologUtil;
 public abstract class AbstractPrologEngine implements PrologEngine {
 	
 	private static final String ALL_RESULTS_VAR = JPC_VAR_PREFIX + "ALL_RESULTS";
-	private String name; //This optional attribute is intended to be used for GUI development in a multi-engine environment.
 	
 	public AbstractPrologEngine() {
-		name = "";
 	}
-
-//	public LogtalkEngine asLogtalkEngine() {
-//		return new LogtalkEngine(this);
-//	}
-
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public void setName(String name) {
-		this.name = name;
+	
+	public LogtalkEngine asLogtalkEngine() {
+		return new LogtalkEngine(this);
 	}
 	
 	/* ********************************************************************************************************************************
@@ -67,10 +56,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
      */
 
 	@Override
-	public abstract boolean interrupt();
-
-	@Override
-	public abstract boolean close();
+	public abstract void close();
 
 	@Override
 	public boolean command(String command) {

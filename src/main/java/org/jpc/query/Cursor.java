@@ -13,15 +13,15 @@ import java.util.NoSuchElementException;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 /**
- * Note: The ugly class hierarchy of class Cursor will be redesigned after the coming release of Java8 supporting virtual extension methods
+ * Note: The class hierarchy of class Cursor will be redesigned after the coming release of Java8 supporting virtual extension methods
  * @author sergioc
  *
  * @param <T>
  */
 public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 
-	private CursorState state;
-	private T next;
+	private volatile CursorState state;
+	private volatile T cachedNext;
 	
 	public Cursor() {
 		setState(READY);
@@ -62,17 +62,18 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 * @return
 	 */
 	public synchronized T oneSolution() {
-		if(!isReady())
-			throw new InvalidCursorStateException();
-		T oneSolution = basicOneSolution();
-		close();
-		return oneSolution;
+		open();
+		try (Cursor<T> autoCloseable = this) {
+			return basicOneSolution();
+		}
 	}
 
 	protected T basicOneSolution() {
-		if(hasNext())
-			return next();
-		return null;
+		try {
+			return cachedNext();
+		} catch(NoSuchElementException e) {
+			return null;
+		}
 	}
 	
 	/**
@@ -102,12 +103,12 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 		checkArgument(from >= 0);
 		checkArgument(to > from);
 		List<T> solutions = new ArrayList<>();
-		try (Cursor<T> cursorToClose = this) {
+		try (Cursor<T> autoCloseable = this) {
 			long count = 0;
 			while(count<to) {
 				T solution = null;
-				if(hasNext()) {
-					solution = next();
+				if(cachedHasNext()) {
+					solution = cachedNext();
 					if(count >= from)
 						solutions.add(solution);
 					count++;
@@ -117,7 +118,6 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 				}
 			}
 		}
-		close();
 		return solutions;
 	}
 	
@@ -128,13 +128,9 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 * The cursor should not be open when this method is called
 	 */
 	public synchronized List<T> allSolutions() {
-		if(!isReady()) {
-			throw new InvalidCursorStateException();
-		} else {
-			setState(OPEN);
-			List<T> allSolutions = basicAllSolutions();
-			close();
-			return allSolutions;
+		open();
+		try (Cursor<T> autoCloseable = this) {
+			return basicAllSolutions();
 		}
 	}
 
@@ -145,8 +141,8 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 */
 	protected List<T> basicAllSolutions() {
 		List<T> allSolutions = new ArrayList<>();
-		while (hasNext()) { 
-			allSolutions.add(next());
+		while (cachedHasNext()) { 
+			allSolutions.add(cachedNext());
 		}
 		return allSolutions;
 	}
@@ -177,54 +173,74 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 		return getState().equals(EXHAUSTED);
 	}
 	
-	public synchronized void abort() {
+	/**
+	 * Aborts execution.
+	 * This method is not synchronized since it is supposed to be called from a thread different to the one currently executing a query
+	 * @throws InvalidCursorStateException if the cursor is not open
+	 */
+	public void abort() {
 		if(!isOpen())
 			throw new InvalidCursorStateException();
 		basicAbort();
 		close();
 	}
 	
+	public abstract boolean isAbortable();
+	
+	private void open() {
+		if(!isReady())
+			throw new InvalidCursorStateException();
+		setState(OPEN);
+	}
+	
 	public synchronized void close() {
 		if(!isReady()) { //there is no need to close if the state is READY
 			basicClose();
-			next = null;
+			cachedNext = null;
 			setState(READY);
 		}
 	}
 	
 	/**
-	 * Answers if there are still rows in the cursor
-	 * In case there are no more solutions, the cursor will be closed by this method
-	 * @return true if there are more solutions to the query
+	 * Answers if there are still rows in the cursor.
+	 * This method may have effects on the state of the cursor. If the cursor is in READY state, it will change it to OPEN.
+	 * If there are no more elements, it will change the state of the cursor to EXHAUSTED.
+	 * @return true if there are more solutions to the query, false otherwise.
+	 * 
 	 */
 	public synchronized boolean hasNext() {
-		if(isExhausted())
-			return false;
-		if(next == null) {
-			try {
-				next = next();
-			} catch(NoSuchElementException e) {
-				return false;
-			}
-		}
-		return true;
+		return cachedHasNext();
 	}
 
-	
 	/**
-	 * Answers the next solution
-	 * hasNext should be called before
+	 * Answers the next solution.
 	 * @return the next solution
+	 * @throws NoSuchElementException if there are no more elements in the cursor.
 	 */
 	public synchronized T next() {
+		return cachedNext();
+	}
+	
+	private boolean cachedHasNext() {
+		if(cachedNext != null)
+			return true;
+		try {
+			cachedNext = cachedNext();
+			return true;
+		} catch(NoSuchElementException e) {
+			return false;
+		}
+	}
+	
+	private T cachedNext() {
 		if(isExhausted())
 			throw new NoSuchElementException();
 		if(isReady())
-			setState(OPEN);
+			open();
 		T t;
-		if(next != null) {
-			t = next;
-			next = null;
+		if(cachedNext != null) { //in the event of a previous call to cachedHasNext()
+			t = cachedNext;
+			cachedNext = null;
 		} else {
 			try {
 				t = basicNext();
@@ -235,12 +251,17 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 		}
 		return t;
 	}
-
 	
 	protected abstract void basicAbort();
 	
 	protected abstract void basicClose();
 
+	/**
+	 * Returns the next available element in the cursor.
+	 * If the cursor is exhausted it should throw a NoSuchElementException the first time it is invoked. 
+	 * Its behavior is not specified if invoked more than once after the cursor has been exhausted.
+	 * @return
+	 */
 	protected abstract T basicNext();
 
 
