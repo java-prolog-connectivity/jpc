@@ -20,8 +20,8 @@ import com.google.common.base.Predicate;
  */
 public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 
-	private volatile CursorState state;
-	private volatile T cachedNext;
+	private CursorState state;
+	private T cachedNext;
 	
 	public Cursor() {
 		setState(READY);
