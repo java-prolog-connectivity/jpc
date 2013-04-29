@@ -10,7 +10,6 @@ import org.jpc.converter.instantiation.DefaultInstantiationManager;
 import org.jpc.converter.instantiation.InstantiationManager;
 import org.jpc.converter.typesolver.DefaultTypeSolverManager;
 import org.jpc.converter.typesolver.TypeSolverManager;
-import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.error.handling.DefaultJpcErrorHandler;
 import org.jpc.error.handling.ErrorHandler;
 import org.jpc.term.Compound;
@@ -69,7 +68,7 @@ public class Jpc {
 		return listTerm;
 	}
 	
-	public Object fromTerm(Term term) {
+	public <T> T fromTerm(Term term) {
 		return fromTerm(term, Object.class);
 	}
 	
@@ -85,16 +84,16 @@ public class Jpc {
 		return converterManager.toTerm(object, termClass, this);
 	}
 
-	public <T> T instantiate(Type t) {
-		return instantiationManager.instantiate(t);
+	public <T> T instantiate(Type targetType) {
+		return instantiationManager.instantiate(targetType);
 	}
 
 	public Type getType(Term term) {
 		return typeSolverManager.getType(term);
 	}
 
-	public boolean handleError(PrologEngine prologEngine, Term errorTerm, Term goal) {
-		return errorHandler.handle(prologEngine, errorTerm, goal, this);
+	public boolean handleError(Term errorTerm, Term goal) {
+		return errorHandler.handle(errorTerm, goal, this);
 	}
-	
+
 }

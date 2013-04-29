@@ -1,83 +1,38 @@
 package org.jpc.converter.instantiation;
 
 import java.lang.reflect.Type;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
-
-import org.minitoolbox.pattern.Factory;
-import org.minitoolbox.reflection.wrappertype.TypeWrapper;
 
 /*
- * Utility class mapping abstract classes and interfaces to factories
+ * Utility class mapping types to instance creators
  */
 public class InstantiationManager {
-	List<Entry<Class, Factory>> factories;
-	
-	private static InstantiationManager instantiationManager = new DefaultInstantiationManager();
-	
-	public static InstantiationManager getDefault() {
-		return instantiationManager;
-	}
+	List<InstanceCreator> instanceCreators;
 	
 	public InstantiationManager() {
-		factories = new ArrayList<>();
+		instanceCreators = new ArrayList<>();
 	}
 
-	protected <CT> Factory<CT> createFactory(Class<CT> clazz) {
-		return createFactory(clazz, clazz);
+	public void register(Type type) {
+		register(new SimpleInstanceCreator(type));
 	}
 	
-	protected <CT> Factory<CT> createFactory(Class<CT> clazz, final Class<? extends CT> instantiationClass) {
-		Factory<CT> factory = new Factory<CT>() {
-			@Override
-			public CT create() {
-				try {
-					return instantiationClass.newInstance();
-				} catch (InstantiationException | IllegalAccessException e) {
-					throw new RuntimeException(e);
-				}
-			}
-		};
-		return factory;
-	}
 	
+	public void register(InstanceCreator instanceCreator) {
+		instanceCreators.add(0, instanceCreator);
+	}
 
-	public void register(Class clazz) {
-		register(clazz, clazz);
-	}
-	
-	public <CT> void register(Class<CT> clazz, final Class<? extends CT> instantiationClass) {
-		Factory<CT> factory = createFactory(clazz, instantiationClass);
-		register(clazz, factory);
-	}
-	
-	public <CT> void register(Class<CT> clazz, Factory<CT> factory) {
-		factories.add(0, new AbstractMap.SimpleEntry<Class, Factory>(clazz, factory));
-	}
-	
-
-	
-	
-	
-	public <T> T instantiate(Type type) {
-		Class rawClass = TypeWrapper.wrap(type).getRawClass();
+	public <T> T instantiate(Type targetType) {
 		T instantiation = null;
-		try {
-			instantiation = (T) rawClass.newInstance();
-		} catch (InstantiationException | IllegalAccessException e1) {
-		}
-		if(instantiation == null) {
-			for(Entry<Class, Factory> entry : factories) {
-				if(rawClass.isAssignableFrom(entry.getKey())) {
-					instantiation = (T) entry.getValue().create();
-					break;
-				}
+		for(InstanceCreator instanceCreator : instanceCreators) {
+			if(instanceCreator.canInstantiate(targetType)) {
+				instantiation = instanceCreator.instantiate(targetType);
+				break;
 			}
-		} 
+		}
 		if(instantiation == null)
-			throw new RuntimeException(new InstantiationException("Impossible to instantiate type: " + type));
+			throw new RuntimeException(new InstantiationException("Impossible to instantiate type: " + targetType));
 		return instantiation;
 	}
 

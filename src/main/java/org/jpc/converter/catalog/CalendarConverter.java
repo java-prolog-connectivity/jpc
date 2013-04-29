@@ -33,7 +33,6 @@ public class CalendarConverter extends JpcConverter<Calendar, Term> {
 	public Calendar fromTerm(Term term, Type type, Jpc context) {
 		Calendar calendar;
 		long timeInMilliSeconds;
-		
 		try {
 			calendar = context.instantiate(type);
 			timeInMilliSeconds = context.fromTerm(term, Long.class);

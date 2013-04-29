@@ -25,7 +25,7 @@ public class InstantiationManagerTest {
 	public void testFailInstantiation() {
 		InstantiationManager im = new InstantiationManager();
 		try {
-			List o = im.instantiate(List.class);
+			List o = (List) im.instantiate(List.class);
 			fail();
 		} catch(RuntimeException e) {
 		}

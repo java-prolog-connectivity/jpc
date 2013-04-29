@@ -8,7 +8,7 @@ import org.jpc.Jpc;
 import org.jpc.converter.JpcConversionException;
 import org.jpc.converter.JpcConverter;
 import org.jpc.term.Term;
-import org.minitoolbox.reflection.wrappertype.TypeWrapper;
+import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
 public class CollectionConverter<E> extends JpcConverter<Collection<E>, Term> {
 	

@@ -87,7 +87,6 @@ public class DefaultTermConverterTest {
 		AtomicInteger ai = new AtomicInteger(10);
 		AtomicLong al = new AtomicLong(10);
 		BigInteger bi = BigInteger.TEN;
-		
 		assertEquals(new IntegerTerm(10), jpc.toTerm(aByte));
 		assertEquals(new IntegerTerm(10), jpc.toTerm(aShort));
 		assertEquals(new IntegerTerm(10), jpc.toTerm(anInt));
@@ -102,10 +101,16 @@ public class DefaultTermConverterTest {
 		float aFloat = 10.5f;
 		double aDouble = 10.5;
 		BigDecimal bd = new BigDecimal(10.5);
-		
+		assertEquals(new FloatTerm(10), jpc.toTerm(10f));
 		assertEquals(new FloatTerm(10.5), jpc.toTerm(aFloat));
 		assertEquals(new FloatTerm(10.5), jpc.toTerm(aDouble));
 		assertEquals(new FloatTerm(10.5), jpc.toTerm(bd));
+	}
+	
+	@Test
+	public void testNumberToAtom() {
+		assertEquals(new Atom("1"), jpc.toTerm(1, Atom.class));
+		assertEquals(new Atom("1.0"), jpc.toTerm(1D, Atom.class));
 	}
 	
 	@Test
@@ -120,7 +125,8 @@ public class DefaultTermConverterTest {
 			put("apple", 10);
 			put("orange", 20);
 		}};
-		List<Term> listTerm = jpc.toTerm(map).asList();
+		Term mapTerm = jpc.toTerm(map);
+		List<Term> listTerm = mapTerm.asList();
 		assertEquals(2, listTerm.size());
 		assertEquals(new Compound(MapTypeSolver.DEFAULT_MAP_ENTRY_SEPARATOR, asList(new Atom("apple"), new IntegerTerm(10))), listTerm.get(0));
 		assertEquals(new Compound(MapTypeSolver.DEFAULT_MAP_ENTRY_SEPARATOR, asList(new Atom("orange"), new IntegerTerm(20))), listTerm.get(1));
@@ -161,10 +167,7 @@ public class DefaultTermConverterTest {
 	
 	@Test
 	public void testListToTerm() {
-		Term nonEmptyList = jpc.toTerm(new ArrayList() {{ 
-			add("apple");
-			add(10);
-		}});
+		Term nonEmptyList = jpc.toTerm(asList("apple", 10));
 		assertEquals(new Compound(".", asList(new Atom("apple"), 
 				new Compound(".", asList(new IntegerTerm(10), 
 				new Atom("[]"))))), nonEmptyList);
@@ -198,7 +201,7 @@ public class DefaultTermConverterTest {
 		assertFalse("true".equals(jpc.fromTerm(new Atom(TRUE))));
 		assertTrue("true".equals(jpc.fromTerm(new Atom(TRUE), String.class)));
 		assertEquals("123", jpc.fromTerm(new Atom("123")));
-		assertEquals(123, jpc.fromTerm(new Atom("123"), Integer.class));
+		assertEquals("123", jpc.fromTerm(new IntegerTerm(123), String.class));
 	}
 	
 	@Test
@@ -227,8 +230,11 @@ public class DefaultTermConverterTest {
 	
 	@Test
 	public void testTermToInt() {
+		assertTrue(jpc.fromTerm(new IntegerTerm(10L)).equals(10L));
+		assertFalse(jpc.fromTerm(new IntegerTerm(10)).equals(10)); //values in Prolog Integer terms are stored as a Java Long
 		assertEquals(10L, jpc.fromTerm(new IntegerTerm(10)));
 		assertEquals(10, jpc.fromTerm(new IntegerTerm(10), Integer.class));
+		assertEquals(10, jpc.fromTerm(new Atom("10"), Integer.class));
 		try{
 			jpc.fromTerm(new Atom(TRUE), Integer.class);
 			fail();
@@ -237,6 +243,9 @@ public class DefaultTermConverterTest {
 	
 	@Test
 	public void testTermToDouble() {
+		assertTrue(jpc.fromTerm(new FloatTerm(1D)).equals(1D));
+		assertFalse(jpc.fromTerm(new FloatTerm(1F)).equals(1F)); //values in Prolog Float terms are stored as a Java Double
+		assertTrue(jpc.fromTerm(new FloatTerm(1F)).equals(1D));
 		assertEquals(10.5, jpc.fromTerm(new FloatTerm(10.5)));
 	}
 
@@ -259,7 +268,7 @@ public class DefaultTermConverterTest {
 		Compound c1 = new Compound("-", asList(new Atom("apple"), new IntegerTerm(10)));
 		Compound c2 = new Compound("-", asList(new Atom("orange"), new IntegerTerm(20)));
 		Term listTerm = listTerm(c1, c2);
-		Map map = (Map) jpc.fromTerm(listTerm);
+		Map map = jpc.fromTerm(listTerm);
 		assertEquals(2, map.size());
 		assertEquals(map.get("apple"), 10L);
 		assertEquals(map.get("orange"), 20L);
@@ -278,7 +287,7 @@ public class DefaultTermConverterTest {
 	
 	@Test
 	public void testTermToMap3() {
-		Compound c1 = new Compound("#", asList(new Atom("apple"), new IntegerTerm(10)));
+		Compound c1 = new Compound("#", asList(new Atom("apple"), new IntegerTerm(10))); //the symbol # is not a valid entry separator
 		Compound c2 = new Compound("#", asList(new Atom("orange"), new IntegerTerm(20)));
 		Term listTerm = listTerm(c1, c2);
 		try {
@@ -294,6 +303,40 @@ public class DefaultTermConverterTest {
 		assertEquals(2, list.size());
 		assertEquals(list.get(0), "apple");
 		assertEquals(list.get(1), null);
+	}
+	
+	@Test
+	public void testTermToList2() {
+		Compound c1 = new Compound("-", asList(new Atom("apple"), new IntegerTerm(10)));
+		Compound c2 = new Compound("-", asList(new Atom("orange"), new IntegerTerm(20)));
+		Term listTerm = listTerm(c1, c2);
+		List list = jpc.fromTerm(listTerm, List.class);
+		assertEquals(2, list.size());
+		
+		assertEquals("apple", ((Entry)list.get(0)).getKey());
+		assertEquals(10L, ((Entry)list.get(0)).getValue());
+		assertEquals("orange", ((Entry)list.get(1)).getKey());
+		assertEquals(20L, ((Entry)list.get(1)).getValue());
+	}
+	
+	@Test
+	public void testTermToGenericList() {
+		Term listTerm = listTerm(new Atom("1"), new Atom("2"));
+		List list = jpc.fromTerm(listTerm); //no type specified
+		assertEquals(list.get(0), "1");
+		assertEquals(list.get(1), "2");
+		Type type = new TypeToken<List<String>>(){}.getType();
+		list = jpc.fromTerm(listTerm, type); //redundant specification of the type
+		assertEquals(list.get(0), "1");
+		assertEquals(list.get(1), "2");
+		type = new TypeToken<List<Integer>>(){}.getType();
+		list = jpc.fromTerm(listTerm, type); //indicating that the elements of the list should be integers
+		assertEquals(list.get(0), 1);
+		assertEquals(list.get(1), 2);
+		type = new TypeToken<List<Long>>(){}.getType();
+		list = jpc.fromTerm(listTerm, type); //indicating that the elements of the list should be longs
+		assertEquals(list.get(0), 1L);
+		assertEquals(list.get(1), 2L);
 	}
 	
 	@Test

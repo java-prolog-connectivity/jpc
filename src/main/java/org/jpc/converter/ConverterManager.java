@@ -8,8 +8,8 @@ import org.jpc.Jpc;
 import org.jpc.converter.catalog.NullConverter;
 import org.jpc.term.Term;
 import org.jpc.term.Variable;
-import org.minitoolbox.reflection.wrappertype.ArrayTypeWrapper;
-import org.minitoolbox.reflection.wrappertype.TypeWrapper;
+import org.minitoolbox.reflection.IncompatibleTypesException;
+import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,49 +30,31 @@ public class ConverterManager {
 	public Object fromTerm(Term term, Type type, Jpc context) {
 		if(term instanceof Variable)
 			return new NullConverter().fromTerm((Variable) term, type, context);
-		
-		TypeWrapper typeWrapper = TypeWrapper.wrap(type);
-		Type termType = context.getType(term);
-		if(termType != null && typeWrapper.isWeakAssignableFrom(termType)) { //if the term type is more specific, use that type instead
-			type = typeWrapper.asType(termType);
-			typeWrapper = TypeWrapper.wrap(type);
-		}
-		for(JpcConverter converter : converters) {
-			Type bestTypeForConverter = type;
-			Type converterObjectType;
-			try {
-				converterObjectType = converter.getObjectTypeOrThrow();
-			} catch(Exception e) {
-				logger.error("Converter error: " + e.toString());
-				continue;
-			}
-			
-			TypeWrapper converterObjectTypeWrapper = TypeWrapper.wrap(converterObjectType); //a type wrapper over the target type (the destination type) of the converter
 
-			if(converterObjectTypeWrapper instanceof ArrayTypeWrapper) {//the converter converts to an array
-				if(typeWrapper.isWeakAssignableFrom(converterObjectType)) {
-					Type baseTypeArray = TypeWrapper.wrap(converterObjectTypeWrapper.getBaseType()).asType(typeWrapper.getBaseType());
-					int typeArrayDimension = typeWrapper.getDimension();
-					int converterArrayDimension = converterObjectTypeWrapper.getDimension();
-					int dimension = typeArrayDimension<converterArrayDimension?converterArrayDimension:typeArrayDimension;
-					bestTypeForConverter = ArrayTypeWrapper.createArray(baseTypeArray, dimension);
-				} else
-					continue;
-			} else if(typeWrapper instanceof ArrayTypeWrapper) { //the current converter does not convert to arrays, but the desired type is an array
+		Type termType = context.getType(term);
+		if(termType != null) {
+			try {
+				type = TypeWrapper.wrap(termType).mostSpecificType(type); //will throw an exception if the types are not compatible
+			} catch(IncompatibleTypesException e) {} //do nothing
+		}		
+		TypeWrapper typeWrapper = TypeWrapper.wrap(type);
+
+		for(JpcConverter converter : converters) {
+			Type bestTypeForConverter;
+			Type converterObjectType = converter.getObjectType();
+			TypeWrapper converterObjectTypeWrapper = TypeWrapper.wrap(converterObjectType); //a type wrapper over the target type (the destination type) of the converter
+		
+			try {
+				bestTypeForConverter = converterObjectTypeWrapper.mostSpecificType(type); //will throw an exception if the types are not compatible
+			} catch(IncompatibleTypesException e) {
 				continue;
-			} else if(converter.objectTypeIsAssignableTo(type)) {
-				bestTypeForConverter = typeWrapper.asType(converterObjectType);
-			} else if (converter.objectTypeIsAssignableFrom(type)) {
-				bestTypeForConverter = converterObjectTypeWrapper.asType(type);
-			} else
-				continue;
-			
+			} //do nothing
+
+			TypeWrapper bestTypeForConverterWrapper = TypeWrapper.wrap(bestTypeForConverter);
 			
 			if(converter.canConvertFromTerm(term, bestTypeForConverter)) {
-				TypeWrapper bestTypeForConverterWrapper = TypeWrapper.wrap(bestTypeForConverter);
 				try {
-					if(bestTypeForConverterWrapper.getRawClass().equals(converterObjectTypeWrapper.getRawClass()) &&
-							bestTypeForConverterWrapper.isAssignableFrom(converterObjectType)) { //Returns false if the "best type" has type parameters and the converter type does not (this check is because in the call to fromTerm/2 the type arguments would be lost, then a call to fromTerm/3 is more appropriate).
+					if(bestTypeForConverter.equals(converterObjectType)) { //this check is because in the call to fromTerm/2 the type arguments would be lost, then a call to fromTerm/3 would be more appropriate.
 						return converter.fromTerm(term, context); //by default will delegate to fromTerm/3 unless overridding by the programmer
 					} else {
 						return converter.fromTerm(term, bestTypeForConverter, context); //the idea of these two calls is to allow the programmer to override either fromTerm/2 (if the type argument is not necessary) or fromTerm/3 (more verbose)
@@ -86,6 +68,8 @@ public class ConverterManager {
 		}
 		throw new JpcConversionException(term.toString(), type.toString()); //no converter was able to convert the term to the desired type
 	}
+	
+	
 	
 	public <T extends Term> T toTerm(Object object, Class<T> termClass, Jpc context) {
 		if(object==null) {
@@ -103,16 +87,17 @@ public class ConverterManager {
 
 		for(JpcConverter converter : converters) {
 			Class bestTermClassForConverter;
-			Class converterTermClass = converter.getTermClassOrThrow();
-			if(termClass.isAssignableFrom(converterTermClass))
-				bestTermClassForConverter = converterTermClass;
-			else if(converterTermClass.isAssignableFrom(termClass))
+			Type converterTermType = converter.getTermType();
+			TypeWrapper converterTermTypeWrapper = TypeWrapper.wrap(converterTermType);
+			if(TypeWrapper.wrap(termClass).isAssignableFrom(converterTermType))
+				bestTermClassForConverter = (Class) converterTermType;
+			else if(converterTermTypeWrapper.isAssignableFrom(termClass))
 				bestTermClassForConverter = termClass;
 			else
 				continue;
 			if(converter.canConvertToTerm(object, bestTermClassForConverter)) {
 				try {
-					if(bestTermClassForConverter.equals(converterTermClass)) {
+					if(bestTermClassForConverter.equals(converterTermType)) {
 						return (T) converter.toTerm(object, context);
 					} else {
 						return (T) converter.toTerm(object, bestTermClassForConverter, context);

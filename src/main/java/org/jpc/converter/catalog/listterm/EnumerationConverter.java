@@ -10,7 +10,7 @@ import org.jpc.converter.JpcConversionException;
 import org.jpc.converter.JpcConverter;
 import org.jpc.term.Term;
 import org.minitoolbox.reflection.javatype.ParameterizedTypeImpl;
-import org.minitoolbox.reflection.wrappertype.TypeWrapper;
+import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
 public class EnumerationConverter<E> extends JpcConverter<Enumeration<E>, Term> {
 

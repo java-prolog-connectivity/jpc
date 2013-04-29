@@ -12,7 +12,7 @@ import org.jpc.converter.JpcConverter;
 import org.jpc.converter.typesolver.MapTypeSolver;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
-import org.minitoolbox.reflection.wrappertype.TypeWrapper;
+import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
 public abstract class MapEntryConverter<K,V> extends JpcConverter<Entry<K,V>, Compound> {
 

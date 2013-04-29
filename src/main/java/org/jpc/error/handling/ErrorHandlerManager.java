@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jpc.Jpc;
-import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Term;
 
 public class ErrorHandlerManager implements ErrorHandler {
@@ -20,9 +19,9 @@ public class ErrorHandlerManager implements ErrorHandler {
 	}
 
 	@Override
-	public boolean handle(PrologEngine prologEngine, Term errorTerm, Term goal, Jpc context) {
+	public boolean handle(Term errorTerm, Term goal, Jpc context) {
 		for(ErrorHandler errorHandler : errorHandlers) {
-			if(errorHandler.handle(prologEngine, errorTerm, goal, context))
+			if(errorHandler.handle(errorTerm, goal, context))
 				return true;
 		}
 		return false;
