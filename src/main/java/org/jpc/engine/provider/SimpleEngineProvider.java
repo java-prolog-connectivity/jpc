@@ -3,20 +3,20 @@ package org.jpc.engine.provider;
 import org.jpc.engine.prolog.PrologEngine;
 
 /**
- * Currently used for unit testing together with the PrologEngineProviderManager class.
+ * Currently used for unit testing.
  * @author sergioc
  *
  */
-public class SimpleEngineProvider<T extends PrologEngine> implements PrologEngineProvider<T> {
+public class SimpleEngineProvider implements PrologEngineProvider {
 
-	private T prologEngine;
+	private PrologEngine prologEngine;
 	
-	public SimpleEngineProvider(T prologEngine) {
+	public SimpleEngineProvider(PrologEngine prologEngine) {
 		this.prologEngine = prologEngine;
 	}
 	
 	@Override
-	public T getPrologEngine() {
+	public PrologEngine getPrologEngine() {
 		return prologEngine;
 	}
 	

@@ -7,7 +7,6 @@ import org.jpc.engine.provider.PrologEngineProvider;
 public class ThreadLocalPrologEngineProvider implements PrologEngineProvider {
 
 	private PrologEngineFactory prologEngineFactory;
-	private PrologEngine prologEngine;
 	
 	public ThreadLocalPrologEngineProvider(PrologEngineFactory prologEngineFactory) {
 		this.prologEngineFactory = prologEngineFactory;
@@ -17,10 +16,7 @@ public class ThreadLocalPrologEngineProvider implements PrologEngineProvider {
 	public PrologEngine getPrologEngine() {
     	PrologEngine threadLocalPrologEngine = ThreadLocalPrologEngine.getPrologEngine();
     	if(threadLocalPrologEngine == null) {
-    		if(prologEngine == null) {
-    			prologEngine = prologEngineFactory.createPrologEngine();
-    		}
-    		threadLocalPrologEngine = prologEngine;
+    		threadLocalPrologEngine = prologEngineFactory.createPrologEngine();
     		ThreadLocalPrologEngine.setPrologEngine(threadLocalPrologEngine);
     	}
     	return threadLocalPrologEngine;

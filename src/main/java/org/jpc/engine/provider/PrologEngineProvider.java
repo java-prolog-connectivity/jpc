@@ -2,8 +2,8 @@ package org.jpc.engine.provider;
 
 import org.jpc.engine.prolog.PrologEngine;
 
-public interface PrologEngineProvider<T extends PrologEngine> {
+public interface PrologEngineProvider {
 
-	public abstract T getPrologEngine();
+	public PrologEngine getPrologEngine();
 	
 }

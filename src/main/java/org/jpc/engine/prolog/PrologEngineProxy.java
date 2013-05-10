@@ -9,10 +9,10 @@ import org.jpc.term.Term;
 
 public class PrologEngineProxy implements PrologEngine {
 
-	private PrologEngine prologEngine;
+	private PrologEngine proxiedEngine;
 	
-	public PrologEngineProxy(PrologEngine prologEngine) {
-		this.prologEngine = prologEngine;
+	public PrologEngineProxy(PrologEngine proxiedEngine) {
+		this.proxiedEngine = proxiedEngine;
 	}
 	
 	/**
@@ -21,86 +21,86 @@ public class PrologEngineProxy implements PrologEngine {
 	protected PrologEngineProxy() {
 	}
 	
-	protected void setPrologEngine(PrologEngine prologEngine) {
-		this.prologEngine = prologEngine;
+	protected void setPrologEngine(PrologEngine proxiedEngine) {
+		this.proxiedEngine = proxiedEngine;
 	}
 	
 	public PrologEngine getPrologEngine() {
-		return prologEngine;
+		return proxiedEngine;
 	}
 
 	public LogtalkEngine asLogtalkEngine() {
-		return prologEngine.asLogtalkEngine();
+		return proxiedEngine.asLogtalkEngine();
 	}
 	
 	@Override
 	public void close() {
-		prologEngine.close();
+		proxiedEngine.close();
 	}
 
 	@Override
 	public boolean isCloseable() {
-		return prologEngine.isCloseable();
+		return proxiedEngine.isCloseable();
 	}
 	
 	@Override
 	public boolean command(String termString) {
-		return prologEngine.command(termString);
+		return proxiedEngine.command(termString);
 	}
 
 	@Override
 	public boolean command(String termString, boolean errorHandledQuery) {
-		return prologEngine.command(termString, errorHandledQuery);
+		return proxiedEngine.command(termString, errorHandledQuery);
 	}
 	
 	@Override
 	public boolean command(String termString, Jpc context) {
-		return prologEngine.command(termString, context);
+		return proxiedEngine.command(termString, context);
 	}
 	
 	@Override
 	public Query query(String termString) {
-		return prologEngine.query(termString);
+		return proxiedEngine.query(termString);
 	}
 
 	@Override
 	public Query query(Term term) {
-		return prologEngine.query(term);
+		return proxiedEngine.query(term);
 	}
 	
 	@Override
 	public Query query(String termString, boolean errorHandledQuery) {
-		return prologEngine.query(termString, errorHandledQuery);
+		return proxiedEngine.query(termString, errorHandledQuery);
 	}
 	
 	@Override
 	public Query query(Term term, boolean errorHandledQuery) {
-		return prologEngine.query(term, errorHandledQuery);
+		return proxiedEngine.query(term, errorHandledQuery);
 	}
 	
 	@Override
 	public Query query(String termString, Jpc context) {
-		return prologEngine.query(termString, context);
+		return proxiedEngine.query(termString, context);
 	}
 
 	@Override
 	public Query query(Term term, Jpc context) {
-		return prologEngine.query(term, context);
+		return proxiedEngine.query(term, context);
 	}
 	
 	@Override
 	public Query query(String termString, boolean errorHandledQuery, Jpc context) {
-		return prologEngine.query(termString, errorHandledQuery, context);
+		return proxiedEngine.query(termString, errorHandledQuery, context);
 	}
 	
 	@Override
 	public Query query(Term term, boolean errorHandledQuery, Jpc context) {
-		return prologEngine.query(term, errorHandledQuery, context);
+		return proxiedEngine.query(term, errorHandledQuery, context);
 	}
 	
 	@Override
 	public Term asTerm(String termString) {
-		return prologEngine.asTerm(termString);
+		return proxiedEngine.asTerm(termString);
 	}
 
 //	public Term asTerm(String termString, boolean force) {
@@ -109,7 +109,7 @@ public class PrologEngineProxy implements PrologEngine {
 
 	@Override
 	public List<Term> asTerms(List<String> termsString) {
-		return prologEngine.asTerms(termsString);
+		return proxiedEngine.asTerms(termsString);
 	}
 
 //	public List<Term> asTerms(List<String> termsString, boolean force) {
@@ -118,166 +118,166 @@ public class PrologEngineProxy implements PrologEngine {
 
 	@Override
 	public boolean setPrologFlag(Term flag, Term flagValue) {
-		return prologEngine.setPrologFlag(flag, flagValue);
+		return proxiedEngine.setPrologFlag(flag, flagValue);
 	}
 
 	@Override
 	public boolean setPrologFlag(Flag flag, String flagValue) {
-		return prologEngine.setPrologFlag(flag, flagValue);
+		return proxiedEngine.setPrologFlag(flag, flagValue);
 	}
 
 	@Override
 	public Query currentPrologFlag(Term flag, Term flagValue) {
-		return prologEngine.currentPrologFlag(flag, flagValue);
+		return proxiedEngine.currentPrologFlag(flag, flagValue);
 	}
 
 	@Override
 	public Query currentPrologFlag(Flag flag, String flagValue) {
-		return prologEngine.currentPrologFlag(flag, flagValue);
+		return proxiedEngine.currentPrologFlag(flag, flagValue);
 	}
 	
 	@Override
 	public String currentPrologFlag(Flag flag) {
-		return prologEngine.currentPrologFlag(flag);
+		return proxiedEngine.currentPrologFlag(flag);
 	}
 
 	@Override
 	public String prologDialect() {
-		return prologEngine.prologDialect();
+		return proxiedEngine.prologDialect();
 	}
 
 	@Override
 	public Query currentOp(Term priority, Term specifier, Term operator) {
-		return prologEngine.currentOp(priority, specifier, operator);
+		return proxiedEngine.currentOp(priority, specifier, operator);
 	}
 
 	@Override
 	public boolean isBinaryOperator(String op) {
-		return prologEngine.isBinaryOperator(op);
+		return proxiedEngine.isBinaryOperator(op);
 	}
 
 	@Override
 	public boolean isUnaryOperator(String op) {
-		return prologEngine.isUnaryOperator(op);
+		return proxiedEngine.isUnaryOperator(op);
 	}
 
 	@Override
 	public boolean cd(Term path) {
-		return prologEngine.cd(path);
+		return proxiedEngine.cd(path);
 	}
 
 	@Override
 	public boolean cd(String path) {
-		return prologEngine.cd(path);
+		return proxiedEngine.cd(path);
 	}
 
 	@Override
 	public boolean asserta(Term term) {
-		return prologEngine.asserta(term);
+		return proxiedEngine.asserta(term);
 	}
 
 	@Override
 	public boolean assertz(Term term) {
-		return prologEngine.assertz(term);
+		return proxiedEngine.assertz(term);
 	}
 
 	@Override
 	public Query retract(Term term) {
-		return prologEngine.retract(term);
+		return proxiedEngine.retract(term);
 	}
 
 	@Override
 	public boolean retractAll(Term term) {
-		return prologEngine.retractAll(term);
+		return proxiedEngine.retractAll(term);
 	}
 
 	@Override
 	public boolean abolish(Term term) {
-		return prologEngine.abolish(term);
+		return proxiedEngine.abolish(term);
 	}
 
 	@Override
 	public Query clause(Term head, Term body) {
-		return prologEngine.clause(head, body);
+		return proxiedEngine.clause(head, body);
 	}
 
 	@Override
 	public boolean asserta(List<? extends Term> terms) {
-		return prologEngine.asserta(terms);
+		return proxiedEngine.asserta(terms);
 	}
 
 	@Override
 	public boolean assertz(List<? extends Term> terms) {
-		return prologEngine.assertz(terms);
+		return proxiedEngine.assertz(terms);
 	}
 
 	@Override
 	public boolean ensureLoaded(List<? extends Term> terms) {
-		return prologEngine.ensureLoaded(terms);
+		return proxiedEngine.ensureLoaded(terms);
 	}
 
 	@Override
 	public boolean ensureLoaded(Term... terms) {
-		return prologEngine.ensureLoaded(terms);
+		return proxiedEngine.ensureLoaded(terms);
 	}
 
 	@Override
 	public boolean ensureLoaded(String... resources) {
-		return prologEngine.ensureLoaded(resources);
+		return proxiedEngine.ensureLoaded(resources);
 	}
 
 	@Override
 	public Query bagof(Term select, Term exp, Term all) {
-		return prologEngine.bagof(select, exp, all);
+		return proxiedEngine.bagof(select, exp, all);
 	}
 
 	@Override
 	public Term bagof(Term select, Term exp) {
-		return prologEngine.bagof(select, exp);
+		return proxiedEngine.bagof(select, exp);
 	}
 	
 	@Override
 	public Query findall(Term select, Term exp, Term all) {
-		return prologEngine.findall(select, exp, all);
+		return proxiedEngine.findall(select, exp, all);
 	}
 
 	@Override
 	public Term findall(Term select, Term exp) {
-		return prologEngine.findall(select, exp);
+		return proxiedEngine.findall(select, exp);
 	}
 	
 	@Override
 	public Query setof(Term select, Term exp, Term all) {
-		return prologEngine.setof(select, exp, all);
+		return proxiedEngine.setof(select, exp, all);
 	}
 
 	@Override
 	public Term setof(Term select, Term exp) {
-		return prologEngine.setof(select, exp);
+		return proxiedEngine.setof(select, exp);
 	}
 	
 	@Override
 	public Query forall(Term generator, Term test) {
-		return prologEngine.forall(generator, test);
+		return proxiedEngine.forall(generator, test);
 	}
 
 	@Override
 	public boolean flushOutput() {
-		return prologEngine.flushOutput();
+		return proxiedEngine.flushOutput();
 	}
 
 	@Override
 	public Term unify(Term... terms) {
-		return prologEngine.unify(terms);
+		return proxiedEngine.unify(terms);
 	}
 	
 	@Override
 	public Term unify(List<? extends Term> terms) {
-		return prologEngine.unify(terms);
+		return proxiedEngine.unify(terms);
 	}
 
 	@Override
 	public boolean allSucceed(List<? extends Term> Terms) {
-		return prologEngine.allSucceed(Terms);
+		return proxiedEngine.allSucceed(Terms);
 	}
 }

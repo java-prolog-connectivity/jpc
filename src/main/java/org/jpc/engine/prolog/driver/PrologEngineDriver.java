@@ -11,7 +11,7 @@ import org.minitoolbox.CollectionsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class PrologEngineDriver implements PrologEngineFactory<PrologEngine>, Nameable {
+public abstract class PrologEngineDriver implements PrologEngineFactory, Nameable {
 
 	private static Logger logger = LoggerFactory.getLogger(PrologEngineDriver.class);
 	private String name; //This optional attribute is intended to be used for GUI development in a multi-engine environment.
@@ -34,7 +34,7 @@ public abstract class PrologEngineDriver implements PrologEngineFactory<PrologEn
 		 * Using a weak set for keeping the list of state listeners, so references to these listeners can be collected by the GC if required.
 		 */
 		listeners = CollectionsUtil.createWeakSet();
-		String defaultConfigurationName = getEngineName() + "-" + getLibraryName();
+		String defaultConfigurationName = getShortDescription();
 		setName(defaultConfigurationName);
 	}
 
@@ -54,23 +54,24 @@ public abstract class PrologEngineDriver implements PrologEngineFactory<PrologEn
 	}
 
 	/**
-	 * Answers if the driver is enabled (can create a Prolog Engine session) or disabled.
+	 * Answers if the driver is disabled (cannot create a Prolog Engine session) or enabled.
 	 * Normally this property cannot be set by the programmer but depends on the internals of the concrete driver implementation (that is the reason is not implemented as an instance variable).
 	 * The original motivation of this property is to enable GUI tools to show properly the driver description and availability on the screen
 	 * Normally, drivers supporting multiple Prolog engines are always enable.
 	 * However, drivers supporting only one Prolog session are enabled only before creating the first (and unique) Prolog session, and disabled afterwards.
 	 * Note that certain libraries (e.g., JPL) allows only one session using the library, so it is not possible to start a second session with a different Prolog engine that uses the same library.
 	 * For example, if a SWI Prolog engine is created using JPL, it is not going to be possible to create a YAP Prolog engine using also JPL.
-	 * @return the enable state of the driver
+	 * @return the disabled state of the driver
 	 */
-	public boolean isEnabled() {
-		return true;
+	@Override
+	public boolean isDisabled() {
+		return false;
 	}
 
 
 	@Override
 	public PrologEngine createPrologEngine() {
-		if(!isEnabled())
+		if(isDisabled())
 			throw new PrologEngineInitializationException("The driver cannot instantiate new Prolog engines.");
 		readyOrThrow();
 		logger.info("Initializing logic engine ...");
@@ -140,6 +141,10 @@ public abstract class PrologEngineDriver implements PrologEngineFactory<PrologEn
 	@Override
 	public String toString() {
 		return getDescription();
+	}
+	
+	public String getShortDescription() {
+		return getEngineName() + "-" + getLibraryName();
 	}
 	
 	public String getDescription() {

@@ -23,8 +23,8 @@ public abstract class UniquePrologEngineDriver extends PrologEngineDriver {
 	}
 	
 	@Override
-	public synchronized boolean isEnabled() {
-		return !isInstanceRunning();
+	public synchronized boolean isDisabled() {
+		return isInstanceRunning();
 	}
 	
 	protected abstract boolean isInstanceRunning();
