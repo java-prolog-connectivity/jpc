@@ -1,37 +1,45 @@
-package org.jpc.engine.prolog.driver;
+package org.jpc.engine.profile;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.jpc.engine.prolog.PrologEngine;
+import org.jpc.engine.prolog.driver.PrologEngineFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PrologEngineProfile<T extends PrologEngine> implements PrologEngineFactory<T> {
+/**
+ * A factory of tailored Prolog engines.
+ * The objective of this class is to decouple the work of creating a Prolog engine (task of drivers) from the work of customizing it.
+ * Different profiles can initialize Prolog engines according to certain required features (e.g., configuration of Logtalk, preloading of files, etc).
+ * @author sergioc
+ *
+ */
+public class PrologEngineProfile implements PrologEngineFactory {
 
 	private static Logger logger = LoggerFactory.getLogger(PrologEngineProfile.class);
 	
-	private PrologEngineFactory<T> prologEngineFactory;
+	private PrologEngineFactory prologEngineFactory;
 	private String name; //This optional attribute is intended to be used for GUI development in a multi-engine environment.
 	
-	//the scope (packages) where this logic engine should be applied. This attribute may be used for automatic configuration of Prolog Engines 
+	//(Experimental) The scope (packages) where this logic engine should be applied. This attribute may be used for automatic configuration of Prolog Engines 
 	//TODO consider changing it for an annotation in the configuration class.
 	protected List<String> scope; 
 	
 
-	public PrologEngineProfile(PrologEngineFactory<T> prologEngineFactory) {
+	public PrologEngineProfile(PrologEngineFactory prologEngineFactory) {
 		this.prologEngineFactory = prologEngineFactory;
 		scope = new ArrayList<String>();
 		//addScope(""); //the root package
 	}
 
-	public PrologEngineFactory<T> getPrologEngineFactory() {
+	public PrologEngineFactory getPrologEngineFactory() {
 		return prologEngineFactory;
 	}
 
-	public boolean isEnabled() {
-		return prologEngineFactory.isEnabled();
+	public boolean isDisabled() {
+		return prologEngineFactory.isDisabled();
 	}
 	
 	public String getName() {
@@ -58,19 +66,25 @@ public class PrologEngineProfile<T extends PrologEngine> implements PrologEngine
 		scope.addAll(Arrays.asList(newScopes));
 	}
 	
+	
 	@Override
-	public T createPrologEngine() {
-		T prologEngine = basicCreatePrologEngine();
-		onCreate(prologEngine);
+	public final PrologEngine createPrologEngine() {
+		PrologEngine prologEngine = basicCreatePrologEngine();
+		try {
+			onCreate(prologEngine);
+		} catch(RuntimeException e) {
+			if(prologEngine.isCloseable())
+				prologEngine.close();
+			throw e;
+		}
 		return prologEngine;
 	}
-	
 	
 	/**
 	 * 
 	 * @return a instance of a Prolog engine.
 	 */
-	protected T basicCreatePrologEngine() {
+	protected final PrologEngine basicCreatePrologEngine() {
 		return prologEngineFactory.createPrologEngine();
 	}
 	
