@@ -4,7 +4,10 @@ public class DummyNameSolver implements NameSolver {
 
 	@Override
 	public String nameOf(Nameable o) {
-		return o.getName();
+		String name = o.getName();
+		if(name == null)
+			name = "<NO NAME>";
+		return name;
 	}
 
 }
