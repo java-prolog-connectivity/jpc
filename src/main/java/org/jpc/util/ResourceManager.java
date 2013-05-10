@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.jpc.JpcPreferences;
+import org.jpc.resource.LogicResource;
 import org.minitoolbox.io.FileUtil;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
@@ -17,7 +18,6 @@ import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.io.Resources;
 
@@ -30,7 +30,7 @@ import com.google.common.io.Resources;
 public class ResourceManager {
 
 	private static Logger logger = LoggerFactory.getLogger(ResourceManager.class);
-	
+	private JpcPreferences preferences;
 	private static ResourceManager defaultResourceManager;
 
 	public static ResourceManager getDefaultResourceManager() {
@@ -47,7 +47,7 @@ public class ResourceManager {
 	private final File jpcTmpDir; //a File object representing a folder in the tmp directory where logic files or similar resources can be unzipped if required
 
 	private Set<URL> processedURLs; //remember which URLs have been processed already (i.e., tmp files have already been created for logic files in such url)
-	private JpcPreferences preferences;
+	//private JpcPreferences preferences;
 	
 	public ResourceManager(JpcPreferences preferences) {
 		this.preferences = preferences;
@@ -113,11 +113,6 @@ public class ResourceManager {
 		return new File(jpcTmpDir, tmpFolderPath);
 	}
 	
-	
-	private String regExpPrologExtensions() {
-		return Joiner.on("|").join(preferences.prologExtensionFiles());
-	}
-	
 	public void createTmpLogicFiles(URL url) throws IOException {
 		File tmpDirForUrl = getTmpDir(url);
 		if(tmpDirForUrl.exists()) {
@@ -130,10 +125,9 @@ public class ResourceManager {
 		
 		Predicate<String> predicate = new Predicate<String>() {
 			  public boolean apply(String string) {
-				return string.matches(".*\\.(" + regExpPrologExtensions() + ")$");  //matching resources names ending  with the default Logtalk and Prolog extensions pl|P|lgt
+				  return LogicResource.hasLogicExtension(string); //matching resources names ending  with the default Logtalk and Prolog extensions pl|P|lgt
 			  }
 			};
-			
 		copyResources(url, predicate, tmpDirForUrl);
 	}
 
