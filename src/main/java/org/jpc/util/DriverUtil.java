@@ -141,7 +141,18 @@ public class DriverUtil {
 		return libraryNameMultimap;
 	}
 
-
+	/**
+	 * Order alphabetically a list of drivers.
+	 * @param drivers
+	 */
+	public static void orderByLibraryName(List<PrologEngineDriver> drivers) {
+		Collections.sort(drivers, new Comparator<PrologEngineDriver>(){
+			@Override
+			public int compare(PrologEngineDriver d1, PrologEngineDriver d2) {
+				return d1.getLibraryName().compareTo(d2.getLibraryName());
+			}
+		});
+	}
 
 	
 }
