@@ -12,7 +12,7 @@ import org.jpc.engine.prolog.PrologEngine;
  * @author sergioc
  *
  */
-public abstract class UniquePrologEngineDriver extends PrologEngineDriver {
+public abstract class UniquePrologEngineDriver<T extends PrologEngine> extends PrologEngineDriver<T> {
 	
 	public UniquePrologEngineDriver() {
 		super();
@@ -30,13 +30,13 @@ public abstract class UniquePrologEngineDriver extends PrologEngineDriver {
 	protected abstract boolean isInstanceRunning();
 	
 	@Override
-	public synchronized PrologEngine createPrologEngine() {
+	public synchronized T createPrologEngine() {
 		if(isInstanceRunning()) {
 			throw new UnsupportedOperationException("No more than one Prolog Engine can be created by this configuration");
 			//return basicCreatePrologEngine();
 		}
 		else {
-			PrologEngine prologEngine = super.createPrologEngine();
+			T prologEngine = super.createPrologEngine();
 			notifyDisabledState();
 			return prologEngine;
 		}

@@ -16,11 +16,11 @@ import org.slf4j.LoggerFactory;
  * @author sergioc
  *
  */
-public class PrologEngineProfile implements PrologEngineFactory {
+public class PrologEngineProfile<T extends PrologEngine> implements PrologEngineFactory<T> {
 
 	private static Logger logger = LoggerFactory.getLogger(PrologEngineProfile.class);
 	
-	private PrologEngineFactory prologEngineFactory;
+	private PrologEngineFactory<T> prologEngineFactory;
 	private String name; //This optional attribute is intended to be used for GUI development in a multi-engine environment.
 	
 	//(Experimental) The scope (packages) where this logic engine should be applied. This attribute may be used for automatic configuration of Prolog Engines 
@@ -28,13 +28,13 @@ public class PrologEngineProfile implements PrologEngineFactory {
 	protected List<String> scope; 
 	
 
-	public PrologEngineProfile(PrologEngineFactory prologEngineFactory) {
+	public PrologEngineProfile(PrologEngineFactory<T> prologEngineFactory) {
 		this.prologEngineFactory = prologEngineFactory;
 		scope = new ArrayList<String>();
 		//addScope(""); //the root package
 	}
 
-	public PrologEngineFactory getPrologEngineFactory() {
+	public PrologEngineFactory<T> getPrologEngineFactory() {
 		return prologEngineFactory;
 	}
 
@@ -68,8 +68,8 @@ public class PrologEngineProfile implements PrologEngineFactory {
 	
 	
 	@Override
-	public final PrologEngine createPrologEngine() {
-		PrologEngine prologEngine = basicCreatePrologEngine();
+	public final T createPrologEngine() {
+		T prologEngine = basicCreatePrologEngine();
 		try {
 			onCreate(prologEngine);
 		} catch(RuntimeException e) {
@@ -84,11 +84,11 @@ public class PrologEngineProfile implements PrologEngineFactory {
 	 * 
 	 * @return a instance of a Prolog engine.
 	 */
-	protected final PrologEngine basicCreatePrologEngine() {
+	protected final T basicCreatePrologEngine() {
 		return prologEngineFactory.createPrologEngine();
 	}
 	
-	public void onCreate(PrologEngine prologEngine) {
+	public void onCreate(T prologEngine) {
 		//nothing by default, to be overridden if needed
 	}
 }

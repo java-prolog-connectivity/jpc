@@ -6,17 +6,17 @@ import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.engine.prolog.driver.PrologEngineFactory;
 import org.jpc.resource.LogtalkResource;
 
-public class PreloaderEngineProfile extends PrologEngineProfile {
+public class PreloaderEngineProfile<T extends PrologEngine> extends PrologEngineProfile<T> {
 
 	private List<String> absolutePaths;
 
-	public PreloaderEngineProfile(PrologEngineFactory engineFactory, List<String> absolutePaths) {
+	public PreloaderEngineProfile(PrologEngineFactory<T> engineFactory, List<String> absolutePaths) {
 		super(engineFactory);
 		this.absolutePaths = absolutePaths;
 	}
 
 	@Override
-	public void onCreate(PrologEngine newPrologEngine) {
+	public void onCreate(T newPrologEngine) {
 		for(String absolutePath : absolutePaths) {
 			if(LogtalkResource.hasLogtalkExtension(absolutePath))
 				newPrologEngine.asLogtalkEngine().logtalkLoad(absolutePath);

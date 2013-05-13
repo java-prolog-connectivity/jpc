@@ -6,16 +6,16 @@ import org.jpc.engine.prolog.driver.PrologEngineFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LogtalkEngineProfile extends PrologEngineProfile {
+public class LogtalkEngineProfile<T extends PrologEngine> extends PrologEngineProfile<T> {
 
 	private static Logger logger = LoggerFactory.getLogger(LogtalkEngineProfile.class);
 	private JpcPreferences preferences;
 	
-	public LogtalkEngineProfile(PrologEngineFactory engineFactory) {
+	public LogtalkEngineProfile(PrologEngineFactory<T> engineFactory) {
 		this(engineFactory, new JpcPreferences());
 	}
 	
-	public LogtalkEngineProfile(PrologEngineFactory engineFactory, JpcPreferences preferences) {
+	public LogtalkEngineProfile(PrologEngineFactory<T> engineFactory, JpcPreferences preferences) {
 		super(engineFactory);
 		this.preferences = preferences;
 	}
@@ -25,7 +25,7 @@ public class LogtalkEngineProfile extends PrologEngineProfile {
 	}
 	
 	@Override
-	public void onCreate(PrologEngine newPrologEngine) {
+	public void onCreate(T newPrologEngine) {
 		boolean logtalkLoaded = false;
 		String prologDialect = newPrologEngine.prologDialect();
 		logger.info("Attempting to load logtalk in a " + prologDialect + " Prolog engine...");

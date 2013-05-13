@@ -11,7 +11,7 @@ import org.minitoolbox.CollectionsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class PrologEngineDriver implements PrologEngineFactory, Nameable {
+public abstract class PrologEngineDriver<T extends PrologEngine> implements PrologEngineFactory<T>, Nameable {
 
 	private static Logger logger = LoggerFactory.getLogger(PrologEngineDriver.class);
 	private String name; //This optional attribute is intended to be used for GUI development in a multi-engine environment.
@@ -70,14 +70,14 @@ public abstract class PrologEngineDriver implements PrologEngineFactory, Nameabl
 
 
 	@Override
-	public PrologEngine createPrologEngine() {
+	public T createPrologEngine() {
 		if(isDisabled())
 			throw new PrologEngineInitializationException("The driver cannot instantiate new Prolog engines.");
 		readyOrThrow();
 		logger.info("Initializing logic engine ...");
 		long startTime = System.nanoTime();
 
-		PrologEngine newPrologEngine = basicCreatePrologEngine();
+		T newPrologEngine = basicCreatePrologEngine();
 		onCreate(newPrologEngine);
 		newPrologEngine.flushOutput();
 		
@@ -155,7 +155,7 @@ public abstract class PrologEngineDriver implements PrologEngineFactory, Nameabl
 	 * 
 	 * @return a instance of a Prolog engine. This instance has not been configured yet
 	 */
-	protected abstract PrologEngine basicCreatePrologEngine();
+	protected abstract T basicCreatePrologEngine();
 	
 	public abstract String getLibraryName();
 	

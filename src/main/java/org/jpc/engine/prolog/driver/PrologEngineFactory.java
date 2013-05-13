@@ -2,9 +2,9 @@ package org.jpc.engine.prolog.driver;
 
 import org.jpc.engine.prolog.PrologEngine;
 
-public interface PrologEngineFactory {
+public interface PrologEngineFactory<T extends PrologEngine> {
 
-	public PrologEngine createPrologEngine();
+	public T createPrologEngine();
 
 	/**
 	 * Answers if the factory cannot create new Prolog engines

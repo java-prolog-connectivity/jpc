@@ -7,16 +7,16 @@ import org.jpc.engine.prolog.PrologEngine;
  * @author sergioc
  *
  */
-public class SimpleEngineProvider implements PrologEngineProvider {
+public class SimpleEngineProvider<T extends PrologEngine> implements PrologEngineProvider<T> {
 
-	private PrologEngine prologEngine;
+	private T prologEngine;
 	
-	public SimpleEngineProvider(PrologEngine prologEngine) {
+	public SimpleEngineProvider(T prologEngine) {
 		this.prologEngine = prologEngine;
 	}
 	
 	@Override
-	public PrologEngine getPrologEngine() {
+	public T getPrologEngine() {
 		return prologEngine;
 	}
 	

@@ -4,8 +4,8 @@ import org.jpc.engine.prolog.PrologEngine;
 
 
 
-public interface PrologEngineManager extends PrologEngineFactory {
+public interface PrologEngineManager<T extends PrologEngine> extends PrologEngineFactory<T> {
 
-	public void shutdownPrologEngine(PrologEngine prologEngine);
+	public void shutdownPrologEngine(T prologEngine);
 	
 }
