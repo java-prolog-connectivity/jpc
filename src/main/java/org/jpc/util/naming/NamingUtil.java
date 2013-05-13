@@ -6,7 +6,11 @@ import java.util.Map;
 public abstract class NamingUtil {
 
 	public static void renameRepeatedNames(Iterable<? extends Nameable> nameables) {
-		assignUniqueNames(nameables, new DummyNameSolver());
+		renameRepeatedNames(nameables, new HashMap<String, Integer>());
+	}
+	
+	public static void renameRepeatedNames(Iterable<? extends Nameable> nameables, Map<String, Integer> nameOccurrences) {
+		assignUniqueNames(nameables, new DummyNameSolver(), nameOccurrences);
 	}
 	
 	public static void renameIfRepeated(Nameable nameable, Map<String, Integer> nameOccurrences) {
@@ -14,7 +18,10 @@ public abstract class NamingUtil {
 	}
 	
 	public static void assignUniqueNames(Iterable<? extends Nameable> nameables, NameSolver nameSolver) {
-		Map<String, Integer> nameOccurrences = new HashMap<String, Integer>();
+		assignUniqueNames(nameables, nameSolver, new HashMap<String, Integer>());
+	}
+
+	public static void assignUniqueNames(Iterable<? extends Nameable> nameables, NameSolver nameSolver, Map<String, Integer> nameOccurrences) {
 		for(Nameable nameable : nameables) {
 			assignUniqueName(nameable, nameSolver, new HashMap<String, Integer>());
 		}
