@@ -24,12 +24,14 @@ public class ObservableQuery extends QueryAdapter {
 	@Override
 	protected void setState(CursorState state) {
 		super.setState(state);
-		if(state.equals(CursorState.READY))
-			notifyQueryReady();
-		else if(state.equals(CursorState.OPEN))
-			notifyQueryOpened();
-		else if(state.equals(CursorState.EXHAUSTED))
-			notifyQueryExhausted();
+		if(listeners != null) { //if listeners == null the object is being initialized. Particularly, the listeners collection has not been initialized yet.
+			if(state.equals(CursorState.READY))
+				notifyQueryReady();
+			else if(state.equals(CursorState.OPEN))
+				notifyQueryOpened();
+			else if(state.equals(CursorState.EXHAUSTED))
+				notifyQueryExhausted();
+		}
 	}
 	
 	@Override
