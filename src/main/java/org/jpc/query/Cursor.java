@@ -64,13 +64,16 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	public synchronized T oneSolution() {
 		open();
 		try (Cursor<T> autoCloseable = this) {
-			return basicOneSolution();
+			T one = basicOneSolution();
+			if(one == null)
+				setState(EXHAUSTED);
+			return one;
 		}
 	}
 
 	protected T basicOneSolution() {
 		try {
-			return cachedNext();
+			return basicNext();
 		} catch(NoSuchElementException e) {
 			return null;
 		}
