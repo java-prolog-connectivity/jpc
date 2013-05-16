@@ -53,7 +53,7 @@ public class ObservableQuery extends QueryAdapter {
 		Map<String,Term> next = null;
 		try {
 			notifyQueryInProgress();
-			next = super.next();
+			next = super.next(); //throws a NoSuchElementException in case the query is exhausted
 			notifyQueryFinished();
 		} catch(Exception e) {
 			notifyException(e);
@@ -74,7 +74,8 @@ public class ObservableQuery extends QueryAdapter {
 			notifyException(e);
 			throw e;
 		}
-		notifyNextSolutionFound(next);
+		if(next != null)
+			notifyNextSolutionFound(next);
 		return next;
 	}
 	
