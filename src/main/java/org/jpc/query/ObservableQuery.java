@@ -39,11 +39,14 @@ public class ObservableQuery extends QueryAdapter {
 		Boolean hasNext = null;
 		try {
 			notifyQueryInProgress();
-			hasNext = super.hasNext();
+			try {
+				hasNext = super.hasNext();
+			} catch(Exception e) {
+				notifyException(e);
+				throw e;
+			} 
+		} finally {
 			notifyQueryFinished();
-		} catch(Exception e) {
-			notifyException(e);
-			throw e;
 		}
 		return hasNext;
 	}
@@ -53,11 +56,14 @@ public class ObservableQuery extends QueryAdapter {
 		Map<String,Term> next = null;
 		try {
 			notifyQueryInProgress();
-			next = super.next(); //throws a NoSuchElementException in case the query is exhausted
+			try {
+				next = super.next(); //throws a NoSuchElementException in case the query is exhausted
+			} catch(Exception e) {
+				notifyException(e);
+				throw e;
+			} 
+		} finally {
 			notifyQueryFinished();
-		} catch(Exception e) {
-			notifyException(e);
-			throw e;
 		}
 		notifyNextSolutionFound(next);
 		return next;
@@ -68,11 +74,14 @@ public class ObservableQuery extends QueryAdapter {
 		Map<String,Term> next = null;
 		try {
 			notifyQueryInProgress();
-			next = super.oneSolution();
+			try {
+				next = super.oneSolution();
+			} catch(Exception e) {
+				notifyException(e);
+				throw e;
+			} 
+		} finally {
 			notifyQueryFinished();
-		} catch(Exception e) {
-			notifyException(e);
-			throw e;
 		}
 		if(next != null)
 			notifyNextSolutionFound(next);
@@ -84,11 +93,14 @@ public class ObservableQuery extends QueryAdapter {
 		List<Map<String,Term>> allSolutions = null;
 		try {
 			notifyQueryInProgress();
-			allSolutions = super.solutionsRange(from, to);
+			try {
+				allSolutions = super.solutionsRange(from, to);
+			} catch(Exception e) {
+				notifyException(e);
+				throw e;
+			} 
+		} finally {
 			notifyQueryFinished();
-		} catch(Exception e) {
-			notifyException(e);
-			throw e;
 		}
 		notifySolutionsFound(allSolutions);
 		return allSolutions;
@@ -99,11 +111,14 @@ public class ObservableQuery extends QueryAdapter {
 		List<Map<String,Term>> allSolutions = null;
 		try {
 			notifyQueryInProgress();
-			allSolutions = super.allSolutions();
+			try {
+				allSolutions = super.allSolutions();
+			} catch(Exception e) {
+				notifyException(e);
+				throw e;
+			} 
+		} finally {
 			notifyQueryFinished();
-		} catch(Exception e) {
-			notifyException(e);
-			throw e;
 		}
 		notifySolutionsFound(allSolutions);
 		return allSolutions;

@@ -30,10 +30,14 @@ public interface PrologEngine extends PrologDatabase {
 	public void close();
 
 	/**
-	 * Answers if a Prolog engine can be closed
-	 * @return
+	 * @return true if the Prolog engine can be closed (i.e., its resources can be freed). false otherwise.
 	 */
 	public boolean isCloseable();
+	
+	/**
+	 * @return true if the Prolog engine can manage concurrent requests (e.g., multiple queries open at the same time). false otherwise.
+	 */
+	public boolean isMultiThreaded();
 	
 	public boolean command(String command);
 	

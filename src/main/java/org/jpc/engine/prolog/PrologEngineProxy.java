@@ -37,10 +37,15 @@ public class PrologEngineProxy implements PrologEngine {
 	public void close() {
 		proxiedEngine.close();
 	}
-
+	
 	@Override
 	public boolean isCloseable() {
 		return proxiedEngine.isCloseable();
+	}
+
+	@Override
+	public boolean isMultiThreaded() {
+		return proxiedEngine.isMultiThreaded();
 	}
 	
 	@Override
