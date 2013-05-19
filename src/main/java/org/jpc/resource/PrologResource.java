@@ -9,7 +9,7 @@ import org.minitoolbox.RegExUtil;
 
 public class PrologResource extends LogicResource {
 	
-	private static final List<String> defaultPrologExtensions = Arrays.asList(new String[] {"pl", "P"});
+	private static final List<String> defaultPrologExtensions = Arrays.asList(new String[] {"pl", "P", "pro"});
 	
 	public static List<String> getPrologExtensions() {
 		return defaultPrologExtensions;
