@@ -30,8 +30,10 @@ import static org.jpc.engine.logtalk.LogtalkConstants.SET_LOGTALK_FLAG;
 import static org.jpc.engine.logtalk.LogtalkConstants.SPECIALIZES_CLASS;
 import static org.jpc.term.ListTerm.listTerm;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +41,7 @@ import org.jpc.Jpc;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.engine.prolog.PrologEngineProxy;
 import org.jpc.query.Query;
+import org.jpc.query.QuerySolution;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
@@ -75,6 +78,21 @@ public class LogtalkEngine extends PrologEngineProxy {
 	
 	public boolean setLogtalkFlag(LogtalkFlag flag, String value) {
 		return query(new Compound(SET_LOGTALK_FLAG, asList(new Atom(flag.toString()), new Atom(value)))).hasSolution();
+	}
+	
+	public Map<String, LogtalkLibrary> getLibraries() {
+		Map<String, LogtalkLibrary> libraries = new HashMap<>();
+		Query query = query("logtalk_library_path(Alias,TermPath), logtalk::expand_library_path(Alias, Dir)");
+		for(QuerySolution oneSolution : query.allSolutions()) {
+			String alias = oneSolution.getString("Alias");
+			Term termPath = oneSolution.get("TermPath");
+			String absolutePath = oneSolution.getString("Dir");
+			File dir = new File(absolutePath);
+			LogtalkLibraryDescription libraryDescription = new LogtalkLibraryDescription(alias, termPath, dir);
+			LogtalkLibrary library = new LogtalkLibrary(libraryDescription);
+			libraries.put(alias, library);
+		}
+		return libraries;
 	}
 	
 	public Query currentObject(Term term) {
