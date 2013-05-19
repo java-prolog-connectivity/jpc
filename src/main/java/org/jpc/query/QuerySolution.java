@@ -2,23 +2,47 @@ package org.jpc.query;
 
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import org.jpc.Jpc;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Term;
+import org.jpc.term.Variable;
 
 public class QuerySolution implements Map<String,Term> {
 
+	public static final String EXCEPTION_VAR_NAME = "JPC_EXCEPTION_VAR";
+	
 	private PrologEngine prologEngine;
 	private Map<String, Term> solution;
 	private Jpc context;
+	private Term errorTerm;
 	
 	public QuerySolution(Map<String, Term> solution, PrologEngine prologEngine, Jpc context) {
-		this.solution = solution;
+		this.solution = new HashMap<>(solution);
 		this.prologEngine = prologEngine;
 		this.context = context;
+		configure();
+	}
+	
+	private void configure() {
+		if(solution.containsKey(EXCEPTION_VAR_NAME)) {
+			Term errorTerm = solution.get(EXCEPTION_VAR_NAME);
+			if(!(errorTerm instanceof Variable)) {
+				this.errorTerm = errorTerm;
+			}
+			solution.remove(EXCEPTION_VAR_NAME);
+		}
+	}
+	
+	public boolean isError() {
+		return errorTerm != null;
+	}
+	
+	public Term getErrorTerm() {
+		return errorTerm;
 	}
 	
 	@Override

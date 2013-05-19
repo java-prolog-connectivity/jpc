@@ -13,30 +13,31 @@ import org.jpc.term.Variable;
 public abstract class PrologQuery extends Query {
 
 	private PrologEngine prologEngine;
-	private boolean errorHandledQuery;
 	private Term goal;
 	private Term instrumentedGoal;
 	private Jpc context;
 	
 	
-	public PrologQuery(PrologEngine prologEngine, Term goal, boolean errorHandledQuery, Jpc context) {
+	public PrologQuery(PrologEngine prologEngine, Term goal, Jpc context) {
 		this.prologEngine = prologEngine;
 		this.context = context;
 		this.goal = goal;
-		this.errorHandledQuery = errorHandledQuery;
 		instrumentedGoal = instrumentGoal(goal);
 	}
 	
 	public static Term exceptionHandledQueryTerm(Term term) {
-		return new Compound(CATCH, asList(term, new Variable(ExceptionHandledQuery.EXCEPTION_VAR_NAME), Atom.TRUE_TERM));
+		return new Compound(CATCH, asList(term, new Variable(QuerySolution.EXCEPTION_VAR_NAME), Atom.TRUE_TERM));
 	}
 	
 	protected Term instrumentGoal(Term goal) {
+		return exceptionHandledQueryTerm(goal);
+		/*
 		if(errorHandledQuery) {
 			return exceptionHandledQueryTerm(goal);
 		} else {
 			return goal;
 		}
+		*/
 	}
 	
 	@Override

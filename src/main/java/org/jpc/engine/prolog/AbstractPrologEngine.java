@@ -113,13 +113,13 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	public Query query(Term term, boolean errorHandledQuery, Jpc context) {
 		Query query;
 		if(errorHandledQuery)
-			query = new ExceptionHandledQuery(basicQuery(term, true, context));
+			query = new ExceptionHandledQuery(basicQuery(term, context));
 		else
-			query = basicQuery(term, false, context);
+			query = basicQuery(term, context);
 		return query;
 	}
 	
-	protected abstract Query basicQuery(Term term, boolean errorHandledQuery, Jpc context);
+	protected abstract Query basicQuery(Term term, Jpc context);
 	
 //	public Term asTerm(String termString, boolean force) {
 //		try {
