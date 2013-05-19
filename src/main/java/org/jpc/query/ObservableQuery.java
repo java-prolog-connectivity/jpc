@@ -3,9 +3,7 @@ package org.jpc.query;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
-import org.jpc.term.Term;
 import org.minitoolbox.CollectionsUtil;
 
 public class ObservableQuery extends QueryAdapter {
@@ -52,8 +50,8 @@ public class ObservableQuery extends QueryAdapter {
 	}
 	
 	@Override
-	public synchronized Map<String,Term> next() {
-		Map<String,Term> next = null;
+	public synchronized QuerySolution next() {
+		QuerySolution next = null;
 		try {
 			notifyQueryInProgress();
 			try {
@@ -70,8 +68,8 @@ public class ObservableQuery extends QueryAdapter {
 	}
 	
 	@Override
-	public synchronized Map<String,Term> oneSolution() {
-		Map<String,Term> next = null;
+	public synchronized QuerySolution oneSolution() {
+		QuerySolution next = null;
 		try {
 			notifyQueryInProgress();
 			try {
@@ -89,8 +87,8 @@ public class ObservableQuery extends QueryAdapter {
 	}
 	
 	@Override
-	public synchronized List<Map<String,Term>> solutionsRange(long from, long to) {
-		List<Map<String,Term>> allSolutions = null;
+	public synchronized List<QuerySolution> solutionsRange(long from, long to) {
+		List<QuerySolution> allSolutions = null;
 		try {
 			notifyQueryInProgress();
 			try {
@@ -107,8 +105,8 @@ public class ObservableQuery extends QueryAdapter {
 	}
 	
 	@Override
-	public synchronized List<Map<String,Term>> allSolutions() {
-		List<Map<String,Term>> allSolutions = null;
+	public synchronized List<QuerySolution> allSolutions() {
+		List<QuerySolution> allSolutions = null;
 		try {
 			notifyQueryInProgress();
 			try {
@@ -170,13 +168,13 @@ public class ObservableQuery extends QueryAdapter {
 		}
 	}
 	
-	private void notifyNextSolutionFound(Map<String,Term> solution) {
+	private void notifyNextSolutionFound(QuerySolution solution) {
 		for(QueryListener listener : listeners) {
 			listener.onNextSolutionFound(solution);
 		}
 	}
 	
-	private void notifySolutionsFound(List<Map<String,Term>> solutions) {
+	private void notifySolutionsFound(List<QuerySolution> solutions) {
 		for(QueryListener listener : listeners) {
 			listener.onSolutionsFound(solutions);
 		}

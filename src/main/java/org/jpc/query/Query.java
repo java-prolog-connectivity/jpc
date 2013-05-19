@@ -17,10 +17,10 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 
 /**
- * Disclaimer: The following comment was taken/adapted from the JPL library
+ * Disclaimer: The following comment was adapted from the JPL library
  * 
  * This class represents a cursor of query solutions.
- * A query solution is  an instance of java.util.Map, which represents
+ * A query solution is an implementation of java.util.Map, which represents
  * a set of bindings from the names of query variables to terms within the solution.
  * <p>
  * For example, if a Query has an occurrence of a Variable,
@@ -30,7 +30,7 @@ import com.google.common.collect.ListMultimap;
  * Variable x = new Variable("X");
  * Query q = // obtain Query reference (with x in the Term array)
  * while (q.hasNext()) {
- *     Map<String, Term> solution = q.next();
+ *     QuerySolution solution = q.next();
  *     // make t the Term bound to "X" in the solution
  *     Term t = solution.get("X");
  *     // ...
@@ -38,8 +38,7 @@ import com.google.common.collect.ListMultimap;
  * @author sergioc
  *
  */
-
-public abstract class Query extends Cursor<Map<String,Term>> {
+public abstract class Query extends Cursor<QuerySolution> {
 	
 	public abstract PrologEngine getPrologEngine();
 	
@@ -48,25 +47,25 @@ public abstract class Query extends Cursor<Map<String,Term>> {
 	public abstract Jpc getJpcContext();
 	
 	@Override
-	protected synchronized List<Map<String,Term>> basicAllSolutions() {
+	protected synchronized List<QuerySolution> basicAllSolutions() {
 		ListTerm goalVariables = new ListTerm(getGoal().getNonAnonymousVariables());
 		Term allSolutionsFindAllTerm = getPrologEngine().findall(goalVariables.asTerm(), getGoal());
 		ListTerm allSolutionsFindAll = allSolutionsFindAllTerm.asList();
-		List<Map<String,Term>> allSolutionsBindings = new ArrayList<>();
+		List<QuerySolution> allSolutionsBindings = new ArrayList<>();
 		for(Term oneSolutionFindAllTerm : allSolutionsFindAll) {
 			ListTerm oneSolutionFindAll = oneSolutionFindAllTerm.asList();
 			Map<String,Term> solutionBindings = new HashMap<>();
 			for(int i=0; i<goalVariables.size(); i++) {
 				solutionBindings.put(((Variable)goalVariables.get(i)).getName(), oneSolutionFindAll.get(i));
 			}
-			allSolutionsBindings.add(solutionBindings);
+			allSolutionsBindings.add(new QuerySolution(solutionBindings, getPrologEngine(), getJpcContext()));
 		}
 		return allSolutionsBindings;
 	}
 	
 	public synchronized ListMultimap<String, Term> allSolutionsMultimap() {
 		ListMultimap<String, Term> allSolutionsMultimap = ArrayListMultimap.create();
-		List<Map<String, Term>> allSolutions = allSolutions();
+		List<QuerySolution> allSolutions = allSolutions();
 		for(Map<String, Term> solution : allSolutions) {
 			for(Entry<String, Term> entry : solution.entrySet()) {
 				allSolutionsMultimap.put(entry.getKey(), entry.getValue());
@@ -127,11 +126,7 @@ public abstract class Query extends Cursor<Map<String,Term>> {
 	}
 
 	public synchronized <O> Cursor<O> selectObject(Term selector, Type targetType) {
-		return select(selector).adapt(getTermToObjectFunction(targetType));
-	}
-	
-	protected TermToObjectFunction getTermToObjectFunction(Type targetType) {
-		return new TermToObjectFunction(getJpcContext(), targetType);
+		return select(selector).adapt(new TermToObjectFunction(getJpcContext(), targetType));
 	}
 
 }

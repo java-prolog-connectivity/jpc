@@ -1,13 +1,10 @@
 package org.jpc.query;
 
-import java.util.Map;
-
-import org.jpc.converter.TermConvertable;
 import org.jpc.term.Term;
 
 import com.google.common.base.Function;
 
-public class QuerySolutionToTermFunction implements Function<Map<String, Term>, Term> {
+public class QuerySolutionToTermFunction implements Function<QuerySolution, Term> {
 
 	private Term term;
 	
@@ -16,7 +13,7 @@ public class QuerySolutionToTermFunction implements Function<Map<String, Term>, 
 	}
 	
 	@Override
-	public Term apply(Map<String, Term> solution) {
+	public Term apply(QuerySolution solution) {
 		return term.replaceVariables(solution);
 	}
 

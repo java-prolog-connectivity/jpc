@@ -50,10 +50,8 @@ public class JpcPreferences extends Preferences {
 		checkNotNull(engineName);
 		checkArgument(!engineName.isEmpty());
 		engineName = engineName.toLowerCase();
-		String logtalkHome = getVarOrThrow(LOGTALK_HOME_ENV_VAR);
-		File logtalkHomeFile = new File(logtalkHome);
-		if(!logtalkHomeFile.exists())
-			throw new RuntimeException("Logtalk is not installed at " + logtalkHome + ". Please configure the " + LOGTALK_HOME_ENV_VAR + " environment variable or install Logtalk.");
+		File logtalkHomeFile = getLogtalkHomeOrThrow();
+		String logtalkHome = logtalkHomeFile.getAbsolutePath();
 		String scriptPath = logtalkHome + "/integration/";
 		File scriptFolderFile = new File(scriptPath);
 		if(!scriptFolderFile.exists())
@@ -64,6 +62,19 @@ public class JpcPreferences extends Preferences {
 		if(!integrationScriptfile.exists())
 			throw new RuntimeException("The Logtalk installation at " + logtalkHome + " does not support the Prolog engine " + engineName);
 		return scriptPath;
+	}
+	
+	public String logtalkLibraryDirOrThrow() {
+		File logtalkHomeFile = getLogtalkHomeOrThrow();
+		return logtalkHomeFile.getAbsolutePath() + "/library/";
+	}
+	
+	public File getLogtalkHomeOrThrow() {
+		String logtalkHome = getVarOrThrow(LOGTALK_HOME_ENV_VAR);
+		File logtalkHomeFile = new File(logtalkHome);
+		if(!logtalkHomeFile.exists())
+			throw new RuntimeException("Logtalk is not installed at " + logtalkHome + ". Please configure the " + LOGTALK_HOME_ENV_VAR + " environment variable or install Logtalk.");
+		return logtalkHomeFile;
 	}
 	
 	public String getTmpDirectory() {

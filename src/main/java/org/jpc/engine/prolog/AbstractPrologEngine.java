@@ -32,6 +32,7 @@ import org.jpc.Jpc;
 import org.jpc.engine.logtalk.LogtalkEngine;
 import org.jpc.query.ExceptionHandledQuery;
 import org.jpc.query.Query;
+import org.jpc.query.QuerySolution;
 import org.jpc.query.QuerySolutionToTermFunction;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
@@ -390,13 +391,12 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 		for(int i=0; i<terms.size()-1; i++) {
 			unifications.add(new Compound("=", asList(terms.get(i), terms.get(i+1))));
 		}
-		List<Map<String, Term>> solutions = query(termSequence(unifications)).allSolutions();
+		List<QuerySolution> solutions = query(termSequence(unifications)).allSolutions();
 		if(solutions.isEmpty())
 			return null;
-		Map<String, Term> solution = solutions.get(0);
+		QuerySolution solution = solutions.get(0);
 		return new QuerySolutionToTermFunction(terms.get(0)).apply(solution);
 	}
-
 
 	
 	/* ********************************************************************************************************************************

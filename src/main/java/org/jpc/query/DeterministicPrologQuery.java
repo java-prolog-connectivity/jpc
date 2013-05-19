@@ -1,7 +1,6 @@
 package org.jpc.query;
 
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.jpc.Jpc;
@@ -14,7 +13,7 @@ public abstract class DeterministicPrologQuery extends PrologQuery {
 		super(prologEngine, goal, errorHandledQuery, context);
 	}
 
-	private List<Map<String, Term>> allSolutions;
+	private List<QuerySolution> allSolutions;
 	private int index = 0;
 	
 	private void reset() {
@@ -33,7 +32,7 @@ public abstract class DeterministicPrologQuery extends PrologQuery {
 	}
 
 	@Override
-	protected Map<String, Term> basicNext() {
+	protected QuerySolution basicNext() {
 		if(allSolutions == null)
 			allSolutions = basicAllSolutions();
 		if(index == allSolutions.size())
