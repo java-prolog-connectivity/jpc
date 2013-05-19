@@ -15,6 +15,8 @@ public class LogtalkConstants {
 	
 	public static final String LOGTALK_LOGTALK_OBJECT = "logtalk"; //the default 'logtalk' Logtalk object
 	
+	public static final String LOGTALK_LIBRARY_PATH = "logtalk_library_path";
+	
 	public static final String SET_LOGTALK_FLAG = "set_logtalk_flag";
 	
 	public static final String CURRENT_LOGTALK_FLAG = "current_logtalk_flag";
@@ -90,6 +92,10 @@ public class LogtalkConstants {
 	
 	public static final String THREADED_NOTIFY = "threaded_notify";
 	
+	
+	//ERRORS
+	public static final String LOGTALK_ERROR_CONTEXT_FUNCTOR = "error";
+	
 	//DOCUMENTATION CONSTANTS
 	//(entities)
 	public static final String COMMENT = "comment";
@@ -123,7 +129,4 @@ public class LogtalkConstants {
 	
 	public static final String EXAMPLES = "examples";
 	
-	
-	//ERRORS
-	public static final String LOGTALK_ERROR_CONTEXT_FUNCTOR = "error";
 }
