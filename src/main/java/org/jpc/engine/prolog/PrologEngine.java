@@ -69,12 +69,11 @@ public interface PrologEngine extends PrologDatabase {
 	 */
 	public Term asTerm(String termString);
 	
-	//public Term asTerm(String termString, boolean force);
+	public Term asTerm(String termString, Jpc context);
 	
 	public List<Term> asTerms(List<String> termsString);
 	
-	//public List<Term> asTerms(List<String> termsString, boolean force);
-	
+	public List<Term> asTerms(List<String> termsString, Jpc context);
 	
 	/* ********************************************************************************************************************************
 	 * FLAGS

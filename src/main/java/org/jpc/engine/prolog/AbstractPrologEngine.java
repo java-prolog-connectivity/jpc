@@ -51,6 +51,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 		return new LogtalkEngine(this);
 	}
 	
+	
 	/* ********************************************************************************************************************************
 	 * CORE METHODS (and overloaded variations of those methods)
      **********************************************************************************************************************************
@@ -106,7 +107,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	
 	@Override
 	public final Query query(String termString, boolean errorHandledQuery, Jpc context) {
-		return query(asTerm(termString), errorHandledQuery, context);
+		return query(asTerm(termString, context), errorHandledQuery, context);
 	}
  
 	@Override
@@ -120,33 +121,24 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	}
 	
 	protected abstract Query basicQuery(Term term, Jpc context);
-	
-//	public Term asTerm(String termString, boolean force) {
-//		try {
-//			return asTerm(termString); //to be provided by subclasses
-//		} catch(Exception e) {
-//			if(force)
-//				return new Atom(termString);
-//			else
-//				throw e;
-//		}
-//	}
-	
 
 	@Override
-	public List<Term> asTerms(List<String> termsString) {
-		List<Term> terms = new ArrayList<>();
-		for(String s : termsString)
-			terms.add(asTerm(s));
-		return terms;
+	public Term asTerm(String termString) {
+		return asTerm(termString, new Jpc());
 	}
 	
-//	public List<Term> asTerms(List<String> termsString, boolean force) {
-//		List<Term> terms = new ArrayList<>();
-//		for(String s : termsString)
-//			terms.add(asTerm(s, force));
-//		return terms;
-//	}
+	@Override
+	public List<Term> asTerms(List<String> termsString) {
+		return asTerms(termsString, new Jpc());
+	}
+	
+	@Override
+	public List<Term> asTerms(List<String> termsString, Jpc context) {
+		List<Term> terms = new ArrayList<>();
+		for(String s : termsString)
+			terms.add(asTerm(s, context));
+		return terms;
+	}
 	
 	
 	/* ********************************************************************************************************************************

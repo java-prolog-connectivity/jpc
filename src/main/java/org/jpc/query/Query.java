@@ -85,7 +85,7 @@ public abstract class Query extends Cursor<QuerySolution> {
 	protected abstract Term getDefaultSelectedTerm();
 	
 	protected Term asTerm(String termString) {
-		return getPrologEngine().asTerm(termString);
+		return getPrologEngine().asTerm(termString, getJpcContext());
 	}
 	
 	public synchronized Cursor<Term> select(String selector) {

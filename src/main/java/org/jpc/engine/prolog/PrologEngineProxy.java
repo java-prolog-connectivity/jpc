@@ -108,19 +108,20 @@ public class PrologEngineProxy implements PrologEngine {
 		return proxiedEngine.asTerm(termString);
 	}
 
-//	public Term asTerm(String termString, boolean force) {
-//		return prologEngine.asTerm(termString, force);
-//	}
+	public Term asTerm(String termString, Jpc context) {
+		return proxiedEngine.asTerm(termString, context);
+	}
 
 	@Override
 	public List<Term> asTerms(List<String> termsString) {
 		return proxiedEngine.asTerms(termsString);
 	}
 
-//	public List<Term> asTerms(List<String> termsString, boolean force) {
-//		return prologEngine.asTerms(termsString, force);
-//	}
-
+	@Override
+	public List<Term> asTerms(List<String> termsString, Jpc context) {
+		return proxiedEngine.asTerms(termsString, context);
+	}
+	
 	@Override
 	public boolean setPrologFlag(Term flag, Term flagValue) {
 		return proxiedEngine.setPrologFlag(flag, flagValue);

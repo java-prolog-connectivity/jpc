@@ -21,7 +21,6 @@ public class PrologError extends RuntimeException implements TermConvertable {
 		return errorTerm;
 	}
 
-
 	@Override
 	public String getMessage() {
 		StringBuilder sb = new StringBuilder("Error Term: " + errorTerm);
