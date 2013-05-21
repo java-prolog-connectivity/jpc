@@ -14,6 +14,16 @@ import org.jpc.resource.LogtalkResource;
 
 public class LogtalkLibrary {
 
+	private static Map<String, LogtalkLibrary> defaultLogtalkLibraries;
+	
+	public static Map<String, LogtalkLibrary> getDefaultLogtalkLibraries() {
+		return defaultLogtalkLibraries;
+	}
+	
+	public static void setDefaultLogtalkLibraries(Map<String, LogtalkLibrary> defaultLogtalkLibraries) {
+		LogtalkLibrary.defaultLogtalkLibraries = defaultLogtalkLibraries;
+	}
+	
 	private LogtalkLibraryDescription libraryDescription;
 	private Map<String,LogtalkLibraryItem> items;
 	

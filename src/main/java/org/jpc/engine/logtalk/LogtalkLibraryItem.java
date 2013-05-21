@@ -34,6 +34,10 @@ public class LogtalkLibraryItem implements TermConvertable<Compound> {
 		return name;
 	}
 
+	public boolean isProtocol() {
+		return (name.substring(name.length()-1).equalsIgnoreCase("p")); //by convention, Logtalk protocol files end in "p"
+	}
+	
 	public String getProperty(String key) {
 		return entityInfo.get(key);
 	}
