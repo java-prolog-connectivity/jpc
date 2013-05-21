@@ -106,39 +106,47 @@ public class QuerySolution implements Map<String,Term> {
 	}
 	
 	public Byte getByte(String key) {
-		return context.fromTerm(get(key), Byte.class);
+		return getObject(key, Byte.class);
 	}
 	
 	public Short getShort(String key) {
-		return context.fromTerm(get(key), Short.class);
+		return getObject(key, Short.class);
 	}
 	
 	public Integer getInt(String key) {
-		return context.fromTerm(get(key), Integer.class);
+		return getObject(key, Integer.class);
 	}
 	
 	public Long getLong(String key) {
-		return context.fromTerm(get(key), Long.class);
+		return getObject(key, Long.class);
 	}
 	
 	public Float getFloat(String key) {
-		return context.fromTerm(get(key), Float.class);
+		return getObject(key, Float.class);
 	}
 	
 	public Double getDouble(String key) {
-		return context.fromTerm(get(key), Double.class);
+		return getObject(key, Double.class);
 	}
 	
 	public Boolean getBoolean(String key) {
-		return context.fromTerm(get(key), Boolean.class);
+		return getObject(key, Boolean.class);
 	}
 	
 	public Character getChar(String key) {
-		return context.fromTerm(get(key), Character.class);
+		return getObject(key, Character.class);
 	}
 	
 	public String getString(String key) {
-		return context.fromTerm(get(key), String.class);
+		return getObject(key, String.class);
+	}
+	
+	public <O> O getObject(String key) {
+		return context.fromTerm(get(key));
+	}
+	
+	public <O> O getObject(String key, Type type) {
+		return context.fromTerm(get(key), type);
 	}
 	
 	
@@ -159,7 +167,7 @@ public class QuerySolution implements Map<String,Term> {
 	}
 
 	private Term asTerm(String termString) {
-		return prologEngine.asTerm(termString);
+		return prologEngine.asTerm(termString, context);
 	}
-	
+
 }
