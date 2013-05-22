@@ -36,4 +36,9 @@ public class PrologParsingException extends JpcException {
 		return source;
 	}
 	
+	@Override
+	public String getMessage() {
+		return "Parsing exception.";
+	}
+
 }
