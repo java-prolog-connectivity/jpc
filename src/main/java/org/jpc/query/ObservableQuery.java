@@ -1,5 +1,7 @@
 package org.jpc.query;
 
+import static java.util.Arrays.asList;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -82,7 +84,7 @@ public class ObservableQuery extends QueryAdapter {
 			notifyQueryFinished();
 		}
 		if(next != null)
-			notifyNextSolutionFound(next);
+			notifySolutionsFound(asList(next));
 		return next;
 	}
 	
@@ -122,15 +124,22 @@ public class ObservableQuery extends QueryAdapter {
 		return allSolutions;
 	}
 	
-	public void addQueryListener(QueryListener listener) {
+	public synchronized void dispose() {
+		if(query != null) { //otherwise the query has already been disposed
+			if(query.isOpen())
+				query.close();
+			query = null;
+			notifyQueryDisposed();
+		}
+	}
+	
+	public synchronized void addQueryListener(QueryListener listener) {
 		listeners.add(listener);
 	}
 	
-	public void removeQueryListener(QueryListener listener) {
+	public synchronized void removeQueryListener(QueryListener listener) {
 		listeners.remove(listener);
 	}
-	
-	
 	
 	private void notifyQueryReady() {
 		for(QueryListener listener : listeners) {
@@ -180,4 +189,10 @@ public class ObservableQuery extends QueryAdapter {
 		}
 	}
 
+	private void notifyQueryDisposed() {
+		for(QueryListener listener : listeners) {
+			listener.onQueryDisposed();
+		}
+	}
+	
 }
