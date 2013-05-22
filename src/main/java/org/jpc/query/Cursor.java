@@ -63,7 +63,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 */
 	public synchronized T oneSolution() {
 		open();
-		try (Cursor<T> autoCloseable = this) {
+		try (Cursor<T> autoCloseable = this) {//this guarantees that after the try block the cursor will be closed
 			T one = basicOneSolution();
 			if(one == null)
 				setState(EXHAUSTED);
