@@ -123,16 +123,7 @@ public class ObservableQuery extends QueryAdapter {
 		notifySolutionsFound(allSolutions);
 		return allSolutions;
 	}
-	
-	public synchronized void dispose() {
-		if(query != null) { //otherwise the query has already been disposed
-			if(query.isOpen())
-				query.close();
-			query = null;
-			notifyQueryDisposed();
-		}
-	}
-	
+
 	public synchronized void addQueryListener(QueryListener listener) {
 		listeners.add(listener);
 	}
@@ -189,10 +180,4 @@ public class ObservableQuery extends QueryAdapter {
 		}
 	}
 
-	private void notifyQueryDisposed() {
-		for(QueryListener listener : listeners) {
-			listener.onQueryDisposed();
-		}
-	}
-	
 }
