@@ -29,15 +29,20 @@ public abstract class NamingUtil {
 	
 	private static void assignUniqueName(Nameable nameable, NameSolver nameSolver, Map<String, Integer> nameOccurrences) {
 		String name = nameSolver.nameOf(nameable);
+		name = getUniqueName(name, nameOccurrences);
+		nameable.setName(name);
+	}
+	
+	public synchronized static String getUniqueName(String name, Map<String, Integer> nameOccurrences) {
 		Integer occurrence = nameOccurrences.get(name);
 		if(occurrence != null) {
 			int next = occurrence+1;
 			nameOccurrences.put(name, next);
 			name = name + next;
-		} else {
+		}else {
 			nameOccurrences.put(name, 1);
 		}
-		nameable.setName(name);
+		return name;
 	}
 
 }
