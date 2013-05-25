@@ -12,7 +12,7 @@ import org.jpc.engine.prolog.PrologEngine;
  * @author sergioc
  *
  */
-public abstract class UniquePrologEngineDriver<T extends PrologEngine> extends PrologEngineDriver<T> {
+public abstract class UniquePrologEngineDriver<T extends PrologEngine> extends AbstractPrologEngineDriver<T> {
 	
 	public UniquePrologEngineDriver() {
 		super();
