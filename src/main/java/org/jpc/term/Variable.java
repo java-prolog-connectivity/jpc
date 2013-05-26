@@ -3,6 +3,9 @@ package org.jpc.term;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.jpc.engine.prolog.PrologConstants.ANONYMOUS_VAR_NAME;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jpc.salt.TermContentHandler;
 import org.jpc.term.visitor.TermVisitor;
 
@@ -16,6 +19,13 @@ public final class Variable extends AbstractTerm {
 
 	public static final Variable ANONYMOUS_VAR = new Variable(ANONYMOUS_VAR_NAME);
 	
+	public static List<Variable> asVariables(Iterable<String> variablesNames) {
+		List<Variable> variables = new ArrayList<>();
+		for(String variableName : variablesNames) {
+			variables.add(new Variable(variableName));
+		}
+		return variables;
+	}
 	
 //	public static boolean isAnonymousVariableName(String variableName) {
 //		return variableName.substring(0, 1).equals("_"); //the variable name is equals to "_" or starts with "_"
@@ -55,16 +65,19 @@ public final class Variable extends AbstractTerm {
 		return toString();
 	}
 	
+	public static boolean isAnonymousVariableName(String variableName) {
+		return variableName.substring(0, 1).equals(ANONYMOUS_VAR_NAME);
+	}
+	
 	/**
 	 * Wether a logic variable has a valid name
 	 * @param variableName the name of the variable
 	 * @return wether a logic variable has a valid name
 	 */
-	protected boolean isValidVariableName(String variableName) {
+	public static boolean isValidVariableName(String variableName) {
 		if(variableName.isEmpty())
 			return false;
-		char firstChar = variableName.toCharArray()[0];
-		return firstChar == '_' || Character.isUpperCase(firstChar); //additional checks could be added here
+		return isAnonymousVariableName(variableName) || Character.isUpperCase(variableName.toCharArray()[0]); //additional checks could be added here
 	}
 	
 	@Override

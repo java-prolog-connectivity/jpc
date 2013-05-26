@@ -16,24 +16,39 @@ public class QuerySolution implements Map<String,Term> {
 	public static final String EXCEPTION_VAR_NAME = "JPC_EXCEPTION_VAR";
 	
 	private PrologEngine prologEngine;
-	private Map<String, Term> solution;
+	private Map<String, Term> allVariablesSolution;
+	private Map<String, Term> nonAnonymousVariablesSolution;
 	private Jpc context;
 	private Term errorTerm;
 	
-	public QuerySolution(Map<String, Term> solution, PrologEngine prologEngine, Jpc context) {
-		this.solution = new HashMap<>(solution);
+	public QuerySolution(Map<String, Term> rawSolution, PrologEngine prologEngine, Jpc context) {
+		this.allVariablesSolution = new HashMap<>(rawSolution);
 		this.prologEngine = prologEngine;
 		this.context = context;
-		configure();
+		configure(); //The original solution may be modified. 
+		nonAnonymousVariablesSolution = nonAnonymousVariablesSolutions(allVariablesSolution);
 	}
 	
+	private static Map<String, Term> nonAnonymousVariablesSolutions(Map<String, Term> allVariablesSolution) {
+		Map<String, Term> nonAnonymousVariablesSolution = new HashMap<>();
+		for(String varName : allVariablesSolution.keySet()) {
+			if(!Variable.isAnonymousVariableName(varName)) {
+				nonAnonymousVariablesSolution.put(varName, allVariablesSolution.get(varName));
+			}
+		}
+		return nonAnonymousVariablesSolution;
+	}
+	
+	/**
+	 * Tracks and processes special variables in the solution. The original solution may be modified.
+	 */
 	private void configure() {
-		if(solution.containsKey(EXCEPTION_VAR_NAME)) {
-			Term errorTerm = solution.get(EXCEPTION_VAR_NAME);
+		if(allVariablesSolution.containsKey(EXCEPTION_VAR_NAME)) {
+			Term errorTerm = allVariablesSolution.get(EXCEPTION_VAR_NAME);
 			if(!(errorTerm instanceof Variable)) {
 				this.errorTerm = errorTerm;
 			}
-			solution.remove(EXCEPTION_VAR_NAME);
+			allVariablesSolution.remove(EXCEPTION_VAR_NAME);
 		}
 	}
 	
@@ -47,29 +62,64 @@ public class QuerySolution implements Map<String,Term> {
 	
 	@Override
 	public int size() {
-		return solution.size();
+		return size(false);
+	}
+	
+	public int size(boolean considerAllVariables) {
+		if(considerAllVariables)
+			return allVariablesSolution.size();
+		else
+			return nonAnonymousVariablesSolution.size();
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return solution.isEmpty();
+		return isEmpty(false);
 	}
 
+	public boolean isEmpty(boolean considerAllVariables) {
+		if(considerAllVariables)
+			return allVariablesSolution.isEmpty();
+		else
+			return nonAnonymousVariablesSolution.isEmpty();
+	}
+	
 	@Override
 	public boolean containsKey(Object key) {
-		return solution.containsKey(key);
+		return containsKey(key, false);
 	}
 
+	public boolean containsKey(Object key, boolean considerAllVariables) {
+		if(considerAllVariables)
+			return allVariablesSolution.containsKey(key);
+		else
+			return nonAnonymousVariablesSolution.containsKey(key);
+	}
+	
 	@Override
 	public boolean containsValue(Object value) {
-		return solution.containsValue(value);
+		return containsValue(value, false);
 	}
 
+	public boolean containsValue(Object value, boolean considerAllVariables) {
+		if(considerAllVariables)
+			return allVariablesSolution.containsValue(value);
+		else
+			return nonAnonymousVariablesSolution.containsValue(value);
+	}
+	
 	@Override
 	public Term get(Object key) {
-		return solution.get(key);
+		return get(key, false);
 	}
 
+	public Term get(Object key, boolean considerAllVariables) {
+		if(considerAllVariables)
+			return allVariablesSolution.get(key);
+		else
+			return nonAnonymousVariablesSolution.get(key);
+	}
+	
 	@Override
 	public Term put(String key, Term value) {
 		throw new UnsupportedOperationException();
@@ -92,18 +142,40 @@ public class QuerySolution implements Map<String,Term> {
 
 	@Override
 	public Set<String> keySet() {
-		return solution.keySet();
+		return keySet(false);
 	}
 
+	public Set<String> keySet(boolean considerAllVariables) {
+		if(considerAllVariables)
+			return allVariablesSolution.keySet();
+		else
+			return nonAnonymousVariablesSolution.keySet();
+	}
+	
 	@Override
 	public Collection<Term> values() {
-		return solution.values();
+		return values(false);
 	}
 
+	public Collection<Term> values(boolean considerAllVariables) {
+		if(considerAllVariables)
+			return allVariablesSolution.values();
+		else
+			return nonAnonymousVariablesSolution.values();
+	}
+	
 	@Override
 	public Set<java.util.Map.Entry<String, Term>> entrySet() {
-		return solution.entrySet();
+		return entrySet(false);
 	}
+	
+	public Set<java.util.Map.Entry<String, Term>> entrySet(boolean considerAllVariables) {
+		if(considerAllVariables)
+			return allVariablesSolution.entrySet();
+		else
+			return nonAnonymousVariablesSolution.entrySet();
+	}
+	
 	
 	public Byte getByte(String key) {
 		return getObject(key, Byte.class);
@@ -142,11 +214,11 @@ public class QuerySolution implements Map<String,Term> {
 	}
 	
 	public <O> O getObject(String key) {
-		return context.fromTerm(get(key));
+		return context.fromTerm(get(key, true));
 	}
 	
 	public <O> O getObject(String key, Type type) {
-		return context.fromTerm(get(key), type);
+		return context.fromTerm(get(key, true), type);
 	}
 	
 	
@@ -163,7 +235,8 @@ public class QuerySolution implements Map<String,Term> {
 	}
 
 	public <O> O asObject(Term selector, Type targetType) {
-		return (O) new TermToObjectFunction(context, targetType).apply(selector);
+		Term boundTerm = selector.replaceVariables(allVariablesSolution);
+		return (O) new TermToObjectFunction(context, targetType).apply(boundTerm);
 	}
 
 	private Term asTerm(String termString) {

@@ -9,7 +9,7 @@ public class PrologConstants {
 	
 	public static final String ANONYMOUS_VAR_NAME = "_";
 	
-	public static final String ANONYMOUS_VAR_PREFIX = "_";
+	//public static final String ANONYMOUS_VAR_PREFIX = "_";
 	
 	public static final String TRUE = "true";
 	

@@ -3,7 +3,6 @@ package org.jpc.util;
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Arrays.asList;
 import static org.jpc.engine.prolog.PrologConstants.ANONYMOUS_VAR_NAME;
-import static org.jpc.engine.prolog.PrologConstants.ANONYMOUS_VAR_PREFIX;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,7 +104,7 @@ public class PrologUtil {
 	}
 
 	/**
-	 * Answers an array of anonymous logic variables
+	 * Answers a list of anonymous logic variables
 	 * @param n the number of variables in the array
 	 * @return
 	 */
@@ -137,8 +136,8 @@ public class PrologUtil {
 				String newName = null;
 				if(name.equals(ANONYMOUS_VAR_NAME)) {
 					newName = ANONYMOUS_VAR_NAME;
-				} else if(name.substring(0, 1).equals(ANONYMOUS_VAR_PREFIX)) {
-					newName = ANONYMOUS_VAR_PREFIX + prefix + name;
+				} else if(name.substring(0, 1).equals(ANONYMOUS_VAR_NAME)) {
+					newName = ANONYMOUS_VAR_NAME + prefix + name;
 				} else {
 					newName = prefix + name;
 				}

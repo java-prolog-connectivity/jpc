@@ -120,29 +120,45 @@ public abstract class AbstractTerm implements Term, TermConvertable {
 	}
 	
 	@Override
+	public List<Variable> getVariables() {
+		return Variable.asVariables(getVariablesNames());
+	}
+	
+	@Override
 	public List<String> getVariablesNames() {
 		VariableNamesCollectorHandler variableNamesCollector = new VariableNamesCollectorHandler();
 		read(variableNamesCollector);
 		return variableNamesCollector.getVariableNames();
+	}
+	
+	@Override
+	public List<Variable> getNonAnonymousVariables() {
+		return Variable.asVariables(getNamedVariablesNames());
 	}
 
 	@Override
 	public List<String> getNonAnonymousVariablesNames() {
 		List<String> nonAnonymousVariablesNames = new ArrayList<>();
 		for(String variableName : getVariablesNames()) {
-			if(!variableName.equals(ANONYMOUS_VAR_NAME))
+			if(!Variable.isAnonymousVariableName(variableName))
 				nonAnonymousVariablesNames.add(variableName);
 		}
 		return nonAnonymousVariablesNames;
 	}
 	
 	@Override
-	public List<Variable> getNonAnonymousVariables() {
-		List<Variable> variables = new ArrayList<>();
-		for(String varName : getNonAnonymousVariablesNames()) {
-			variables.add(new Variable(varName));
+	public List<Variable> getNamedVariables() {
+		return Variable.asVariables(getNamedVariablesNames());
+	}
+	
+	@Override
+	public List<String> getNamedVariablesNames() {
+		List<String> namedVariablesNames = new ArrayList<>();
+		for(String variableName : getVariablesNames()) {
+			if(!variableName.equals(ANONYMOUS_VAR_NAME))
+				namedVariablesNames.add(variableName);
 		}
-		return variables;
+		return namedVariablesNames;
 	}
 	
 	@Override

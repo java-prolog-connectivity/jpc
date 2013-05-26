@@ -48,7 +48,7 @@ public abstract class Query extends Cursor<QuerySolution> {
 	
 	@Override
 	protected synchronized List<QuerySolution> basicAllSolutions() {
-		ListTerm goalVariables = new ListTerm(getGoal().getNonAnonymousVariables());
+		ListTerm goalVariables = new ListTerm(getGoal().getNamedVariables());
 		Term allSolutionsFindAllTerm = getPrologEngine().findall(goalVariables.asTerm(), getGoal());
 		ListTerm allSolutionsFindAll = allSolutionsFindAllTerm.asList();
 		List<QuerySolution> allSolutionsBindings = new ArrayList<>();

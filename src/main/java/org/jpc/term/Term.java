@@ -113,30 +113,49 @@ public interface Term /*extends TermConvertable*/ {
 	 */
 	public abstract Term changeVariablesNames(Map<String, String> map);
 
-	/**
-	 * Returns the variable names present in the term
-	 * @return the variable names present in the term
-	 */
-	public abstract List<String> getVariablesNames();
 
 	/**
-	 * wether the term has a variable with a given name
+	 * whether the term has a variable with a given name
 	 * @param variableName the variable name that is queried
-	 * @return wether the term has a variable with a given name
+	 * @return whether the term has a variable with a given name
 	 */
 	public abstract boolean hasVariable(String variableName);
 
 	/**
-	 * Returns a list with all the non anonymous variables names
-	 * @return a list with all the non anonymous variables names
+	 * Returns the variables names present in the term
+	 * @return the variables names present in the term
 	 */
-	public abstract List<String> getNonAnonymousVariablesNames();
+	public abstract List<Variable> getVariables();
+	
+	/**
+	 * Returns the variables names present in the term
+	 * @return the variables names present in the term
+	 */
+	public abstract List<String> getVariablesNames();
 
 	/**
-	 * Returns a list with all the non anonymous variables
-	 * @return a list with all the non anonymous variables
+	 * Returns a list with all the non anonymous variables (i.e., all variables that do not start with "_")
+	 * @return a list with all the non anonymous variables (i.e., all variables that do not start with "_")
 	 */
 	public abstract List<Variable> getNonAnonymousVariables();
+	
+	/**
+	 * Returns a list with all the non anonymous variables names (i.e., all variables that do not start with "_")
+	 * @return a list with all the non anonymous variables names (i.e., all variables that do not start with "_")
+	 */
+	public abstract List<String> getNonAnonymousVariablesNames();
+	
+	/**
+	 * Returns a list with all the named variables (i.e., all variables but "_")
+	 * @return a list with all the named variables (i.e., all variables but "_")
+	 */
+	public abstract List<Variable> getNamedVariables();
+	
+	/**
+	 * Returns a list with all the named variables names (i.e., all variables but "_")
+	 * @return a list with all the named variables names (i.e., all variables but "_")
+	 */
+	public abstract List<String> getNamedVariablesNames();
 	
 	/**
 	 * Accepts a Jpc term visitor.
