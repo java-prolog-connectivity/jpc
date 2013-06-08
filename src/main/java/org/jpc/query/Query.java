@@ -47,7 +47,7 @@ public abstract class Query extends Cursor<QuerySolution> {
 	public abstract Jpc getJpcContext();
 	
 	@Override
-	protected synchronized List<QuerySolution> basicAllSolutions() {
+	protected List<QuerySolution> basicAllSolutions() {
 		ListTerm goalVariables = new ListTerm(getGoal().getNamedVariables());
 		Term allSolutionsFindAllTerm = getPrologEngine().findall(goalVariables.asTerm(), getGoal());
 		ListTerm allSolutionsFindAll = allSolutionsFindAllTerm.asList();

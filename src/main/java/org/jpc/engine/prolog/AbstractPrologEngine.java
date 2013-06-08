@@ -170,7 +170,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	public String currentPrologFlag(Flag flag) {
 		String flagValue = null;
 		Variable varFlagValue = new Variable("Var");
-		Map<String, Term> solutions = currentPrologFlag(flag.asTerm(), varFlagValue).oneSolution();
+		Map<String, Term> solutions = currentPrologFlag(flag.asTerm(), varFlagValue).oneSolutionOrThrow();
 		if(solutions!=null) {
 			Atom flagValueTerm = (Atom) solutions.get(varFlagValue.getName());
 			flagValue = flagValueTerm.getName();
@@ -326,7 +326,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	
 	@Override
 	public Term bagof(Term select, Term exp) {
-		return bagof(select, exp, new Variable(ALL_RESULTS_VAR)).oneSolution().get(ALL_RESULTS_VAR);
+		return bagof(select, exp, new Variable(ALL_RESULTS_VAR)).oneSolutionOrThrow().get(ALL_RESULTS_VAR);
 	}
 	
 	@Override
@@ -336,7 +336,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	
 	@Override
 	public Term findall(Term select, Term exp) {
-		return findall(select, exp, new Variable(ALL_RESULTS_VAR)).oneSolution().get(ALL_RESULTS_VAR);
+		return findall(select, exp, new Variable(ALL_RESULTS_VAR)).oneSolutionOrThrow().get(ALL_RESULTS_VAR);
 	}
 	
 	@Override
@@ -346,7 +346,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	
 	@Override
 	public Term setof(Term select, Term exp) {
-		return setof(select, exp, new Variable(ALL_RESULTS_VAR)).oneSolution().get(ALL_RESULTS_VAR);
+		return setof(select, exp, new Variable(ALL_RESULTS_VAR)).oneSolutionOrThrow().get(ALL_RESULTS_VAR);
 	}
 	
 	@Override

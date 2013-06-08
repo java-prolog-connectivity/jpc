@@ -38,8 +38,8 @@ public class CursorAdapter<AdapterType, AdapteeType> extends Cursor<AdapterType>
 	 * whatever mechanism is implemented by the adaptee cursor for bringing one solution.
 	 */
 	@Override
-	protected AdapterType basicOneSolution() {
-		AdapteeType adaptee = cursor.oneSolution();
+	protected AdapterType basicOneSolutionOrThrow() {
+		AdapteeType adaptee = cursor.oneSolutionOrThrow();
 		return adaptee != null?adapterFunction.apply(adaptee):null;
 	}
 	

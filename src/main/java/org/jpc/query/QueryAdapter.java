@@ -48,8 +48,8 @@ public class QueryAdapter extends Query {
 	}
 
 	@Override
-	protected QuerySolution basicOneSolution() {
-		QuerySolution adaptee = query.oneSolution();
+	protected QuerySolution basicOneSolutionOrThrow() {
+		QuerySolution adaptee = query.oneSolutionOrThrow();
 		return adaptee != null?adapterFunction.apply(adaptee):null;
 	}
 	

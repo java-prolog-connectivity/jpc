@@ -5,6 +5,7 @@ import static java.util.Arrays.asList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.minitoolbox.CollectionsUtil;
 
@@ -58,6 +59,8 @@ public class ObservableQuery extends QueryAdapter {
 			notifyQueryInProgress();
 			try {
 				next = super.next(); //throws a NoSuchElementException in case the query is exhausted
+			} catch(NoSuchElementException e) {
+				throw e;
 			} catch(Exception e) {
 				notifyException(e);
 				throw e;
@@ -70,22 +73,23 @@ public class ObservableQuery extends QueryAdapter {
 	}
 	
 	@Override
-	public synchronized QuerySolution oneSolution() {
-		QuerySolution next = null;
+	public synchronized QuerySolution oneSolutionOrThrow() {
+		QuerySolution oneSolution = null;
 		try {
 			notifyQueryInProgress();
 			try {
-				next = super.oneSolution();
-			} catch(Exception e) {
+				oneSolution = super.oneSolutionOrThrow();
+			} catch(NoSuchElementException e) {
+				throw e;
+			} catch(Exception e) { //all other exceptions will generate an event.
 				notifyException(e);
 				throw e;
 			} 
 		} finally {
 			notifyQueryFinished();
 		}
-		if(next != null)
-			notifySolutionsFound(asList(next));
-		return next;
+		notifySolutionsFound(asList(oneSolution));
+		return oneSolution;
 	}
 	
 	@Override

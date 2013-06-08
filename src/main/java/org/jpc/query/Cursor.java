@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 /**
  * Note: The class hierarchy of class Cursor will be redesigned after the coming release of Java8 supporting virtual extension methods
@@ -27,7 +28,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 		setState(READY);
 	}
 	
-	public CursorState getState() {
+	public synchronized CursorState getState() {
 		return state;
 	}
 	
@@ -51,8 +52,25 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 * will throw an exception if the cursor state is not READY
 	 * @return
 	 */
-	public synchronized boolean hasSolution() { 
-		return oneSolution() != null;
+	public synchronized boolean hasSolution() {
+		try {
+			oneSolutionOrThrow();
+			return true;
+		} catch(NoSuchElementException e) {
+			return false;
+		}
+	}
+	
+	/**
+	 * This method will change to return a java.util.Optional when Java8 is ready
+	 * @return an Optional value with the first solution. Empty means that there are no solutions.
+	 */
+	public Optional<T> oneSolution() {
+		try {
+			return Optional.of(oneSolutionOrThrow());
+		} catch(NoSuchElementException e) {
+			return Optional.absent();
+		}
 	}
 	
 	/**
@@ -61,22 +79,20 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 * will throw an exception if the cursor state is not READY
 	 * @return
 	 */
-	public synchronized T oneSolution() {
+	public synchronized T oneSolutionOrThrow() {
 		open();
-		try (Cursor<T> autoCloseable = this) {//this guarantees that after the try block the cursor will be closed
-			T one = basicOneSolution();
-			if(one == null)
-				setState(EXHAUSTED);
-			return one;
-		}
+		try {
+			return basicOneSolutionOrThrow();
+		} catch(NoSuchElementException e) {
+			setState(EXHAUSTED);
+			throw e;
+		} finally {
+			close();
+		} 
 	}
 
-	protected T basicOneSolution() {
-		try {
-			return basicNext();
-		} catch(NoSuchElementException e) {
-			return null;
-		}
+	protected T basicOneSolutionOrThrow() {
+		return basicNext(); //will throw a NoSuchElementException in there are no solutions
 	}
 	
 	/**
