@@ -118,7 +118,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 */
 	public synchronized List<T> solutionsRange(long from, long to) {
 		if(!isReady())
-			throw new InvalidCursorStateException();
+			throw new IllegalStateException();
 		checkArgument(from >= 0);
 		checkArgument(to > from);
 		List<T> solutions = new ArrayList<>();
@@ -199,7 +199,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 */
 	public void abort() {
 		if(!isOpen())
-			throw new InvalidCursorStateException();
+			throw new IllegalStateException();
 		basicAbort();
 		close();
 	}
@@ -208,7 +208,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	
 	private void open() {
 		if(!isReady())
-			throw new InvalidCursorStateException();
+			throw new IllegalStateException();
 		setState(OPEN);
 	}
 	
