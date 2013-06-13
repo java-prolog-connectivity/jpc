@@ -102,10 +102,10 @@ public class DriverUtil {
 	public static <T extends PrologEngineDriver> Map<String,Multimap<String, T>> groupByPrologEngineName(Iterable<T> drivers) {
 		Map<String,Multimap<String, T>> dictionary = new HashMap<>();
 		for(T driver : drivers) {
-			Multimap<String, T> matchedLibraryNameMultiMap = dictionary.get(driver.getEngineName()); //find existing entries for the configuration engine name
+			Multimap<String, T> matchedLibraryNameMultiMap = dictionary.get(driver.getEngineDescription().getName()); //find existing entries for the configuration engine name
 			if(matchedLibraryNameMultiMap == null) {
 				matchedLibraryNameMultiMap = TreeMultimap.create(new PrologEngineTypeComparator(), new PrologEngineDriverComparator());
-				dictionary.put(driver.getEngineName(), matchedLibraryNameMultiMap);
+				dictionary.put(driver.getEngineDescription().getName(), matchedLibraryNameMultiMap);
 			}
 			matchedLibraryNameMultiMap.put(driver.getLibraryName(), driver);
 		}
@@ -126,7 +126,7 @@ public class DriverUtil {
 				matchedEngineNameMultiMap = TreeMultimap.create(new PrologEngineTypeComparator(), new PrologEngineDriverComparator());
 				dictionary.put(driver.getLibraryName(), matchedEngineNameMultiMap);
 			}
-			matchedEngineNameMultiMap.put(driver.getEngineName(), driver);
+			matchedEngineNameMultiMap.put(driver.getEngineDescription().getName(), driver);
 		}
 		return dictionary;
 	}

@@ -2,6 +2,7 @@ package org.jpc.engine.prolog.driver;
 
 import org.jpc.engine.listener.DriverStateListener;
 import org.jpc.engine.prolog.PrologEngine;
+import org.jpc.util.supportedengines.EngineDescription;
 
 public class PrologEngineDriverProxy<T extends PrologEngine> implements PrologEngineDriver<T> {
 
@@ -53,8 +54,8 @@ public class PrologEngineDriverProxy<T extends PrologEngine> implements PrologEn
 		return proxiedDriver.getLibraryName();
 	}
 
-	public String getEngineName() {
-		return proxiedDriver.getEngineName();
+	public EngineDescription getEngineDescription() {
+		return proxiedDriver.getEngineDescription();
 	}
 
 	public String getLicenseUrl() {

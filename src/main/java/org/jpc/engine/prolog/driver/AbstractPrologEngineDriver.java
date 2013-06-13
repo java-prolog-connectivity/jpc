@@ -6,6 +6,7 @@ import org.jpc.JpcPreferences;
 import org.jpc.engine.listener.DriverStateListener;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.engine.prolog.PrologEngineInitializationException;
+import org.jpc.util.supportedengines.EngineDescription;
 import org.minitoolbox.CollectionsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -133,11 +134,11 @@ public abstract class AbstractPrologEngineDriver<T extends PrologEngine> impleme
 	}
 	
 	public String getShortDescription() {
-		return getEngineName() + "-" + getLibraryName();
+		return getEngineDescription().getName() + "-" + getLibraryName();
 	}
 	
 	public String getDescription() {
-		return "This driver connects a " + getEngineName() + " Prolog engine by means of the " + getLibraryName() +" library.";
+		return "This driver connects a " + getEngineDescription().getName() + " Prolog engine by means of the " + getLibraryName() +" library.";
 	}
 	
 	/**
@@ -148,7 +149,7 @@ public abstract class AbstractPrologEngineDriver<T extends PrologEngine> impleme
 	
 	public abstract String getLibraryName();
 	
-	public abstract String getEngineName();
+	public abstract EngineDescription getEngineDescription();
 
 	public String getLicenseUrl() {
 		return "";
