@@ -9,8 +9,8 @@ import org.jpc.term.Term;
 
 public abstract class DeterministicPrologQuery extends PrologQuery {
 
-	public DeterministicPrologQuery(PrologEngine prologEngine, Term goal, Jpc context) {
-		super(prologEngine, goal, context);
+	public DeterministicPrologQuery(PrologEngine prologEngine, Term goal, boolean errorHandledQuery, Jpc context) {
+		super(prologEngine, goal, errorHandledQuery, context);
 	}
 
 	private List<QuerySolution> allSolutions;

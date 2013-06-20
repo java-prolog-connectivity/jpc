@@ -98,6 +98,8 @@ public interface PrologEngine extends PrologDatabase {
      **********************************************************************************************************************************
      */
 	
+	public List<Operator> getAllOperators();
+	
 	public Query currentOp(Term priority, Term specifier, Term operator);
 
 	public boolean isBinaryOperator(String op);

@@ -153,6 +153,11 @@ public class PrologEngineProxy implements PrologEngine {
 	}
 
 	@Override
+	public List<Operator> getAllOperators() {
+		return proxiedEngine.getAllOperators();
+	}
+	
+	@Override
 	public Query currentOp(Term priority, Term specifier, Term operator) {
 		return proxiedEngine.currentOp(priority, specifier, operator);
 	}

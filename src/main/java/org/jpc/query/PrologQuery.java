@@ -16,12 +16,13 @@ public abstract class PrologQuery extends Query {
 	private Term goal;
 	private Term instrumentedGoal;
 	private Jpc context;
+	private boolean errorHandledQuery;
 	
-	
-	public PrologQuery(PrologEngine prologEngine, Term goal, Jpc context) {
+	public PrologQuery(PrologEngine prologEngine, Term goal, boolean errorHandledQuery, Jpc context) {
 		this.prologEngine = prologEngine;
-		this.context = context;
 		this.goal = goal;
+		this.errorHandledQuery = errorHandledQuery;
+		this.context = context;
 		instrumentedGoal = instrumentGoal(goal);
 	}
 	
@@ -30,14 +31,11 @@ public abstract class PrologQuery extends Query {
 	}
 	
 	protected Term instrumentGoal(Term goal) {
-		return exceptionHandledQueryTerm(goal);
-		/*
 		if(errorHandledQuery) {
 			return exceptionHandledQueryTerm(goal);
 		} else {
 			return goal;
 		}
-		*/
 	}
 	
 	@Override

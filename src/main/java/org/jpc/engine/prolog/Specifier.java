@@ -9,11 +9,11 @@ import org.jpc.term.Atom;
  *
  */
 public enum Specifier implements TermConvertable<Atom> {
-	FX, FY, XF, YF, XFX, YFX, XFY;
+	fx, fy, xf, yf, xfx, yfx, xfy;
 	
 	@Override
 	public String toString() {
-		return super.toString().toLowerCase();
+		return super.toString();
 	}
 	
 	@Override
@@ -21,7 +21,4 @@ public enum Specifier implements TermConvertable<Atom> {
 		return new Atom(toString());
 	}
 
-	public static void main(String[] args) {
-		System.out.println(FX.asTerm());
-	}
 }

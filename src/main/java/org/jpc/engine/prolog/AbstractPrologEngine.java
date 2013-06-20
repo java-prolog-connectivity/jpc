@@ -36,6 +36,7 @@ import org.jpc.query.QuerySolution;
 import org.jpc.query.QuerySolutionToTermFunction;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
+import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Variable;
 import org.jpc.util.PrologUtil;
@@ -114,13 +115,13 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	public Query query(Term term, boolean errorHandledQuery, Jpc context) {
 		Query query;
 		if(errorHandledQuery)
-			query = new ExceptionHandledQuery(basicQuery(term, context));
+			query = new ExceptionHandledQuery(basicQuery(term, errorHandledQuery, context));
 		else
-			query = basicQuery(term, context);
+			query = basicQuery(term, errorHandledQuery, context);
 		return query;
 	}
 	
-	protected abstract Query basicQuery(Term term, Jpc context);
+	protected abstract Query basicQuery(Term term, boolean errorHandledQuery, Jpc context);
 
 	@Override
 	public Term asTerm(String termString) {
@@ -188,6 +189,13 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	 * OPERATORS
      **********************************************************************************************************************************
      */
+	
+	@Override
+	public List<Operator> getAllOperators() {
+		Term operatorsTerm = findall(ListTerm.create(new Variable("P"), new Variable("S"), new Variable("O")).asTerm(), new Compound(CURRENT_OP, asList(new Variable("P"), new Variable("S"), new Variable("O"))));
+		return Operator.asOperators(operatorsTerm.asList());
+	}
+	
 	
 	@Override
 	public Query currentOp(Term priority, Term specifier, Term operator) {
