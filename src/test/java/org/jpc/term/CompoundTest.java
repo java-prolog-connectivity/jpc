@@ -41,14 +41,5 @@ public class CompoundTest {
 		assertFalse(t1.hasFunctor("yellow", 2));
 		assertFalse(t1.hasFunctor("orange", 1));
 	}
-	
-	@Test
-	public void sequence() {
-		Term sequence = new Compound(",", asList(new Atom("a"), new Compound(",", asList(new Atom("b"), new Atom("c")))));
-		assertEquals(3, PrologUtil.sequenceLength(sequence));
-		List<Term> terms = PrologUtil.sequenceAsTerms(sequence);
-		assertEquals(asList(new Atom("a"), new Atom("b"), new Atom("c")), terms);
-		assertEquals(sequence, PrologUtil.termSequence(terms));
-	}
 
 }

@@ -8,6 +8,9 @@ import java.util.List;
 
 import org.jpc.converter.TermConvertable;
 import org.jpc.salt.TermContentHandler;
+import org.jpc.util.PrologUtil;
+
+import com.google.common.base.Preconditions;
 
 public class ListTerm extends ArrayList<Term> implements TermConvertable {
 	
@@ -27,6 +30,17 @@ public class ListTerm extends ArrayList<Term> implements TermConvertable {
 		return new ListTerm(terms);
 	}
 	
+	public static ListTerm fromTermSequence(Term termSequence) {
+		ListTerm listTerm = new ListTerm();
+		Term currentTerm = termSequence;
+		while(PrologUtil.isSequence(currentTerm)) {
+			listTerm.add(currentTerm.arg(1));
+			currentTerm = currentTerm.arg(2);
+		}
+		listTerm.add(currentTerm);
+		return listTerm;
+	}
+	
 	public ListTerm() {
 	}
 	
@@ -34,10 +48,17 @@ public class ListTerm extends ArrayList<Term> implements TermConvertable {
 		super(terms);
 	}
 	
-
-	
 	public ListTerm(int initialCapacity) {
 		super(initialCapacity);
+	}
+	
+	public Term asSequence() {
+		Preconditions.checkState(!this.isEmpty(), "A sequence cannot be generated if the list is empty");
+		Term termSequence = this.get(this.size()-1);
+		for(int i = this.size()-2; i>=0; i--) {
+			termSequence = new Compound(",", asList(this.get(i), termSequence));
+		}
+		return termSequence;
 	}
 	
 	@Override

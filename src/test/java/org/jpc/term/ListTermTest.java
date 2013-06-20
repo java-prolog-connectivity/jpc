@@ -5,10 +5,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.jpc.term.Atom;
-import org.jpc.term.Compound;
-import org.jpc.term.ListTerm;
-import org.jpc.term.Term;
 import org.junit.Test;
 
 public class ListTermTest {
@@ -65,5 +61,15 @@ public class ListTermTest {
 		assertEquals(listTerm.get(2), new Atom("c"));
 		assertEquals(listTerm.asTerm(), nonEmpty);
 	}
+	
+	@Test
+	public void asSequence() {
+		assertEquals(new Atom("a"), new ListTerm(asList(new Atom("a"))).asSequence());
+		Term sequence = new Compound(",", asList(new Atom("a"), new Compound(",", asList(new Atom("b"), new Atom("c")))));
+		assertEquals(sequence, new ListTerm(asList(new Atom("a"), new Atom("b"), new Atom("c"))).asSequence());
+		assertEquals(3, ListTerm.fromTermSequence(sequence).size());
+		assertEquals(sequence, ListTerm.fromTermSequence(sequence).asSequence());
+	}
+	
 	
 }

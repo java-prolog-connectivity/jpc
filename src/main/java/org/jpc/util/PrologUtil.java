@@ -1,10 +1,10 @@
 package org.jpc.util;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Arrays.asList;
 import static org.jpc.engine.prolog.PrologConstants.ANONYMOUS_VAR_NAME;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.jpc.salt.JpcTermWriter;
@@ -12,6 +12,7 @@ import org.jpc.salt.TermAdapter;
 import org.jpc.salt.TermContentHandler;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
+import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Variable;
 
@@ -36,40 +37,26 @@ public class PrologUtil {
 		return term.hasFunctor("-", 2);
 	}
 	
-
+	public static boolean isSequence(Term term) {
+		return term.hasFunctor(",", 2);
+	}
+	
 	public static Term termSequence(Term... terms) {
 		return termSequence(asList(terms));
 	}
 	
-	public static Term termSequence(List<? extends Term> terms) {
-		checkArgument(!terms.isEmpty());
-		Term termSequence = terms.get(terms.size()-1);
-		for(int i = terms.size()-2; i>=0; i--) {
-			termSequence = new Compound(",", asList(terms.get(i), termSequence));
-		}
-		return termSequence;
+	public static Term termSequence(Collection<Term> terms) {
+		return new ListTerm(terms).asSequence();
 	}
 	
-	public static List<Term> sequenceAsTerms(Term termSequence) {
-		int len = sequenceLength(termSequence);
-		Term[] ts = new Term[len];
-		for (int i = 0; i < len; i++) {
-			if(i<len-1) {
-				ts[i] = termSequence.arg(1);
-				termSequence = termSequence.arg(2);
-			} else
-				ts[i] = termSequence;
+	public static Term varDictionaryTerm(Term term) {
+		ListTerm mapVarsNames = new ListTerm();
+		for(Variable var : term.getNamedVariables()) {
+			Compound varNameEntry = new Compound("=", asList(new Atom(var.getName()), var));
+			mapVarsNames.add(varNameEntry);
 		}
-		return asList(ts);
-	} 
-
-	public static int sequenceLength(Term termSequence) {
-		int length = 1;
-		if(termSequence instanceof Compound) {
-			if(termSequence.hasFunctor(",", 2))
-				length = 1 + sequenceLength(termSequence.arg(2));
-		}
-		return length;
+		Term mapVarsNamesTerm = mapVarsNames.asTerm();
+		return mapVarsNamesTerm;
 	}
 	
 	/**

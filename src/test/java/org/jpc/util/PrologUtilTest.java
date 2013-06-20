@@ -1,7 +1,8 @@
 package org.jpc.util;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
@@ -11,8 +12,8 @@ public class PrologUtilTest {
 
 	@Test
 	public void testTermsToSequence() {
-		assertEquals(new Atom("a"), PrologUtil.termSequence(asList(new Atom("a"))));
-		assertEquals(new Compound(",", asList(new Atom("a"), new Compound(",", asList(new Atom("b"), new Atom("c"))))), PrologUtil.termSequence(asList(new Atom("a"), new Atom("b"), new Atom("c"))));
+		assertTrue(PrologUtil.isSequence(new Compound(",", asList(new Atom("x"), new Atom("x")))));
+		assertFalse(PrologUtil.isSequence(new Atom("x")));
 	}
 	
 }
