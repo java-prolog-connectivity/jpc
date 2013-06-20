@@ -9,9 +9,10 @@ import java.util.Map.Entry;
 
 import org.jpc.Jpc;
 import org.jpc.engine.prolog.PrologEngine;
+import org.jpc.term.Atom;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
-import org.jpc.term.Variable;
+import org.jpc.util.PrologUtil;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
@@ -48,19 +49,27 @@ public abstract class Query extends Cursor<QuerySolution> {
 	
 	@Override
 	protected List<QuerySolution> basicAllSolutions() {
-		ListTerm goalVariables = new ListTerm(getGoal().getNamedVariables());
-		Term allSolutionsFindAllTerm = getPrologEngine().findall(goalVariables.asTerm(), getGoal());
-		ListTerm allSolutionsFindAll = allSolutionsFindAllTerm.asList();
-		List<QuerySolution> allSolutionsBindings = new ArrayList<>();
-		for(Term oneSolutionFindAllTerm : allSolutionsFindAll) {
+		Term allSolutionsBindingsTerm = getAllSolutionsBindingsTerm();
+		ListTerm allSolutionsBindingsList = allSolutionsBindingsTerm.asList();
+		List<QuerySolution> allSolutions = new ArrayList<>();
+		for(Term oneSolutionFindAllTerm : allSolutionsBindingsList) {
 			ListTerm oneSolutionFindAll = oneSolutionFindAllTerm.asList();
 			Map<String,Term> solutionBindings = new HashMap<>();
-			for(int i=0; i<goalVariables.size(); i++) {
-				solutionBindings.put(((Variable)goalVariables.get(i)).getName(), oneSolutionFindAll.get(i));
+			for(Term bindingTerm : oneSolutionFindAll) {
+				solutionBindings.put(((Atom)bindingTerm.arg(1)).getName(), bindingTerm.arg(2));
 			}
-			allSolutionsBindings.add(new QuerySolution(solutionBindings, getPrologEngine(), getJpcContext()));
+			allSolutions.add(new QuerySolution(solutionBindings, getPrologEngine(), getJpcContext()));
 		}
-		return allSolutionsBindings;
+		return allSolutions;
+	}
+	
+	/**
+	 * Answers a list term with the form [f(Name,Term), ...]
+	 * Where f is an arbitrary functor name, Name is the name of a variable present in the original goal and Term the value bound to such variable.
+	 * @return a list term where each entry in the list binds a variable name to a term
+	 */
+	protected Term getAllSolutionsBindingsTerm() {
+		return getPrologEngine().findall(PrologUtil.varDictionaryTerm(getGoal()), getGoal());
 	}
 	
 	public synchronized ListMultimap<String, Term> allSolutionsMultimap() {
