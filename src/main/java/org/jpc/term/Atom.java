@@ -8,6 +8,7 @@ import static org.jpc.engine.prolog.PrologConstants.TRUE;
 import java.util.regex.Matcher;
 
 import org.jpc.JpcException;
+import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.TermContentHandler;
 import org.jpc.term.visitor.TermVisitor;
 
@@ -35,9 +36,12 @@ public final class Atom extends AbstractTerm {
 	public Atom(String name) {
 		this.name = name;
 		String escapedName = name;
-		escapedName = escapedName.replaceAll("\\\\", Matcher.quoteReplacement("\\\\"));
-		escapedName = escapedName.replaceAll("'", Matcher.quoteReplacement("''")); //escaping ' with \' does not work correctly in XSB, therefore it is escaped with the alternative ''
-		this.escapedName = "'" + escapedName + "'";
+		if(!isList()) {
+			escapedName = escapedName.replaceAll("\\\\", Matcher.quoteReplacement("\\\\"));
+			escapedName = escapedName.replaceAll("'", Matcher.quoteReplacement("''")); //escaping ' with \' does not work correctly in XSB, therefore it is escaped with the alternative ''
+			escapedName = "'" + escapedName + "'";
+		}
+		this.escapedName = escapedName;
 	}
 
 	public String getName() {
@@ -89,6 +93,11 @@ public final class Atom extends AbstractTerm {
 	@Override
 	public boolean equals(Object obj) {
 		return (this == obj || (obj instanceof Atom && name.equals(((Atom)obj).name)));
+	}
+
+	@Override
+	public String toString(OperatorsContext operatorsContext) {
+		return toString();
 	}
 
 }

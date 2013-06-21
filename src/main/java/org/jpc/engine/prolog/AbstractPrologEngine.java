@@ -42,8 +42,8 @@ import org.jpc.term.Variable;
 import org.jpc.util.PrologUtil;
 
 public abstract class AbstractPrologEngine implements PrologEngine {
-	
-	private static final String ALL_RESULTS_VAR = JPC_VAR_PREFIX + "ALL_RESULTS";
+
+	public static final String ALL_RESULTS_VAR = JPC_VAR_PREFIX + "ALL_RESULTS";
 	
 	public AbstractPrologEngine() {
 	}
@@ -191,9 +191,9 @@ public abstract class AbstractPrologEngine implements PrologEngine {
      */
 	
 	@Override
-	public List<Operator> getAllOperators() {
+	public OperatorsContext getOperatorsContext() {
 		Term operatorsTerm = findall(ListTerm.create(new Variable("P"), new Variable("S"), new Variable("O")).asTerm(), new Compound(CURRENT_OP, asList(new Variable("P"), new Variable("S"), new Variable("O"))));
-		return Operator.asOperators(operatorsTerm.asList());
+		return OperatorsContext.asOperatorsContext(operatorsTerm.asList());
 	}
 	
 	

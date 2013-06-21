@@ -153,8 +153,8 @@ public class PrologEngineProxy implements PrologEngine {
 	}
 
 	@Override
-	public List<Operator> getAllOperators() {
-		return proxiedEngine.getAllOperators();
+	public OperatorsContext getOperatorsContext() {
+		return proxiedEngine.getOperatorsContext();
 	}
 	
 	@Override

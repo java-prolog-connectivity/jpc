@@ -1,5 +1,8 @@
 package org.jpc.query;
 
+import static java.util.Arrays.asList;
+import static org.jpc.engine.prolog.PrologConstants.FINDALL;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,10 +11,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.jpc.Jpc;
+import org.jpc.engine.prolog.AbstractPrologEngine;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Atom;
+import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
+import org.jpc.term.Variable;
 import org.jpc.util.PrologUtil;
 
 import com.google.common.collect.ArrayListMultimap;
@@ -49,7 +55,13 @@ public abstract class Query extends Cursor<QuerySolution> {
 	
 	@Override
 	protected List<QuerySolution> basicAllSolutions() {
-		Term allSolutionsBindingsTerm = getAllSolutionsBindingsTerm();
+		Query findAllQuery = getPrologEngine().query(new Compound(FINDALL, asList(
+				PrologUtil.varDictionaryTerm(getGoal()), 
+				getGoal(),
+				new Variable(AbstractPrologEngine.ALL_RESULTS_VAR)
+		)));
+		QuerySolution findAllSolution = findAllQuery.oneSolutionOrThrow();
+		Term allSolutionsBindingsTerm = findAllSolution.get(AbstractPrologEngine.ALL_RESULTS_VAR);
 		ListTerm allSolutionsBindingsList = allSolutionsBindingsTerm.asList();
 		List<QuerySolution> allSolutions = new ArrayList<>();
 		for(Term oneSolutionFindAllTerm : allSolutionsBindingsList) {
@@ -58,7 +70,9 @@ public abstract class Query extends Cursor<QuerySolution> {
 			for(Term bindingTerm : oneSolutionFindAll) {
 				solutionBindings.put(((Atom)bindingTerm.arg(1)).getName(), bindingTerm.arg(2));
 			}
-			allSolutions.add(new QuerySolution(solutionBindings, getPrologEngine(), getJpcContext()));
+			QuerySolution aSolution = new QuerySolution(solutionBindings, getPrologEngine(), getJpcContext());
+			aSolution.setOperatorsContext(findAllSolution.getOperatorsContext());
+			allSolutions.add(aSolution);
 		}
 		return allSolutions;
 	}

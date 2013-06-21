@@ -6,6 +6,7 @@ import static org.jpc.engine.prolog.PrologConstants.ANONYMOUS_VAR_NAME;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.TermContentHandler;
 import org.jpc.term.visitor.TermVisitor;
 
@@ -117,6 +118,11 @@ public final class Variable extends AbstractTerm {
 	public void read(TermContentHandler contentHandler) {
 		contentHandler.startVariable(name);
 		
+	}
+
+	@Override
+	public String toString(OperatorsContext operatorsContext) {
+		return toString();
 	}
 	
 }

@@ -3,6 +3,7 @@ package org.jpc.term;
 import java.util.List;
 import java.util.Map;
 
+import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.TermContentHandler;
 import org.jpc.term.visitor.TermVisitor;
 
@@ -168,6 +169,7 @@ public interface Term /*extends TermConvertable*/ {
 	 * @param contentHandler the content handler that will receive the events describing the structure of this term
 	 */
 	public abstract void read(TermContentHandler contentHandler);
+	public abstract String toString(OperatorsContext operatorsContext);
 	public abstract String toEscapedString();
 	
 

@@ -33,7 +33,7 @@ public abstract class AbstractTerm implements Term, TermConvertable {
 	
 	@Override
 	public List<Term> getArgs() {
-		return Collections.emptyList();//assuming no arguments by default
+		return Collections.emptyList(); //assuming no arguments by default
 	}
 	
 	@Override

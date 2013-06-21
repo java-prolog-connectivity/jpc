@@ -98,7 +98,7 @@ public interface PrologEngine extends PrologDatabase {
      **********************************************************************************************************************************
      */
 	
-	public List<Operator> getAllOperators();
+	public OperatorsContext getOperatorsContext();
 	
 	public Query currentOp(Term priority, Term specifier, Term operator);
 

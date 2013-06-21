@@ -1,5 +1,7 @@
 package org.jpc.term;
 
+import org.jpc.engine.prolog.OperatorsContext;
+
 
 public abstract class NumberTerm extends AbstractTerm {
 
@@ -63,5 +65,9 @@ public abstract class NumberTerm extends AbstractTerm {
 		return true;
 	}
 
+	@Override
+	public String toString(OperatorsContext operatorsContext) {
+		return toString();
+	}
 
 }

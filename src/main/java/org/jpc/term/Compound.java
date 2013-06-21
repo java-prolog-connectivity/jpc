@@ -9,9 +9,12 @@ import java.util.List;
 import java.util.Objects;
 
 import org.jpc.JpcException;
-import org.jpc.engine.prolog.PrologEngine;
+import org.jpc.engine.prolog.Operator;
+import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.TermContentHandler;
 import org.jpc.term.visitor.TermVisitor;
+
+import com.google.common.base.Joiner;
 
 /**
  * A class reifying a logic compound term
@@ -94,20 +97,27 @@ public final class Compound extends AbstractTerm {
 	}
 	
 	
-	
 	/**
-	 * Returns the name (unquoted) of this Compound.
+	 * Returns the name of this Compound.
 	 * 
-	 * @return the name (unquoted) of this Compound
+	 * @return the name of this Compound
 	 */
 	public Term getName() {
 		return name;
 	}
 	
+//	public String getNameString() {
+//		if(name instanceof Atom) {
+//			return ((Atom)name).getName();
+//		} else {
+//			throw new RuntimeException("The compound functor is not an atom: " + name);
+//		}
+//	}
+	
 	/**
-	 * Returns the arguments of this Compound (1..arity) of this Compound as an array[0..arity-1] of Term.
+	 * Returns the arguments of this Compound (1..arity) of this Compound as a List of Term.
 	 * 
-	 * @return the arguments (1..arity) of this Compound as an array[0..arity-1] of Term
+	 * @return the arguments of this Compound (1..arity) of this Compound as a List of Term.
 	 */
 	@Override
 	public List<Term> getArgs() {
@@ -164,6 +174,12 @@ public final class Compound extends AbstractTerm {
 		}
 	}
 
+	public boolean usesOperator(Operator operator) {
+		return(hasName(operator.getName()) &&
+			((operator.isUnary() && arity() == 1) || 
+			(operator.isBinary() && arity() == 2)));
+	}
+	
 	@Override
 	public void read(TermContentHandler contentHandler) {
 		contentHandler.startCompound();
@@ -172,6 +188,40 @@ public final class Compound extends AbstractTerm {
 			child.read(contentHandler);
 		}
 		contentHandler.endCompound();
+	}
+
+	@Override
+	public String toString(OperatorsContext operatorsContext) {
+		StringBuilder sb = new StringBuilder();
+		if(isList()) {
+			sb.append("[");
+			List<String> members = new ArrayList<>();
+			for(Term term : asList()) {
+				members.add(term.toString(operatorsContext));
+			}
+			sb.append(Joiner.on(",").join(members));
+			sb.append("]");
+		} else {
+			Operator op = operatorsContext.getOperator(this);
+			if(op != null) {
+				if(op.isUnary()) {
+					if(op.isPrefix()) {
+						sb.append(op.getName());
+						sb.append(arg(1).toString(operatorsContext));
+					} else {
+						sb.append(arg(1).toString(operatorsContext));
+						sb.append(op.getName());
+					}
+				} else {
+					sb.append(arg(1).toString(operatorsContext));
+					sb.append(op.getName());
+					sb.append(arg(2).toString(operatorsContext));
+				}
+					
+			} else
+				sb.append(toString());
+		}
+		return sb.toString();
 	}
 
 }

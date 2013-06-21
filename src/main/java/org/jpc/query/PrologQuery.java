@@ -4,6 +4,7 @@ import static java.util.Arrays.asList;
 import static org.jpc.engine.prolog.PrologConstants.CATCH;
 
 import org.jpc.Jpc;
+import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
@@ -30,7 +31,12 @@ public abstract class PrologQuery extends Query {
 		return new Compound(CATCH, asList(term, new Variable(QuerySolution.EXCEPTION_VAR_NAME), Atom.TRUE_TERM));
 	}
 	
+	public static Term withOperatorsQueryTerm(Term term) {
+		return new Compound(",", asList(term, OperatorsContext.findAllOperatorsTerm()));
+	}
+	
 	protected Term instrumentGoal(Term goal) {
+		goal = withOperatorsQueryTerm(goal);
 		if(errorHandledQuery) {
 			return exceptionHandledQueryTerm(goal);
 		} else {

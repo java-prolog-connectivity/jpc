@@ -21,4 +21,24 @@ public enum Specifier implements TermConvertable<Atom> {
 		return new Atom(toString());
 	}
 
+	public boolean isUnary() {
+		return toString().length() == 2;
+	}
+	
+	public boolean isBinary() {
+		return toString().length() == 3;
+	}
+	
+	public boolean isPrefix() {
+		return toString().startsWith("f");
+	}
+	
+	public boolean isPostfix() {
+		return toString().endsWith("f");
+	}
+	
+	public boolean isInfix() {
+		return isBinary() && toString().substring(1, 2).equals("f");
+	}
+	
 }

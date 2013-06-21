@@ -1,7 +1,5 @@
 package org.jpc.engine.prolog;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.jpc.converter.TermConvertable;
 import org.jpc.term.Atom;
@@ -43,14 +41,6 @@ public class Operator implements TermConvertable<Atom> {
 		return new Atom(name);
 	}
 
-	public static List<Operator> asOperators(Iterable<? extends Term> operatorsListTerm) {
-		List<Operator> operators = new ArrayList<>();
-		for(Term operatorTerm : operatorsListTerm) {
-			operators.add(asOperator(operatorTerm));
-		}
-		return operators;
-	}
-	
 	/**
 	 * Constructs an operator from a term having as structure [P,S,N]
 	 * Where P is the operator's priority, S is its specifier (an integer term) and N the operator's name
@@ -66,4 +56,24 @@ public class Operator implements TermConvertable<Atom> {
 		return op;
 	}
 	
+	public boolean isUnary() {
+		return specifier.isUnary();
+	}
+	
+	public boolean isBinary() {
+		return specifier.isBinary();
+	}
+	
+	public boolean isPrefix() {
+		return specifier.isPrefix();
+	}
+	
+	public boolean isPostfix() {
+		return specifier.isPostfix();
+	}
+	
+	public boolean isInfix() {
+		return specifier.isInfix();
+	}
+
 }
