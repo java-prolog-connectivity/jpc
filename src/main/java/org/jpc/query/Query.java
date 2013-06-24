@@ -89,7 +89,7 @@ public abstract class Query extends Cursor<QuerySolution> {
 	public synchronized ListMultimap<String, Term> allSolutionsMultimap() {
 		ListMultimap<String, Term> allSolutionsMultimap = ArrayListMultimap.create();
 		List<QuerySolution> allSolutions = allSolutions();
-		for(Map<String, Term> solution : allSolutions) {
+		for(QuerySolution solution : allSolutions) {
 			for(Entry<String, Term> entry : solution.entrySet()) {
 				allSolutionsMultimap.put(entry.getKey(), entry.getValue());
 			}
