@@ -55,7 +55,7 @@ public class ConverterManager {
 			if(converter.canConvertFromTerm(term, bestTypeForConverter)) {
 				try {
 					if(bestTypeForConverter.equals(converterObjectType)) { //this check is because in the call to fromTerm/2 the type arguments would be lost, then a call to fromTerm/3 would be more appropriate.
-						return converter.fromTerm(term, context); //by default will delegate to fromTerm/3 unless overridding by the programmer
+						return converter.fromTerm(term, context); //by default will delegate to fromTerm/3 unless overriding by the programmer
 					} else {
 						return converter.fromTerm(term, bestTypeForConverter, context); //the idea of these two calls is to allow the programmer to override either fromTerm/2 (if the type argument is not necessary) or fromTerm/3 (more verbose)
 					}
