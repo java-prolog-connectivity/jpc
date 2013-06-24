@@ -9,13 +9,13 @@ import org.jpc.engine.prolog.PrologEngine;
  */
 public class PrologEngineProviderManager {
 
-	private static PrologEngineProvider<PrologEngine> prologEngineProvider;
+	private static PrologEngineProvider<? extends PrologEngine> prologEngineProvider;
 	
 	public static synchronized PrologEngine getPrologEngine() {
 		return prologEngineProvider.getPrologEngine();
 	}
 	
-	public static synchronized void setPrologEngineProvider(PrologEngineProvider<PrologEngine> prologEngineProvider) {
+	public static synchronized void setPrologEngineProvider(PrologEngineProvider<? extends PrologEngine> prologEngineProvider) {
 		PrologEngineProviderManager.prologEngineProvider = prologEngineProvider;
 	}
 }
