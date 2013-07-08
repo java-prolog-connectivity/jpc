@@ -80,16 +80,25 @@ public class JpcPreferences extends Preferences {
 		return logtalkHomeFile;
 	}
 	
-	public String getTmpDirectory() {
+	public File getTmpDirectory() {
+		File tmpDir = null;
 		String tmp = getVar(LOGTALK_USER_ENV_VAR);
 		if(tmp == null)
 			tmp = getVar(SYSTEM_TEMP_DIRECTORY_ENV_VAR);
-		return tmp;
+		if(tmp != null)
+			tmpDir = new File(tmp);
+		return tmpDir;
 	}
 	
-	public String getTmpSubdirectoryName() {
+	private String getTmpSubdirectoryName() {
 		return JPC_SHORT_NAME;
 	}
 
+	public File getJpcTmpDirectory() {
+		File tmpDir = getTmpDirectory();
+		checkNotNull(tmpDir, "No tmp directory has been defined in the preferences");
+		return new File(tmpDir, getTmpSubdirectoryName());
+	}
 
 }
+

@@ -1,7 +1,5 @@
 package org.jpc.util;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -43,20 +41,14 @@ public class ResourceManager {
 		ResourceManager.defaultResourceManager = defaultResourceManager;
 	}
 
-	private final String tmpDirPath; // the root temporary directory 
 	private final File jpcTmpDir; //a File object representing a folder in the tmp directory where logic files or similar resources can be unzipped if required
 
 	private Set<URL> processedURLs; //remember which URLs have been processed already (i.e., tmp files have already been created for logic files in such url)
-	//private JpcPreferences preferences;
 	
 	public ResourceManager(JpcPreferences preferences) {
 		this.preferences = preferences;
 		processedURLs = new HashSet<>();
-		this.tmpDirPath = preferences.getTmpDirectory(); //the system tmp directory
-		checkNotNull(tmpDirPath, "No tmp directory has been defined in the preferences");
-		String tmpSubdirectoryPath = preferences.getTmpSubdirectoryName(); //the tmp subdirectory to be created in the tmp directory
-		checkNotNull(tmpSubdirectoryPath, "No tmp subdirectory has been defined in the preferences");
-		jpcTmpDir = new File(tmpDirPath, tmpSubdirectoryPath);
+		jpcTmpDir = preferences.getJpcTmpDirectory();
 		jpcTmpDir.mkdirs(); //creating all the directories needed to locate the tmp logic files
 	}
 	
