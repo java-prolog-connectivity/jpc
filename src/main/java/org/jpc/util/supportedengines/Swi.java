@@ -15,26 +15,30 @@ public class Swi extends EngineDescription {
 		return SWI;
 	}
 
-	@Override
-	public String getDescription() {
-		return null;
-	}
-
-	@Override
-	public String getLicenseUrl() {
-		return null;
-	}
-
-	@Override
-	public String getSiteUrl() {
-		return null;
-	}
-	
 	public String getExecutableFileName() {
 		if(OsUtil.osIsOsX() || OsUtil.osIsWindows())
 			return EXECUTABLE_FILE_NAME_WINDOWS_OSX;
 		else
 			return EXECUTABLE_FILE_NAME_LINUX;
+	}
+	
+	/**
+	 * Source: http://en.wikipedia.org/wiki/SWI-Prolog
+	 */
+	@Override
+	public String getDescription() {
+		return "SWI-Prolog is an open source implementation of the programming language Prolog, "
+				+ "commonly used for teaching and semantic web applications."; 
+	}
+
+	@Override
+	public String getLicenseUrl() {
+		return "http://www.swi-prolog.org/license.html";
+	}
+
+	@Override
+	public String getSiteUrl() {
+		return "http://www.swi-prolog.org/";
 	}
 
 }

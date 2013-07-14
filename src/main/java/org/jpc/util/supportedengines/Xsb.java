@@ -11,17 +11,17 @@ public class Xsb extends EngineDescription {
 
 	@Override
 	public String getDescription() {
-		return null;
+		return "XSB is a Logic Programming and Deductive Database system for Unix and Windows.";
 	}
 
 	@Override
 	public String getLicenseUrl() {
-		return null;
+		return "http://sourceforge.net/projects/xsb/";
 	}
 
 	@Override
 	public String getSiteUrl() {
-		return null;
+		return "http://xsb.sourceforge.net/";
 	}
 	
 }
