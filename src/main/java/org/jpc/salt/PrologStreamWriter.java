@@ -6,7 +6,6 @@ import static org.jpc.engine.prolog.PrologConstants.ASSERTZ;
 
 import java.io.PrintStream;
 
-import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
 
@@ -15,15 +14,14 @@ import org.jpc.term.Term;
  */
 public class PrologStreamWriter extends PrologWriter {
 
-	private PrintStream out;
+	protected PrintStream out;
 	public static final String DIRECTIVE_PREFIX = ":- ";
 	
 	
-	public PrologStreamWriter(PrologEngine prologEngine, PrintStream out) {
-		super(prologEngine);
+	public PrologStreamWriter(PrintStream out) {
 		this.out = out;
 	}
-
+	
 	@Override
 	public void writePrologDirective(Term directive) {
 		String termString = directive.toEscapedString();

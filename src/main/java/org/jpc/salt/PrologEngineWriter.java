@@ -13,10 +13,16 @@ public class PrologEngineWriter extends PrologWriter {
 
 	private static Logger logger = LoggerFactory.getLogger(PrologEngineWriter.class);
 
+	private PrologEngine prologEngine;
+	
 	public PrologEngineWriter(PrologEngine prologEngine) {
-		super(prologEngine);
+		this.prologEngine = prologEngine;
 	}
 
+	public PrologEngine getPrologEngine() {
+		return prologEngine;
+	}
+	
 	public void writePrologDirective(Term directive) {
 		if(!getPrologEngine().query(directive).hasSolution())
 			logger.error("The directive: " + directive.toEscapedString() + "cannot be executed");

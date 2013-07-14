@@ -8,21 +8,18 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Write logic terms to a "target". 
- * This target is defined by subclasses. For example, it can be a logic engine or a text file.
+ * This target is defined by subclasses. For example, it may be a logic engine or just a text file.
  */
 public abstract class PrologWriter extends JpcTermWriter implements PrologContentHandler {
 
 	private static Logger logger = LoggerFactory.getLogger(PrologWriter.class);
-	
-	private PrologEngine prologEngine;
-	
+
 	private boolean writeDirective;
 	private boolean writeClause;
 	private boolean readingLogtalkObjectTerm;
 	private Term currentLogtalkObjectTerm;
 	
-	public PrologWriter(PrologEngine prologEngine) {
-		this.prologEngine = prologEngine;
+	public PrologWriter() {
 	}
 
 	private void resetLogtalkOjectTerm() {
@@ -35,10 +32,6 @@ public abstract class PrologWriter extends JpcTermWriter implements PrologConten
 
 	public Term getCurrentLogtalkObjectTerm() {
 		return currentLogtalkObjectTerm;
-	}
-	
-	public PrologEngine getPrologEngine() {
-		return prologEngine;
 	}
 	
 	
