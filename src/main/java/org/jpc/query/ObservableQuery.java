@@ -9,6 +9,8 @@ import java.util.NoSuchElementException;
 
 import org.minitoolbox.CollectionsUtil;
 
+import com.google.common.collect.Lists;
+
 public class ObservableQuery extends QueryAdapter {
 
 	private Collection<QueryListener> listeners;
@@ -128,6 +130,10 @@ public class ObservableQuery extends QueryAdapter {
 		return allSolutions;
 	}
 
+	public synchronized void addQueryListeners(Iterable<QueryListener> listeners) {
+		this.listeners.addAll(Lists.newArrayList(listeners));
+	}
+	
 	public synchronized void addQueryListener(QueryListener listener) {
 		listeners.add(listener);
 	}
