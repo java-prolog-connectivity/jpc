@@ -121,7 +121,6 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 		return query;
 	}
 	
-	protected abstract Query basicQuery(Term term, boolean errorHandledQuery, Jpc context);
 
 	@Override
 	public Term asTerm(String termString) {

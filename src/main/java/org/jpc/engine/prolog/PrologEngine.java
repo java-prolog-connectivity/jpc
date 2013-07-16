@@ -61,6 +61,11 @@ public interface PrologEngine extends PrologDatabase {
 	
 	public Query query(Term term, boolean errorHandledQuery, Jpc context);
 	
+	/**
+	 * 
+	 * @return a non-instrumented query
+	 */
+	Query basicQuery(Term term, boolean errorHandledQuery, Jpc context);
 	
 	/**
 	 * 
