@@ -30,12 +30,10 @@ public class Jpc {
 	private ErrorHandler errorHandler;
 	//private JpcPreferences preferences;
 	
-	
 	private static final Version version = new Version();
 	public static Version version() {
 		return version;
 	}
-	
 	
 	public Jpc() {
 		this.converterManager = new DefaultJpcConverterManager();
@@ -50,22 +48,6 @@ public class Jpc {
 		this.instantiationManager = instantiationManager;
 		this.errorHandler = errorHandler;
 		//this.preferences = preferences;
-	}
-	
-	public Compound compound(String name, List<? extends Object> args) {
-		return new Compound(name, listTerm(args));
-	}
-	
-	public ListTerm listTerm(Object ...objects) {
-		return listTerm(Arrays.asList(objects));
-	}
-	
-	public ListTerm listTerm(List<? extends Object> objects) {
-		ListTerm listTerm = new ListTerm();
-		for(Object o : objects) {
-			listTerm.add(toTerm(o));
-		}
-		return listTerm;
 	}
 	
 	public <T> T fromTerm(Term term) {
@@ -84,6 +66,22 @@ public class Jpc {
 		return converterManager.toTerm(object, termClass, this);
 	}
 
+	public Compound toTerm(Object name, List<? extends Object> args) {
+		return new Compound(toTerm(name), listTerm(args));
+	}
+	
+	public ListTerm listTerm(Object ...objects) {
+		return listTerm(Arrays.asList(objects));
+	}
+	
+	public ListTerm listTerm(List<? extends Object> objects) {
+		ListTerm listTerm = new ListTerm();
+		for(Object o : objects) {
+			listTerm.add(toTerm(o));
+		}
+		return listTerm;
+	}
+	
 	public <T> T instantiate(Type targetType) {
 		return instantiationManager.instantiate(targetType);
 	}
