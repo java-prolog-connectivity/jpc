@@ -1,4 +1,4 @@
-package org.jpc.jref;
+package org.jpc.jterm;
 
 
 public class WeakReferencesCleaner extends Thread {

@@ -1,4 +1,4 @@
-package org.jpc.jref;
+package org.jpc.jterm;
 
 import java.lang.ref.ReferenceQueue;
 import java.util.HashMap;
@@ -23,14 +23,14 @@ public class RefManager {
 	
 	private Map<RefId, JRef> knownReferences;
 	
-	private ReferenceQueue referenceQueue;
+	private ReferenceQueue<Object> referenceQueue;
 	
 	private RefManager(){
-		referenceQueue = new ReferenceQueue();
+		referenceQueue = new ReferenceQueue<>();
 		knownReferences = new HashMap<>();
 	}
 
-	public ReferenceQueue getReferenceQueue() {
+	public ReferenceQueue<Object> getReferenceQueue() {
 		return referenceQueue;
 	}
 

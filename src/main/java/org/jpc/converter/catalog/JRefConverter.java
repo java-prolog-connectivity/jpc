@@ -5,13 +5,13 @@ import java.lang.reflect.Type;
 import org.jpc.Jpc;
 import org.jpc.converter.JpcConversionException;
 import org.jpc.converter.JpcConverter;
-import org.jpc.jref.JRef;
-import org.jpc.jref.RefId;
-import org.jpc.jref.RefManager;
+import org.jpc.jterm.JRef;
+import org.jpc.jterm.RefId;
+import org.jpc.jterm.RefManager;
 import org.jpc.term.Compound;
 import org.jpc.term.IntegerTerm;
 
-public class JRefConverter extends JpcConverter<Object, Compound>{
+public class JRefConverter extends JpcConverter<Object, Compound> {
 
 	@Override
 	public Object fromTerm(Compound term, Type type, Jpc context) {
