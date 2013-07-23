@@ -27,6 +27,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.jpc.Jpc;
 import org.jpc.converter.typesolver.MapTypeSolver;
+import org.jpc.jref.JRef;
 import org.jpc.jref.RefManager;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
@@ -191,7 +192,14 @@ public class DefaultTermConverterTest {
 	@Test
 	public void testJRef() {
 		Object o = new Object();
-		assertEquals(o, jpc.fromTerm(RefManager.jRef(o).asTerm()));
+		JRef jRef = RefManager.jRef(o);
+		assertEquals(o, jpc.fromTerm(jRef.asTerm()));
+		o = null;
+		System.gc();
+		try {
+			jpc.fromTerm(jRef.asTerm());
+			fail();
+		} catch(RuntimeException e) {}
 	}
 	
 	// *** OBJECT TO TERM TESTS ***

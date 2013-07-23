@@ -53,7 +53,7 @@ public class RefManager {
 	public <T> T getOrThrow(RefId refId) {
 		T object = null;
 		JRef jRef = knownReferences.get(refId);
-		if(jRef == null)
+		if(jRef == null || jRef.get() == null)
 			throw new RuntimeException("No such a reference: " + refId);
 		object = (T) jRef.get();
 		return object;
