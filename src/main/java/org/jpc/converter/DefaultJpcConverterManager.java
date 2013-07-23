@@ -3,6 +3,7 @@ package org.jpc.converter;
 import org.jpc.converter.catalog.BooleanConverter;
 import org.jpc.converter.catalog.CalendarConverter;
 import org.jpc.converter.catalog.CharacterConverter;
+import org.jpc.converter.catalog.JRefConverter;
 import org.jpc.converter.catalog.NumberConverter;
 import org.jpc.converter.catalog.StringConverter;
 import org.jpc.converter.catalog.XmlGregorianCalendarConverter;
@@ -53,6 +54,7 @@ public class DefaultJpcConverterManager extends ConverterManager {
 		register(new NumberConverter());
 		register(new StringConverter());
 		register(new XmlGregorianCalendarConverter());
+		register(new JRefConverter());
 	}
 	
 	
