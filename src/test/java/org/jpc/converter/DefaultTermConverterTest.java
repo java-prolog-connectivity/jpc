@@ -27,8 +27,9 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.jpc.Jpc;
 import org.jpc.converter.typesolver.MapTypeSolver;
-import org.jpc.jref.JRef;
-import org.jpc.jref.RefManager;
+import org.jpc.jterm.JRef;
+import org.jpc.jterm.RefManager;
+import org.jpc.jterm.SerializedTerm;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.FloatTerm;
@@ -43,6 +44,7 @@ import com.google.common.reflect.TypeToken;
 public class DefaultTermConverterTest {
 
 	private Jpc jpc = new Jpc();
+	
 	
 	// *** TERM TO OBJECTS TESTS ***
 	
@@ -201,6 +203,14 @@ public class DefaultTermConverterTest {
 			fail();
 		} catch(RuntimeException e) {}
 	}
+	
+	@Test
+	public void testSerializedTerm() {
+		String s = "hello";
+		SerializedTerm st = new SerializedTerm(s);
+		assertEquals(s, jpc.fromTerm(st.asTerm()));
+	}
+	
 	
 	// *** OBJECT TO TERM TESTS ***
 
