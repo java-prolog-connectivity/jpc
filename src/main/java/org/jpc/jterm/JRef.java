@@ -23,15 +23,28 @@ public class JRef extends WeakReference<Object> implements TermConvertable<Compo
 	public RefId getRefId() {
 		return refId;
 	}
-
-	@Override
-	public String toString() {
-		return asTerm().toString();
-	}
 	
 	@Override
 	public Compound asTerm() {
 		return new Compound(JREF_FUNCTOR, asList(new IntegerTerm(refId.getId())));
 	}
 
+	@Override
+	public String toString() {
+		return asTerm().toString();
+	}
+
+	@Override
+	public int hashCode() {
+		return refId.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof JRef) {
+			return refId.equals(((JRef)obj).getRefId());
+		}
+		return false;
+	}
+	
 }
