@@ -195,7 +195,7 @@ public class DefaultTermConverterTest {
 	public void testJRef() {
 		Object o = new Object();
 		JRef jRef = RefManager.jRef(o);
-		assertEquals(o, jpc.fromTerm(jRef.asTerm()));
+		assertTrue(o == jpc.fromTerm(jRef.asTerm()));
 		o = null;
 		System.gc();
 		try {
@@ -208,7 +208,9 @@ public class DefaultTermConverterTest {
 	public void testSerializedTerm() {
 		String s = "hello";
 		SerializedTerm st = new SerializedTerm(s);
-		assertEquals(s, jpc.fromTerm(st.asTerm()));
+		String s2 = jpc.fromTerm(st.asTerm());
+		assertFalse(s == s2);
+		assertEquals(s, s2);
 	}
 	
 	
