@@ -33,15 +33,6 @@ public class JpcPreferences extends Preferences {
 		super(properties);
 	}
 	
-//	public boolean isLogtalkSupported(String engineName) {
-//		try {
-//			logtalkIntegrationScriptOrThrow(engineName);
-//			return true;
-//		} catch(Exception e) {
-//			return false;
-//		}
-//	}
-	
 	/**
 	 * Answers a Logtalk integration script for a given Prolog engine name.
 	 * This method should always return the valid path of an integration script.
@@ -90,7 +81,7 @@ public class JpcPreferences extends Preferences {
 		return tmpDir;
 	}
 	
-	private String getTmpSubdirectoryName() {
+	protected String getTmpSubdirectoryName() {
 		return JPC_SHORT_NAME;
 	}
 
