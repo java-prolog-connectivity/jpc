@@ -1,6 +1,7 @@
 package org.jpc;
 
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.List;
 
 import org.jpc.term.Compound;
@@ -9,32 +10,46 @@ import org.jpc.term.Term;
 
 /**
  * A class providing an interface for the main JPC functionality (such as converting between terms and Java objects)
- * This class is inspired by the Gson class from the Gson library (http://code.google.com/p/google-gson/)
+ * This class is inspired by the Gson class from Google's Gson library (http://code.google.com/p/google-gson/)
  * @author sergioc
  *
  */
-public interface Jpc {
+public abstract class Jpc {
 
 	public static final Version version = new Version();
 	
-	public <T> T fromTerm(Term term);
+	public final <T> T fromTerm(Term term) {
+		return fromTerm(term, Object.class);
+	}
 	
-	public <T> T fromTerm(Term term, Type type);
+	public abstract <T> T fromTerm(Term term, Type type);
 	
-	public Term toTerm(Object object);
+	public final Term toTerm(Object object) {
+		return toTerm(object, Term.class);
+	}
 	
-	public <T extends Term> T toTerm(Object object, Class<T> termClass);
+	public final Compound toTerm(Object name, List<? extends Object> args) {
+		return new Compound(toTerm(name), listTerm(args));
+	}
+	
+	public abstract <T extends Term> T toTerm(Object object, Class<T> termClass);
+	
+	public final ListTerm listTerm(Object ...objects) {
+		return listTerm(Arrays.asList(objects));
+	}
+	
+	public final ListTerm listTerm(List<? extends Object> objects) {
+		ListTerm listTerm = new ListTerm();
+		for(Object o : objects) {
+			listTerm.add(toTerm(o));
+		}
+		return listTerm;
+	}
+	
+	public abstract <T> T instantiate(Type targetType);
 
-	public Compound toTerm(Object name, List<? extends Object> args);
-	
-	public ListTerm listTerm(Object ...objects);
-	
-	public ListTerm listTerm(List<? extends Object> objects);
-	
-	public <T> T instantiate(Type targetType);
+	public abstract Type getType(Term term);
 
-	public Type getType(Term term);
-
-	public boolean handleError(Term errorTerm, Term goal);
+	public abstract boolean handleError(Term errorTerm, Term goal);
 
 }

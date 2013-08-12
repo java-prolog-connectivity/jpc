@@ -1,8 +1,6 @@
 package org.jpc;
 
 import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.List;
 
 import org.jpc.converter.ConverterManager;
 import org.jpc.converter.DefaultJpcConverterManager;
@@ -12,11 +10,9 @@ import org.jpc.converter.typesolver.DefaultTypeSolverManager;
 import org.jpc.converter.typesolver.TypeSolverManager;
 import org.jpc.error.handling.DefaultJpcErrorHandler;
 import org.jpc.error.handling.ErrorHandler;
-import org.jpc.term.Compound;
-import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 
-public class DefaultJpc implements Jpc {
+public class DefaultJpc extends Jpc {
 
 	private ConverterManager converterManager;
 	private TypeSolverManager typeSolverManager;
@@ -40,42 +36,13 @@ public class DefaultJpc implements Jpc {
 	}
 	
 	@Override
-	public <T> T fromTerm(Term term) {
-		return fromTerm(term, Object.class);
-	}
-	
-	@Override
 	public <T> T fromTerm(Term term, Type type) {
 		return (T) converterManager.fromTerm(term, type, this);
 	}
 	
 	@Override
-	public Term toTerm(Object object) {
-		return toTerm(object, Term.class);
-	}
-	
-	@Override
 	public <T extends Term> T toTerm(Object object, Class<T> termClass) {
 		return converterManager.toTerm(object, termClass, this);
-	}
-
-	@Override
-	public Compound toTerm(Object name, List<? extends Object> args) {
-		return new Compound(toTerm(name), listTerm(args));
-	}
-	
-	@Override
-	public ListTerm listTerm(Object ...objects) {
-		return listTerm(Arrays.asList(objects));
-	}
-	
-	@Override
-	public ListTerm listTerm(List<? extends Object> objects) {
-		ListTerm listTerm = new ListTerm();
-		for(Object o : objects) {
-			listTerm.add(toTerm(o));
-		}
-		return listTerm;
 	}
 	
 	@Override
