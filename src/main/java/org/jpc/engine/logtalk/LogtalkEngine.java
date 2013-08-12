@@ -37,7 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jpc.Jpc;
+import org.jpc.DefaultJpc;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.engine.prolog.PrologEngineProxy;
 import org.jpc.query.Query;
@@ -62,7 +62,7 @@ public class LogtalkEngine extends PrologEngineProxy {
 	}
 	
 	public boolean logtalkLoad(String... resources) {
-		return query(new Compound(LOGTALK_LOAD, asList(new Jpc().toTerm(resources)))).hasSolution(); 
+		return query(new Compound(LOGTALK_LOAD, asList(new DefaultJpc().toTerm(resources)))).hasSolution(); 
 	}
 	
 	public String currentLogtalkFlag(LogtalkFlag flag) {

@@ -5,6 +5,8 @@ package org.jpc;
  *
  */
 public class Version {
+
+	Version(){}
 	
 	public final int major = 0;
 	public final int minor = 0;

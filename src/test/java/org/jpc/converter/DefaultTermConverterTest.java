@@ -25,6 +25,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.jpc.DefaultJpc;
 import org.jpc.Jpc;
 import org.jpc.converter.typesolver.MapTypeSolver;
 import org.jpc.jterm.JRef;
@@ -43,7 +44,7 @@ import com.google.common.reflect.TypeToken;
 
 public class DefaultTermConverterTest {
 
-	private Jpc jpc = new Jpc();
+	private Jpc jpc = new DefaultJpc();
 	
 	
 	// *** TERM TO OBJECTS TESTS ***

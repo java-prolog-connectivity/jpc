@@ -32,7 +32,7 @@ public class JpcBuilder {
 	}
 	
 	public Jpc build() {
-		return new Jpc(converterManager, typeSolverManager, instantiationManager, errorHandlerManager);
+		return new DefaultJpc(converterManager, typeSolverManager, instantiationManager, errorHandlerManager);
 	}
 
 	public JpcBuilder registerConverter(JpcConverter<?,?> converter) {

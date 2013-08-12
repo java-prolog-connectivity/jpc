@@ -19,6 +19,7 @@ import static org.jpc.engine.prolog.PrologConstants.RETRACT_ALL;
 
 import java.util.Arrays;
 
+import org.jpc.DefaultJpc;
 import org.jpc.Jpc;
 import org.jpc.converter.TermConvertable;
 import org.jpc.engine.prolog.PrologDatabase;
@@ -45,7 +46,7 @@ public class LogtalkObject implements TermConvertable, PrologDatabase {
 	private Jpc context;
 	
 	public LogtalkObject(Object object, PrologEngine prologEngine) {
-		this(object, prologEngine, new Jpc());
+		this(object, prologEngine, new DefaultJpc());
 	}
 	
 	public LogtalkObject(Object object, PrologEngine prologEngine, Jpc context) {

@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.jpc.DefaultJpc;
 import org.jpc.Jpc;
 import org.jpc.engine.logtalk.LogtalkEngine;
 import org.jpc.query.ExceptionHandledQuery;
@@ -78,22 +79,22 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	
 	@Override
 	public final Query query(String termString) {
-		return query(termString, new Jpc());
+		return query(termString, new DefaultJpc());
 	}
 	
 	@Override
 	public final Query query(Term terms) {
-		return query(terms, new Jpc());
+		return query(terms, new DefaultJpc());
 	}
 	
 	@Override
 	public final Query query(String termString, boolean errorHandledQuery) {
-		return query(termString, errorHandledQuery, new Jpc());
+		return query(termString, errorHandledQuery, new DefaultJpc());
 	}
 	
 	@Override
 	public final Query query(Term terms, boolean errorHandledQuery) {
-		return query(terms, errorHandledQuery, new Jpc());
+		return query(terms, errorHandledQuery, new DefaultJpc());
 	}
 	
 	@Override
@@ -124,12 +125,12 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 
 	@Override
 	public Term asTerm(String termString) {
-		return asTerm(termString, new Jpc());
+		return asTerm(termString, new DefaultJpc());
 	}
 	
 	@Override
 	public List<Term> asTerms(List<String> termsString) {
-		return asTerms(termsString, new Jpc());
+		return asTerms(termsString, new DefaultJpc());
 	}
 	
 	@Override
@@ -318,7 +319,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 
 	@Override
 	public boolean ensureLoaded(String... resources) {
-		return query(new Compound(ENSURE_LOADED, asList(new Jpc().toTerm(resources)))).hasSolution();
+		return query(new Compound(ENSURE_LOADED, asList(new DefaultJpc().toTerm(resources)))).hasSolution();
 	}
 	
 
