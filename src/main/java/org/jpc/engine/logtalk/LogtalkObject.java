@@ -18,6 +18,7 @@ import static org.jpc.engine.prolog.PrologConstants.RETRACT;
 import static org.jpc.engine.prolog.PrologConstants.RETRACT_ALL;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.jpc.DefaultJpc;
 import org.jpc.Jpc;
@@ -26,12 +27,21 @@ import org.jpc.engine.prolog.PrologDatabase;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.query.LogtalkQuery;
 import org.jpc.query.Query;
+import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
 
 public class LogtalkObject implements TermConvertable, PrologDatabase {
 
-	public static Term logtalkMessage(Term receiver, Term message) {
+	public static Compound logtalkMessage(Term receiver, String message) {
+		return logtalkMessage(receiver, new Atom(message));
+	}
+	
+	public static Compound logtalkMessage(Term receiver, String message, List<? extends Term> args) {
+		return logtalkMessage(receiver, new Compound(message, args));
+	}
+	
+	public static Compound logtalkMessage(Term receiver, Term message) {
 		return new Compound(LogtalkConstants.LOGTALK_OPERATOR, Arrays.asList(receiver, message));
 	}
 	
