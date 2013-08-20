@@ -4,6 +4,8 @@ import java.lang.ref.ReferenceQueue;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jpc.term.Term;
+
 public class RefManager {
 
 	private static RefManager defaultRefManager;
@@ -19,6 +21,10 @@ public class RefManager {
 	
 	public static JRef jRef(Object o) {
 		return defaultRefManager.newJRef(o);
+	}
+	
+	public static Term jRefTerm(Object o) {
+		return jRef(o).asTerm();
 	}
 	
 	private Map<RefId, JRef> knownReferences;

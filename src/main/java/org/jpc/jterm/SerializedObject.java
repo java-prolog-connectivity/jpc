@@ -13,15 +13,20 @@ import javax.xml.bind.DatatypeConverter;
 import org.jpc.converter.TermConvertable;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
+import org.jpc.term.Term;
 
-public class SerializedTerm implements TermConvertable<Compound> {
+public class SerializedObject implements TermConvertable<Compound> {
 
 	public static final String SERIALIZED_TERM_FUNCTOR = "jserialized";
+	
+	public static Term serializedObjectTerm(Serializable serializable) {
+		return new SerializedObject(serializable).asTerm();
+	}
 	
 	private Serializable serializable;
 	private String encodedBytes;
 	
-	public SerializedTerm(Serializable serializable) {
+	public SerializedObject(Serializable serializable) {
 		this.serializable = serializable;
 		byte[] bytes;
 		try(ByteArrayOutputStream bos = new ByteArrayOutputStream(); 

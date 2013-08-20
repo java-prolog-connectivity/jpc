@@ -28,9 +28,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.jpc.DefaultJpc;
 import org.jpc.Jpc;
 import org.jpc.converter.typesolver.MapTypeSolver;
-import org.jpc.jterm.JRef;
 import org.jpc.jterm.RefManager;
-import org.jpc.jterm.SerializedTerm;
+import org.jpc.jterm.SerializedObject;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.FloatTerm;
@@ -195,12 +194,12 @@ public class DefaultTermConverterTest {
 	@Test
 	public void testJRef() {
 		Object o = new Object();
-		JRef jRef = RefManager.jRef(o);
-		assertTrue(o == jpc.fromTerm(jRef.asTerm()));
+		Term jRef = RefManager.jRefTerm(o);
+		assertTrue(o == jpc.fromTerm(jRef));
 		o = null;
 		System.gc();
 		try {
-			jpc.fromTerm(jRef.asTerm());
+			jpc.fromTerm(jRef);
 			fail();
 		} catch(RuntimeException e) {}
 	}
@@ -208,8 +207,8 @@ public class DefaultTermConverterTest {
 	@Test
 	public void testSerializedTerm() {
 		String s = "hello";
-		SerializedTerm st = new SerializedTerm(s);
-		String s2 = jpc.fromTerm(st.asTerm());
+		Term term = SerializedObject.serializedObjectTerm(s);
+		String s2 = jpc.fromTerm(term);
 		assertFalse(s == s2);
 		assertEquals(s, s2);
 	}
