@@ -27,12 +27,28 @@ public final class Variable extends AbstractTerm {
 		}
 		return variables;
 	}
+
+	public static boolean isAnonymousVariableName(String variableName) {
+		return variableName.substring(0, 1).equals(ANONYMOUS_VAR_NAME); //the variable name is equals to "_" or starts with "_"
+	}
 	
-//	public static boolean isAnonymousVariableName(String variableName) {
-//		return variableName.substring(0, 1).equals("_"); //the variable name is equals to "_" or starts with "_"
-//	}
+	/**
+	 * Wether a logic variable has a valid name
+	 * @param variableName the name of the variable
+	 * @return wether a logic variable has a valid name
+	 */
+	public static boolean isValidVariableName(String variableName) {
+		if(variableName.isEmpty())
+			return false;
+		return isAnonymousVariableName(variableName) || Character.isUpperCase(variableName.toCharArray()[0]); //additional checks could be added here
+	}
+	
 	
 	private final String name; // the name of this Variable
+	
+	public Variable() {
+		this.name = ANONYMOUS_VAR_NAME;
+	}
 	
 	public Variable(String name) {
 		checkArgument(isValidVariableName(name), "The variable name " + name + " is not valid");
@@ -64,21 +80,6 @@ public final class Variable extends AbstractTerm {
 	@Override
 	public String toEscapedString() {
 		return toString();
-	}
-	
-	public static boolean isAnonymousVariableName(String variableName) {
-		return variableName.substring(0, 1).equals(ANONYMOUS_VAR_NAME);
-	}
-	
-	/**
-	 * Wether a logic variable has a valid name
-	 * @param variableName the name of the variable
-	 * @return wether a logic variable has a valid name
-	 */
-	public static boolean isValidVariableName(String variableName) {
-		if(variableName.isEmpty())
-			return false;
-		return isAnonymousVariableName(variableName) || Character.isUpperCase(variableName.toCharArray()[0]); //additional checks could be added here
 	}
 	
 	@Override
