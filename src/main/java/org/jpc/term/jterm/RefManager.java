@@ -1,4 +1,4 @@
-package org.jpc.jterm;
+package org.jpc.term.jterm;
 
 import java.lang.ref.ReferenceQueue;
 import java.util.HashMap;

@@ -19,7 +19,7 @@ public interface Term /*extends TermConvertable*/ {
 	 * 
 	 * @return true if the term is a proper Hilog term (i.e., a Hilog term that is not a Prolog term)
 	 */
-	public abstract boolean isHilog();
+	public abstract boolean isHilog(); //experimental, may be deleted soon
 	
 	/**
 	 * Returns the ith argument (if any) of this Term.
@@ -164,11 +164,15 @@ public interface Term /*extends TermConvertable*/ {
 	 */
 	public abstract void accept(TermVisitor termVisitor);
 	
+	public abstract Term termExpansion(Term term, Map<Term,Term> replacements);
+	public abstract void read(TermContentHandler contentHandler);
+	public abstract void read(TermContentHandler contentHandler, Map<Term,Term> replacements);
+	
 	/**
 	 * Reads the contents of this term (i.e., generates events) to a content handler
 	 * @param contentHandler the content handler that will receive the events describing the structure of this term
 	 */
-	public abstract void read(TermContentHandler contentHandler);
+	//public abstract void read(TermContentHandler contentHandler);
 	public abstract String toString(OperatorsContext operatorsContext);
 	public abstract String toEscapedString();
 	

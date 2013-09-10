@@ -6,6 +6,7 @@ import static org.jpc.engine.prolog.PrologConstants.CONS_FUNCTOR;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.jpc.JpcException;
@@ -181,11 +182,11 @@ public final class Compound extends AbstractTerm {
 	}
 	
 	@Override
-	public void read(TermContentHandler contentHandler) {
+	public void basicRead(TermContentHandler contentHandler, Map<Term,Term> replacements) {
 		contentHandler.startCompound();
-		getName().read(contentHandler);
+		getName().read(contentHandler, replacements);
 		for(Term child: args) {
-			child.read(contentHandler);
+			child.read(contentHandler, replacements);
 		}
 		contentHandler.endCompound();
 	}

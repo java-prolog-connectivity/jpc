@@ -5,6 +5,7 @@ import static org.jpc.engine.prolog.PrologConstants.FAIL;
 import static org.jpc.engine.prolog.PrologConstants.FALSE;
 import static org.jpc.engine.prolog.PrologConstants.TRUE;
 
+import java.util.Map;
 import java.util.regex.Matcher;
 
 import org.jpc.JpcException;
@@ -76,7 +77,7 @@ public final class Atom extends AbstractTerm {
 	}
 	
 	@Override
-	public void read(TermContentHandler contentHandler) {
+	public void basicRead(TermContentHandler contentHandler, Map<Term,Term> replacements) {
 		contentHandler.startAtom(name);
 	}
 	

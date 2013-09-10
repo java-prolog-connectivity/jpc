@@ -28,14 +28,14 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.jpc.DefaultJpc;
 import org.jpc.Jpc;
 import org.jpc.converter.typesolver.MapTypeSolver;
-import org.jpc.jterm.RefManager;
-import org.jpc.jterm.SerializedObject;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Variable;
+import org.jpc.term.jterm.RefManager;
+import org.jpc.term.jterm.Serialized;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -206,7 +206,7 @@ public class DefaultTermConverterTest {
 	@Test
 	public void testSerializedTerm() {
 		String s = "hello";
-		Term term = SerializedObject.serializedObjectTerm(s);
+		Term term = Serialized.jSerializedTerm(s);
 		String s2 = jpc.fromTerm(term);
 		assertFalse(s == s2);
 		assertEquals(s, s2);

@@ -5,6 +5,7 @@ import static org.jpc.engine.prolog.PrologConstants.ANONYMOUS_VAR_NAME;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.TermContentHandler;
@@ -116,7 +117,7 @@ public final class Variable extends AbstractTerm {
 	}
 
 	@Override
-	public void read(TermContentHandler contentHandler) {
+	public void basicRead(TermContentHandler contentHandler, Map<Term,Term> replacements) {
 		contentHandler.startVariable(name);
 		
 	}

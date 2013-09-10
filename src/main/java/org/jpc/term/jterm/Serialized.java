@@ -1,9 +1,12 @@
-package org.jpc.jterm;
+package org.jpc.term.jterm;
 
 import static java.util.Arrays.asList;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -15,18 +18,27 @@ import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
 
-public class SerializedObject implements TermConvertable<Compound> {
+public class Serialized implements TermConvertable<Compound> {
 
 	public static final String SERIALIZED_TERM_FUNCTOR = "jserialized";
 	
-	public static Term serializedObjectTerm(Serializable serializable) {
-		return new SerializedObject(serializable).asTerm();
+	public static Term jSerializedTerm(Serializable serializable) {
+		return new Serialized(serializable).asTerm();
+	}
+	
+	public static <T> T deserialize(byte[] bytes) {
+		try(ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+				ObjectInput in = new ObjectInputStream(bis)) {
+			return (T) in.readObject();
+		} catch (IOException | ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	private Serializable serializable;
 	private String encodedBytes;
 	
-	public SerializedObject(Serializable serializable) {
+	public Serialized(Serializable serializable) {
 		this.serializable = serializable;
 		byte[] bytes;
 		try(ByteArrayOutputStream bos = new ByteArrayOutputStream(); 

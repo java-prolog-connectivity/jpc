@@ -10,6 +10,7 @@ import java.util.Map;
 import org.jpc.JpcException;
 import org.jpc.converter.TermConvertable;
 import org.jpc.salt.JpcTermWriter;
+import org.jpc.salt.TermContentHandler;
 import org.jpc.util.salt.ChangeVariableNameAdapter;
 import org.jpc.util.salt.ReplaceVariableAdapter;
 import org.jpc.util.salt.VariableNamesCollectorHandler;
@@ -98,6 +99,30 @@ public abstract class AbstractTerm implements Term, TermConvertable {
 		}
 	}
 
+	@Override
+	public void read(TermContentHandler contentHandler) {
+		read(contentHandler, Collections.<Term, Term>emptyMap());
+	}
+	
+	@Override
+	public void read(TermContentHandler contentHandler, Map<Term,Term> replacements) {
+		Term replacedTerm = replacements.get(this);
+		if(replacedTerm != null)
+			replacedTerm.read(contentHandler);
+		else {
+			basicRead(contentHandler, replacements);
+		}
+	}
+	
+	public abstract void basicRead(TermContentHandler contentHandler, Map<Term,Term> replacements);
+	
+	@Override
+	public Term termExpansion(Term term, Map<Term,Term> replacements) {
+		JpcTermWriter termWriter = new JpcTermWriter();
+		read(termWriter, replacements);
+		return termWriter.getTerms().get(0);
+	}
+	
 	@Override
 	public Term replaceVariables(Map<String, ? extends Term> map) {
 		JpcTermWriter termWriter = new JpcTermWriter();
