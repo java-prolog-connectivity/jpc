@@ -16,9 +16,9 @@ public interface QueryListener {
 	
 	public void onException(Exception e); //an exception was thrown while executing a Prolog query 
 	
-	public void onNextSolutionFound(QuerySolution solution); //a single solution was found upon a next solution request
+	public void onNextSolutionFound(Solution solution); //a single solution was found upon a next solution request
 	
-	public void onSolutionsFound(List<QuerySolution> solutions); //a group of solutions (e.g., all solutions or a solution range) was found
+	public void onSolutionsFound(List<Solution> solutions); //a group of solutions (e.g., all solutions or a solution range) was found
 
 	public void onQueryDisposed(); //the query has been explicitly destroyed
 

@@ -4,9 +4,9 @@ import com.google.common.base.Function;
 
 public class ExceptionHandledQuery extends QueryAdapter {
 
-	private final Function<QuerySolution, QuerySolution> exceptionAdapterFunction = new Function<QuerySolution, QuerySolution>() {
+	private final Function<Solution, Solution> exceptionAdapterFunction = new Function<Solution, Solution>() {
 		@Override
-		public QuerySolution apply(QuerySolution solution) {
+		public Solution apply(Solution solution) {
 			if(solution.isError())
 				getJpcContext().handleError(solution.getErrorTerm(), getGoal());
 			return solution;

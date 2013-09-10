@@ -15,7 +15,7 @@ import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Term;
 import org.jpc.term.Variable;
 
-public class QuerySolution implements Map<String,Term> {
+public class Solution implements Map<String,Term> {
 
 	public static final String EXCEPTION_VAR_NAME = JPC_ANON_VAR_PREFIX + "EXCEPTION_VAR";
 	
@@ -26,7 +26,7 @@ public class QuerySolution implements Map<String,Term> {
 	private Term errorTerm;
 	private OperatorsContext operatorsContext;
 	
-	public QuerySolution(Map<String, Term> rawSolution, PrologEngine prologEngine, Jpc context) {
+	public Solution(Map<String, Term> rawSolution, PrologEngine prologEngine, Jpc context) {
 		this.allVariablesSolution = new HashMap<>(rawSolution);
 		this.prologEngine = prologEngine;
 		this.context = context;

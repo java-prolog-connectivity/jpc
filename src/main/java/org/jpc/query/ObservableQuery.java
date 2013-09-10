@@ -55,8 +55,8 @@ public class ObservableQuery extends QueryAdapter {
 	}
 	
 	@Override
-	public synchronized QuerySolution next() {
-		QuerySolution next = null;
+	public synchronized Solution next() {
+		Solution next = null;
 		try {
 			notifyQueryInProgress();
 			try {
@@ -75,8 +75,8 @@ public class ObservableQuery extends QueryAdapter {
 	}
 	
 	@Override
-	public synchronized QuerySolution oneSolutionOrThrow() {
-		QuerySolution oneSolution = null;
+	public synchronized Solution oneSolutionOrThrow() {
+		Solution oneSolution = null;
 		try {
 			notifyQueryInProgress();
 			try {
@@ -95,8 +95,8 @@ public class ObservableQuery extends QueryAdapter {
 	}
 	
 	@Override
-	public synchronized List<QuerySolution> solutionsRange(long from, long to) {
-		List<QuerySolution> allSolutions = null;
+	public synchronized List<Solution> solutionsRange(long from, long to) {
+		List<Solution> allSolutions = null;
 		try {
 			notifyQueryInProgress();
 			try {
@@ -113,8 +113,8 @@ public class ObservableQuery extends QueryAdapter {
 	}
 	
 	@Override
-	public synchronized List<QuerySolution> allSolutions() {
-		List<QuerySolution> allSolutions = null;
+	public synchronized List<Solution> allSolutions() {
+		List<Solution> allSolutions = null;
 		try {
 			notifyQueryInProgress();
 			try {
@@ -178,13 +178,13 @@ public class ObservableQuery extends QueryAdapter {
 		}
 	}
 	
-	private void notifyNextSolutionFound(QuerySolution solution) {
+	private void notifyNextSolutionFound(Solution solution) {
 		for(QueryListener listener : listeners) {
 			listener.onNextSolutionFound(solution);
 		}
 	}
 	
-	private void notifySolutionsFound(List<QuerySolution> solutions) {
+	private void notifySolutionsFound(List<Solution> solutions) {
 		for(QueryListener listener : listeners) {
 			listener.onSolutionsFound(solutions);
 		}

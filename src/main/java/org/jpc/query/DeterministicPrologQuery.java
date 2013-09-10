@@ -13,7 +13,7 @@ public abstract class DeterministicPrologQuery extends PrologQuery {
 		super(prologEngine, goal, errorHandledQuery, context);
 	}
 
-	private List<QuerySolution> allSolutions;
+	private List<Solution> allSolutions;
 	private int index = 0;
 	
 	private void reset() {
@@ -32,7 +32,7 @@ public abstract class DeterministicPrologQuery extends PrologQuery {
 	}
 
 	@Override
-	protected QuerySolution basicNext() {
+	protected Solution basicNext() {
 		if(allSolutions == null)
 			allSolutions = basicAllSolutions();
 		if(index == allSolutions.size())

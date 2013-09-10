@@ -46,7 +46,7 @@ public class DefaultTermConverterTest {
 	private Jpc jpc = new DefaultJpc();
 	
 	
-	// *** TERM TO OBJECTS TESTS ***
+	// *** OBJECT TO TERM TESTS ***
 	
 	@Test
 	public void testNullToTerm() {
@@ -75,7 +75,6 @@ public class DefaultTermConverterTest {
 		assertEquals(new FloatTerm(1), jpc.toTerm("1", FloatTerm.class));
 	}
 	
-
 	@Test
 	public void testCharToTerm() {
 		char a = 'a';
@@ -214,7 +213,7 @@ public class DefaultTermConverterTest {
 	}
 	
 	
-	// *** OBJECT TO TERM TESTS ***
+	// *** TERM TO OBJECTS TESTS ***
 
 	@Test
 	public void testVariableToNull() {
@@ -347,7 +346,7 @@ public class DefaultTermConverterTest {
 	
 	@Test
 	public void testTermToGenericList() {
-		Term listTerm = listTerm(new Atom("1"), new Atom("2"));
+		Term listTerm = listTerm(new Atom("1"), new Atom("2")); //['1','2']
 		List list = jpc.fromTerm(listTerm); //no type specified
 		assertEquals(list.get(0), "1");
 		assertEquals(list.get(1), "2");

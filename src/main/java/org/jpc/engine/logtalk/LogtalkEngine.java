@@ -41,7 +41,7 @@ import org.jpc.DefaultJpc;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.engine.prolog.PrologEngineProxy;
 import org.jpc.query.Query;
-import org.jpc.query.QuerySolution;
+import org.jpc.query.Solution;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
@@ -83,7 +83,7 @@ public class LogtalkEngine extends PrologEngineProxy {
 	public Map<String, LogtalkLibrary> getLibraries() {
 		Map<String, LogtalkLibrary> libraries = new HashMap<>();
 		Query query = query("logtalk_library_path(Alias,TermPath), logtalk::expand_library_path(Alias, Dir)");
-		for(QuerySolution oneSolution : query.allSolutions()) {
+		for(Solution oneSolution : query.allSolutions()) {
 			String alias = oneSolution.getString("Alias");
 			Term termPath = oneSolution.get("TermPath");
 			String absolutePath = oneSolution.getString("Dir");

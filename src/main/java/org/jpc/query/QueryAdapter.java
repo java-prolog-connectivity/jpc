@@ -11,14 +11,14 @@ import com.google.common.base.Function;
 
 public class QueryAdapter extends Query {
 
-	protected Function<QuerySolution, QuerySolution> adapterFunction;
+	protected Function<Solution, Solution> adapterFunction;
 	protected Query query;
 	
 	public QueryAdapter(Query query) {
-		this(query, (Function<QuerySolution, QuerySolution>) CursorAdapter.defaultAdapterFunction);
+		this(query, (Function<Solution, Solution>) CursorAdapter.defaultAdapterFunction);
 	}
 	
-	public QueryAdapter(Query query, Function<QuerySolution, QuerySolution> adapterFunction) {
+	public QueryAdapter(Query query, Function<Solution, Solution> adapterFunction) {
 		this.query = query;
 		this.adapterFunction = adapterFunction;
 	}
@@ -48,15 +48,15 @@ public class QueryAdapter extends Query {
 	}
 
 	@Override
-	protected QuerySolution basicOneSolutionOrThrow() {
-		QuerySolution adaptee = query.oneSolutionOrThrow();
+	protected Solution basicOneSolutionOrThrow() {
+		Solution adaptee = query.oneSolutionOrThrow();
 		return adaptee != null?adapterFunction.apply(adaptee):null;
 	}
 	
 	@Override
-	protected List<QuerySolution> basicAllSolutions() {
-		List<QuerySolution> allSolutions = new ArrayList<>();
-		for(QuerySolution adaptee : query.allSolutions()) {
+	protected List<Solution> basicAllSolutions() {
+		List<Solution> allSolutions = new ArrayList<>();
+		for(Solution adaptee : query.allSolutions()) {
 			allSolutions.add(adapterFunction.apply(adaptee));
 		}
 		return allSolutions;
@@ -73,8 +73,8 @@ public class QueryAdapter extends Query {
 	}
 
 	@Override
-	protected QuerySolution basicNext() {
-		QuerySolution adaptee = query.next();
+	protected Solution basicNext() {
+		Solution adaptee = query.next();
 		return adaptee != null?adapterFunction.apply(adaptee):null;
 	}
 

@@ -45,7 +45,7 @@ import com.google.common.collect.ListMultimap;
  * @author sergioc
  *
  */
-public abstract class Query extends Cursor<QuerySolution> {
+public abstract class Query extends Cursor<Solution> {
 	
 	public abstract PrologEngine getPrologEngine();
 	
@@ -54,23 +54,23 @@ public abstract class Query extends Cursor<QuerySolution> {
 	public abstract Jpc getJpcContext();
 	
 	@Override
-	protected List<QuerySolution> basicAllSolutions() {
+	protected List<Solution> basicAllSolutions() {
 		Query findAllQuery = getPrologEngine().query(new Compound(FINDALL, asList(
 				PrologUtil.varDictionaryTerm(getGoal()), 
 				getGoal(),
 				new Variable(AbstractPrologEngine.ALL_RESULTS_VAR)
 		)));
-		QuerySolution findAllSolution = findAllQuery.oneSolutionOrThrow();
+		Solution findAllSolution = findAllQuery.oneSolutionOrThrow();
 		Term allSolutionsBindingsTerm = findAllSolution.get(AbstractPrologEngine.ALL_RESULTS_VAR);
 		ListTerm allSolutionsBindingsList = allSolutionsBindingsTerm.asList();
-		List<QuerySolution> allSolutions = new ArrayList<>();
+		List<Solution> allSolutions = new ArrayList<>();
 		for(Term oneSolutionFindAllTerm : allSolutionsBindingsList) {
 			ListTerm oneSolutionFindAll = oneSolutionFindAllTerm.asList();
 			Map<String,Term> solutionBindings = new HashMap<>();
 			for(Term bindingTerm : oneSolutionFindAll) {
 				solutionBindings.put(((Atom)bindingTerm.arg(1)).getName(), bindingTerm.arg(2));
 			}
-			QuerySolution aSolution = new QuerySolution(solutionBindings, getPrologEngine(), getJpcContext());
+			Solution aSolution = new Solution(solutionBindings, getPrologEngine(), getJpcContext());
 			aSolution.setOperatorsContext(findAllSolution.getOperatorsContext());
 			allSolutions.add(aSolution);
 		}
@@ -88,8 +88,8 @@ public abstract class Query extends Cursor<QuerySolution> {
 	
 	public synchronized ListMultimap<String, Term> allSolutionsMultimap() {
 		ListMultimap<String, Term> allSolutionsMultimap = ArrayListMultimap.create();
-		List<QuerySolution> allSolutions = allSolutions();
-		for(QuerySolution solution : allSolutions) {
+		List<Solution> allSolutions = allSolutions();
+		for(Solution solution : allSolutions) {
 			for(Entry<String, Term> entry : solution.entrySet()) {
 				allSolutionsMultimap.put(entry.getKey(), entry.getValue());
 			}
@@ -125,7 +125,7 @@ public abstract class Query extends Cursor<QuerySolution> {
 	 * @return
 	 */
 	public synchronized Cursor<Term> select(Term selector) {
-		return adapt(new QuerySolutionToTermFunction(selector));
+		return adapt(new SolutionToTermFunction(selector));
 	}
 	
 	public synchronized <O> Cursor<O> selectObject() {

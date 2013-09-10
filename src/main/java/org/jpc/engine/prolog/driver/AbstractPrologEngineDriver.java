@@ -72,6 +72,11 @@ public abstract class AbstractPrologEngineDriver<T extends PrologEngine> impleme
 		
 		long endTime = System.nanoTime();
 		long total = (endTime - startTime)/1000000;
+		
+		
+		//System.out.println(newPrologEngine.query("true").oneSolution());
+		
+		
 		String prologDialect = newPrologEngine.prologDialect();
 		StringBuilder sb = new StringBuilder();
 		if(prologDialect == null) {
