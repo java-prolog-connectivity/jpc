@@ -20,8 +20,8 @@ import com.google.common.base.Predicate;
 import com.google.common.io.Resources;
 
 /**
- * A utility class for copying all the logic resources in a given url to a tmp location
- * Answers the path of any given resource, given the base url of the resource
+ * A utility class for copying all the logic resources in a given url to a tmp location.
+ * Provides methods for obtaining the path in the file system of any given resource, given the original url of the resource.
  * @author sergioc
  *
  */
