@@ -37,7 +37,7 @@ import com.google.common.collect.ListMultimap;
  * Variable x = new Variable("X");
  * Query q = // obtain Query reference (with x in the Term array)
  * while (q.hasNext()) {
- *     QuerySolution solution = q.next();
+ *     Solution solution = q.next();
  *     // make t the Term bound to "X" in the solution
  *     Term t = solution.get("X");
  *     // ...
