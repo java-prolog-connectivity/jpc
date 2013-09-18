@@ -11,7 +11,7 @@ import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.jterm.Serialized;
 
-public class SerializedTermConverter extends JpcConverter<Object, Compound> {
+public class SerializedConverter extends JpcConverter<Object, Compound> {
 
 	@Override
 	public Object fromTerm(Compound term, Type type, Jpc context) {

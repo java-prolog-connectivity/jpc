@@ -5,7 +5,7 @@ import org.jpc.converter.catalog.CalendarConverter;
 import org.jpc.converter.catalog.CharacterConverter;
 import org.jpc.converter.catalog.JRefConverter;
 import org.jpc.converter.catalog.NumberConverter;
-import org.jpc.converter.catalog.SerializedTermConverter;
+import org.jpc.converter.catalog.SerializedConverter;
 import org.jpc.converter.catalog.StringConverter;
 import org.jpc.converter.catalog.XmlGregorianCalendarConverter;
 import org.jpc.converter.catalog.error.DomainErrorConverter;
@@ -56,7 +56,7 @@ public class DefaultJpcConverterManager extends ConverterManager {
 		register(new StringConverter());
 		register(new XmlGregorianCalendarConverter());
 		register(new JRefConverter());
-		register(new SerializedTermConverter());
+		register(new SerializedConverter());
 	}
 	
 	
