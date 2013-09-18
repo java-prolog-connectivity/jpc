@@ -1,11 +1,14 @@
 package org.jpc.engine.prolog.driver;
 
+import static org.jpc.JpcPreferences.JPC_LOADER_FILE;
+
 import java.util.Collection;
 
 import org.jpc.JpcPreferences;
 import org.jpc.engine.listener.DriverStateListener;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.engine.prolog.PrologEngineInitializationException;
+import org.jpc.util.PrologResourceLoader;
 import org.jpc.util.supportedengines.EngineDescription;
 import org.minitoolbox.CollectionsUtil;
 import org.slf4j.Logger;
@@ -56,26 +59,26 @@ public abstract class AbstractPrologEngineDriver<T extends PrologEngine> impleme
 	public boolean isDisabled() {
 		return false;
 	}
-
+	
+	
 
 	@Override
 	public T createPrologEngine() {
 		if(isDisabled())
 			throw new PrologEngineInitializationException("The driver cannot instantiate new Prolog engines.");
 		readyOrThrow();
+		
 		logger.info("Initializing logic engine ...");
 		long startTime = System.nanoTime();
-
 		T newPrologEngine = basicCreatePrologEngine();
 		onCreate(newPrologEngine);
-		newPrologEngine.flushOutput();
 		
+		PrologResourceLoader resourceLoader = new PrologResourceLoader(newPrologEngine);
+		resourceLoader.ensureLoaded(JPC_LOADER_FILE);
+		
+		newPrologEngine.flushOutput();
 		long endTime = System.nanoTime();
 		long total = (endTime - startTime)/1000000;
-		
-		
-		//System.out.println(newPrologEngine.query("true").oneSolution());
-		
 		
 		String prologDialect = newPrologEngine.prologDialect();
 		StringBuilder sb = new StringBuilder();
@@ -99,6 +102,14 @@ public abstract class AbstractPrologEngineDriver<T extends PrologEngine> impleme
 		//empty by default
 	}
 	
+	/**
+	 * Invoked immediately after a Prolog engine abstraction has been created.
+	 * This method is the right place for loading libraries required for the driver to function correctly in a concrete local engine.
+	 * Driver implementors should note that this is a bootstrapping method and not all the services are available yet. 
+	 * Concretely, the jpc.pl file has not been loaded yet.
+	 * 
+	 * @param prologEngine
+	 */
 	protected void onCreate(PrologEngine prologEngine) {
 		//nothing by default, to be overridden if needed
 	}

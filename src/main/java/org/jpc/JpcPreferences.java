@@ -13,6 +13,10 @@ public class JpcPreferences extends Preferences {
 	public static final String JPC_NAME = "The Java-Prolog Connectivity Library";
 	public static final String JPC_SHORT_NAME = "JPC";
 	public static final String JPC_BASE_PACKAGE = "org.jpc";
+	public static final String JPC_PROLOG_PACKAGE = JPC_BASE_PACKAGE + ".pl";
+	private static final String JPC_PROLOG_RESOURCES = JPC_PROLOG_PACKAGE.replaceAll("\\.", "/") + "/";
+	public static final String JPC_LOADER_FILE = JPC_PROLOG_RESOURCES + "jpc.pl";
+	
 	
 	//Prefix for all the variables exclusive to JPC (used by the library in certain cases, not directly written by the user). Variables starting with this prefix should not be visible in the result.
 	public static final String JPC_ANON_VAR_PREFIX = "_JPC_VAR_";
