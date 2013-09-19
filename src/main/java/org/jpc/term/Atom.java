@@ -5,12 +5,12 @@ import static org.jpc.engine.prolog.PrologConstants.FAIL;
 import static org.jpc.engine.prolog.PrologConstants.FALSE;
 import static org.jpc.engine.prolog.PrologConstants.TRUE;
 
-import java.util.Map;
 import java.util.regex.Matcher;
 
 import org.jpc.JpcException;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.TermContentHandler;
+import org.jpc.term.expansion.TermExpander;
 import org.jpc.term.visitor.TermVisitor;
 
 /**
@@ -18,7 +18,7 @@ import org.jpc.term.visitor.TermVisitor;
  * @author scastro
  *
  */
-public final class Atom extends AbstractTerm {
+public final class Atom extends Term {
 
 	public static final Atom TRUE_TERM = new Atom(TRUE);
 	public static final Atom FALSE_TERM = new Atom(FAIL); //choosing 'fail' over 'false', since 'fail' is ISO
@@ -77,7 +77,7 @@ public final class Atom extends AbstractTerm {
 	}
 	
 	@Override
-	public void basicRead(TermContentHandler contentHandler, Map<Term,Term> replacements) {
+	protected void basicRead(TermContentHandler contentHandler, TermExpander termExpander) {
 		contentHandler.startAtom(name);
 	}
 	

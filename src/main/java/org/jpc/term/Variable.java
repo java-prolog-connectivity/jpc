@@ -5,10 +5,10 @@ import static org.jpc.engine.prolog.PrologConstants.ANONYMOUS_VAR_NAME;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.TermContentHandler;
+import org.jpc.term.expansion.TermExpander;
 import org.jpc.term.visitor.TermVisitor;
 
 /**
@@ -17,7 +17,7 @@ import org.jpc.term.visitor.TermVisitor;
  * @author scastro
  *
  */
-public final class Variable extends AbstractTerm {
+public final class Variable extends Term {
 
 	public static final Variable ANONYMOUS_VAR = new Variable(ANONYMOUS_VAR_NAME);
 	
@@ -117,7 +117,7 @@ public final class Variable extends AbstractTerm {
 	}
 
 	@Override
-	public void basicRead(TermContentHandler contentHandler, Map<Term,Term> replacements) {
+	protected void basicRead(TermContentHandler contentHandler, TermExpander termExpander) {
 		contentHandler.startVariable(name);
 		
 	}

@@ -1,8 +1,7 @@
 package org.jpc.term;
 
-import java.util.Map;
-
 import org.jpc.salt.TermContentHandler;
+import org.jpc.term.expansion.TermExpander;
 import org.jpc.term.visitor.TermVisitor;
 
 /**
@@ -13,7 +12,7 @@ import org.jpc.term.visitor.TermVisitor;
 public final class IntegerTerm extends NumberTerm {
 
 	/**
-	 * @param   value  This Integer's (long) value
+	 * @param   value  This IntegerTerm's (long) value
 	 */
 	public IntegerTerm(long value) {
 		super(value);
@@ -37,7 +36,7 @@ public final class IntegerTerm extends NumberTerm {
 	}
 
 	@Override
-	public void basicRead(TermContentHandler contentHandler, Map<Term,Term> replacements) {
+	protected void basicRead(TermContentHandler contentHandler, TermExpander termExpander) {
 		contentHandler.startIntegerTerm((Long)value);
 	}
 }

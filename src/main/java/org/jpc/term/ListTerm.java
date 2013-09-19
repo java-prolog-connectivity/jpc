@@ -97,7 +97,7 @@ public class ListTerm extends ArrayList<Term> implements TermConvertable {
 		StringBuilder sb = new StringBuilder("[");
 		for(int i=0; i<size(); i++) {
 			Term item = get(i);
-			sb.append(item == this?"(this List)":item.toString());
+			sb.append(item.toString());
 			if(i<size()-1)
 				sb.append(", ");
 		}

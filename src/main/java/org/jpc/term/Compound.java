@@ -6,13 +6,13 @@ import static org.jpc.engine.prolog.PrologConstants.CONS_FUNCTOR;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import org.jpc.JpcException;
 import org.jpc.engine.prolog.Operator;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.TermContentHandler;
+import org.jpc.term.expansion.TermExpander;
 import org.jpc.term.visitor.TermVisitor;
 
 import com.google.common.base.Joiner;
@@ -22,7 +22,7 @@ import com.google.common.base.Joiner;
  * @author scastro
  *
  */
-public final class Compound extends AbstractTerm {
+public final class Compound extends Term {
 
 	/**
 	 * the name of this Compound
@@ -182,11 +182,11 @@ public final class Compound extends AbstractTerm {
 	}
 	
 	@Override
-	public void basicRead(TermContentHandler contentHandler, Map<Term,Term> replacements) {
+	protected void basicRead(TermContentHandler contentHandler, TermExpander termExpander) {
 		contentHandler.startCompound();
-		getName().read(contentHandler, replacements);
+		getName().read(contentHandler, termExpander);
 		for(Term child: args) {
-			child.read(contentHandler, replacements);
+			child.read(contentHandler, termExpander);
 		}
 		contentHandler.endCompound();
 	}

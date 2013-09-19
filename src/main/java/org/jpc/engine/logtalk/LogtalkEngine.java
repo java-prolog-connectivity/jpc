@@ -68,7 +68,7 @@ public class LogtalkEngine extends PrologEngineProxy {
 	public String currentLogtalkFlag(LogtalkFlag flag) {
 		String flagValue = null;
 		Variable varFlag = new Variable("Var");
-		Map<String, Term> solutions = query(new Compound(CURRENT_LOGTALK_FLAG, Arrays.asList(flag.asTerm(), varFlag.asTerm()))).oneSolutionOrThrow();
+		Map<String, Term> solutions = query(new Compound(CURRENT_LOGTALK_FLAG, Arrays.asList(flag.asTerm(), varFlag))).oneSolutionOrThrow();
 		if(solutions!=null) {
 			Atom flagValueTerm = (Atom) solutions.get(varFlag.getName());
 			flagValue = flagValueTerm.getName();

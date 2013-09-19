@@ -1,8 +1,7 @@
 package org.jpc.term;
 
-import java.util.Map;
-
 import org.jpc.salt.TermContentHandler;
+import org.jpc.term.expansion.TermExpander;
 import org.jpc.term.visitor.TermVisitor;
 
 
@@ -13,6 +12,9 @@ import org.jpc.term.visitor.TermVisitor;
  */
 public final class FloatTerm extends NumberTerm {
 
+	/**
+	 * @param   value  This FloatTerm's (double) value
+	 */
 	public FloatTerm(double value) {
 		super(value);
 	}
@@ -23,7 +25,7 @@ public final class FloatTerm extends NumberTerm {
 	}
 
 	@Override
-	public void basicRead(TermContentHandler contentHandler, Map<Term,Term> replacements) {
+	protected void basicRead(TermContentHandler contentHandler, TermExpander termExpander) {
 		contentHandler.startFloatTerm((Double)value);
 	}
 
