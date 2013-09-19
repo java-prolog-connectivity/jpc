@@ -209,6 +209,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	private void open() {
 		if(!isReady())
 			throw new IllegalStateException();
+		//basicOpen();
 		setState(OPEN);
 	}
 	
@@ -270,6 +271,8 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 		}
 		return t;
 	}
+	
+	//protected abstract void basicOpen();
 	
 	protected abstract void basicAbort();
 	

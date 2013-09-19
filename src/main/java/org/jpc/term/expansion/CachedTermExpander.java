@@ -27,19 +27,19 @@ public class CachedTermExpander implements TermExpander {
 		expansionCache.put(sourceTerm, expandedTerm);
 	}
 	
-	protected Term doExpand(Term term) {
-		return null;
+	protected Optional<Term> doExpand(Term term) {
+		return Optional.absent();
 	}
 	
 	@Override
 	public Optional<Term> expand(Term term) {
-		Term expandedTerm = getCachedExpansion(term);
-		if(expandedTerm == null) {
-			expandedTerm = doExpand(term);
-			if(expandedTerm != null)
-				addCachedExpansion(term, expandedTerm);
+		Optional<Term> optExpandedTerm = Optional.fromNullable(getCachedExpansion(term));
+		if(!optExpandedTerm.isPresent()) {
+			optExpandedTerm = doExpand(term);
+			if(optExpandedTerm.isPresent())
+				addCachedExpansion(term, optExpandedTerm.get());
 		}
-		return Optional.fromNullable(expandedTerm);
+		return optExpandedTerm;
 	}
 	
 }

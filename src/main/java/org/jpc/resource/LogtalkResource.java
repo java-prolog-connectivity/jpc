@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.minitoolbox.RegExUtil;
+import org.minitoolbox.regex.RegExUtil;
 
 
 public class LogtalkResource extends LogicResource {

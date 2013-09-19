@@ -10,7 +10,7 @@ import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.engine.prolog.PrologEngineInitializationException;
 import org.jpc.util.PrologResourceLoader;
 import org.jpc.util.supportedengines.EngineDescription;
-import org.minitoolbox.CollectionsUtil;
+import org.minitoolbox.collections.CollectionsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

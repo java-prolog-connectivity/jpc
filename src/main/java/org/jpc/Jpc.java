@@ -7,6 +7,7 @@ import java.util.List;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
+import org.minitoolbox.commons.Version;
 
 /**
  * A class providing an interface for the main JPC functionality (such as converting between terms and Java objects)
@@ -16,7 +17,7 @@ import org.jpc.term.Term;
  */
 public abstract class Jpc {
 
-	public static final Version version = new Version();
+	public static final Version version = new Version(0,0,1,"alpha");
 	
 	public final <T> T fromTerm(Term term) {
 		return fromTerm(term, Object.class);
