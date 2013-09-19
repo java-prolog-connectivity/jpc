@@ -133,7 +133,7 @@ public final class Compound extends Term {
 	 */
 	@Override
 	public String toEscapedString() {
-		return getName().toEscapedString() + "(" + AbstractTerm.toEscapedString(args) + ")";
+		return getName().toEscapedString() + "(" + Term.toEscapedString(args) + ")";
 	}
 	
 	@Override
