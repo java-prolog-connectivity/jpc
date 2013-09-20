@@ -233,7 +233,7 @@ public abstract class Term {
 	 */
 	public abstract void accept(TermVisitor termVisitor);
 	
-	public Term termExpansion(Term term, TermExpander termExpander) {
+	public Term termExpansion(TermExpander termExpander) {
 		JpcTermWriter termWriter = new JpcTermWriter();
 		read(termWriter, termExpander);
 		return termWriter.getTerms().get(0);
