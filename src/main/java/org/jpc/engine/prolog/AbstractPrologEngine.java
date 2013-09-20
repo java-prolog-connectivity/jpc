@@ -25,6 +25,7 @@ import static org.jpc.util.PrologUtil.termSequence;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +40,7 @@ import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Variable;
+import org.jpc.term.expansion.ParameterizedSymbolExpander;
 import org.jpc.util.PrologUtil;
 
 public abstract class AbstractPrologEngine implements PrologEngine {
@@ -67,8 +69,8 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	}
 	
 	@Override
-	public boolean command(String command, boolean errorHandledQuery) {
-		return query(command, errorHandledQuery).hasSolution();
+	public boolean command(String command, List<?> arguments) {
+		return query(command, arguments).hasSolution();
 	}
 	
 	@Override
@@ -77,50 +79,49 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	}
 	
 	@Override
-	public final Query query(String termString) {
-		return query(termString, new DefaultJpc());
+	public boolean command(String command, List<?> arguments, Jpc context) {
+		return query(command, arguments, context).hasSolution();
 	}
 	
 	@Override
-	public final Query query(Term terms) {
-		return query(terms, new DefaultJpc());
+	public final Query query(String goalString) {
+		return query(goalString, Collections.emptyList());
 	}
 	
 	@Override
-	public final Query query(String termString, boolean errorHandledQuery) {
-		return query(termString, errorHandledQuery, new DefaultJpc());
+	public final Query query(String goalString, List<?> arguments) {
+		return query(goalString, arguments, new DefaultJpc());
 	}
 	
 	@Override
-	public final Query query(Term terms, boolean errorHandledQuery) {
-		return query(terms, errorHandledQuery, new DefaultJpc());
+	public final Query query(String goalString, Jpc context) {
+		return query(goalString, Collections.emptyList(), context);
 	}
 	
 	@Override
-	public final Query query(String termString, Jpc context) {
-		return query(termString, true, context);
+	public final Query query(String goalString, List<?> arguments, Jpc context) {
+		return query(goalString, arguments, true, context);
 	}
-	
+
 	@Override
-	public final Query query(Term terms, Jpc context) {
-		return query(terms, true, context);
-	}
-	
-	@Override
-	public final Query query(String termString, boolean errorHandledQuery, Jpc context) {
-		return query(asTerm(termString, context), errorHandledQuery, context);
+	public Query query(String goalString, List<?> arguments, boolean errorHandledQuery, Jpc context) {
+		return query(asTerm(goalString, context), arguments, errorHandledQuery, context);
 	}
  
 	@Override
-	public Query query(Term term, boolean errorHandledQuery, Jpc context) {
-		//Term expandedTerm = term.termExpansion(new ParameterizedSymbolExpander(context));
-		Query query;
-//		if(errorHandledQuery)
-//			query = new ExceptionHandledQuery(basicQuery(term, errorHandledQuery, context));
-//		else
-//			query = basicQuery(term, errorHandledQuery, context);
-		query = basicQuery(term, errorHandledQuery, context);
-		
+	public final Query query(Term goal) {
+		return query(goal, new DefaultJpc());
+	}
+
+	@Override
+	public final Query query(Term goal, Jpc context) {
+		return query(goal, Collections.emptyList(), true, context);
+	}
+	
+	@Override
+	public Query query(Term goal, List<?> arguments, boolean errorHandledQuery, Jpc context) {
+		Term expandedGoal = goal.termExpansion(new ParameterizedSymbolExpander(arguments, context));
+		Query query = basicQuery(expandedGoal, errorHandledQuery, context);
 		return query;
 	}
 	

@@ -41,25 +41,27 @@ public interface PrologEngine extends PrologDatabase {
 	
 	public boolean command(String command);
 	
-	public boolean command(String command, boolean errorHandledQuery);
+	public boolean command(String command, List<?> arguments);
 	
 	public boolean command(String command, Jpc context);
 	
-	public Query query(String termString);
-	
-	public Query query(Term terms);
-	
-	public Query query(String termString, boolean errorHandledQuery);
-	
-	public Query query(Term terms, boolean errorHandledQuery);
+	public boolean command(String command, List<?> arguments, Jpc context);
 
-	public Query query(String termString, Jpc context);
-
-	public Query query(Term terms, Jpc context);
-
-	public Query query(String termString, boolean errorHandledQuery, Jpc context);
+	public Query query(String goalString);
 	
-	public Query query(Term term, boolean errorHandledQuery, Jpc context);
+	public Query query(String goalString, List<?> arguments);
+
+	public Query query(String goalString, Jpc context);
+
+	public Query query(String goalString, List<?> arguments, Jpc context);
+
+	public Query query(String goalString, List<?> arguments, boolean errorHandledQuery, Jpc context);
+	
+	public Query query(Term goal);
+	
+	public Query query(Term goal, Jpc context);
+	
+	public Query query(Term goal, List<?> arguments, boolean errorHandledQuery, Jpc context);
 	
 	/**
 	 * 

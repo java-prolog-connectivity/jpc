@@ -5,6 +5,7 @@ import static org.jpc.engine.prolog.PrologConstants.FINDALL;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,7 +86,7 @@ public abstract class Query extends Cursor<Solution> {
 				getGoal(),
 				new Variable(AbstractPrologEngine.ALL_RESULTS_VAR)
 		));
-		Query findAllQuery = getPrologEngine().query(findAllTerm, isErrorHandledQuery(), getJpcContext());
+		Query findAllQuery = getPrologEngine().query(findAllTerm, Collections.emptyList(), isErrorHandledQuery(), getJpcContext());
 		Solution findAllSolution = findAllQuery.oneSolutionOrThrow();
 		Term allSolutionsBindingsTerm = findAllSolution.get(AbstractPrologEngine.ALL_RESULTS_VAR);
 		ListTerm allSolutionsBindingsList = allSolutionsBindingsTerm.asList();

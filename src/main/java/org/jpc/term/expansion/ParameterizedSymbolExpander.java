@@ -21,14 +21,14 @@ import com.google.common.base.Optional;
 
 public class ParameterizedSymbolExpander extends CachedTermExpander {
 
-	private List parameters;
+	private List<?> parameters;
 	private Jpc context;
 	
-	public ParameterizedSymbolExpander(List parameters) {
+	public ParameterizedSymbolExpander(List<?> parameters) {
 		this(parameters, JpcBuilder.create().build());
 	}
 	
-	public ParameterizedSymbolExpander(List parameters, Jpc context) {
+	public ParameterizedSymbolExpander(List<?> parameters, Jpc context) {
 		this.parameters = parameters;
 		this.context = context;
 	}
