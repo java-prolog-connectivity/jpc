@@ -31,7 +31,6 @@ import java.util.Map;
 import org.jpc.DefaultJpc;
 import org.jpc.Jpc;
 import org.jpc.engine.logtalk.LogtalkEngine;
-import org.jpc.query.ExceptionHandledQuery;
 import org.jpc.query.Query;
 import org.jpc.query.Solution;
 import org.jpc.query.SolutionToTermFunction;
@@ -114,11 +113,14 @@ public abstract class AbstractPrologEngine implements PrologEngine {
  
 	@Override
 	public Query query(Term term, boolean errorHandledQuery, Jpc context) {
+		//Term expandedTerm = term.termExpansion(new ParameterizedSymbolExpander(context));
 		Query query;
-		if(errorHandledQuery)
-			query = new ExceptionHandledQuery(basicQuery(term, errorHandledQuery, context));
-		else
-			query = basicQuery(term, errorHandledQuery, context);
+//		if(errorHandledQuery)
+//			query = new ExceptionHandledQuery(basicQuery(term, errorHandledQuery, context));
+//		else
+//			query = basicQuery(term, errorHandledQuery, context);
+		query = basicQuery(term, errorHandledQuery, context);
+		
 		return query;
 	}
 	

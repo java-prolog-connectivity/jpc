@@ -43,6 +43,16 @@ public class QueryAdapter extends Query {
 	}
 	
 	@Override
+	public boolean isErrorHandledQuery() {
+		return query.isErrorHandledQuery();
+	}
+	
+	@Override
+	protected boolean shouldVerifySolution() {
+		return false;
+	}
+	
+	@Override
 	protected Term getDefaultSelectedTerm() {
 		return query.getDefaultSelectedTerm();
 	}

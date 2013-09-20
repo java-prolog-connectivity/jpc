@@ -24,7 +24,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 
 /**
- * Disclaimer: The following comment was adapted from the JPL library
+ * Disclaimer: The following comment was adapted from the JPL library:
  * 
  * This class represents a cursor of query solutions.
  * A query solution is an implementation of java.util.Map, which represents
@@ -50,16 +50,42 @@ public abstract class Query extends Cursor<Solution> {
 	public abstract PrologEngine getPrologEngine();
 	
 	public abstract Term getGoal();
-	
+
 	public abstract Jpc getJpcContext();
+	
+	public abstract boolean isErrorHandledQuery();
+	
+	protected boolean shouldVerifySolution() {
+		return isErrorHandledQuery();
+	}
+	
+	protected void verify(Solution solution) {
+		if(solution.isError())
+			getJpcContext().handleError(solution.getErrorTerm(), getGoal());
+	}
+	
+	public synchronized Solution next() {
+		Solution solution = super.next();
+		if(shouldVerifySolution())
+			verify(solution);
+		return solution;
+	}
+	
+	public synchronized Solution oneSolutionOrThrow() {
+		Solution solution = super.oneSolutionOrThrow();
+		if(shouldVerifySolution())
+			verify(solution);
+		return solution;
+	}
 	
 	@Override
 	protected List<Solution> basicAllSolutions() {
-		Query findAllQuery = getPrologEngine().query(new Compound(FINDALL, asList(
+		Term findAllTerm = new Compound(FINDALL, asList(
 				PrologUtil.varDictionaryTerm(getGoal()), 
 				getGoal(),
 				new Variable(AbstractPrologEngine.ALL_RESULTS_VAR)
-		)));
+		));
+		Query findAllQuery = getPrologEngine().query(findAllTerm, isErrorHandledQuery(), getJpcContext());
 		Solution findAllSolution = findAllQuery.oneSolutionOrThrow();
 		Term allSolutionsBindingsTerm = findAllSolution.get(AbstractPrologEngine.ALL_RESULTS_VAR);
 		ListTerm allSolutionsBindingsList = allSolutionsBindingsTerm.asList();
@@ -151,5 +177,5 @@ public abstract class Query extends Cursor<Solution> {
 	public synchronized <O> Cursor<O> selectObject(Term selector, Type targetType) {
 		return select(selector).adapt(new TermToObjectFunction(getJpcContext(), targetType));
 	}
-
+	
 }

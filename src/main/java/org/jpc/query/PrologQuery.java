@@ -37,7 +37,7 @@ public abstract class PrologQuery extends Query {
 	
 	protected Term instrumentGoal(Term goal) {
 		goal = withOperatorsQueryTerm(goal);
-		if(errorHandledQuery) {
+		if(isErrorHandledQuery()) {
 			return exceptionHandledQueryTerm(goal);
 		} else {
 			return goal;
@@ -47,6 +47,11 @@ public abstract class PrologQuery extends Query {
 	@Override
 	public PrologEngine getPrologEngine() {
 		return prologEngine;
+	}
+	
+	@Override
+	public boolean isErrorHandledQuery() {
+		return errorHandledQuery;
 	}
 	
 	@Override

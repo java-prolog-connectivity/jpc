@@ -92,7 +92,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	}
 
 	protected T basicOneSolutionOrThrow() {
-		return basicNext(); //will throw a NoSuchElementException in there are no solutions
+		return basicNext(); //will throw a NoSuchElementException if there are no solutions
 	}
 	
 	/**
