@@ -20,7 +20,7 @@ public class BooleanConverter extends JpcConverter<Boolean, Atom> {
 		if(bool)
 			term = Atom.TRUE_TERM;
 		else
-			term = Atom.FALSE_TERM;
+			term = Atom.FAIL_TERM;
 		return (T) term;
 	}
 	

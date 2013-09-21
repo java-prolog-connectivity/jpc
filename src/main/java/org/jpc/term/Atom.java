@@ -21,7 +21,7 @@ import org.jpc.term.visitor.TermVisitor;
 public final class Atom extends Term {
 
 	public static final Atom TRUE_TERM = new Atom(TRUE);
-	public static final Atom FALSE_TERM = new Atom(FAIL); //choosing 'fail' over 'false', since 'fail' is ISO
+	public static final Atom FAIL_TERM = new Atom(FAIL); //preferring 'fail' over 'false' since 'fail' is ISO.
 	public static final Atom EMPTY_LIST = new Atom(EMPTY_LIST_SYMBOL);
 	
 	private final String name;
