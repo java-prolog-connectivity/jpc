@@ -11,7 +11,7 @@ import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
-import org.jpc.term.Variable;
+import org.jpc.term.Var;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -31,9 +31,9 @@ public class OperatorsContext {
 	
 	public static Term findAllOperatorsTerm() {
 		return new Compound(FINDALL, asList(
-				ListTerm.create(new Variable(OP_PRIORITY_VAR_NAME), new Variable(OP_SPECIFIER_VAR_NAME), new Variable(OP_NAME_VAR_NAME)).asTerm(), 
-				new Compound(CURRENT_OP, asList(new Variable(OP_PRIORITY_VAR_NAME), new Variable(OP_SPECIFIER_VAR_NAME), new Variable(OP_NAME_VAR_NAME))),
-				new Variable(ALL_OPERATORS_VAR_NAME)));
+				ListTerm.create(new Var(OP_PRIORITY_VAR_NAME), new Var(OP_SPECIFIER_VAR_NAME), new Var(OP_NAME_VAR_NAME)).asTerm(), 
+				new Compound(CURRENT_OP, asList(new Var(OP_PRIORITY_VAR_NAME), new Var(OP_SPECIFIER_VAR_NAME), new Var(OP_NAME_VAR_NAME))),
+				new Var(ALL_OPERATORS_VAR_NAME)));
 	}
 	
 	public Collection<Operator> getOperators(String name) {

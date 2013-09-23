@@ -45,7 +45,7 @@ import org.jpc.query.Solution;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
-import org.jpc.term.Variable;
+import org.jpc.term.Var;
 
 public class LogtalkEngine extends PrologEngineProxy {
 
@@ -67,7 +67,7 @@ public class LogtalkEngine extends PrologEngineProxy {
 	
 	public String currentLogtalkFlag(LogtalkFlag flag) {
 		String flagValue = null;
-		Variable varFlag = new Variable("Var");
+		Var varFlag = new Var("Var");
 		Map<String, Term> solutions = query(new Compound(CURRENT_LOGTALK_FLAG, Arrays.asList(flag.asTerm(), varFlag))).oneSolutionOrThrow();
 		if(solutions!=null) {
 			Atom flagValueTerm = (Atom) solutions.get(varFlag.getName());
@@ -101,7 +101,7 @@ public class LogtalkEngine extends PrologEngineProxy {
 	
 	public List<LogtalkObject> currentObjects() {
 		List<LogtalkObject> currentObjects = new ArrayList<>();
-		Variable logtalkObjectVar = new Variable("LogtalkObject");
+		Var logtalkObjectVar = new Var("LogtalkObject");
 		Compound compound = new Compound(CURRENT_OBJECT, asList(logtalkObjectVar));
 		for(Map<String, Term> solution : query(compound).allSolutions()) {
 			Term currentObjectTerm = solution.get(logtalkObjectVar.getName());

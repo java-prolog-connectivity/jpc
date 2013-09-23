@@ -4,7 +4,7 @@ import org.jpc.term.Atom;
 import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
 import org.jpc.term.Term;
-import org.jpc.term.Variable;
+import org.jpc.term.Var;
 
 public class JpcTermWriter extends TermWriter<Term> {
 
@@ -22,7 +22,7 @@ public class JpcTermWriter extends TermWriter<Term> {
 
 	@Override
 	public TermContentHandler startVariable(String name) {
-		process(new Variable(name));
+		process(new Var(name));
 		return this;
 	}
 	

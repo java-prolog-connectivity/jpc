@@ -6,7 +6,7 @@ import org.jpc.term.Atom;
 import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
 import org.jpc.term.Term;
-import org.jpc.term.Variable;
+import org.jpc.term.Var;
 
 
 public class PrimitiveTypeSolver implements TermTypeSolver {
@@ -24,7 +24,7 @@ public class PrimitiveTypeSolver implements TermTypeSolver {
 			return Long.class;
 		if(term instanceof FloatTerm)
 			return Double.class;
-		if(term instanceof Variable)
+		if(term instanceof Var)
 			return Object.class; //should be mapped to null
 		return null;
 	}

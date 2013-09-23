@@ -171,8 +171,8 @@ public abstract class Term {
 	 * Returns the variables names present in the term
 	 * @return the variables names present in the term
 	 */
-	public List<Variable> getVariables() {
-		return Variable.asVariables(getVariablesNames());
+	public List<Var> getVariables() {
+		return Var.asVariables(getVariablesNames());
 	}
 	
 	/**
@@ -189,8 +189,8 @@ public abstract class Term {
 	 * Returns a list with all the non anonymous variables (i.e., all variables that do not start with "_")
 	 * @return a list with all the non anonymous variables (i.e., all variables that do not start with "_")
 	 */
-	public List<Variable> getNonAnonymousVariables() {
-		return Variable.asVariables(getNamedVariablesNames());
+	public List<Var> getNonAnonymousVariables() {
+		return Var.asVariables(getNamedVariablesNames());
 	}
 	
 	/**
@@ -200,7 +200,7 @@ public abstract class Term {
 	public List<String> getNonAnonymousVariablesNames() {
 		List<String> nonAnonymousVariablesNames = new ArrayList<>();
 		for(String variableName : getVariablesNames()) {
-			if(!Variable.isAnonymousVariableName(variableName))
+			if(!Var.isAnonymousVariableName(variableName))
 				nonAnonymousVariablesNames.add(variableName);
 		}
 		return nonAnonymousVariablesNames;
@@ -210,8 +210,8 @@ public abstract class Term {
 	 * Returns a list with all the named variables (i.e., all variables but "_")
 	 * @return a list with all the named variables (i.e., all variables but "_")
 	 */
-	public List<Variable> getNamedVariables() {
-		return Variable.asVariables(getNamedVariablesNames());
+	public List<Var> getNamedVariables() {
+		return Var.asVariables(getNamedVariablesNames());
 	}
 	
 	/**

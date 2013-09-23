@@ -2,7 +2,7 @@ package org.jpc.term;
 
 import static java.util.Arrays.asList;
 import static org.jpc.term.ListTerm.listTerm;
-import static org.jpc.term.Variable.ANONYMOUS_VAR;
+import static org.jpc.term.Var.ANONYMOUS_VAR;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -21,9 +21,9 @@ import org.junit.Test;
  */
 public class AbstractTermTest {
 	Term aAtom = new Atom("A");
-	Term aVar = new Variable("A");
-	Term bVar = new Variable("B");
-	Term namedAnonVar = new Variable("_A");
+	Term aVar = new Var("A");
+	Term bVar = new Var("B");
+	Term namedAnonVar = new Var("_A");
 
 	Term t0 = new Compound(aAtom, asList(ANONYMOUS_VAR));
 	Term t1 = new Compound(aAtom, asList(new Compound(ANONYMOUS_VAR, asList(aVar))));
@@ -84,8 +84,8 @@ public class AbstractTermTest {
 	
 	@Test
 	public void testChangeVariablesNames() {
-		Variable newAVar = new Variable("NewA");
-		Variable newAnon = new Variable("ANONYMOUS");
+		Var newAVar = new Var("NewA");
+		Var newAnon = new Var("ANONYMOUS");
 		Map<String, String> map = new HashMap<String, String>(){{
 			put("_", "ANONYMOUS");
 			put("A", "NewA");
@@ -107,8 +107,8 @@ public class AbstractTermTest {
 	
 	@Test
 	public void testReplaceVariables() {
-		final Variable newAVar = new Variable("NewA");
-		final Variable newAnon = new Variable("ANONYMOUS");
+		final Var newAVar = new Var("NewA");
+		final Var newAnon = new Var("ANONYMOUS");
 		Map<String, Term> map = new HashMap<String, Term>(){{
 			put("_", newAnon);
 			put("A", newAVar);

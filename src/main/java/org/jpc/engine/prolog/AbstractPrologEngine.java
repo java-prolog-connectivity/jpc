@@ -20,7 +20,7 @@ import static org.jpc.engine.prolog.PrologConstants.RETRACT_ALL;
 import static org.jpc.engine.prolog.PrologConstants.SETOF;
 import static org.jpc.engine.prolog.PrologConstants.SET_PROLOG_FLAG;
 import static org.jpc.term.ListTerm.listTerm;
-import static org.jpc.term.Variable.ANONYMOUS_VAR;
+import static org.jpc.term.Var.ANONYMOUS_VAR;
 import static org.jpc.util.PrologUtil.termSequence;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
-import org.jpc.term.Variable;
+import org.jpc.term.Var;
 import org.jpc.term.expansion.ParameterizedSymbolExpander;
 import org.jpc.util.PrologUtil;
 
@@ -173,7 +173,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	@Override
 	public String currentPrologFlag(Flag flag) {
 		String flagValue = null;
-		Variable varFlagValue = new Variable("Var");
+		Var varFlagValue = new Var("Var");
 		Map<String, Term> solutions = currentPrologFlag(flag.asTerm(), varFlagValue).oneSolutionOrThrow();
 		if(solutions!=null) {
 			Atom flagValueTerm = (Atom) solutions.get(varFlagValue.getName());
@@ -195,7 +195,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	
 	@Override
 	public OperatorsContext getOperatorsContext() {
-		Term operatorsTerm = findall(ListTerm.create(new Variable("P"), new Variable("S"), new Variable("O")).asTerm(), new Compound(CURRENT_OP, asList(new Variable("P"), new Variable("S"), new Variable("O"))));
+		Term operatorsTerm = findall(ListTerm.create(new Var("P"), new Var("S"), new Var("O")).asTerm(), new Compound(CURRENT_OP, asList(new Var("P"), new Var("S"), new Var("O"))));
 		return OperatorsContext.asOperatorsContext(operatorsTerm.asList());
 	}
 	
@@ -208,8 +208,8 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	@Override
 	public boolean isBinaryOperator(String op) {
 		return query(termSequence(
-				new Compound(CURRENT_OP, asList(ANONYMOUS_VAR, new Variable("Type"), new Atom(op))), 
-				new Compound(ATOM_CHARS, Arrays.<Term>asList(new Variable("Type"), listTerm(ANONYMOUS_VAR, new Atom("f"), ANONYMOUS_VAR)))
+				new Compound(CURRENT_OP, asList(ANONYMOUS_VAR, new Var("Type"), new Atom(op))), 
+				new Compound(ATOM_CHARS, Arrays.<Term>asList(new Var("Type"), listTerm(ANONYMOUS_VAR, new Atom("f"), ANONYMOUS_VAR)))
 			)).hasSolution();
 		//return createQuery("current_op(_, Type, '" + op + "'), atom_chars(Type, [_, f, _])").hasSolution();
 	}
@@ -217,8 +217,8 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	@Override
 	public boolean isUnaryOperator(String op) {
 		return query(termSequence(
-				new Compound(CURRENT_OP, asList(ANONYMOUS_VAR, new Variable("Type"), 
-				new Atom(op))), new Compound(ATOM_CHARS, asList(new Variable("Type"), listTerm(new Atom("f"), ANONYMOUS_VAR)))
+				new Compound(CURRENT_OP, asList(ANONYMOUS_VAR, new Var("Type"), 
+				new Atom(op))), new Compound(ATOM_CHARS, asList(new Var("Type"), listTerm(new Atom("f"), ANONYMOUS_VAR)))
 			)).hasSolution();
 		//return createQuery("current_op(_, Type, '" + op + "'), atom_chars(Type, [f, _])").hasSolution();
 	}
@@ -337,7 +337,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	
 	@Override
 	public Term bagof(Term select, Term exp) {
-		return bagof(select, exp, new Variable(ALL_RESULTS_VAR)).oneSolutionOrThrow().get(ALL_RESULTS_VAR);
+		return bagof(select, exp, new Var(ALL_RESULTS_VAR)).oneSolutionOrThrow().get(ALL_RESULTS_VAR);
 	}
 	
 	@Override
@@ -347,7 +347,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	
 	@Override
 	public Term findall(Term select, Term exp) {
-		return findall(select, exp, new Variable(ALL_RESULTS_VAR)).oneSolutionOrThrow().get(ALL_RESULTS_VAR);
+		return findall(select, exp, new Var(ALL_RESULTS_VAR)).oneSolutionOrThrow().get(ALL_RESULTS_VAR);
 	}
 	
 	@Override
@@ -357,7 +357,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	
 	@Override
 	public Term setof(Term select, Term exp) {
-		return setof(select, exp, new Variable(ALL_RESULTS_VAR)).oneSolutionOrThrow().get(ALL_RESULTS_VAR);
+		return setof(select, exp, new Var(ALL_RESULTS_VAR)).oneSolutionOrThrow().get(ALL_RESULTS_VAR);
 	}
 	
 	@Override

@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 
 import org.jpc.salt.TermContentHandler;
 import org.jpc.term.Term;
-import org.jpc.term.Variable;
+import org.jpc.term.Var;
 
 public class ChangeVariableNameAdapter extends ReplaceVariableAdapter {
 	
@@ -17,7 +17,7 @@ public class ChangeVariableNameAdapter extends ReplaceVariableAdapter {
 	private static Map<String, Term> asVariableReplacementMap(final Map<String, String> variableNamesMap) {
 		Map<String, Term> termReplacementMap = new HashMap<String, Term>() {{
 			for(Entry<String, String> entry : variableNamesMap.entrySet()) {
-				put(entry.getKey(), new Variable(entry.getValue()));
+				put(entry.getKey(), new Var(entry.getValue()));
 			}
 		}};
 		return termReplacementMap;

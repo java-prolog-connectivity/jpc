@@ -33,7 +33,7 @@ import org.jpc.term.Compound;
 import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
 import org.jpc.term.Term;
-import org.jpc.term.Variable;
+import org.jpc.term.Var;
 import org.jpc.term.jterm.RefManager;
 import org.jpc.term.jterm.Serialized;
 import org.junit.Assert;
@@ -50,7 +50,7 @@ public class DefaultTermConverterTest {
 	
 	@Test
 	public void testNullToTerm() {
-		assertTrue(new Variable("_").termEquals(jpc.toTerm(null)));
+		assertTrue(new Var("_").termEquals(jpc.toTerm(null)));
 	}
 	
 	@Test
@@ -217,7 +217,7 @@ public class DefaultTermConverterTest {
 
 	@Test
 	public void testVariableToNull() {
-		assertNull(jpc.fromTerm(new Variable("X")));
+		assertNull(jpc.fromTerm(new Var("X")));
 	}
 	
 	@Test
@@ -323,7 +323,7 @@ public class DefaultTermConverterTest {
 	
 	@Test
 	public void testTermToList() {
-		Term listTerm = listTerm(new Atom("apple"), new Variable("X"));
+		Term listTerm = listTerm(new Atom("apple"), new Var("X"));
 		List list = (List) jpc.fromTerm(listTerm);
 		assertEquals(2, list.size());
 		assertEquals(list.get(0), "apple");
@@ -366,7 +366,7 @@ public class DefaultTermConverterTest {
 	
 	@Test
 	public void testTermToObjectArray() {
-		Term listTerm = listTerm(new Atom("apple"), new Variable("X"));
+		Term listTerm = listTerm(new Atom("apple"), new Var("X"));
 		Object[] array = jpc.fromTerm(listTerm, Object[].class);
 		assertEquals(2, array.length);
 		assertEquals(array[0], "apple");
@@ -375,7 +375,7 @@ public class DefaultTermConverterTest {
 	
 	@Test
 	public void testTermToStringArray() {
-		Term listTerm = listTerm(new Atom("apple"), new Variable("X"));
+		Term listTerm = listTerm(new Atom("apple"), new Var("X"));
 		String[] array = jpc.fromTerm(listTerm, String[].class);
 		assertEquals(2, array.length);
 		assertEquals(array[0], "apple");
@@ -386,11 +386,11 @@ public class DefaultTermConverterTest {
 	public void testTermToObjectTable() {
 		Term term = new Compound(".", asList(
 				new Compound(".", asList(new Atom("apple"), 
-						new Compound(".", asList(new Variable("Var"), 
+						new Compound(".", asList(new Var("Var"), 
 							new Atom("[]"))))), 
 					new Compound(".", asList(
 						new Compound(".", asList(new Atom("pears"), 
-							new Compound(".", asList(new Variable("_"), 
+							new Compound(".", asList(new Var("_"), 
 								new Atom("[]"))))), 
 					new Atom("[]")))));
 		Object[][] table = jpc.fromTerm(term, Object[][].class);
@@ -401,11 +401,11 @@ public class DefaultTermConverterTest {
 	public void testTermToStringTable() {
 		Term term = new Compound(".", asList(
 				new Compound(".", asList(new Atom("apple"), 
-						new Compound(".", asList(new Variable("Var"), 
+						new Compound(".", asList(new Var("Var"), 
 							new Atom("[]"))))), 
 					new Compound(".", asList(
 						new Compound(".", asList(new Atom("pears"), 
-							new Compound(".", asList(new Variable("_"), 
+							new Compound(".", asList(new Var("_"), 
 								new Atom("[]"))))), 
 					new Atom("[]")))));
 		String[][] table = jpc.fromTerm(term, String[][].class);
@@ -416,11 +416,11 @@ public class DefaultTermConverterTest {
 	public void testTermToListOfStringArray() {
 		Term term = new Compound(".", asList(
 				new Compound(".", asList(new Atom("apple"), 
-						new Compound(".", asList(new Variable("Var"), 
+						new Compound(".", asList(new Var("Var"), 
 							new Atom("[]"))))), 
 					new Compound(".", asList(
 						new Compound(".", asList(new Atom("pears"), 
-							new Compound(".", asList(new Variable("_"), 
+							new Compound(".", asList(new Var("_"), 
 								new Atom("[]"))))), 
 					new Atom("[]")))));
 		Type type = new TypeToken<List<String[]>>(){}.getType();

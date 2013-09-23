@@ -14,7 +14,7 @@ import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
-import org.jpc.term.Variable;
+import org.jpc.term.Var;
 
 /**
  * An utility class for general purpose queries and term manipulation
@@ -51,7 +51,7 @@ public class PrologUtil {
 	
 	public static Term varDictionaryTerm(Term term) {
 		ListTerm mapVarsNames = new ListTerm();
-		for(Variable var : term.getNamedVariables()) {
+		for(Var var : term.getNamedVariables()) {
 			Compound varNameEntry = new Compound("=", asList(new Atom(var.getName()), var));
 			mapVarsNames.add(varNameEntry);
 		}
@@ -95,10 +95,10 @@ public class PrologUtil {
 	 * @param n the number of variables in the array
 	 * @return
 	 */
-	public static List<Variable> anonymousVariables(int n) {
-		List<Variable> variablesList = new ArrayList<>();
+	public static List<Var> anonymousVariables(int n) {
+		List<Var> variablesList = new ArrayList<>();
 		for(int i=0; i<n; i++) {
-			variablesList.add(Variable.ANONYMOUS_VAR);
+			variablesList.add(Var.ANONYMOUS_VAR);
 		}
 		return variablesList;
 	}

@@ -7,7 +7,7 @@ import java.util.List;
 import org.jpc.Jpc;
 import org.jpc.converter.catalog.NullConverter;
 import org.jpc.term.Term;
-import org.jpc.term.Variable;
+import org.jpc.term.Var;
 import org.minitoolbox.reflection.IncompatibleTypesException;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 import org.slf4j.Logger;
@@ -28,8 +28,8 @@ public class ConverterManager {
 	}
 
 	public Object fromTerm(Term term, Type type, Jpc context) {
-		if(term instanceof Variable)
-			return new NullConverter().fromTerm((Variable) term, type, context);
+		if(term instanceof Var)
+			return new NullConverter().fromTerm((Var) term, type, context);
 
 		Type termType = context.getType(term);
 		if(termType != null) {
@@ -73,8 +73,8 @@ public class ConverterManager {
 	
 	public <T extends Term> T toTerm(Object object, Class<T> termClass, Jpc context) {
 		if(object==null) {
-			if(termClass.isAssignableFrom(Variable.class))
-				return (T) new NullConverter().toTerm(object, Variable.class, context);
+			if(termClass.isAssignableFrom(Var.class))
+				return (T) new NullConverter().toTerm(object, Var.class, context);
 			else
 				throw new NullPointerException("A Null object cannot be transformed to a logic term of class " + termClass);
 		}

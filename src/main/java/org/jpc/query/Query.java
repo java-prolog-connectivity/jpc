@@ -18,7 +18,7 @@ import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
-import org.jpc.term.Variable;
+import org.jpc.term.Var;
 import org.jpc.util.PrologUtil;
 
 import com.google.common.collect.ArrayListMultimap;
@@ -84,7 +84,7 @@ public abstract class Query extends Cursor<Solution> {
 		Term findAllTerm = new Compound(FINDALL, asList(
 				PrologUtil.varDictionaryTerm(getGoal()), 
 				getGoal(),
-				new Variable(AbstractPrologEngine.ALL_RESULTS_VAR)
+				new Var(AbstractPrologEngine.ALL_RESULTS_VAR)
 		));
 		Query findAllQuery = getPrologEngine().query(findAllTerm, Collections.emptyList(), isErrorHandledQuery(), getJpcContext());
 		Solution findAllSolution = findAllQuery.oneSolutionOrThrow();

@@ -11,44 +11,44 @@ public class VariableTest {
 
 	@Test
 	public void testVariableInstantiation() {
-		new Variable("VarName"); //fine
-		new Variable("_varName"); //fine
-		new Variable("__VarName"); //fine
-		new Variable("_"); //fine
+		new Var("VarName"); //fine
+		new Var("_varName"); //fine
+		new Var("__VarName"); //fine
+		new Var("_"); //fine
 		try {
-			new Variable("varName"); //wrong, variables should start with capital letters or _
+			new Var("varName"); //wrong, variables should start with capital letters or _
 			fail();
 		} catch(Exception e){}//expected
 		try {
-			new Variable("1varName"); //wrong, variables should start with capital letters or _
+			new Var("1varName"); //wrong, variables should start with capital letters or _
 			fail();
 		} catch(Exception e){}//expected
 	}
 	
 	@Test
 	public void testEquality() {
-		assertEquals(new Variable("A"), new Variable("A"));
-		assertEquals(new Variable("A").hashCode(), new Variable("A").hashCode());
-		assertEquals(new Variable("_A"), new Variable("_A"));
-		assertFalse(new Variable("A").equals(new Variable("_A")));
-		assertFalse(new Variable("A").equals(new Variable("B")));
-		assertFalse(new Variable("A").equals(new Variable("_")));
-		assertFalse(new Variable("_").equals(new Variable("A")));
-		assertFalse(new Variable("_").equals(new Variable("_")));
-		assertTrue(new Variable("_").termEquals(new Variable("_")));
+		assertEquals(new Var("A"), new Var("A"));
+		assertEquals(new Var("A").hashCode(), new Var("A").hashCode());
+		assertEquals(new Var("_A"), new Var("_A"));
+		assertFalse(new Var("A").equals(new Var("_A")));
+		assertFalse(new Var("A").equals(new Var("B")));
+		assertFalse(new Var("A").equals(new Var("_")));
+		assertFalse(new Var("_").equals(new Var("A")));
+		assertFalse(new Var("_").equals(new Var("_")));
+		assertTrue(new Var("_").termEquals(new Var("_")));
 	}
 	
 	@Test
 	public void testArity() {
-		assertEquals(new Variable("A").arity(), 0);
-		assertEquals(new Variable("_").arity(), 0);
+		assertEquals(new Var("A").arity(), 0);
+		assertEquals(new Var("_").arity(), 0);
 	}
 	
 	@Test
 	public void testHasFunctor() {
-		assertTrue(new Variable("A").hasFunctor(new Variable("A"), 0));
-		assertTrue(new Variable("_A").hasFunctor(new Variable("_A"), 0));
-		assertTrue(new Variable("_").hasFunctor(new Variable("_"), 0));
+		assertTrue(new Var("A").hasFunctor(new Var("A"), 0));
+		assertTrue(new Var("_A").hasFunctor(new Var("_A"), 0));
+		assertTrue(new Var("_").hasFunctor(new Var("_"), 0));
 	}
 	
 }

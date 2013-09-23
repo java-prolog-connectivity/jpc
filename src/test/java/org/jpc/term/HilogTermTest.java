@@ -10,8 +10,8 @@ public class HilogTermTest {
 
 	@Test
 	public void isHilog() {
-		assertTrue(new Compound(new Variable("_"), asList(new Atom("atom"))).isHilog());
-		assertTrue(new Compound(new Variable("V"), asList(new Atom("atom"))).isHilog());
+		assertTrue(new Compound(new Var("_"), asList(new Atom("atom"))).isHilog());
+		assertTrue(new Compound(new Var("V"), asList(new Atom("atom"))).isHilog());
 		assertTrue(new Compound(new IntegerTerm(1), asList(new Atom("atom"))).isHilog());
 		assertTrue(new Compound(new FloatTerm(1), asList(new Atom("atom"))).isHilog());
 		assertTrue(new Compound(new Compound("c", asList(new Atom("atom"))), asList(new Atom("atom"))).isHilog());
@@ -19,8 +19,8 @@ public class HilogTermTest {
 	
 	@Test
 	public void isNotHilog() {
-		assertFalse(new Variable("_").isHilog());
-		assertFalse(new Variable("V").isHilog());
+		assertFalse(new Var("_").isHilog());
+		assertFalse(new Var("V").isHilog());
 		assertFalse(new Atom("atom").isHilog());
 		assertFalse(new IntegerTerm(1).isHilog());
 		assertFalse(new FloatTerm(1).isHilog());

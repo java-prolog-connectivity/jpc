@@ -17,14 +17,14 @@ import org.jpc.term.visitor.TermVisitor;
  * @author scastro
  *
  */
-public final class Variable extends Term {
+public final class Var extends Term {
 
-	public static final Variable ANONYMOUS_VAR = new Variable(ANONYMOUS_VAR_NAME);
+	public static final Var ANONYMOUS_VAR = new Var(ANONYMOUS_VAR_NAME);
 	
-	public static List<Variable> asVariables(Iterable<String> variablesNames) {
-		List<Variable> variables = new ArrayList<>();
+	public static List<Var> asVariables(Iterable<String> variablesNames) {
+		List<Var> variables = new ArrayList<>();
 		for(String variableName : variablesNames) {
-			variables.add(new Variable(variableName));
+			variables.add(new Var(variableName));
 		}
 		return variables;
 	}
@@ -47,11 +47,11 @@ public final class Variable extends Term {
 	
 	private final String name; // the name of this Variable
 	
-	public Variable() {
+	public Var() {
 		this.name = ANONYMOUS_VAR_NAME;
 	}
 	
-	public Variable(String name) {
+	public Var(String name) {
 		checkArgument(isValidVariableName(name), "The variable name " + name + " is not valid");
 		this.name = name;
 	}
@@ -96,14 +96,14 @@ public final class Variable extends Term {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		return obj instanceof Variable && 
+		return obj instanceof Var && 
 				!this.name.equals("_") && 
-				this.name.equals(((Variable) obj).name);
+				this.name.equals(((Var) obj).name);
 	}
 	
 	@Override
 	public final boolean termEquals(Term term) {
-		return (term instanceof Variable) && this.name.equals(((Variable) term).name);
+		return (term instanceof Var) && this.name.equals(((Var) term).name);
 	}
 	
 	@Override

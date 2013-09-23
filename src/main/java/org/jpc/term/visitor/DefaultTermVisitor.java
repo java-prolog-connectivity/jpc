@@ -4,7 +4,7 @@ import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
-import org.jpc.term.Variable;
+import org.jpc.term.Var;
 
 public class DefaultTermVisitor implements TermVisitor {
 
@@ -17,7 +17,7 @@ public class DefaultTermVisitor implements TermVisitor {
 	}
 
 	@Override
-	public void visitVariable(Variable term) {
+	public void visitVariable(Var term) {
 	}
 	
 	@Override

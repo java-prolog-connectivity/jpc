@@ -4,7 +4,7 @@ import static org.jpc.engine.logtalk.LogtalkConstants.LOGTALK_ERROR_CONTEXT_FUNC
 
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
-import org.jpc.term.Variable;
+import org.jpc.term.Var;
 
 /**
  * An exception in the Prolog side having the format "error(FormalDescription, Context)"
@@ -57,7 +57,7 @@ public class IsoPrologError extends PrologError {
 			return null;
 		Compound logtalkArg = (Compound) getContextTerm();
 		Term logtalkCall = logtalkArg.arg(1);
-		return (logtalkCall instanceof Variable)? null : logtalkCall;
+		return (logtalkCall instanceof Var)? null : logtalkCall;
 	}
 	
 	public Term getLogtalkEntity() {
@@ -65,7 +65,7 @@ public class IsoPrologError extends PrologError {
 			return null;
 		Compound logtalkArg = (Compound) getContextTerm();
 		Term logtalkEntity = logtalkArg.arg(2);
-		return (logtalkEntity instanceof Variable)? null : logtalkEntity;
+		return (logtalkEntity instanceof Var)? null : logtalkEntity;
 	}
 	
 }

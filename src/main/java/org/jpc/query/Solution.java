@@ -13,7 +13,7 @@ import org.jpc.Jpc;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Term;
-import org.jpc.term.Variable;
+import org.jpc.term.Var;
 
 public class Solution implements Map<String,Term> {
 
@@ -37,7 +37,7 @@ public class Solution implements Map<String,Term> {
 	private static Map<String, Term> nonAnonymousVariablesSolutions(Map<String, Term> allVariablesSolution) {
 		Map<String, Term> nonAnonymousVariablesSolution = new HashMap<>();
 		for(String varName : allVariablesSolution.keySet()) {
-			if(!Variable.isAnonymousVariableName(varName)) {
+			if(!Var.isAnonymousVariableName(varName)) {
 				nonAnonymousVariablesSolution.put(varName, allVariablesSolution.get(varName));
 			}
 		}
@@ -54,14 +54,14 @@ public class Solution implements Map<String,Term> {
 	private void configure() {
 		if(allVariablesSolution.containsKey(EXCEPTION_VAR_NAME)) {
 			Term errorTerm = allVariablesSolution.get(EXCEPTION_VAR_NAME);
-			if(!(errorTerm instanceof Variable)) {
+			if(!(errorTerm instanceof Var)) {
 				this.errorTerm = errorTerm;
 			}
 			allVariablesSolution.remove(EXCEPTION_VAR_NAME);
 		}
 		if(allVariablesSolution.containsKey(OperatorsContext.ALL_OPERATORS_VAR_NAME)) {
 			Term operatorsTerm = allVariablesSolution.get(OperatorsContext.ALL_OPERATORS_VAR_NAME);
-			if(!(operatorsTerm instanceof Variable)) { //operatorsTerm may be a variable if an exception occurred before querying the operators
+			if(!(operatorsTerm instanceof Var)) { //operatorsTerm may be a variable if an exception occurred before querying the operators
 				operatorsContext = OperatorsContext.asOperatorsContext(operatorsTerm.asList());
 			}
 			allVariablesSolution.remove(OperatorsContext.ALL_OPERATORS_VAR_NAME);
@@ -163,7 +163,7 @@ public class Solution implements Map<String,Term> {
 	@Override
 	public Term put(String key, Term value) {
 		allVariablesSolution.put(key, value);
-		if(!Variable.isAnonymousVariableName((String)key))
+		if(!Var.isAnonymousVariableName((String)key))
 			allVariablesSolution.put(key, value);
 		return value;
 	}
@@ -171,7 +171,7 @@ public class Solution implements Map<String,Term> {
 	@Override
 	public Term remove(Object key) {
 		Term term = allVariablesSolution.remove(key);
-		if(!Variable.isAnonymousVariableName((String)key))
+		if(!Var.isAnonymousVariableName((String)key))
 			nonAnonymousVariablesSolution.remove(key);
 		return term;
 	}
