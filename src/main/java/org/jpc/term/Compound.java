@@ -137,7 +137,7 @@ public final class Compound extends Term {
 	}
 	
 	@Override
-	public int hashCode() {
+	protected int basicHashCode() {
 		List<Term> allFields = new ArrayList<Term>(getArgs());
 		allFields.add(0, getName());
 		return Objects.hash(allFields.toArray());

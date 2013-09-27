@@ -84,7 +84,7 @@ public final class Var extends Term {
 	}
 	
 	@Override
-	public int hashCode() {
+	protected int basicHashCode() {
 		return name.hashCode();
 	}
 	

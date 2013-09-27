@@ -87,7 +87,7 @@ public final class Atom extends Term {
 	}
 	
 	@Override
-	public int hashCode() {
+	protected int basicHashCode() {
 		return name.hashCode();
 	}
 	

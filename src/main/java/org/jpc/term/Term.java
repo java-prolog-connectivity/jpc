@@ -29,6 +29,8 @@ import com.google.common.base.Optional;
  */
 public abstract class Term {
 
+	private Integer hash;
+	
 	/**
 	 * 
 	 * @return true if the term is a proper Hilog term (i.e., a Hilog term that is not a Prolog term)
@@ -280,6 +282,15 @@ public abstract class Term {
 		return equals(t); //default implementation, to be overridden.
 	}
 
+	@Override
+	public final int hashCode() {
+		if(hash == null)
+			hash = basicHashCode();
+		return hash;
+	}
+	
+	protected abstract int basicHashCode();
+	
 	
 	/**
 	 * @param   list1  a list of Terms
