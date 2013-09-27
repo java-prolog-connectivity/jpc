@@ -204,6 +204,18 @@ public class DefaultTermConverterTest {
 	}
 	
 	@Test
+	public void testJRef2() {
+		//s1 and s2 are equals but have different references.
+		String s1 = "hello";
+		String s2 = new String("hello");
+		RefManager.jRefTerm(s1);
+		Term jRef2 = RefManager.jRefTerm(s2);
+		String stringFromTerm = jpc.fromTerm(jRef2);
+		assertFalse(stringFromTerm == s1);
+		assertTrue(stringFromTerm == s2);
+	}
+	
+	@Test
 	public void testSerializedTerm() {
 		String s = "hello";
 		Term term = Serialized.jSerializedTerm(s);

@@ -9,13 +9,13 @@ import org.jpc.converter.TermConvertable;
 import org.jpc.term.Compound;
 import org.jpc.term.IntegerTerm;
 
-public class JRef extends WeakReference<Object> implements TermConvertable<Compound> {
+public class JRef<T> extends WeakReference<T> implements TermConvertable<Compound> {
 
 	public static final String JREF_FUNCTOR = "jref";
 	
 	private RefId refId;
 	
-	JRef(Object referent, ReferenceQueue<Object> referenceQueue) {
+	JRef(T referent, ReferenceQueue<Object> referenceQueue) {
 		super(referent, referenceQueue);
 		refId = RefIdManager.getDefaultRefIdManager().getOrCreate(referent);
 	}
@@ -42,7 +42,7 @@ public class JRef extends WeakReference<Object> implements TermConvertable<Compo
 	@Override
 	public boolean equals(Object obj) {
 		if(obj instanceof JRef) {
-			return refId.equals(((JRef)obj).getRefId());
+			return refId.equals(((JRef<?>)obj).getRefId());
 		}
 		return false;
 	}
