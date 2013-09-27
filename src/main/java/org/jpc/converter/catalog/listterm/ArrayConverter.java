@@ -32,7 +32,7 @@ public class ArrayConverter<E> extends JpcConverter<E[], Term> {
 		Type listType = new ParameterizedTypeImpl(new Type[]{arrayComponentType}, null, List.class);
 		List<E> list = context.fromTerm(term, listType);
 
-		E[] array = (E[]) ReflectionUtil.createArray(arrayComponentType, list.size());
+		E[] array = (E[]) ReflectionUtil.newArray(arrayComponentType, list.size());
 		for(int i=0; i<list.size(); i++) {
 			array[i] = list.get(i);
 		}
