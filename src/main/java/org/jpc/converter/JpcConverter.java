@@ -26,65 +26,6 @@ public abstract class JpcConverter<ObjectType,TermType extends Term> {
 		return termType;
 	}
 	
-//	public Type getPreferredObjectType() {
-//		return asNonVariableType(objectType);
-//	}
-//	
-//	public Class<TermType> getPreferredTermClass() {
-//		return (Class<TermType>) asNonVariableType(termType);
-//	}
-//
-//	private Type asNonVariableType(Type type) {
-//		Type nonVariableType;
-//		if(type instanceof VariableTypeWrapper || 
-//				(type instanceof ArrayTypeWrapper && ((ArrayTypeWrapper)type).getBaseType() instanceof VariableTypeWrapper)) {
-//			nonVariableType = TypeWrapper.wrap(type).getRawClass();
-//		} else
-//			nonVariableType = type;
-//		return nonVariableType;
-//	}
-	
-	
-	
-//	public Type getObjectTypeOrThrow() {
-//		TypeWrapper typeWrapper = TypeWrapper.wrap(objectType);
-//		if(typeWrapper instanceof VariableTypeWrapper)
-//			throw new RuntimeException("The converter object type is not available.");
-//		return objectType;
-//	}
-//	
-//	public Class getTermClassOrThrow() {
-//		TypeWrapper typeWrapper = TypeWrapper.wrap(termType);
-//		if(typeWrapper instanceof VariableTypeWrapper)
-//			throw new RuntimeException("The converter term type not available.");
-//		return typeWrapper.getRawClass();
-//	}
-//
-//	public boolean termClassIsEquals(Type type) {
-//		return getTermClassOrThrow().equals(type);
-//	}
-//	
-//	public boolean termClassIsAssignableTo(Type type) {
-//		return TypeWrapper.wrap(type).isWeakAssignableFrom(getTermClassOrThrow());
-//	}
-//
-//	public boolean termClassIsAssignableFrom(Type type) {
-//		return TypeWrapper.wrap(getTermClassOrThrow()).isWeakAssignableFrom(type);
-//	}
-//	
-//	public boolean objectTypeIsEquals(Type type) {
-//		return getObjectTypeOrThrow().equals(type);
-//	}
-//	
-//	public boolean objectTypeIsAssignableTo(Type type) {
-//		return TypeWrapper.wrap(type).isWeakAssignableFrom(getObjectTypeOrThrow());
-//	}
-//
-//	public boolean objectTypeIsAssignableFrom(Type type) {
-//		return TypeWrapper.wrap(getObjectTypeOrThrow()).isWeakAssignableFrom(type);
-//	}
-	
-	
 	public <T extends Term> boolean canConvertToTerm(Object object, Class<T> termClass) {
 		return TypeWrapper.wrap(getTermType()).isAssignableFrom(termClass) &&
 				TypeWrapper.wrap(getObjectType()).isWeakAssignableFrom(object.getClass());

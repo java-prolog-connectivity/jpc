@@ -49,12 +49,12 @@ public class DefaultJpcConverterManager extends ConverterManager {
 			register(new TermToMapConverter(mapEntrySeparator));
 			register(new TermToMapEntryConverter(mapEntrySeparator));
 		}
-		register(new BooleanConverter());
+		register(new XmlGregorianCalendarConverter());
 		register(new CalendarConverter());
 		register(new CharacterConverter());
-		register(new NumberConverter());
 		register(new StringConverter());
-		register(new XmlGregorianCalendarConverter());
+		register(new BooleanConverter());
+		register(new NumberConverter());
 		register(new JRefConverter());
 		register(new SerializedConverter());
 	}
