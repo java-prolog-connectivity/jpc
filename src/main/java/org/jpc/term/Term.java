@@ -93,13 +93,12 @@ public abstract class Term {
 		return hasFunctor(new IntegerTerm(nameTermObject), arity);
 	}
 	
-
 	/**
 	 * whether this Term is a list
 	 * 
 	 * @return whether this Term is a list
 	 */
-	public boolean isList() {
+	public final boolean isList() {
 		if(list == null)
 			list = basicIsList();
 		return list;
