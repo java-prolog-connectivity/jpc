@@ -1,12 +1,14 @@
 package org.jpc;
 
+import static java.util.Arrays.asList;
+
 import java.lang.reflect.Type;
-import java.util.Arrays;
 import java.util.List;
 
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
+import org.jpc.term.jterm.RefManager;
 import org.minitoolbox.commons.Version;
 
 /**
@@ -36,7 +38,7 @@ public abstract class Jpc {
 	public abstract <T extends Term> T toTerm(Object object, Class<T> termClass);
 	
 	public final ListTerm listTerm(Object ...objects) {
-		return listTerm(Arrays.asList(objects));
+		return listTerm(asList(objects));
 	}
 	
 	public final ListTerm listTerm(List<? extends Object> objects) {
@@ -51,6 +53,8 @@ public abstract class Jpc {
 
 	public abstract Type getType(Term term);
 
+	public abstract RefManager getRefManager();
+	
 	public abstract boolean handleError(Term errorTerm, Term goal);
 
 }

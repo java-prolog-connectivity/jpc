@@ -12,6 +12,7 @@ import org.jpc.converter.typesolver.TypeSolverManager;
 import org.jpc.error.handling.DefaultJpcErrorHandler;
 import org.jpc.error.handling.ErrorHandler;
 import org.jpc.error.handling.ErrorHandlerManager;
+import org.jpc.term.jterm.RefManager;
 
 public class JpcBuilder {
 
@@ -19,6 +20,7 @@ public class JpcBuilder {
 	private TypeSolverManager typeSolverManager;
 	private InstantiationManager instantiationManager;
 	private ErrorHandlerManager errorHandlerManager;
+	private RefManager refManager;
 	
 	public static JpcBuilder create() {
 		return new JpcBuilder();
@@ -29,10 +31,11 @@ public class JpcBuilder {
 		this.typeSolverManager = new DefaultTypeSolverManager();
 		this.instantiationManager = new DefaultInstantiationManager();
 		this.errorHandlerManager = new DefaultJpcErrorHandler();
+		this.refManager = RefManager.getDefaultRefManager();
 	}
 	
 	public Jpc build() {
-		return new DefaultJpc(converterManager, typeSolverManager, instantiationManager, errorHandlerManager);
+		return new DefaultJpc(converterManager, typeSolverManager, instantiationManager, refManager, errorHandlerManager);
 	}
 
 	public JpcBuilder registerConverter(JpcConverter<?,?> converter) {
@@ -55,8 +58,13 @@ public class JpcBuilder {
 		return this;
 	}
 	
+	public JpcBuilder setRefManager(RefManager refManager) {
+		this.refManager = refManager;
+		return this;
+	}
+	
 //	//TODO
-//	public void setPreferences(JpcPreferences preferences) {
+//	public JpcBuilder setPreferences(JpcPreferences preferences) {
 //		throw new NotYetImplementedException();
 //	}
 

@@ -9,7 +9,6 @@ import org.jpc.term.Compound;
 import org.jpc.term.IntegerTerm;
 import org.jpc.term.jterm.JRef;
 import org.jpc.term.jterm.RefId;
-import org.jpc.term.jterm.RefManager;
 
 public class JRefConverter extends JpcConverter<Object, Compound> {
 
@@ -20,7 +19,7 @@ public class JRefConverter extends JpcConverter<Object, Compound> {
 		}
 		IntegerTerm iTerm = (IntegerTerm) term.arg(1);
 		RefId refId = new RefId(iTerm.intValue());
-		return RefManager.getDefaultRefManager().getOrThrow(refId);
+		return context.getRefManager().getOrThrow(refId);
 	}
 
 }
