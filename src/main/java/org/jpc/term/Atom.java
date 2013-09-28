@@ -59,8 +59,8 @@ public final class Atom extends Term {
 	}
 	
 	@Override
-	public boolean isList() {
-		return equals(EMPTY_LIST);
+	protected boolean basicIsList() {
+		return name.equals(EMPTY_LIST_SYMBOL);
 	}
 
 	@Override

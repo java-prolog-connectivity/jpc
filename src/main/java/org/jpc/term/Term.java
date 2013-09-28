@@ -30,6 +30,7 @@ import com.google.common.base.Optional;
 public abstract class Term {
 
 	private Integer hash;
+	private Boolean list;
 	
 	/**
 	 * 
@@ -99,6 +100,12 @@ public abstract class Term {
 	 * @return whether this Term is a list
 	 */
 	public boolean isList() {
+		if(list == null)
+			list = basicIsList();
+		return list;
+	}
+	
+	protected boolean basicIsList() {
 		return false;
 	}
 	
