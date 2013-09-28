@@ -10,15 +10,6 @@ import org.jpc.term.Term;
 public class IsoPrologErrorConverterManager extends ConverterManager<IsoPrologError, Compound> {
 
 	public IsoPrologErrorConverterManager() {
-		registerIsoPrologErrorConverters();
-	}
-	
-	@Override
-	public boolean canConvertFromTerm(Term term, Type toType) {
-		return super.canConvertFromTerm(term, toType) && IsoPrologErrorConverter.isIsoPrologError(term);
-		
-	}
-	private void registerIsoPrologErrorConverters() {
 		register(new IsoPrologErrorConverter());
 		register(new DomainErrorConverter());
 		register(new EvaluationErrorConverter());
@@ -30,6 +21,11 @@ public class IsoPrologErrorConverterManager extends ConverterManager<IsoPrologEr
 		register(new SyntaxErrorConverter());
 		register(new SystemErrorConverter());
 		register(new TypeErrorConverter());
+	}
+	
+	@Override
+	public boolean canConvertFromTerm(Term term, Type toType) {
+		return super.canConvertFromTerm(term, toType) && IsoPrologErrorConverter.isIsoPrologError(term);
 	}
 
 }

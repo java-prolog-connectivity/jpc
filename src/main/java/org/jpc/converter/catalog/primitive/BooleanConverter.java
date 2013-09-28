@@ -1,4 +1,4 @@
-package org.jpc.converter.catalog;
+package org.jpc.converter.catalog.primitive;
 
 import static org.jpc.engine.prolog.PrologConstants.FAIL;
 import static org.jpc.engine.prolog.PrologConstants.FALSE;

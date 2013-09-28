@@ -1,4 +1,4 @@
-package org.jpc.converter.catalog;
+package org.jpc.converter.catalog.primitive;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;

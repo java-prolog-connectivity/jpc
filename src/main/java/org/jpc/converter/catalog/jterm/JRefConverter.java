@@ -1,4 +1,4 @@
-package org.jpc.converter.catalog;
+package org.jpc.converter.catalog.jterm;
 
 import java.lang.reflect.Type;
 

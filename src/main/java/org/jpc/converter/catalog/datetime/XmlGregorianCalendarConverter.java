@@ -1,4 +1,4 @@
-package org.jpc.converter.catalog;
+package org.jpc.converter.catalog.datetime;
 
 import java.lang.reflect.Type;
 import java.util.GregorianCalendar;
