@@ -5,8 +5,8 @@ import org.jpc.converter.JpcConversionException;
 import org.jpc.term.Term;
 
 /**
- * Handles an error term attempting to convert it, according to the default jpc context of the engine, to an instance of RuntimeException.
- * If it succeeds it throws the exception, otherwise returns false
+ * Handles an error term attempting to convert it, according to a given jpc context, to an instance of RuntimeException.
+ * If it succeeds, throws the obtained exception. Otherwise returns false.
  * @author sergioc
  *
  */

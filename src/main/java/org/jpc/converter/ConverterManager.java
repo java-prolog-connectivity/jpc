@@ -11,7 +11,7 @@ import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ConverterManager {
+public class ConverterManager<ObjectType,TermType extends Term> extends JpcConverter<ObjectType,TermType> {
 	
 	private static Logger logger = LoggerFactory.getLogger(ConverterManager.class);
 	
@@ -25,7 +25,8 @@ public class ConverterManager {
 		converters.add(0, converter);
 	}
 
-	public Object fromTerm(Term term, Type type, Jpc context) {		
+	@Override
+	public ObjectType fromTerm(TermType term, Type type, Jpc context) {
 		TypeWrapper typeWrapper = TypeWrapper.wrap(type);
 
 		for(JpcConverter converter : converters) {
@@ -42,9 +43,9 @@ public class ConverterManager {
 				try {
 					//this check is because in the call to fromTerm/2 the type argument would be lost. If the type is more specific than the converter type, a call to fromTerm/3 is more appropriate.
 					if(bestTypeForConverter.equals(converterObjectType)) { 
-						return converter.fromTerm(term, context); //by default will delegate to fromTerm/3 unless overridden by the programmer
+						return (ObjectType) converter.fromTerm(term, context); //by default will delegate to fromTerm/3 unless overridden by the programmer
 					} else {
-						return converter.fromTerm(term, bestTypeForConverter, context); //the idea of these two alternatives is to allow the programmer to override either fromTerm/2 (if the type argument is not necessary) or fromTerm/3 (more verbose)
+						return (ObjectType) converter.fromTerm(term, bestTypeForConverter, context); //the idea of these two alternatives is to allow the programmer to override either fromTerm/2 (if the type argument is not necessary) or fromTerm/3 (more verbose)
 					}
 				} catch(UnsupportedOperationException|//exception thrown if the converter does not support conversion from term to objects
 						JpcConversionException e){//converters should throw this exception if they are not able to convert a term to a Java object.
@@ -55,8 +56,8 @@ public class ConverterManager {
 		throw new JpcConversionException(term.toString(), type.toString()); //no converter was able to convert the term to the desired type
 	}
 	
-	
-	public <T extends Term> T toTerm(Object object, Class<T> termClass, Jpc context) {
+	@Override
+	public <T extends TermType> T toTerm(ObjectType object, Class<T> termClass, Jpc context) {
 		TypeWrapper termClassWrapper = TypeWrapper.wrap(termClass);
 		
 		for(JpcConverter converter : converters) {

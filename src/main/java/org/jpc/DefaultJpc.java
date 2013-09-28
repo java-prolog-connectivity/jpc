@@ -69,7 +69,7 @@ public class DefaultJpc extends Jpc {
 		else if(object instanceof TermConvertable)
 			return (T) ((TermConvertable)object).asTerm();
 		else
-			return converterManager.toTerm(object, termClass, this);
+			return (T) converterManager.toTerm(object, termClass, this);
 	}
 	
 	@Override

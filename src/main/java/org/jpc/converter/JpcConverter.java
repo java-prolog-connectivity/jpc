@@ -48,7 +48,7 @@ public abstract class JpcConverter<ObjectType,TermType extends Term> {
 		return (TermType) toTerm(object, (Class)getTermType(), context);
 	}
 	
-	public <T extends TermType>T toTerm(ObjectType object, Class<T> termClass, Jpc context) {
+	public <T extends TermType> T toTerm(ObjectType object, Class<T> termClass, Jpc context) {
 		throw new UnsupportedOperationException();
 	}
 
