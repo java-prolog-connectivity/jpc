@@ -56,7 +56,7 @@ public final class Compound extends Term {
 	}
 	
 	@Override
-	public boolean isList() {
+	protected boolean basicIsList() {
 		return isCons() && arg(2).isList();
 	}
 	
