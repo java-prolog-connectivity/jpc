@@ -12,7 +12,7 @@ import org.jpc.converter.typesolver.TypeSolverManager;
 import org.jpc.error.handling.DefaultJpcErrorHandler;
 import org.jpc.error.handling.ErrorHandler;
 import org.jpc.error.handling.ErrorHandlerManager;
-import org.jpc.term.jterm.RefManager;
+import org.jpc.term.jterm.JRefManager;
 
 public class JpcBuilder {
 
@@ -20,7 +20,7 @@ public class JpcBuilder {
 	private TypeSolverManager typeSolverManager;
 	private InstantiationManager instantiationManager;
 	private ErrorHandlerManager errorHandlerManager;
-	private RefManager refManager;
+	private JRefManager refManager;
 	
 	public static JpcBuilder create() {
 		return new JpcBuilder();
@@ -31,7 +31,7 @@ public class JpcBuilder {
 		this.typeSolverManager = new DefaultTypeSolverManager();
 		this.instantiationManager = new DefaultInstantiationManager();
 		this.errorHandlerManager = new DefaultJpcErrorHandler();
-		this.refManager = RefManager.getDefaultRefManager();
+		this.refManager = JRefManager.getDefaultRefManager();
 	}
 	
 	public Jpc build() {
@@ -58,7 +58,7 @@ public class JpcBuilder {
 		return this;
 	}
 	
-	public JpcBuilder setRefManager(RefManager refManager) {
+	public JpcBuilder setRefManager(JRefManager refManager) {
 		this.refManager = refManager;
 		return this;
 	}

@@ -14,7 +14,7 @@ import org.jpc.error.handling.DefaultJpcErrorHandler;
 import org.jpc.error.handling.ErrorHandler;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
-import org.jpc.term.jterm.RefManager;
+import org.jpc.term.jterm.JRefManager;
 import org.minitoolbox.reflection.IncompatibleTypesException;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
@@ -23,7 +23,7 @@ public class DefaultJpc extends Jpc {
 	private ConverterManager converterManager;
 	private TypeSolverManager typeSolverManager;
 	private InstantiationManager instantiationManager;
-	private RefManager refManager;
+	private JRefManager refManager;
 	private ErrorHandler errorHandler;
 	//private JpcPreferences preferences;
 
@@ -31,11 +31,11 @@ public class DefaultJpc extends Jpc {
 		this.converterManager = new DefaultJpcConverterManager();
 		this.typeSolverManager = new DefaultTypeSolverManager();
 		this.instantiationManager = new DefaultInstantiationManager();
-		this.refManager = RefManager.getDefaultRefManager();
+		this.refManager = JRefManager.getDefaultRefManager();
 		this.errorHandler = new DefaultJpcErrorHandler();
 	}
 	
-	public DefaultJpc(ConverterManager converterManager, TypeSolverManager typeSolverManager, InstantiationManager instantiationManager, RefManager refManager, ErrorHandler errorHandler) {
+	public DefaultJpc(ConverterManager converterManager, TypeSolverManager typeSolverManager, InstantiationManager instantiationManager, JRefManager refManager, ErrorHandler errorHandler) {
 		this.typeSolverManager = typeSolverManager;
 		this.converterManager = converterManager;
 		this.instantiationManager = instantiationManager;
@@ -83,7 +83,7 @@ public class DefaultJpc extends Jpc {
 	}
 	
 	@Override
-	public RefManager getRefManager() {
+	public JRefManager getRefManager() {
 		return refManager;
 	}
 

@@ -36,6 +36,7 @@ public class JpcPreferences extends Preferences {
 	public static final String SUBSTITUTION_OPERATOR = "/";
 	public static final String TERM_CONVERSION_BY_MAPPING_SYMBOL = "m";
 	public static final String TERM_CONVERSION_BY_REFERENCE_SYMBOL = "r";
+	public static final String TERM_CONVERSION_BY_MAPPING_AND_REFERENCE_SYMBOL = TERM_CONVERSION_BY_MAPPING_SYMBOL + TERM_CONVERSION_BY_REFERENCE_SYMBOL;
 	public static final String TERM_CONVERSION_BY_SERIALIZATION_SYMBOL = "s";
 	public static final String DEFAULT_TERM_CONVERSION_SYMBOL = TERM_CONVERSION_BY_MAPPING_SYMBOL;
 	

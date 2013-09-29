@@ -3,7 +3,7 @@ package org.jpc;
 import java.lang.reflect.Type;
 
 import org.jpc.term.Term;
-import org.jpc.term.jterm.RefManager;
+import org.jpc.term.jterm.JRefManager;
 
 public class JpcProxy extends Jpc {
 
@@ -33,7 +33,7 @@ public class JpcProxy extends Jpc {
 	}
 
 	@Override
-	public RefManager getRefManager() {
+	public JRefManager getRefManager() {
 		return proxiedJpc.getRefManager();
 	}
 	

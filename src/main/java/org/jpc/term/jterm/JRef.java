@@ -3,48 +3,27 @@ package org.jpc.term.jterm;
 import static java.util.Arrays.asList;
 
 import java.lang.ref.ReferenceQueue;
-import java.lang.ref.WeakReference;
 
 import org.jpc.converter.TermConvertable;
 import org.jpc.term.Compound;
 import org.jpc.term.IntegerTerm;
 
-public class JRef<T> extends WeakReference<T> implements TermConvertable<Compound> {
+public class JRef<T> extends IdentifiableWeakReference<JRefId, T> implements TermConvertable<Compound> {
 
 	public static final String JREF_FUNCTOR = "jref";
-	
-	private RefId refId;
-	
-	JRef(T referent, ReferenceQueue<Object> referenceQueue) {
-		super(referent, referenceQueue);
-		refId = RefIdManager.getDefaultRefIdManager().getOrCreate(referent);
-	}
 
-	public RefId getRefId() {
-		return refId;
+	JRef(T referent, ReferenceQueue<T> referenceQueue) {
+		super(JRefIdManager.getDefaultRefIdManager().getOrCreate(referent), referent, referenceQueue);
 	}
 	
 	@Override
 	public Compound asTerm() {
-		return new Compound(JREF_FUNCTOR, asList(new IntegerTerm(refId.getId())));
+		return new Compound(JREF_FUNCTOR, asList(new IntegerTerm(getRefId().getId())));
 	}
 
 	@Override
 	public String toString() {
 		return asTerm().toString();
-	}
-
-	@Override
-	public int hashCode() {
-		return refId.hashCode();
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if(obj instanceof JRef) {
-			return refId.equals(((JRef<?>)obj).getRefId());
-		}
-		return false;
 	}
 	
 }

@@ -3,9 +3,9 @@ package org.jpc.term.jterm;
 
 public class WeakReferencesCleaner extends Thread {
 
-	private RefManager refManager;
+	private JRefManager refManager;
 	
-	public WeakReferencesCleaner(RefManager refManager, int priority) {
+	public WeakReferencesCleaner(JRefManager refManager, int priority) {
 		this.refManager = refManager;
 		this.setDaemon(true);
 		this.setPriority(priority);
@@ -15,8 +15,8 @@ public class WeakReferencesCleaner extends Thread {
 	public void run() {
 		while(true) {
 			try {
-				JRef jRef = (JRef) refManager.getReferenceQueue().remove();
-				RefId refId = jRef.getRefId();
+				JRef<?> jRef = (JRef<?>) refManager.getReferenceQueue().remove();
+				JRefId refId = jRef.getRefId();
 				refManager.remove(refId);
 			} catch (InterruptedException e) {}
 		}

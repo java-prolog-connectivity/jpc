@@ -8,7 +8,7 @@ import org.jpc.converter.JpcConverter;
 import org.jpc.term.Compound;
 import org.jpc.term.IntegerTerm;
 import org.jpc.term.jterm.JRef;
-import org.jpc.term.jterm.RefId;
+import org.jpc.term.jterm.JRefId;
 
 public class JRefConverter extends JpcConverter<Object, Compound> {
 
@@ -18,8 +18,8 @@ public class JRefConverter extends JpcConverter<Object, Compound> {
 			throw new JpcConversionException();
 		}
 		IntegerTerm iTerm = (IntegerTerm) term.arg(1);
-		RefId refId = new RefId(iTerm.intValue());
-		return context.getRefManager().getOrThrow(refId);
+		JRefId refId = new JRefId(iTerm.intValue());
+		return context.getRefManager().resolveOrThrow(refId);
 	}
 
 }

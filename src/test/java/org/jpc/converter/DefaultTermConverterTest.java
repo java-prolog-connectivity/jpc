@@ -34,7 +34,7 @@ import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
-import org.jpc.term.jterm.RefManager;
+import org.jpc.term.jterm.JRefManager;
 import org.jpc.term.jterm.Serialized;
 import org.junit.Assert;
 import org.junit.Test;
@@ -193,7 +193,7 @@ public class DefaultTermConverterTest {
 	@Test
 	public void testJRef() {
 		Object o = new Object();
-		Term jRef = RefManager.jRefTerm(o);
+		Term jRef = JRefManager.jRefTerm(o);
 		assertTrue(o == jpc.fromTerm(jRef));
 		o = null;
 		System.gc();
@@ -208,8 +208,8 @@ public class DefaultTermConverterTest {
 		//s1 and s2 are equals but have different references.
 		String s1 = "hello";
 		String s2 = new String("hello");
-		RefManager.jRefTerm(s1);
-		Term jRef2 = RefManager.jRefTerm(s2);
+		JRefManager.jRefTerm(s1);
+		Term jRef2 = JRefManager.jRefTerm(s2);
 		String stringFromTerm = jpc.fromTerm(jRef2);
 		assertFalse(stringFromTerm == s1);
 		assertTrue(stringFromTerm == s2);

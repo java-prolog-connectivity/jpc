@@ -9,11 +9,11 @@ import com.google.common.collect.MapMaker;
  * @author sergioc
  *
  */
-public class RefIdManager {
+public class JRefIdManager {
 	
-	private static RefIdManager defaultRefIdManager = new RefIdManager();
+	private static JRefIdManager defaultRefIdManager = new JRefIdManager();
 	
-	public static RefIdManager getDefaultRefIdManager() {
+	public static JRefIdManager getDefaultRefIdManager() {
 		return defaultRefIdManager;
 	}
 	
@@ -30,23 +30,23 @@ public class RefIdManager {
 	 * 
 	 * Therefore, our map uses identity comparisons. This is a desirable property, since we need different references ids for objects with different references, and this is independent of the equals() method being overridden.
 	 */
-	private Map<Object, RefId> currentRefs = new MapMaker().weakKeys().makeMap(); 
+	private Map<Object, JRefId> currentRefs = new MapMaker().weakKeys().makeMap(); 
 	
-	RefIdManager(){}
+	JRefIdManager(){}
 	
 	/**
 	 * 
 	 * @param o the object to which has been assigned a reference id
 	 * @return the reference id
 	 */
-	public RefId get(Object o) {
+	public JRefId get(Object o) {
 		return currentRefs.get(o);
 	}
 
-	public synchronized RefId getOrCreate(Object o) {
-		RefId ref = get(o);
+	public synchronized JRefId getOrCreate(Object o) {
+		JRefId ref = get(o);
 		if(ref == null) {
-			ref = new RefId(++counter);
+			ref = new JRefId(++counter);
 			currentRefs.put(o, ref);
 		}
 		return ref;	

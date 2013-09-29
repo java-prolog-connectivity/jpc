@@ -1,10 +1,10 @@
 package org.jpc.term.jterm;
 
-public class RefId {
+public class JRefId {
 
 	int id;
 
-	public RefId(int id) {
+	public JRefId(int id) {
 		this.id = id;
 	}
 
@@ -33,7 +33,7 @@ public class RefId {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		RefId other = (RefId) obj;
+		JRefId other = (JRefId) obj;
 		if (id != other.id)
 			return false;
 		return true;

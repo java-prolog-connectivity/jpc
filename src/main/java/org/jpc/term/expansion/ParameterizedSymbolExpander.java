@@ -2,6 +2,7 @@ package org.jpc.term.expansion;
 
 import static org.jpc.JpcPreferences.DEFAULT_TERM_CONVERSION_SYMBOL;
 import static org.jpc.JpcPreferences.SUBSTITUTION_OPERATOR;
+import static org.jpc.JpcPreferences.TERM_CONVERSION_BY_MAPPING_AND_REFERENCE_SYMBOL;
 import static org.jpc.JpcPreferences.TERM_CONVERSION_BY_MAPPING_SYMBOL;
 import static org.jpc.JpcPreferences.TERM_CONVERSION_BY_REFERENCE_SYMBOL;
 import static org.jpc.JpcPreferences.TERM_CONVERSION_BY_SERIALIZATION_SYMBOL;
@@ -14,7 +15,7 @@ import org.jpc.JpcBuilder;
 import org.jpc.term.Atom;
 import org.jpc.term.IntegerTerm;
 import org.jpc.term.Term;
-import org.jpc.term.jterm.RefManager;
+import org.jpc.term.jterm.JRefManager;
 import org.jpc.term.jterm.Serialized;
 
 import com.google.common.base.Optional;
@@ -56,7 +57,7 @@ public class ParameterizedSymbolExpander extends CachedTermExpander {
 					expanded = context.toTerm(param);
 					break;
 				case TERM_CONVERSION_BY_REFERENCE_SYMBOL:
-					expanded = RefManager.jRefTerm(param);
+					expanded = JRefManager.jRefTerm(param);
 					break;
 				case TERM_CONVERSION_BY_SERIALIZATION_SYMBOL:
 					expanded = Serialized.jSerializedTerm((Serializable)param);
@@ -67,7 +68,7 @@ public class ParameterizedSymbolExpander extends CachedTermExpander {
 	}
 	
 	public static void verifyOrThrow(String symbol) {
-		String regex = "(" + TERM_CONVERSION_BY_MAPPING_SYMBOL + "|" + TERM_CONVERSION_BY_REFERENCE_SYMBOL + "|" + TERM_CONVERSION_BY_SERIALIZATION_SYMBOL + ")\\d+";
+		String regex = "(" + TERM_CONVERSION_BY_MAPPING_SYMBOL + "|" + TERM_CONVERSION_BY_REFERENCE_SYMBOL + "|" + TERM_CONVERSION_BY_SERIALIZATION_SYMBOL + "|" + TERM_CONVERSION_BY_MAPPING_AND_REFERENCE_SYMBOL + ")\\d+";
 		if(!symbol.matches(regex))
 			throw new RuntimeException("Wrong symbol: " + symbol);
 	}

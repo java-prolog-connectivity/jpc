@@ -8,7 +8,7 @@ import java.util.List;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
-import org.jpc.term.jterm.RefManager;
+import org.jpc.term.jterm.JRefManager;
 import org.minitoolbox.commons.Version;
 
 /**
@@ -53,7 +53,7 @@ public abstract class Jpc {
 
 	public abstract Type getType(Term term);
 
-	public abstract RefManager getRefManager();
+	public abstract JRefManager getRefManager();
 	
 	public abstract boolean handleError(Term errorTerm, Term goal);
 
