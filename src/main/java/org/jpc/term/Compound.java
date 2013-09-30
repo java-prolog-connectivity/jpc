@@ -92,9 +92,9 @@ public final class Compound extends Term {
 	 * @return whether this Compound's functor has (String) 'name' and 'arity'
 	 */
 	
-	//@Override
+	@Override
 	public boolean hasFunctor(Term nameTermObject, int arity) {
-		return name.termEquals(nameTermObject) && args.size() == arity;
+		return args.size() == arity && name.termEquals(nameTermObject);
 	}
 	
 	

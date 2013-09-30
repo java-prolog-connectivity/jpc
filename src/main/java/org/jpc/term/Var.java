@@ -108,7 +108,7 @@ public final class Var extends Term {
 	
 	@Override
 	public boolean hasFunctor(Term nameTerm, int arity) {
-		return termEquals(nameTerm) && arity == 0;
+		return arity == 0 && termEquals(nameTerm);
 	}
 
 	@Override

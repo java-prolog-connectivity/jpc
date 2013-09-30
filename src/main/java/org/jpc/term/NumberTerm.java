@@ -37,7 +37,7 @@ public abstract class NumberTerm extends Term {
 	
 	@Override
 	public boolean hasFunctor(Term nameTerm, int arity) {
-		return equals(nameTerm) && arity == 0;
+		return arity == 0 && equals(nameTerm);
 	}
 
 	@Override
