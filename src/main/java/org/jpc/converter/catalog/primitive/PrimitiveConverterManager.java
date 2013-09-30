@@ -1,6 +1,9 @@
 package org.jpc.converter.catalog.primitive;
 
+import java.lang.reflect.Type;
+
 import org.jpc.converter.ConverterManager;
+import org.jpc.term.Compound;
 import org.jpc.term.Term;
 
 public class PrimitiveConverterManager extends ConverterManager<Object, Term> {
@@ -12,4 +15,9 @@ public class PrimitiveConverterManager extends ConverterManager<Object, Term> {
 		register(new NumberConverter());
 	}
 
+	@Override
+	public boolean canConvertFromTerm(Term term, Type toType) {
+		return super.canConvertFromTerm(term, toType) && (!(term instanceof Compound));
+	}
+	
 }
