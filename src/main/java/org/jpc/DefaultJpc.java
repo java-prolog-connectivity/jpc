@@ -31,7 +31,7 @@ public class DefaultJpc extends Jpc {
 		this.converterManager = new DefaultJpcConverterManager();
 		this.typeSolverManager = new DefaultTypeSolverManager();
 		this.instantiationManager = new DefaultInstantiationManager();
-		this.refManager = JRefManager.getDefaultRefManager();
+		this.refManager = JRefManager.getJRefManager();
 		this.errorHandler = new DefaultJpcErrorHandler();
 	}
 	

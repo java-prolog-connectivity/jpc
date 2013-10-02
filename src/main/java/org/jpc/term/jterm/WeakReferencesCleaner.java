@@ -1,23 +1,46 @@
 package org.jpc.term.jterm;
 
+import java.lang.ref.ReferenceQueue;
+
 
 public class WeakReferencesCleaner extends Thread {
 
-	private JRefManager refManager;
+	private static WeakReferencesCleaner referencesCleaner = new WeakReferencesCleaner(new ReferenceQueue<Object>());
 	
-	public WeakReferencesCleaner(JRefManager refManager, int priority) {
-		this.refManager = refManager;
+	public static WeakReferencesCleaner getWeakReferencesCleaner() {
+		return referencesCleaner;
+	}
+	
+	public static ReferenceQueue<?> getDefaultReferenceQueue() {
+		return referencesCleaner.getReferenceQueue();
+	}
+	
+	public synchronized static void startWeakReferencesCleaner() {
+		if(!referencesCleaner.isAlive())
+			referencesCleaner.start();
+	}
+	
+	private ReferenceQueue<?> referenceQueue;
+	
+	public WeakReferencesCleaner(ReferenceQueue<?> referenceQueue) {
+		this(referenceQueue, Thread.MAX_PRIORITY);
+	}
+	
+	public WeakReferencesCleaner(ReferenceQueue<?> referenceQueue, int priority) {
+		this.referenceQueue = referenceQueue;
 		this.setDaemon(true);
-		this.setPriority(priority);
 	}
 
+	public ReferenceQueue<?> getReferenceQueue() {
+		return referenceQueue;
+	}
+	
 	@Override
 	public void run() {
 		while(true) {
 			try {
-				JRef<?> jRef = (JRef<?>) refManager.getReferenceQueue().remove();
-				JRefId refId = jRef.getRefId();
-				refManager.remove(refId);
+				IdentifiableWeakReference<?,?> weakRef = (IdentifiableWeakReference<?,?>) referenceQueue.remove();
+				weakRef.cleanUp();
 			} catch (InterruptedException e) {}
 		}
 	}

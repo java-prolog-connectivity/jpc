@@ -8,69 +8,81 @@ import static org.jpc.JpcPreferences.TERM_CONVERSION_BY_REFERENCE_SYMBOL;
 import static org.jpc.JpcPreferences.TERM_CONVERSION_BY_SERIALIZATION_SYMBOL;
 
 import java.io.Serializable;
-import java.util.List;
 
 import org.jpc.Jpc;
 import org.jpc.JpcBuilder;
 import org.jpc.term.Atom;
-import org.jpc.term.IntegerTerm;
+import org.jpc.term.Compound;
 import org.jpc.term.Term;
 import org.jpc.term.jterm.JRefManager;
 import org.jpc.term.jterm.Serialized;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
 
-public class ParameterizedSymbolExpander extends CachedTermExpander {
+public abstract class ParameterizedSymbolExpander extends CachedTermExpander {
 
-	private List<?> parameters;
+	private static Logger logger = LoggerFactory.getLogger(ParameterizedSymbolExpander.class);
+
 	private Jpc context;
 	
-	public ParameterizedSymbolExpander(List<?> parameters) {
-		this(parameters, JpcBuilder.create().build());
+	public ParameterizedSymbolExpander() {
+		this(JpcBuilder.create().build());
 	}
 	
-	public ParameterizedSymbolExpander(List<?> parameters, Jpc context) {
-		this.parameters = parameters;
+	public ParameterizedSymbolExpander(Jpc context) {
 		this.context = context;
 	}
 	
 	@Override
 	protected Optional<Term> doExpand(Term term) {
 		Term expanded = null;
-		if(term.hasFunctor(SUBSTITUTION_OPERATOR, 1)) {
-			Term parameterArgumentTerm = term.arg(1);
-			String conversionCode;
-			int position;
-			if(parameterArgumentTerm instanceof Atom) {
-				String name = ((Atom) parameterArgumentTerm).getName();
-				verifyOrThrow(name);
-				conversionCode = name.substring(0,1);
-				position = Integer.parseInt(name.substring(1));
-			} else if(parameterArgumentTerm instanceof IntegerTerm) {
-				conversionCode = DEFAULT_TERM_CONVERSION_SYMBOL;
-				position = ((IntegerTerm) parameterArgumentTerm).intValue();
-			} else
-				throw new RuntimeException("Wrong operand for " + SUBSTITUTION_OPERATOR);
-			Object param = parameters.get(position -1);
-			switch(conversionCode) {
-				case TERM_CONVERSION_BY_MAPPING_SYMBOL:
-					expanded = context.toTerm(param);
-					break;
-				case TERM_CONVERSION_BY_REFERENCE_SYMBOL:
-					expanded = JRefManager.jRefTerm(param);
-					break;
-				case TERM_CONVERSION_BY_SERIALIZATION_SYMBOL:
-					expanded = Serialized.jSerializedTerm((Serializable)param);
-					break;
+		if(term instanceof Compound) {
+			Compound compound = (Compound) term;
+			int arity = compound.arity();
+			if(compound.hasName(SUBSTITUTION_OPERATOR) && (arity == 1 || arity == 2)) {
+				String conversionCode;
+				Term symbolTerm;
+				if(arity == 1) {
+					conversionCode = DEFAULT_TERM_CONVERSION_SYMBOL;
+					symbolTerm = term.arg(1);
+				} else { //arity ==2
+					Term conversionCodeTerm = term.arg(1);
+					if(!(conversionCodeTerm instanceof Atom)) {//this is not necessarily an error, since the symbol '/' may be used with another meaning in the program.
+						return Optional.absent();
+					}
+					conversionCode = ((Atom)conversionCodeTerm).getName();
+					verifyOrThrow(conversionCode);
+					symbolTerm = term.arg(2);
+				}
+				Object resolved = resolve(symbolTerm);
+				switch(conversionCode) {
+					case TERM_CONVERSION_BY_MAPPING_SYMBOL:
+						expanded = context.toTerm(resolved);
+						break;
+					case TERM_CONVERSION_BY_REFERENCE_SYMBOL:
+						expanded = JRefManager.jRefTerm(resolved);
+						break;
+					case TERM_CONVERSION_BY_SERIALIZATION_SYMBOL:
+						expanded = Serialized.jSerializedTerm((Serializable)resolved);
+						break;
+				}
 			}
 		}
 		return Optional.fromNullable(expanded);
 	}
 	
-	public static void verifyOrThrow(String symbol) {
-		String regex = "(" + TERM_CONVERSION_BY_MAPPING_SYMBOL + "|" + TERM_CONVERSION_BY_REFERENCE_SYMBOL + "|" + TERM_CONVERSION_BY_SERIALIZATION_SYMBOL + "|" + TERM_CONVERSION_BY_MAPPING_AND_REFERENCE_SYMBOL + ")\\d+";
-		if(!symbol.matches(regex))
-			throw new RuntimeException("Wrong symbol: " + symbol);
+	public abstract Object resolve(Term symbolTerm);
+	
+	public static boolean isValidConversion(String conversionCode) {
+		String regex = "(" + TERM_CONVERSION_BY_MAPPING_SYMBOL + "|" + TERM_CONVERSION_BY_REFERENCE_SYMBOL + "|" + TERM_CONVERSION_BY_SERIALIZATION_SYMBOL + "|" + TERM_CONVERSION_BY_MAPPING_AND_REFERENCE_SYMBOL + ")";
+		return conversionCode.matches(regex);
+	}
+	
+	public static void verifyOrThrow(String conversionCode) {
+		if(!isValidConversion(conversionCode))
+			throw new RuntimeException("Not a valid conversion code: " + conversionCode);
 	}
 	
 }

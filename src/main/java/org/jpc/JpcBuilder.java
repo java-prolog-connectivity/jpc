@@ -31,7 +31,7 @@ public class JpcBuilder {
 		this.typeSolverManager = new DefaultTypeSolverManager();
 		this.instantiationManager = new DefaultInstantiationManager();
 		this.errorHandlerManager = new DefaultJpcErrorHandler();
-		this.refManager = JRefManager.getDefaultRefManager();
+		this.refManager = JRefManager.getJRefManager();
 	}
 	
 	public Jpc build() {

@@ -12,8 +12,8 @@ public class JRef<T> extends IdentifiableWeakReference<JRefId, T> implements Ter
 
 	public static final String JREF_FUNCTOR = "jref";
 
-	JRef(T referent, ReferenceQueue<T> referenceQueue) {
-		super(JRefIdManager.getDefaultRefIdManager().getOrCreate(referent), referent, referenceQueue);
+	JRef(IdentifiableWeakReferenceManager<JRefId, T> weakReferenceManager, JRefId jRefId, T referent, ReferenceQueue<T> referenceQueue) {
+		super(weakReferenceManager, jRefId, referent, referenceQueue);
 	}
 	
 	@Override

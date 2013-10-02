@@ -2,19 +2,20 @@ package org.jpc.term.jterm;
 
 import java.util.Map;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.MapMaker;
 
 /**
- * Manages identifiers for object references and warranties that such identifiers are unique per object
+ * Manages identifiers for object references and warranties that such identifiers are unique per object.
  * @author sergioc
  *
  */
 public class JRefIdManager {
 	
-	private static JRefIdManager defaultRefIdManager = new JRefIdManager();
+	private static JRefIdManager defaultJRefIdManager = new JRefIdManager();
 	
-	public static JRefIdManager getDefaultRefIdManager() {
-		return defaultRefIdManager;
+	public static JRefIdManager getJRefIdManager() {
+		return defaultJRefIdManager;
 	}
 	
 	private int counter = 0;
@@ -39,16 +40,18 @@ public class JRefIdManager {
 	 * @param o the object to which has been assigned a reference id
 	 * @return the reference id
 	 */
-	public JRefId get(Object o) {
-		return currentRefs.get(o);
+	public Optional<JRefId> get(Object o) {
+		return Optional.fromNullable(currentRefs.get(o));
 	}
 
 	public synchronized JRefId getOrCreate(Object o) {
-		JRefId ref = get(o);
-		if(ref == null) {
+		Optional<JRefId> optJRefId = get(o);
+		JRefId ref;
+		if(!optJRefId.isPresent()) {
 			ref = new JRefId(++counter);
 			currentRefs.put(o, ref);
-		}
+		} else
+			ref = optJRefId.get();
 		return ref;	
 	}
 	

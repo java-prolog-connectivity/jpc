@@ -40,7 +40,7 @@ import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
-import org.jpc.term.expansion.ParameterizedSymbolExpander;
+import org.jpc.term.expansion.PositionalSymbolExpander;
 import org.jpc.util.PrologUtil;
 
 public abstract class AbstractPrologEngine implements PrologEngine {
@@ -120,12 +120,11 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	
 	@Override
 	public Query query(Term goal, List<?> arguments, boolean errorHandledQuery, Jpc context) {
-		Term expandedGoal = goal.termExpansion(new ParameterizedSymbolExpander(arguments, context));
+		Term expandedGoal = goal.termExpansion(new PositionalSymbolExpander(arguments, context));
 		Query query = basicQuery(expandedGoal, errorHandledQuery, context);
 		return query;
 	}
 	
-
 	@Override
 	public Term asTerm(String termString) {
 		return asTerm(termString, new DefaultJpc());
