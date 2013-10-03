@@ -11,14 +11,13 @@ import org.jpc.JpcException;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.JpcTermWriter;
 import org.jpc.salt.TermContentHandler;
-import org.jpc.term.expansion.DummyTermExpander;
-import org.jpc.term.expansion.TermExpander;
+import org.jpc.term.expansion.DefaultTermExpander;
 import org.jpc.term.visitor.TermVisitor;
 import org.jpc.util.salt.ChangeVariableNameAdapter;
 import org.jpc.util.salt.ReplaceVariableAdapter;
 import org.jpc.util.salt.VariableNamesCollectorHandler;
 
-import com.google.common.base.Optional;
+import com.google.common.base.Function;
 
 /**
  * Implementations of this interface are Java representations of Prolog Terms (i.e., Prolog data types)
@@ -241,25 +240,25 @@ public abstract class Term {
 	 */
 	public abstract void accept(TermVisitor termVisitor);
 	
-	public Term termExpansion(TermExpander termExpander) {
+	public Term termExpansion(Function<Term, Term> termExpander) {
 		JpcTermWriter termWriter = new JpcTermWriter();
 		read(termWriter, termExpander);
 		return termWriter.getTerms().get(0);
 	}
 	
 	public void read(TermContentHandler contentHandler) {
-		read(contentHandler, new DummyTermExpander());
+		read(contentHandler, new DefaultTermExpander());
 	}
 	
-	public void read(TermContentHandler contentHandler, TermExpander termExpander) {
-		Optional<Term> optExpansion = termExpander.expand(this);
-		if(optExpansion.isPresent())
-			optExpansion.get().read(contentHandler);
+	public void read(TermContentHandler contentHandler, Function<Term, Term> termExpander) {
+		Term expandedTerm = termExpander.apply(this);
+		if(expandedTerm != null)
+			expandedTerm.read(contentHandler);
 		else
 			basicRead(contentHandler, termExpander);
 	}
 	
-	protected abstract void basicRead(TermContentHandler contentHandler, TermExpander termExpander);
+	protected abstract void basicRead(TermContentHandler contentHandler, Function<Term, Term> termExpander);
 	
 	/**
 	 * Reads the contents of this term (i.e., generates events) to a content handler

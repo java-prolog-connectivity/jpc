@@ -1,8 +1,9 @@
 package org.jpc.term;
 
 import org.jpc.salt.TermContentHandler;
-import org.jpc.term.expansion.TermExpander;
 import org.jpc.term.visitor.TermVisitor;
+
+import com.google.common.base.Function;
 
 /**
  * A class reifying a logic integer term
@@ -36,7 +37,7 @@ public final class IntegerTerm extends NumberTerm {
 	}
 
 	@Override
-	protected void basicRead(TermContentHandler contentHandler, TermExpander termExpander) {
+	protected void basicRead(TermContentHandler contentHandler, Function<Term, Term> termExpander) {
 		contentHandler.startIntegerTerm((Long)value);
 	}
 }

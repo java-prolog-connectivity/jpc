@@ -5,9 +5,9 @@ import java.util.Map;
 
 import org.jpc.term.Term;
 
-import com.google.common.base.Optional;
+import com.google.common.base.Function;
 
-public class CachedTermExpander implements TermExpander {
+public class CachedTermExpander implements Function<Term, Term> {
 
 	private Map<Term, Term> expansionCache;
 
@@ -27,19 +27,19 @@ public class CachedTermExpander implements TermExpander {
 		expansionCache.put(sourceTerm, expandedTerm);
 	}
 	
-	protected Optional<Term> doExpand(Term term) {
-		return Optional.absent();
+	protected Term doExpand(Term term) {
+		return null;
 	}
 	
 	@Override
-	public Optional<Term> expand(Term term) {
-		Optional<Term> optExpandedTerm = Optional.fromNullable(getCachedExpansion(term));
-		if(!optExpandedTerm.isPresent()) {
-			optExpandedTerm = doExpand(term);
-			if(optExpandedTerm.isPresent())
-				addCachedExpansion(term, optExpandedTerm.get());
+	public Term apply(Term term) {
+		Term expandedTerm = getCachedExpansion(term);
+		if(expandedTerm == null) {
+			expandedTerm = doExpand(term);
+			if(expandedTerm != null)
+				addCachedExpansion(term, expandedTerm);
 		}
-		return optExpandedTerm;
+		return expandedTerm;
 	}
 	
 }

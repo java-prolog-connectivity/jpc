@@ -10,8 +10,9 @@ import java.util.regex.Matcher;
 import org.jpc.JpcException;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.TermContentHandler;
-import org.jpc.term.expansion.TermExpander;
 import org.jpc.term.visitor.TermVisitor;
+
+import com.google.common.base.Function;
 
 /**
  * A class reifying a logic atom
@@ -77,7 +78,7 @@ public final class Atom extends Term {
 	}
 	
 	@Override
-	protected void basicRead(TermContentHandler contentHandler, TermExpander termExpander) {
+	protected void basicRead(TermContentHandler contentHandler, Function<Term, Term> termExpander) {
 		contentHandler.startAtom(name);
 	}
 	

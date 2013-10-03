@@ -8,8 +8,9 @@ import java.util.List;
 
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.TermContentHandler;
-import org.jpc.term.expansion.TermExpander;
 import org.jpc.term.visitor.TermVisitor;
+
+import com.google.common.base.Function;
 
 /**
  * A class reifying a logic variable
@@ -117,7 +118,7 @@ public final class Var extends Term {
 	}
 
 	@Override
-	protected void basicRead(TermContentHandler contentHandler, TermExpander termExpander) {
+	protected void basicRead(TermContentHandler contentHandler, Function<Term, Term> termExpander) {
 		contentHandler.startVariable(name);
 		
 	}

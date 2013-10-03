@@ -19,8 +19,6 @@ import org.jpc.term.jterm.Serialized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Optional;
-
 public abstract class ParameterizedSymbolExpander extends CachedTermExpander {
 
 	private static Logger logger = LoggerFactory.getLogger(ParameterizedSymbolExpander.class);
@@ -36,7 +34,7 @@ public abstract class ParameterizedSymbolExpander extends CachedTermExpander {
 	}
 	
 	@Override
-	protected Optional<Term> doExpand(Term term) {
+	protected Term doExpand(Term term) {
 		Term expanded = null;
 		if(term instanceof Compound) {
 			Compound compound = (Compound) term;
@@ -50,7 +48,7 @@ public abstract class ParameterizedSymbolExpander extends CachedTermExpander {
 				} else { //arity ==2
 					Term conversionCodeTerm = term.arg(1);
 					if(!(conversionCodeTerm instanceof Atom)) {//this is not necessarily an error, since the symbol '/' may be used with another meaning in the program.
-						return Optional.absent();
+						return null;
 					}
 					conversionCode = ((Atom)conversionCodeTerm).getName();
 					verifyOrThrow(conversionCode);
@@ -70,7 +68,7 @@ public abstract class ParameterizedSymbolExpander extends CachedTermExpander {
 				}
 			}
 		}
-		return Optional.fromNullable(expanded);
+		return expanded;
 	}
 	
 	public abstract Object resolve(Term symbolTerm);
