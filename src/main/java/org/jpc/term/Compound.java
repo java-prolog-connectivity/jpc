@@ -79,7 +79,7 @@ public final class Compound extends Term {
 	}
 	
 	public boolean hasName(String name) {
-		return hasName(new Atom(name));
+		return getNameString().equals(name);
 	}
 	
 	public boolean hasName(Term term) {
@@ -107,13 +107,13 @@ public final class Compound extends Term {
 		return name;
 	}
 	
-//	public String getNameString() {
-//		if(name instanceof Atom) {
-//			return ((Atom)name).getName();
-//		} else {
-//			throw new RuntimeException("The compound functor is not an atom: " + name);
-//		}
-//	}
+	public String getNameString() {
+		if(name instanceof Atom) {
+			return ((Atom)name).getName();
+		} else {
+			throw new RuntimeException("The compound functor is not an atom: " + name);
+		}
+	}
 	
 	/**
 	 * Returns the arguments of this Compound (1..arity) of this Compound as a List of Term.
