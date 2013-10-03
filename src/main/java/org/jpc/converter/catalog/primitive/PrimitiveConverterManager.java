@@ -17,7 +17,7 @@ public class PrimitiveConverterManager extends ConverterManager<Object, Term> {
 
 	@Override
 	public boolean canConvertFromTerm(Term term, Type toType) {
-		return super.canConvertFromTerm(term, toType) && (!(term instanceof Compound));
+		return (!(term instanceof Compound));
 	}
 	
 }

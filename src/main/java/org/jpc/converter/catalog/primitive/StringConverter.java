@@ -15,10 +15,9 @@ public class StringConverter extends JpcConverter<Object, Term> {
 
 	@Override
 	public <T extends Term> T toTerm(Object object, Class<T> termClass, Jpc context) {
-		String source;
 		Term term = null;
 		if(object instanceof String || object instanceof StringBuilder || object instanceof StringBuffer) {
-			source = object.toString();
+			String source = object.toString();
 			if(termClass.isAssignableFrom(Atom.class))
 				term = new Atom(source);
 			else if(NumberTerm.class.isAssignableFrom(termClass)) {
@@ -35,12 +34,15 @@ public class StringConverter extends JpcConverter<Object, Term> {
 
 	@Override
 	public String fromTerm(Term term, Type type, Jpc context) {
-		if(!String.class.equals(type))
-			throw new JpcConversionException();
+		String termString;
 		if(term instanceof Atom)
-			return ((Atom) term).getName();
+			termString = ((Atom) term).getName();
 		else if(term instanceof NumberTerm)
-			return term.toString();
+			termString = term.toString();
+		else
+			throw new JpcConversionException();
+		if(String.class.equals(type))
+			return termString;
 		else
 			throw new JpcConversionException();
 	}
