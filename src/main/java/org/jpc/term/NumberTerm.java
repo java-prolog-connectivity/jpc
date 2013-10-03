@@ -14,6 +14,10 @@ public abstract class NumberTerm extends Term {
 		this.value = number;
 	}
 	
+	public Number getValue() {
+		return value;
+	}
+	
 	public final int intValue() {
 		return value.intValue();
 	}

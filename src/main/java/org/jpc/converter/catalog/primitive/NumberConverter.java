@@ -43,10 +43,8 @@ public class NumberConverter extends JpcConverter<Number, Term> {
 	@Override
 	public Number fromTerm(Term term, Type type, Jpc context) {
 		Number number = null;
-		if(term instanceof IntegerTerm)
-			number = ((IntegerTerm)term).longValue();
-		else if(term instanceof FloatTerm)
-			number = ((FloatTerm)term).doubleValue();
+		if(term instanceof NumberTerm)
+			number = ((NumberTerm)term).getValue();
 		else if(term instanceof Atom)
 			try {
 				number = NumberFormat.getInstance().parse(((Atom) term).getName());
