@@ -55,6 +55,13 @@ public abstract class ParameterizedSymbolExpander extends CachedTermExpander {
 					case TERM_CONVERSION_BY_MAPPING_SYMBOL:
 						expanded = context.toTerm(resolved);
 						break;
+					case TERM_CONVERSION_BY_MAPPING_AND_REFERENCE_SYMBOL:
+						expanded = context.toTerm(resolved);
+						if(expanded instanceof Compound)
+							context.getJTermManager().jTerm((Compound)expanded, resolved);
+						else
+							throw new RuntimeException("Wrong conversion specifier: " + TERM_CONVERSION_BY_MAPPING_AND_REFERENCE_SYMBOL + " for non compound term: " + expanded);
+						break;
 					case TERM_CONVERSION_BY_REFERENCE_SYMBOL:
 						expanded = JTermUtil.jRefTerm(resolved);
 						break;

@@ -97,6 +97,14 @@ public class JTermManager {
 		return jTerm;
 	}
 	
+	public Object resolve(Compound compound) {
+		Object resolved = null;
+		JTerm<?> jTerm = get(compound);
+		if(jTerm != null)
+			resolved = jTerm.get();
+		return resolved;
+	}
+	
 	public Object resolveOrThrow(Compound compound) {
 		JTerm<?> jTerm = getOrThrow(compound);
 		Object resolved = jTerm.get();
