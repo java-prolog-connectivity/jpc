@@ -1,7 +1,15 @@
 package org.jpc.term.jterm;
 
-public class JRefId {
+import static java.util.Arrays.asList;
 
+import org.jpc.converter.TermConvertable;
+import org.jpc.term.Compound;
+import org.jpc.term.IntegerTerm;
+
+public class JRefId implements TermConvertable<Compound> {
+
+	public static final String JREF_FUNCTOR = "jref";
+	
 	int id;
 
 	public JRefId(int id) {
@@ -13,16 +21,18 @@ public class JRefId {
 	}
 
 	@Override
+	public Compound asTerm() {
+		return new Compound(JREF_FUNCTOR, asList(new IntegerTerm(id)));
+	}
+	
+	@Override
 	public String toString() {
 		return "@"+id;
 	}
 	
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + id;
-		return result;
+		return id;
 	}
 
 	@Override

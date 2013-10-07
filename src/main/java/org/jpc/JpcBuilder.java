@@ -12,7 +12,8 @@ import org.jpc.converter.typesolver.TypeSolverManager;
 import org.jpc.error.handling.DefaultJpcErrorHandler;
 import org.jpc.error.handling.ErrorHandler;
 import org.jpc.error.handling.ErrorHandlerManager;
-import org.jpc.term.jterm.JRefManager;
+import org.jpc.term.jterm.JTermManager;
+import org.jpc.term.jterm.JTermUtil;
 
 public class JpcBuilder {
 
@@ -20,7 +21,7 @@ public class JpcBuilder {
 	private TypeSolverManager typeSolverManager;
 	private InstantiationManager instantiationManager;
 	private ErrorHandlerManager errorHandlerManager;
-	private JRefManager refManager;
+	private JTermManager jTermManager;
 	
 	public static JpcBuilder create() {
 		return new JpcBuilder();
@@ -31,11 +32,11 @@ public class JpcBuilder {
 		this.typeSolverManager = new DefaultTypeSolverManager();
 		this.instantiationManager = new DefaultInstantiationManager();
 		this.errorHandlerManager = new DefaultJpcErrorHandler();
-		this.refManager = JRefManager.getJRefManager();
+		this.jTermManager = JTermUtil.getJTermManager();
 	}
 	
 	public Jpc build() {
-		return new DefaultJpc(converterManager, typeSolverManager, instantiationManager, refManager, errorHandlerManager);
+		return new DefaultJpc(converterManager, typeSolverManager, instantiationManager, jTermManager, errorHandlerManager);
 	}
 
 	public JpcBuilder registerConverter(JpcConverter<?,?> converter) {
@@ -58,8 +59,8 @@ public class JpcBuilder {
 		return this;
 	}
 	
-	public JpcBuilder setRefManager(JRefManager refManager) {
-		this.refManager = refManager;
+	public JpcBuilder setRefManager(JTermManager jTermManager) {
+		this.jTermManager = jTermManager;
 		return this;
 	}
 	

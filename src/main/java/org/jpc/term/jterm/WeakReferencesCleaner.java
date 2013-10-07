@@ -11,10 +11,6 @@ public class WeakReferencesCleaner extends Thread {
 		return referencesCleaner;
 	}
 	
-	public static ReferenceQueue<?> getDefaultReferenceQueue() {
-		return referencesCleaner.getReferenceQueue();
-	}
-	
 	public synchronized static void startWeakReferencesCleaner() {
 		if(!referencesCleaner.isAlive())
 			referencesCleaner.start();
@@ -39,7 +35,7 @@ public class WeakReferencesCleaner extends Thread {
 	public void run() {
 		while(true) {
 			try {
-				IdentifiableWeakReference<?,?> weakRef = (IdentifiableWeakReference<?,?>) referenceQueue.remove();
+				JTerm<?> weakRef = (JTerm<?>) referenceQueue.remove();
 				weakRef.cleanUp();
 			} catch (InterruptedException e) {}
 		}

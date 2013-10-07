@@ -14,7 +14,8 @@ import org.jpc.error.handling.DefaultJpcErrorHandler;
 import org.jpc.error.handling.ErrorHandler;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
-import org.jpc.term.jterm.JRefManager;
+import org.jpc.term.jterm.JTermManager;
+import org.jpc.term.jterm.JTermUtil;
 import org.minitoolbox.reflection.IncompatibleTypesException;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
@@ -23,7 +24,7 @@ public class DefaultJpc extends Jpc {
 	private ConverterManager converterManager;
 	private TypeSolverManager typeSolverManager;
 	private InstantiationManager instantiationManager;
-	private JRefManager refManager;
+	private JTermManager jTermManager;
 	private ErrorHandler errorHandler;
 	//private JpcPreferences preferences;
 
@@ -31,15 +32,15 @@ public class DefaultJpc extends Jpc {
 		this.converterManager = new DefaultJpcConverterManager();
 		this.typeSolverManager = new DefaultTypeSolverManager();
 		this.instantiationManager = new DefaultInstantiationManager();
-		this.refManager = JRefManager.getJRefManager();
+		this.jTermManager = JTermUtil.getJTermManager();
 		this.errorHandler = new DefaultJpcErrorHandler();
 	}
 	
-	public DefaultJpc(ConverterManager converterManager, TypeSolverManager typeSolverManager, InstantiationManager instantiationManager, JRefManager refManager, ErrorHandler errorHandler) {
+	public DefaultJpc(ConverterManager converterManager, TypeSolverManager typeSolverManager, InstantiationManager instantiationManager, JTermManager jTermManager, ErrorHandler errorHandler) {
 		this.typeSolverManager = typeSolverManager;
 		this.converterManager = converterManager;
 		this.instantiationManager = instantiationManager;
-		this.refManager = refManager;
+		this.jTermManager = jTermManager;
 		this.errorHandler = errorHandler;
 		//this.preferences = preferences;
 	}
@@ -83,8 +84,8 @@ public class DefaultJpc extends Jpc {
 	}
 	
 	@Override
-	public JRefManager getRefManager() {
-		return refManager;
+	public JTermManager getJTermManager() {
+		return jTermManager;
 	}
 
 	@Override

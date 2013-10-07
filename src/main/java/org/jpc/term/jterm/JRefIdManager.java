@@ -2,7 +2,6 @@ package org.jpc.term.jterm;
 
 import java.util.Map;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.MapMaker;
 
 /**
@@ -40,18 +39,16 @@ public class JRefIdManager {
 	 * @param o the object to which has been assigned a reference id
 	 * @return the reference id
 	 */
-	public Optional<JRefId> get(Object o) {
-		return Optional.fromNullable(currentRefs.get(o));
+	public JRefId get(Object o) {
+		return currentRefs.get(o);
 	}
 
 	public synchronized JRefId getOrCreate(Object o) {
-		Optional<JRefId> optJRefId = get(o);
-		JRefId ref;
-		if(!optJRefId.isPresent()) {
+		JRefId ref = get(o);
+		if(ref == null) {
 			ref = new JRefId(++counter);
 			currentRefs.put(o, ref);
-		} else
-			ref = optJRefId.get();
+		}
 		return ref;	
 	}
 	

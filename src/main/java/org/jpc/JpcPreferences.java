@@ -33,7 +33,8 @@ public class JpcPreferences extends Preferences {
 	public final static String SYSTEM_TEMP_DIRECTORY_ENV_VAR = "tmp"; //the tmp environment variable
 	
 	//Macros symbols
-	public static final String SUBSTITUTION_OPERATOR = "/";
+	public static final String SUBSTITUTION_OPERATOR = "?";
+	public static final String CONVERSION_SPECIFIER_OPERATOR = "/";
 	public static final String TERM_CONVERSION_BY_MAPPING_SYMBOL = "m";
 	public static final String TERM_CONVERSION_BY_REFERENCE_SYMBOL = "r";
 	public static final String TERM_CONVERSION_BY_MAPPING_AND_REFERENCE_SYMBOL = TERM_CONVERSION_BY_MAPPING_SYMBOL + TERM_CONVERSION_BY_REFERENCE_SYMBOL;
