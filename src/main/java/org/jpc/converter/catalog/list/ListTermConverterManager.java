@@ -1,10 +1,10 @@
-package org.jpc.converter.catalog.listterm;
+package org.jpc.converter.catalog.list;
 
 import java.lang.reflect.Type;
 
 import org.jpc.converter.ConverterManager;
-import org.jpc.converter.catalog.listterm.MapConverter.MapToTermConverter;
-import org.jpc.converter.catalog.listterm.MapConverter.TermToMapConverter;
+import org.jpc.converter.catalog.map.MapConverter.MapToTermConverter;
+import org.jpc.converter.catalog.map.MapConverter.TermToMapConverter;
 import org.jpc.converter.typesolver.MapTypeSolver;
 import org.jpc.term.Term;
 

@@ -1,4 +1,4 @@
-package org.jpc.converter.catalog.listterm;
+package org.jpc.converter.catalog.map;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -8,8 +8,8 @@ import java.util.Map.Entry;
 import org.jpc.Jpc;
 import org.jpc.converter.JpcConversionException;
 import org.jpc.converter.JpcConverter;
-import org.jpc.converter.catalog.listterm.MapEntryConverter.MapEntryToTermConverter;
-import org.jpc.converter.catalog.listterm.MapEntryConverter.TermToMapEntryConverter;
+import org.jpc.converter.catalog.map.MapEntryConverter.MapEntryToTermConverter;
+import org.jpc.converter.catalog.map.MapEntryConverter.TermToMapEntryConverter;
 import org.jpc.converter.typesolver.MapTypeSolver;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
@@ -97,11 +97,5 @@ public abstract class MapConverter<K,V> extends JpcConverter<Map<K,V>, Term> {
 		}
 		
 	}
-	
-	
-	
-	
-	
-
 
 }

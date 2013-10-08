@@ -1,4 +1,4 @@
-package org.jpc.converter.catalog.listterm;
+package org.jpc.converter.catalog.list;
 
 import org.jpc.Jpc;
 import org.jpc.converter.JpcConverter;

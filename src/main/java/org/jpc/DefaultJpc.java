@@ -1,11 +1,13 @@
 package org.jpc;
 
 import java.lang.reflect.Type;
+import java.util.Objects;
 
 import org.jpc.converter.ConverterManager;
 import org.jpc.converter.DefaultJpcConverterManager;
-import org.jpc.converter.TermConvertable;
+import org.jpc.converter.JpcConversionException;
 import org.jpc.converter.catalog.NullConverter;
+import org.jpc.converter.catalog.SystemConverterManager;
 import org.jpc.converter.instantiation.DefaultInstantiationManager;
 import org.jpc.converter.instantiation.InstantiationManager;
 import org.jpc.converter.typesolver.DefaultTypeSolverManager;
@@ -21,6 +23,8 @@ import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
 public class DefaultJpc extends Jpc {
 
+	private NullConverter nullConverter = new NullConverter();
+	private SystemConverterManager systemConverterManager = new SystemConverterManager();
 	private ConverterManager converterManager;
 	private TypeSolverManager typeSolverManager;
 	private InstantiationManager instantiationManager;
@@ -47,30 +51,45 @@ public class DefaultJpc extends Jpc {
 	
 	@Override
 	public <T> T fromTerm(Term term, Type type) {
+		Objects.requireNonNull(term);
+		if(!Object.class.equals(type) && TypeWrapper.wrap(type).isAssignableFrom(term.getClass()))
+			return (T) term;
 		if(term instanceof Var)
-			return (T) new NullConverter().fromTerm((Var) term, type, this);
+			return (T) nullConverter.fromTerm((Var)term, type, this);
+		try {
+			return (T) systemConverterManager.fromTerm(term, type, this);
+		} catch(JpcConversionException e) {}
+		
 		Type termType = getType(term);
 		if(termType != null) {
 			try {
 				type = TypeWrapper.wrap(termType).mostSpecificType(type); //will throw an exception if the types are not compatible
 			} catch(IncompatibleTypesException e) {} //do nothing
 		}
-		return (T) converterManager.fromTerm(term, type, this);
+//		try {
+			return (T) converterManager.fromTerm(term, type, this);
+//		} catch(JpcConversionException e) {
+//			if(Object.class.equals(type))
+//				return (T) term;
+//			else
+//				throw e;
+//		}
 	}
 	
 	@Override
 	public <T extends Term> T toTerm(Object object, Class<T> termClass) {
 		if(object==null) {
 			if(termClass.isAssignableFrom(Var.class))
-				return (T) new NullConverter().toTerm(object, Var.class, this);
+				return (T) nullConverter.toTerm(object, this);
 			else
 				throw new NullPointerException("A Null object cannot be transformed to a logic term of class " + termClass);
-		} else if(object instanceof Term)
-			return (T) object; // a cast exception if the object is already a term, which is not compatible with the term class sent as argument
-		else if(object instanceof TermConvertable)
-			return (T) ((TermConvertable)object).asTerm();
-		else
-			return (T) converterManager.toTerm(object, termClass, this);
+		} 
+		if(termClass.isAssignableFrom(object.getClass()))
+			return (T) object;
+		try {
+			return systemConverterManager.toTerm(object, termClass, this);
+		} catch(JpcConversionException e) {}
+		return (T) converterManager.toTerm(object, termClass, this);
 	}
 	
 	@Override

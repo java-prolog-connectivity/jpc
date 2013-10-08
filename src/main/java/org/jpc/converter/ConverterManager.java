@@ -24,6 +24,10 @@ public class ConverterManager<ObjectType,TermType extends Term> extends JpcConve
 	public void register(JpcConverter<?,?> converter) {
 		converters.add(0, converter);
 	}
+	
+	public void registerLast(JpcConverter<?,?> converter) {
+		converters.add(converter);
+	}
 
 	@Override
 	public ObjectType fromTerm(TermType term, Type type, Jpc context) {

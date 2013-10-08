@@ -10,10 +10,10 @@ import org.jpc.term.Var;
 public class NullConverter extends JpcConverter<Object, Var> {
 
 	@Override
-	public <T extends Var> T toTerm(Object o, Class<T> termClass, Jpc context) {
+	public Var toTerm(Object o, Jpc context) {
 		if(o != null)
 			throw new JpcConversionException();
-		return (T) Var.ANONYMOUS_VAR;
+		return Var.ANONYMOUS_VAR;
 	}
 	
 	@Override

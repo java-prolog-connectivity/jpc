@@ -198,7 +198,8 @@ public class DefaultTermConverterTest {
 		o = null;
 		System.gc();
 		try {
-			jpc.fromTerm(jRef);
+			Object x = jpc.fromTerm(jRef);
+			
 			fail();
 		} catch(RuntimeException e) {}
 	}
@@ -227,6 +228,11 @@ public class DefaultTermConverterTest {
 	
 	// *** TERM TO OBJECTS TESTS ***
 
+	@Test
+	public void testTermFromTerm() {
+		assertEquals(new Atom("apple"), jpc.fromTerm(new Atom("apple"), Term.class));
+	}
+	
 	@Test
 	public void testVariableToNull() {
 		assertNull(jpc.fromTerm(new Var("X")));
@@ -328,7 +334,7 @@ public class DefaultTermConverterTest {
 		Compound c2 = new Compound("#", asList(new Atom("orange"), new IntegerTerm(20)));
 		Term listTerm = listTerm(c1, c2);
 		try {
-			jpc.fromTerm(listTerm);
+			Object x = jpc.fromTerm(listTerm);
 			fail();
 		} catch(Exception e) {}
 	}
