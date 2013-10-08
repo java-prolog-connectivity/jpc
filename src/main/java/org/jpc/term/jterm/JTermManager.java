@@ -8,6 +8,13 @@ import org.jpc.term.Compound;
 
 import com.google.common.base.Function;
 
+/**
+ * Instances of this class allow to create term representation of arbitrary Java objects.
+ * This term representations can be explicitly provided by a programmer (they must be compound terms),
+ * or they may be explicitly generated if no provided. In that case, references will have the form 'jref(id)', where id uniquely identifies the reference (in the current class loader).
+ * @author sergioc
+ *
+ */
 public class JTermManager {
 	
 	private Map<String, RefMap> knownReferences;
@@ -16,13 +23,16 @@ public class JTermManager {
 	public JTermManager(ReferenceQueue<?> referenceQueue) {
 		this.referenceQueue = referenceQueue;
 		knownReferences = new HashMap<>();
-		createRefMap(JRefId.JREF_FUNCTOR, IndexArgumentFunction.firstArgumentFunction());
+		addIndexFunction(JRefId.JREF_FUNCTOR, IndexArgumentFunction.firstArgumentFunction());
 	}
 
 	public ReferenceQueue<?> getReferenceQueue() {
 		return referenceQueue;
 	}
 
+	public void addIndexFunction(String name, Function<Compound, Object> indexFunction) {
+		createRefMap(name, indexFunction);
+	}
 	
 	private RefMap createRefMap(String name, Function<Compound, Object> indexFunction) {
 		RefMap refMap = new RefMap(indexFunction);

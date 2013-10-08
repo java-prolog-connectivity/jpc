@@ -7,15 +7,15 @@ import org.jpc.converter.TermConvertable;
 import org.jpc.term.Compound;
 
 /**
- * A weak reference with a term id.
+ * A weak reference associated with an arbitrary term identifier (a Compound term).
  * @author sergioc
  *
- * @param <REF_TYPE> the reference class
+ * @param <REF_TYPE> the reference type
  */
 public class JTerm<REF_TYPE> extends WeakReference<REF_TYPE> implements TermConvertable<Compound> {
 	
-	private Compound refId;
-	private JTermManager jTermManager;
+	private Compound refId; //the term identifier for this reference.
+	private JTermManager jTermManager; //the term manager of this reference.
 	
 	public JTerm(REF_TYPE referent, ReferenceQueue<REF_TYPE> referenceQueue, Compound refId, JTermManager jTermManager) {
 		super(referent, referenceQueue);
@@ -27,11 +27,13 @@ public class JTerm<REF_TYPE> extends WeakReference<REF_TYPE> implements TermConv
 		return refId;
 	}
 
-	public void cleanUp() {
+	/**
+	 * Callback method that should be invoked when the referenced object has been garbage collected.
+	 */
+	void cleanUp() {
 		jTermManager.remove(getRefId());
 	}
 	
-
 	@Override
 	public Compound asTerm() {
 		return getRefId();
@@ -49,6 +51,8 @@ public class JTerm<REF_TYPE> extends WeakReference<REF_TYPE> implements TermConv
 
 	@Override
 	public boolean equals(Object obj) {
+		if(this == obj)
+			return true;
 		if(obj instanceof JTerm) {
 			return refId.equals(((JTerm<?>)obj).getRefId()) && 
 					(this.get() == ((JTerm<?>)obj).get());

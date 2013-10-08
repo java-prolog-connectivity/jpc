@@ -6,14 +6,21 @@ import org.jpc.converter.TermConvertable;
 import org.jpc.term.Compound;
 import org.jpc.term.IntegerTerm;
 
+/**
+ * The id of an object reference.
+ * @author sergioc
+ *
+ */
 public class JRefId implements TermConvertable<Compound> {
 
 	public static final String JREF_FUNCTOR = "jref";
 	
-	int id;
-
+	private final int id;
+	private final Compound term;
+	
 	public JRefId(int id) {
 		this.id = id;
+		term = new Compound(JREF_FUNCTOR, asList(new IntegerTerm(id)));
 	}
 
 	public int getId() {
@@ -22,7 +29,7 @@ public class JRefId implements TermConvertable<Compound> {
 
 	@Override
 	public Compound asTerm() {
-		return new Compound(JREF_FUNCTOR, asList(new IntegerTerm(id)));
+		return term;
 	}
 	
 	@Override
