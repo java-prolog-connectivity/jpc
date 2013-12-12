@@ -72,7 +72,7 @@ public class PrologResourceLoader {
 	
 	
 	/**
-	 * Given a resource name (possibly inside a jar) answers a Term that represents the resource in the file system. The resource will be copied to a tmp location
+	 * Given a resource id (possibly inside a jar) answers a Term that represents the resource in the file system. The resource will be copied to a tmp location
 	 * @param resource
 	 * @return
 	 */
@@ -85,13 +85,13 @@ public class PrologResourceLoader {
 			throw new JpcException("The resource to load is not a file"); //TODO maybe a smart default could be implemented when attempting to load a package/directory instead of a concrete file, for example, try to look for a file in such directory called "load_all"
 		}
 		URL resourceUrl = getResourceUrl(resource); 
-		if(resourceUrl == null) { //null means that a resource with that exact name does not exist
-			Set<String> resourcesWithAnyExtension = ReflectionUtil.resourcesWithAnyExtension(resource, classLoaders); //try to find resources with the given name and any file extension
+		if(resourceUrl == null) { //null means that a resource with that exact id does not exist
+			Set<String> resourcesWithAnyExtension = ReflectionUtil.resourcesWithAnyExtension(resource, classLoaders); //try to find resources with the given id and any file extension
 			if(resourcesWithAnyExtension.isEmpty())
 				throw new RuntimeException("Impossible to locate resource " + resource);
 			resource = resourcesWithAnyExtension.iterator().next();
 			if(resourcesWithAnyExtension.size() > 1)
-				logger.warn("Multiple resources with the same name but different extensions: " + Joiner.on(", ").join(resourcesWithAnyExtension) + ". Trying with this: " + resource);
+				logger.warn("Multiple resources with the same id but different extensions: " + Joiner.on(", ").join(resourcesWithAnyExtension) + ". Trying with this: " + resource);
 			resourceUrl = getResourceUrl(resource);
 		}
 		URL baseUrl = null;
@@ -121,7 +121,7 @@ public class PrologResourceLoader {
 		Set<URL> urls = ReflectionUtil.getResources(resource, classLoaders);
 		if(urls.size() > 0) {
 			url = urls.iterator().next(); //take the first one
-			if(urls.size() > 1) //in case there are many resources with the same name
+			if(urls.size() > 1) //in case there are many resources with the same id
 				logger.warn("Resource " + resource + " found in multiple locations: " + Joiner.on(", ").join(urls) +". Chosen the one in: " + url);
 		} 
 		return url;

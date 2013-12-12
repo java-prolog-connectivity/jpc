@@ -6,33 +6,32 @@ import static org.jpc.engine.prolog.PrologConstants.TRUE;
 
 import java.lang.reflect.Type;
 
+import org.jconverter.converter.ConversionException;
 import org.jpc.Jpc;
-import org.jpc.converter.JpcConversionException;
-import org.jpc.converter.JpcConverter;
+import org.jpc.converter.BidirectionalTermConverter;
 import org.jpc.term.Atom;
-import org.jpc.term.Term;
 
-public class BooleanConverter extends JpcConverter<Boolean, Atom> {
+public class BooleanConverter implements BidirectionalTermConverter<Boolean, Atom> {
 
 	@Override
-	public <T extends Atom> T toTerm(Boolean bool, Class<T> termClass, Jpc context) {
-		Term term;
+	public Atom toTerm(Boolean bool, Class<Atom> termClass, Jpc context) {
+		Atom term;
 		if(bool)
 			term = Atom.TRUE_TERM;
 		else
 			term = Atom.FAIL_TERM;
-		return (T) term;
+		return term;
 	}
 	
 	@Override
 	public Boolean fromTerm(Atom atom, Type type, Jpc context) {
 		if(!Boolean.class.equals(type))
-			throw new JpcConversionException();
+			throw new ConversionException();
 		if(atom.getName().equals(TRUE))
 			return true;
 		else if(atom.getName().equals(FAIL) || atom.getName().equals(FALSE))
 			return false;
 		else
-			throw new JpcConversionException();
+			throw new ConversionException();
 	}
 }

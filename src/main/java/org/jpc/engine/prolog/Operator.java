@@ -43,7 +43,7 @@ public class Operator implements TermConvertable<Atom> {
 
 	/**
 	 * Constructs an operator from a term having as structure [P,S,N]
-	 * Where P is the operator's priority, S is its specifier (an integer term) and N the operator's name
+	 * Where P is the operator's priority, S is its specifier (an integer term) and N the operator's id
 	 * @param operatorTerm the term representing an operator
 	 * @return an operator
 	 */

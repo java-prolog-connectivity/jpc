@@ -31,13 +31,13 @@ public final class Var extends Term {
 	}
 
 	public static boolean isAnonymousVariableName(String variableName) {
-		return variableName.substring(0, 1).equals(ANONYMOUS_VAR_NAME); //the variable name is equals to "_" or starts with "_"
+		return variableName.substring(0, 1).equals(ANONYMOUS_VAR_NAME); //the variable id is equals to "_" or starts with "_"
 	}
 	
 	/**
-	 * Wether a logic variable has a valid name
-	 * @param variableName the name of the variable
-	 * @return wether a logic variable has a valid name
+	 * Wether a logic variable has a valid id
+	 * @param variableName the id of the variable
+	 * @return wether a logic variable has a valid id
 	 */
 	public static boolean isValidVariableName(String variableName) {
 		if(variableName.isEmpty())
@@ -46,14 +46,14 @@ public final class Var extends Term {
 	}
 	
 	
-	private final String name; // the name of this Variable
+	private final String name; // the id of this Variable
 	
 	public Var() {
 		this.name = ANONYMOUS_VAR_NAME;
 	}
 	
 	public Var(String name) {
-		checkArgument(isValidVariableName(name), "The variable name " + name + " is not valid");
+		checkArgument(isValidVariableName(name), "The variable id " + name + " is not valid");
 		this.name = name;
 	}
 	
@@ -62,9 +62,9 @@ public final class Var extends Term {
 	}
 	
 	/**
-	 * returns the lexical name of this Variable
+	 * returns the lexical id of this Variable
 	 * 
-	 * @return the lexical name of this Variable
+	 * @return the lexical id of this Variable
 	 */
 	public final String getName() {
 		return this.name;

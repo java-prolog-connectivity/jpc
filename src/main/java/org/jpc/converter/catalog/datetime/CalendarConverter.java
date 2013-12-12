@@ -4,44 +4,31 @@ import java.lang.reflect.Type;
 import java.util.Calendar;
 
 import org.jpc.Jpc;
-import org.jpc.converter.JpcConversionException;
-import org.jpc.converter.JpcConverter;
+import org.jpc.converter.BidirectionalTermConverter;
 import org.jpc.term.Atom;
-import org.jpc.term.FloatTerm;
-import org.jpc.term.IntegerTerm;
 import org.jpc.term.Term;
 
-public class CalendarConverter extends JpcConverter<Calendar, Term> {
+public class CalendarConverter<T extends Calendar, U extends Term> implements BidirectionalTermConverter<T, U> {
 
 	@Override
-	public <T extends Term> T toTerm(Calendar calendar, Class<T> termClass, Jpc context) {
-		long timeInMilliSeconds = calendar.getTimeInMillis();
-		Term term = null;
-		if(termClass.isAssignableFrom(IntegerTerm.class))
-			term = new IntegerTerm(timeInMilliSeconds);
-		else if(termClass.equals(FloatTerm.class))
-			term = new FloatTerm(timeInMilliSeconds);
-		else if(termClass.equals(Atom.class))
-			term = new Atom(String.valueOf(timeInMilliSeconds));
-		if(term == null)
-			throw new JpcConversionException();
-		return (T) term;
+	public U toTerm(T calendar, Class<U> termClass, Jpc context) {
+		Object primitiveCalendar;
+		if(termClass.equals(Atom.class))
+			primitiveCalendar = context.convert(calendar, String.class);  //according to how the context is configured, this can be the string representation of the calendar or something else
+		else
+			primitiveCalendar = context.convert(calendar, Long.class);  //the default context will return the time in milliseconds.
+		return context.toTerm(primitiveCalendar, termClass);
 	}
 
 
 	@Override
-	public Calendar fromTerm(Term term, Type type, Jpc context) {
-		Calendar calendar;
-		long timeInMilliSeconds;
-		try {
-			calendar = context.instantiate(type);
-			timeInMilliSeconds = context.fromTerm(term, Long.class);
-		} catch(Exception e) {
-			throw new JpcConversionException();
-		}
-
-		calendar.setTimeInMillis(timeInMilliSeconds);
-		return calendar;
+	public T fromTerm(U term, Type targetType, Jpc context) {
+		Object primitiveCalendar;
+		if(term instanceof Atom)
+			primitiveCalendar = context.fromTerm(term, String.class);
+		else
+			primitiveCalendar = context.fromTerm(term, Long.class);
+		return context.convert(primitiveCalendar, targetType);
 	}
 	
 }

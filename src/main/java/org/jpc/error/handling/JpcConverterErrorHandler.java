@@ -1,7 +1,7 @@
 package org.jpc.error.handling;
 
+import org.jconverter.converter.ConversionException;
 import org.jpc.Jpc;
-import org.jpc.converter.JpcConversionException;
 import org.jpc.term.Term;
 
 /**
@@ -17,7 +17,7 @@ public class JpcConverterErrorHandler implements ErrorHandler {
 		RuntimeException ex;
 		try {
 			ex = context.fromTerm(errorTerm, RuntimeException.class);
-		} catch(JpcConversionException ce) {
+		} catch(ConversionException ce) {
 			return false;
 		}
 		throw ex;

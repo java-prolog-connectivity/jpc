@@ -4,15 +4,14 @@ import static org.jpc.converter.catalog.error.IsoPrologErrorConverter.isIsoProlo
 
 import java.lang.reflect.Type;
 
+import org.jconverter.converter.ConversionException;
 import org.jpc.Jpc;
-import org.jpc.converter.JpcConversionException;
-import org.jpc.converter.JpcConverter;
-import org.jpc.error.DomainError;
+import org.jpc.converter.FromTermConverter;
 import org.jpc.error.ExistenceError;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
 
-public class ExistenceErrorConverter extends JpcConverter<ExistenceError, Compound> {
+public class ExistenceErrorConverter implements FromTermConverter<Compound, ExistenceError> {
 
 	public static final String EXISTENCE_ERROR_FUNCTOR = "existence_error";
 	
@@ -23,7 +22,7 @@ public class ExistenceErrorConverter extends JpcConverter<ExistenceError, Compou
 	@Override
 	public ExistenceError fromTerm(Compound term, Type type, Jpc context) {
 		if(!isExistenceError(term) || !type.equals(ExistenceError.class))
-			throw new JpcConversionException();
+			throw new ConversionException();
 		return new ExistenceError(term);
 	}
 	

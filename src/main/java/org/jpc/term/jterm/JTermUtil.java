@@ -55,10 +55,10 @@ public class JTermUtil {
 	}
 	
 	/**
-	 * Registers an index function with a compound name.
-	 * @param name the compound name associated with an index function.
+	 * Registers an index function with a compound id.
+	 * @param id the compound id associated with an index function.
 	 * @param indexFunction the index function.
-	 * @throws RuntimeException if an index associated with the given name already exists.
+	 * @throws RuntimeException if an index associated with the given id already exists.
 	 */
 	public static void addIndexFunction(String name, Function<Compound, Object> indexFunction) {
 		getJTermManager().addIndexFunction(name, indexFunction);

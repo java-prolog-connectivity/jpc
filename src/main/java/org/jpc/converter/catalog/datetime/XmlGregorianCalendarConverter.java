@@ -8,23 +8,21 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.jpc.Jpc;
-import org.jpc.converter.JpcConversionException;
-import org.jpc.converter.JpcConverter;
+import org.jpc.converter.BidirectionalTermConverter;
 import org.jpc.term.Term;
 
-public class XmlGregorianCalendarConverter extends JpcConverter<XMLGregorianCalendar, Term> {
+public class XmlGregorianCalendarConverter<T extends Term> implements BidirectionalTermConverter<XMLGregorianCalendar, T> {
 
 	@Override
-	public <T extends Term> T toTerm(XMLGregorianCalendar calendar, Class<T> termClass, Jpc context) {
-		return new CalendarConverter().toTerm(calendar.toGregorianCalendar(), termClass, context);
+	public T toTerm(XMLGregorianCalendar calendar, Class<T> termClass, Jpc context) {
+		return context.toTerm(calendar.toGregorianCalendar(), termClass);
 	}
 
 	@Override
-	public XMLGregorianCalendar fromTerm(Term term, Type type, Jpc context) {
-		if(!XMLGregorianCalendar.class.equals(type))
-			throw new JpcConversionException();
+	public XMLGregorianCalendar fromTerm(T term, Type targetType, Jpc context) {
+		GregorianCalendar gregCalendar = context.fromTerm(term, GregorianCalendar.class);
 		try {
-			return DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)context.fromTerm(term, GregorianCalendar.class));
+			return DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCalendar);
 		} catch (DatatypeConfigurationException e) {
 			throw new RuntimeException(e);
 		}

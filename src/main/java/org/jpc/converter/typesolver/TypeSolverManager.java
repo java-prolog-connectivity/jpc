@@ -1,30 +1,36 @@
 package org.jpc.converter.typesolver;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.jpc.term.Term;
+import org.jpc.converter.typesolver.catalog.ListTypeSolver;
+import org.jpc.converter.typesolver.catalog.MapTypeSolver;
+import org.jpc.converter.typesolver.catalog.PrimitiveTypeSolver;
 
-public class TypeSolverManager implements TermTypeSolver {
 
-	List<TermTypeSolver> typeSolvers;
+public abstract class TypeSolverManager {
 	
-	public TypeSolverManager() {
-		typeSolvers = new ArrayList<>();
+	public static final Object DEFAULT_KEY = new Object();
+	
+	/**
+	 * Registers default type solvers in the given type solver manager.
+	 * @param typeSolverManager a type solver manager.
+	 */
+	public static void registerDefaults(TypeSolverManager typeSolverManager) {
+		typeSolverManager.register(new PrimitiveTypeSolver());
+		typeSolverManager.register(new ListTypeSolver());
+		typeSolverManager.register(new MapTypeSolver());
 	}
 	
-	public void register(TermTypeSolver typeSolver) {
-		typeSolvers.add(0, typeSolver);
+	public void register(TypeSolver typeSolver) {
+		register(DEFAULT_KEY, typeSolver);
 	}
 	
-	public Type getType(Term term) {
-		for(TermTypeSolver typeSolver : typeSolvers) {
-			Type type = typeSolver.getType(term);
-			if(type != null)
-				return type;
-		}
-		return null;
+	public abstract void register(Object typeSolverKey, final TypeSolver typeSolver);
+	
+	public Type getType(Object object) {
+		return getType(DEFAULT_KEY, object);
 	}
 	
+	public abstract Type getType(Object typeSolverKey, Object object);
+
 }

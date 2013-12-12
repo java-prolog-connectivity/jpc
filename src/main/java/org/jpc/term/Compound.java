@@ -25,7 +25,7 @@ import com.google.common.base.Joiner;
 public final class Compound extends Term {
 
 	/**
-	 * the name of this Compound
+	 * the id of this Compound
 	 */
 	private final Term name;
 	/**
@@ -39,9 +39,9 @@ public final class Compound extends Term {
 	}
 	
 	/**
-	 * Creates a Compound with name and args.
+	 * Creates a Compound with id and args.
 	 * 
-	 * @param   name   the name of this Compound
+	 * @param   id   the id of this Compound
 	 * @param   args   the (one or more) arguments of this Compound
 	 */
 	public Compound(Term name, List<? extends Term> args) {
@@ -87,9 +87,9 @@ public final class Compound extends Term {
 	}
 
 	/**
-	 * Tests whether this Compound's functor has (String) 'name' and 'arity'.
+	 * Tests whether this Compound's functor has (String) 'id' and 'arity'.
 	 * 
-	 * @return whether this Compound's functor has (String) 'name' and 'arity'
+	 * @return whether this Compound's functor has (String) 'id' and 'arity'
 	 */
 	
 	@Override
@@ -99,9 +99,9 @@ public final class Compound extends Term {
 	
 	
 	/**
-	 * Returns the name of this Compound.
+	 * Returns the id of this Compound.
 	 * 
-	 * @return the name of this Compound
+	 * @return the id of this Compound
 	 */
 	public Term getName() {
 		return name;
@@ -127,7 +127,7 @@ public final class Compound extends Term {
 	
 	
 	/**
-	 * Returns a prefix functional representation of a Compound of the form name(arg1,...),
+	 * Returns a prefix functional representation of a Compound of the form id(arg1,...),
 	 * 
 	 * @return  string representation of an Compound
 	 */

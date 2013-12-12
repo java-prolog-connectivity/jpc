@@ -1,15 +1,16 @@
-package org.jpc.converter.typesolver;
+package org.jpc.converter.typesolver.catalog;
 
 import java.lang.reflect.Type;
 
+import org.jpc.converter.typesolver.TypeSolver;
+import org.jpc.converter.typesolver.UnrecognizedObjectException;
 import org.jpc.term.Atom;
 import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
 import org.jpc.term.Term;
-import org.jpc.term.Var;
 
 
-public class PrimitiveTypeSolver implements TermTypeSolver {
+public class PrimitiveTypeSolver implements TypeSolver<Term> {
 
 	@Override
 	public Type getType(Term term) {
@@ -24,9 +25,7 @@ public class PrimitiveTypeSolver implements TermTypeSolver {
 			return Long.class;
 		if(term instanceof FloatTerm)
 			return Double.class;
-		if(term instanceof Var)
-			return Object.class; //should be mapped to null
-		return null;
+		throw new UnrecognizedObjectException();
 	}
 
 }

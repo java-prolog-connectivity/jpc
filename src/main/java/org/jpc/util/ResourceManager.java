@@ -94,7 +94,7 @@ public class ResourceManager {
 
 	
 	/**
-	 * Answers a convenient name of a tmp subdirectory for a given url
+	 * Answers a convenient id of a tmp subdirectory for a given url
 	 * @param url
 	 * @return
 	 */

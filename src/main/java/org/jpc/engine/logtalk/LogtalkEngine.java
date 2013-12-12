@@ -113,7 +113,7 @@ public class LogtalkEngine extends PrologEngineProxy {
 	/**
 	 * 
 	 * @param objectName
-	 * @return a list of arities of all the Logtalk objects in the logic side having as name the parameter of the Java method
+	 * @return a list of arities of all the Logtalk objects in the logic side having as id the parameter of the Java method
 	 */
 	//currently assuming that the cardinalities of the objects in the logtalk side are returned ordered from the lowest to the highest
 	public List<Integer> objectArities(String objectName) {

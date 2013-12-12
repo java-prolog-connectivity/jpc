@@ -1,23 +1,43 @@
 package org.jpc.converter.catalog.list;
 
+import java.lang.reflect.Type;
 import java.util.Iterator;
+import java.util.List;
 
+import org.jconverter.converter.ConversionException;
 import org.jpc.Jpc;
-import org.jpc.converter.JpcConversionException;
-import org.jpc.converter.JpcConverter;
+import org.jpc.converter.BidirectionalTermConverter;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
+import org.minitoolbox.reflection.javatype.ParameterizedTypeImpl;
+import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
-public class IteratorConverter<E> extends JpcConverter<Iterator<E>, Term> {
+public class IteratorConverter<T extends Term> implements BidirectionalTermConverter<Iterator, T> {
 
 	@Override
-	public <T extends Term> T toTerm(Iterator<E> it, Class<T> termClass, Jpc context) {
+	public T toTerm(Iterator it, Class<T> termClass, Jpc context) {
 		if(!Term.class.isAssignableFrom(termClass))
-			throw new JpcConversionException();
+			throw new ConversionException();
 		ListTerm terms = new ListTerm();
 		while(it.hasNext())
 			terms.add(context.toTerm(it.next()));
 		return (T) terms.asTerm();
+	}
+
+	@Override
+	public Iterator fromTerm(T term, Type targetType, Jpc context) {
+		TypeWrapper wrappedTargetType = TypeWrapper.wrap(targetType);
+		Type componentType = null;
+		TypeWrapper iteratorTypeWrapper = wrappedTargetType.as(Iterator.class);
+		if(iteratorTypeWrapper.hasActualTypeArguments())
+			componentType = iteratorTypeWrapper.getActualTypeArguments()[0];
+		else
+			componentType = Object.class;
+		
+		Type listType = new ParameterizedTypeImpl(new Type[]{componentType}, null, List.class);
+		
+		List list = (List) new CollectionConverter().fromTerm(term, listType, context);
+		return list.iterator();
 	}
 
 }

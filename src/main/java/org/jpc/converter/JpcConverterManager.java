@@ -4,6 +4,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import javassist.bytecode.SignatureAttribute.ObjectType;
+
+import org.jconverter.converter.ConversionException;
+import org.jconverter.converter.Converter;
 import org.jpc.Jpc;
 import org.jpc.term.Term;
 import org.minitoolbox.reflection.IncompatibleTypesException;
@@ -11,21 +15,23 @@ import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ConverterManager<ObjectType,TermType extends Term> extends JpcConverter<ObjectType,TermType> {
+//TODO delete
+public class JpcConverterManager {
+
+	/*
+	private static Logger logger = LoggerFactory.getLogger(JpcConverterManager.class);
 	
-	private static Logger logger = LoggerFactory.getLogger(ConverterManager.class);
+	private List<Converter<?,?>> converters;
 	
-	private List<JpcConverter<?,?>> converters;
-	
-	public ConverterManager() {
-		converters = new ArrayList<JpcConverter<?,?>>();
+	public JpcConverterManager() {
+		converters = new ArrayList<Converter<?,?>>();
 	}
 	
-	public void register(JpcConverter<?,?> converter) {
+	public void register(Converter<?,?> converter) {
 		converters.add(0, converter);
 	}
 	
-	public void registerLast(JpcConverter<?,?> converter) {
+	public void registerLast(Converter<?,?> converter) {
 		converters.add(converter);
 	}
 
@@ -33,7 +39,7 @@ public class ConverterManager<ObjectType,TermType extends Term> extends JpcConve
 	public ObjectType fromTerm(TermType term, Type type, Jpc context) {
 		TypeWrapper typeWrapper = TypeWrapper.wrap(type);
 
-		for(JpcConverter converter : converters) {
+		for(Converter converter : converters) {
 			Type bestTypeForConverter;
 			Type converterObjectType = converter.getObjectType();
 		
@@ -52,19 +58,19 @@ public class ConverterManager<ObjectType,TermType extends Term> extends JpcConve
 						return (ObjectType) converter.fromTerm(term, bestTypeForConverter, context); //the idea of these two alternatives is to allow the programmer to override either fromTerm/2 (if the type argument is not necessary) or fromTerm/3 (more verbose)
 					}
 				} catch(UnsupportedOperationException|//exception thrown if the converter does not support conversion from term to objects
-						JpcConversionException e){//converters should throw this exception if they are not able to convert a term to a Java object.
+						ConversionException e){//converters should throw this exception if they are not able to convert a term to a Java object.
 					//just try the next converter if any of these exceptions occurs
 				}
 			}
 		}
-		throw new JpcConversionException(term.toString(), type.toString()); //no converter was able to convert the term to the desired type
+		throw new ConversionException(term.toString(), type.toString()); //no converter was able to convert the term to the desired type
 	}
 	
 	@Override
 	public <T extends TermType> T toTerm(ObjectType object, Class<T> termClass, Jpc context) {
 		TypeWrapper termClassWrapper = TypeWrapper.wrap(termClass);
 		
-		for(JpcConverter converter : converters) {
+		for(Converter converter : converters) {
 			Class<? extends Term> bestTermClassForConverter;
 			Type converterTermType = converter.getTermType();
 			
@@ -82,12 +88,12 @@ public class ConverterManager<ObjectType,TermType extends Term> extends JpcConve
 						return (T) converter.toTerm(object, bestTermClassForConverter, context);
 					}
 				} catch(UnsupportedOperationException|//exception thrown if the converter does not support conversion to terms
-						JpcConversionException e) { //exception thrown if the converter finds that it is unable to convert certain object to a term.
+						ConversionException e) { //exception thrown if the converter finds that it is unable to convert certain object to a term.
 					//just try the next converter if any of these exceptions occurs
 				} 
 			}
 		}
-		throw new JpcConversionException(object.toString(), Term.class.getName());
+		throw new ConversionException(object.toString(), Term.class.getName());
 	}
-
+	*/
 }

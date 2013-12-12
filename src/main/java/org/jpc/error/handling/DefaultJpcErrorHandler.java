@@ -2,6 +2,7 @@ package org.jpc.error.handling;
 
 import org.jpc.Jpc;
 import org.jpc.converter.catalog.error.PrologErrorConverter;
+import org.jpc.error.PrologError;
 import org.jpc.term.Term;
 
 public class DefaultJpcErrorHandler extends ErrorHandlerManager {
@@ -18,7 +19,7 @@ public class DefaultJpcErrorHandler extends ErrorHandlerManager {
 	}
 	
 	private void defaultHandling(Term errorTerm, Term goal, Jpc context) {
-		throw new PrologErrorConverter().fromTerm(errorTerm, context); //Generic (non ISO) Prolog error.
+		throw new PrologErrorConverter().fromTerm(errorTerm, PrologError.class, context); //Generic (non ISO) Prolog error.
 	}
 
 }

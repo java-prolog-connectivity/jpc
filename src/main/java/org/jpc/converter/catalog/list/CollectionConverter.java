@@ -4,27 +4,35 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
 
+import org.jconverter.converter.ConversionException;
 import org.jpc.Jpc;
-import org.jpc.converter.JpcConversionException;
-import org.jpc.converter.JpcConverter;
+import org.jpc.converter.FromTermConverter;
 import org.jpc.term.Term;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
-public class CollectionConverter<E> extends JpcConverter<Collection<E>, Term> {
+public class CollectionConverter<U extends Term,T extends Collection> implements FromTermConverter<U,T> {
 	
 	@Override
-	public Collection<E> fromTerm(Term listTerm, Type type, Jpc context) {
-		Collection<E> collection = null;
+	public T fromTerm(Term listTerm, Type type, Jpc context) {
+		T collection = null;
 		List<Term> listMembers = null;
 		try {
 			collection = context.instantiate(type); //instantiate the collection type
 			listMembers = listTerm.asList();
 		} catch(Exception e) {
-			throw new JpcConversionException();
+			throw new ConversionException();
 		}
-		Type memberType = TypeWrapper.wrap(type).as(Collection.class).getActualTypeArgumentsOrUpperBounds()[0];
+		
+		TypeWrapper listTypeWrapper = TypeWrapper.wrap(type);
+		Type componentType;
+		if(listTypeWrapper.hasActualTypeArguments()) {
+			componentType = listTypeWrapper.getActualTypeArguments()[0];
+		} else {
+			componentType = Object.class;
+		}
+		
 		for(Term term : listMembers) {
-			E convertedMember = context.fromTerm(term, memberType);
+			Object convertedMember = context.fromTerm(term, componentType);
 			collection.add(convertedMember);
 		}
 		return collection;

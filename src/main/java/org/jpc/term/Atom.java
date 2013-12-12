@@ -33,7 +33,7 @@ public final class Atom extends Term {
 	}
 	
 	/**
-	 * @param   name   the Atom's name (unquoted)
+	 * @param   id   the Atom's id (unquoted)
 	 */
 	public Atom(String name) {
 		this.name = name;

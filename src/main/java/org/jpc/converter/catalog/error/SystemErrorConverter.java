@@ -4,15 +4,14 @@ import static org.jpc.converter.catalog.error.IsoPrologErrorConverter.isIsoProlo
 
 import java.lang.reflect.Type;
 
+import org.jconverter.converter.ConversionException;
 import org.jpc.Jpc;
-import org.jpc.converter.JpcConversionException;
-import org.jpc.converter.JpcConverter;
-import org.jpc.error.DomainError;
+import org.jpc.converter.FromTermConverter;
 import org.jpc.error.SystemError;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
 
-public class SystemErrorConverter extends JpcConverter<SystemError, Compound> {
+public class SystemErrorConverter implements FromTermConverter<Compound, SystemError> {
 
 	public static final String SYSTEM_ERROR_FUNCTOR = "system_error";
 	
@@ -23,7 +22,7 @@ public class SystemErrorConverter extends JpcConverter<SystemError, Compound> {
 	@Override
 	public SystemError fromTerm(Compound term, Type type, Jpc context) {
 		if(!isSystemError(term) || !type.equals(SystemError.class))
-			throw new JpcConversionException();
+			throw new ConversionException();
 		return new SystemError(term);
 	}
 	

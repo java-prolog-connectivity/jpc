@@ -73,10 +73,10 @@ public abstract class Term {
 	}
 	
 	/**
-	 * whether this term has a functor with a given name and arity
-	 * @param nameTermObject the name of this term
+	 * whether this term has a functor with a given id and arity
+	 * @param nameTermObject the id of this term
 	 * @param arity the arity of this term
-	 * @return true if the term has the given name and arity. False otherwise
+	 * @return true if the term has the given id and arity. False otherwise
 	 */
 	public abstract boolean hasFunctor(Term nameTermObject, int arity);
 
@@ -166,9 +166,9 @@ public abstract class Term {
 
 
 	/**
-	 * whether the term has a variable with a given name
-	 * @param variableName the variable name that is queried
-	 * @return whether the term has a variable with a given name
+	 * whether the term has a variable with a given id
+	 * @param variableName the variable id that is queried
+	 * @return whether the term has a variable with a given id
 	 */
 	public boolean hasVariable(String variableName) {
 		return getVariablesNames().contains(variableName);

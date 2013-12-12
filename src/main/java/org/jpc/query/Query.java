@@ -106,8 +106,8 @@ public abstract class Query extends Cursor<Solution> {
 	
 	/**
 	 * Answers a list term with the form [f(Name,Term), ...]
-	 * Where f is an arbitrary functor name, Name is the name of a variable present in the original goal and Term the value bound to such variable.
-	 * @return a list term where each entry in the list binds a variable name to a term
+	 * Where f is an arbitrary functor id, Name is the id of a variable present in the original goal and Term the value bound to such variable.
+	 * @return a list term where each entry in the list binds a variable id to a term
 	 */
 	protected Term getAllSolutionsBindingsTerm() {
 		return getPrologEngine().findall(PrologUtil.varDictionaryTerm(getGoal()), getGoal());
@@ -129,7 +129,7 @@ public abstract class Query extends Cursor<Solution> {
 	 * By default, a PrologEngineQuery uses its goal. QueryAdapter queries use their adapted default selected term.
 	 * Other QueryAdapter classes may find useful to override this method.
 	 * For example, ExceptionHandledQuery overrides this method so it is the first argument in the catch block of the original goal.
-	 * Logtalk queries overrides this so the default selected term is the Logtalk method and parameters (excluding the name of the Logtalk object and the :: operator)
+	 * Logtalk queries overrides this so the default selected term is the Logtalk method and parameters (excluding the id of the Logtalk object and the :: operator)
 	 * @return
 	 */
 	protected abstract Term getDefaultSelectedTerm();

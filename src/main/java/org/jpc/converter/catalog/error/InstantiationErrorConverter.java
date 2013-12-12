@@ -4,14 +4,14 @@ import static org.jpc.converter.catalog.error.IsoPrologErrorConverter.isIsoProlo
 
 import java.lang.reflect.Type;
 
+import org.jconverter.converter.ConversionException;
 import org.jpc.Jpc;
-import org.jpc.converter.JpcConversionException;
-import org.jpc.converter.JpcConverter;
+import org.jpc.converter.FromTermConverter;
 import org.jpc.error.InstantiationError;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
 
-public class InstantiationErrorConverter extends JpcConverter<InstantiationError, Compound> {
+public class InstantiationErrorConverter implements FromTermConverter<Compound, InstantiationError> {
 
 	public static final String INSTANTIATION_ERROR_FUNCTOR = "instantiation_error";
 	
@@ -22,7 +22,7 @@ public class InstantiationErrorConverter extends JpcConverter<InstantiationError
 	@Override
 	public InstantiationError fromTerm(Compound term, Type type, Jpc context) {
 		if(!isInstantiationError(term) || !type.equals(InstantiationError.class))
-			throw new JpcConversionException();
+			throw new ConversionException();
 		return new InstantiationError(term);
 	}
 	

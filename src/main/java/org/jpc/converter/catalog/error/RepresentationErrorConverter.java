@@ -4,15 +4,14 @@ import static org.jpc.converter.catalog.error.IsoPrologErrorConverter.isIsoProlo
 
 import java.lang.reflect.Type;
 
+import org.jconverter.converter.ConversionException;
 import org.jpc.Jpc;
-import org.jpc.converter.JpcConversionException;
-import org.jpc.converter.JpcConverter;
-import org.jpc.error.DomainError;
+import org.jpc.converter.FromTermConverter;
 import org.jpc.error.RepresentationError;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
 
-public class RepresentationErrorConverter extends JpcConverter<RepresentationError, Compound> {
+public class RepresentationErrorConverter implements FromTermConverter<Compound, RepresentationError> {
 
 	public static final String REPRESENTATION_ERROR_FUNCTOR = "representation_error";
 	
@@ -23,7 +22,7 @@ public class RepresentationErrorConverter extends JpcConverter<RepresentationErr
 	@Override
 	public RepresentationError fromTerm(Compound term, Type type, Jpc context) {
 		if(!isRepresentationError(term) || !type.equals(RepresentationError.class))
-			throw new JpcConversionException();
+			throw new ConversionException();
 		return new RepresentationError(term);
 	}
 	

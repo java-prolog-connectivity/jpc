@@ -51,11 +51,11 @@ public class JpcPreferences extends Preferences {
 	}
 	
 	/**
-	 * Answers a Logtalk integration script for a given Prolog engine name.
+	 * Answers a Logtalk integration script for a given Prolog engine id.
 	 * This method should always return the valid path of an integration script.
 	 * If it is not possible to find the integration script for a given engine, the method should thrown an exception detailing the reason of the failure.
-	 * @param engineName the target engine name
-	 * @return a full path of a Logtalk integration script for the given Prolog engine name.
+	 * @param engineName the target engine id
+	 * @return a full path of a Logtalk integration script for the given Prolog engine id.
 	 */
 	public String logtalkIntegrationScriptOrThrow(String engineName) {
 		checkNotNull(engineName);

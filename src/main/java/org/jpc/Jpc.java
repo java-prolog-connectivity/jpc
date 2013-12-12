@@ -5,6 +5,11 @@ import static java.util.Arrays.asList;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import org.jconverter.JConverter;
+import org.jconverter.converter.ConverterManager;
+import org.jconverter.instantiation.InstantiationManager;
+import org.jgum.JGum;
+import org.jpc.converter.typesolver.TypeSolverManager;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
@@ -13,14 +18,33 @@ import org.minitoolbox.commons.Version;
 
 /**
  * A class providing an interface for the main JPC functionality (such as converting between terms and Java objects)
- * This class is inspired by the Gson class from Google's Gson library (http://code.google.com/p/google-gson/)
  * @author sergioc
  *
  */
-public abstract class Jpc {
+public abstract class Jpc extends JConverter {
 
 	public static final Version version = new Version(0,0,1,"alpha");
 	
+	public Jpc() {
+		this(new JGum());
+	}
+
+	/**
+	 * @param categorizationContext a categorization context.
+	 */
+	protected Jpc(JGum categorizationContext) {
+		super(categorizationContext);
+	}
+	
+	/**
+	 * @param converterManager a converter manager responsible of converting objects.
+	 * @param instantiationManager an instance creator manager responsible of instantiating objects.
+	 * @param typeSolverManager a type solver manager responsible of recommending types for the result of a conversion.
+	 */
+	public Jpc(ConverterManager converterManager, InstantiationManager instantiationManager, TypeSolverManager typeSolverManager) {
+		super(converterManager, instantiationManager);
+	}
+
 	public final <T> T fromTerm(Term term) {
 		return fromTerm(term, Object.class);
 	}
@@ -31,28 +55,41 @@ public abstract class Jpc {
 		return toTerm(object, Term.class);
 	}
 	
-	public final Compound toTerm(Object name, List<? extends Object> args) {
+	public abstract <T extends Term> T toTerm(Object object, Class<T> termClass);
+	
+	public final Compound toTerm(Object name, List<?> args) {
 		return new Compound(toTerm(name), listTerm(args));
 	}
-	
-	public abstract <T extends Term> T toTerm(Object object, Class<T> termClass);
 	
 	public final ListTerm listTerm(Object ...objects) {
 		return listTerm(asList(objects));
 	}
 	
-	public final ListTerm listTerm(List<? extends Object> objects) {
+	public final ListTerm listTerm(List<?> objects) {
 		ListTerm listTerm = new ListTerm();
 		for(Object o : objects) {
 			listTerm.add(toTerm(o));
 		}
 		return listTerm;
 	}
+
+	/**
+	 * 
+	 * @param object the object which conversion target type to recommend.
+	 * @return the recommended type.
+	 */
+	public Type getType(Object object) {
+		return getType(TypeSolverManager.DEFAULT_KEY, object);
+	}
 	
-	public abstract <T> T instantiate(Type targetType);
-
-	public abstract Type getType(Term term);
-
+	/**
+	 * 
+	 * @param key constrains the type solvers that will be looked up in this operation.
+	 * @param object the object which conversion target type to recommend.
+	 * @return the recommended type.
+	 */
+	public abstract Type getType(Object key, Object object);
+	
 	public abstract JTermManager getJTermManager();
 	
 	public abstract boolean handleError(Term errorTerm, Term goal);

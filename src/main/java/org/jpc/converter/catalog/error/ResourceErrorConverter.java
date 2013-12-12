@@ -4,15 +4,14 @@ import static org.jpc.converter.catalog.error.IsoPrologErrorConverter.isIsoProlo
 
 import java.lang.reflect.Type;
 
+import org.jconverter.converter.ConversionException;
 import org.jpc.Jpc;
-import org.jpc.converter.JpcConversionException;
-import org.jpc.converter.JpcConverter;
-import org.jpc.error.DomainError;
+import org.jpc.converter.FromTermConverter;
 import org.jpc.error.ResourceError;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
 
-public class ResourceErrorConverter extends JpcConverter<ResourceError, Compound> {
+public class ResourceErrorConverter implements FromTermConverter<Compound, ResourceError> {
 
 	public static final String RESOURCE_ERROR_FUNCTOR = "resource_error";
 	
@@ -23,7 +22,7 @@ public class ResourceErrorConverter extends JpcConverter<ResourceError, Compound
 	@Override
 	public ResourceError fromTerm(Compound term, Type type, Jpc context) {
 		if(!isResourceError(term) || !type.equals(ResourceError.class))
-			throw new JpcConversionException();
+			throw new ConversionException();
 		return new ResourceError(term);
 	}
 	

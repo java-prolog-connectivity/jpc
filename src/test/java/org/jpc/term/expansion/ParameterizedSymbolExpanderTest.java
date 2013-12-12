@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 import org.jpc.DefaultJpc;
 import org.jpc.Jpc;
 import org.jpc.JpcBuilder;
-import org.jpc.converter.JpcConverter;
+import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.IntegerTerm;
@@ -58,13 +58,13 @@ public class ParameterizedSymbolExpanderTest {
 	public void testExpandingMappedReferencedObject() {
 		final Compound toTerm = new Compound("x", asList(new Atom("x")));
 		class X {}
-		JpcConverter<X, Compound> conv = new JpcConverter<X, Compound>() {
+		ToTermConverter<X, Compound> conv = new ToTermConverter<X, Compound>() {
 			@Override
-			public Compound toTerm(X o, Jpc context) {
+			public Compound toTerm(X o, Class<Compound> type, Jpc context) {
 				return toTerm;
 			}
 		};
-		Jpc context = JpcBuilder.create().registerConverter(conv).build();
+		Jpc context = JpcBuilder.create().register(conv).build();
 		X o = new X();
 		Term term = new Compound(CONVERSION_SPECIFIER_OPERATOR, asList(new Compound(SUBSTITUTION_OPERATOR, asList(new IntegerTerm(1))), new Atom(TERM_CONVERSION_BY_MAPPING_AND_REFERENCE_SYMBOL)));
 		Term expandedTerm = new PositionalSymbolExpander(asList(o), context).apply(term);

@@ -1,15 +1,17 @@
-package org.jpc.converter.typesolver;
+package org.jpc.converter.typesolver.catalog;
 
 import java.lang.reflect.Type;
 import java.util.Map;
 
+import org.jpc.converter.typesolver.TypeSolver;
+import org.jpc.converter.typesolver.UnrecognizedObjectException;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
-public class MapTypeSolver implements TermTypeSolver {
+public class MapTypeSolver implements TypeSolver<Term> {
 
 	public static final String DEFAULT_MAP_ENTRY_SEPARATOR = "-";
 	public static final String[] ALL_MAP_ENTRY_SEPARATORS = new String[]{DEFAULT_MAP_ENTRY_SEPARATOR, "="};
@@ -27,7 +29,7 @@ public class MapTypeSolver implements TermTypeSolver {
 			if(!list.isEmpty() && Iterables.all(list, isMapEntry))
 				return Map.class;
 		}
-		return null;
+		throw new UnrecognizedObjectException();
 	}
 
 	private boolean isMapEntry(Term term) {

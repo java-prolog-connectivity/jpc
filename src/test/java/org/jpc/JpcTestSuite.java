@@ -1,7 +1,7 @@
 package org.jpc;
 
+import org.jconverter.typesolver.TypeSolverTest;
 import org.jpc.converter.DefaultTermConverterTest;
-import org.jpc.instantiationmanager.InstantiationManagerTest;
 import org.jpc.salt.JpcTermWriterTest;
 import org.jpc.term.AbstractTermTest;
 import org.jpc.term.AtomTest;
@@ -26,7 +26,7 @@ import org.junit.runners.Suite;
 	ListTermTest.class,
 	AbstractTermTest.class,
 	HilogTermTest.class,
-	InstantiationManagerTest.class,
+	TypeSolverTest.class,
 	DefaultTermConverterTest.class,
 	PrologUtilTest.class,
 	JpcTermWriterTest.class,

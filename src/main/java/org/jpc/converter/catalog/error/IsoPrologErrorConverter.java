@@ -4,14 +4,14 @@ import static org.jpc.engine.prolog.PrologConstants.PROLOG_ERROR_FUNCTOR;
 
 import java.lang.reflect.Type;
 
+import org.jconverter.converter.ConversionException;
 import org.jpc.Jpc;
-import org.jpc.converter.JpcConversionException;
-import org.jpc.converter.JpcConverter;
+import org.jpc.converter.FromTermConverter;
 import org.jpc.error.IsoPrologError;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
 
-public class IsoPrologErrorConverter extends JpcConverter<IsoPrologError, Compound> {
+public class IsoPrologErrorConverter implements FromTermConverter<Compound, IsoPrologError> {
 
 	public static boolean isIsoPrologError(Term errorTerm) {
 		return errorTerm.hasFunctor(PROLOG_ERROR_FUNCTOR, 2);
@@ -20,7 +20,7 @@ public class IsoPrologErrorConverter extends JpcConverter<IsoPrologError, Compou
 	@Override
 	public IsoPrologError fromTerm(Compound term, Type type, Jpc context) {
 		if(!isIsoPrologError(term) || !type.equals(IsoPrologError.class))
-			throw new JpcConversionException();
+			throw new ConversionException();
 		return new IsoPrologError(term);
 	}
 	
