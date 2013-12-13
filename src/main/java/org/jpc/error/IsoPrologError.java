@@ -13,7 +13,7 @@ import org.jpc.term.Var;
  */
 public class IsoPrologError extends PrologError {
 	
-	public IsoPrologError(Term exceptionTerm) {
+	public IsoPrologError(Compound exceptionTerm) {
 		super(exceptionTerm);
 	}
 	

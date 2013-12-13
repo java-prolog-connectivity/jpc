@@ -1,14 +1,10 @@
 package org.jpc.error;
 
-import org.jpc.term.Term;
+import org.jpc.term.Compound;
 
 public class InstantiationError extends IsoPrologError {
 
-	public static boolean isInstantiationError(Term term) {
-		return true;
-	}
-	
-	public InstantiationError(Term exceptionTerm) {
+	public InstantiationError(Compound exceptionTerm) {
 		super(exceptionTerm);
 	}
 

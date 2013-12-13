@@ -1,14 +1,10 @@
 package org.jpc.error;
 
-import org.jpc.term.Term;
+import org.jpc.term.Compound;
 
 public class ResourceError extends IsoPrologError {
 
-	public static boolean isResourceError(Term term) {
-		return true;
-	}
-	
-	public ResourceError(Term exceptionTerm) {
+	public ResourceError(Compound exceptionTerm) {
 		super(exceptionTerm);
 	}
 

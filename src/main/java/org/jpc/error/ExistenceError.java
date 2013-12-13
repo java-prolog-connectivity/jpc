@@ -1,14 +1,10 @@
 package org.jpc.error;
 
-import org.jpc.term.Term;
+import org.jpc.term.Compound;
 
 public class ExistenceError extends IsoPrologError {
-
-	public static boolean isExistenceError(Term term) {
-		return true;
-	}
 	
-	public ExistenceError(Term exceptionTerm) {
+	public ExistenceError(Compound exceptionTerm) {
 		super(exceptionTerm);
 	}
 

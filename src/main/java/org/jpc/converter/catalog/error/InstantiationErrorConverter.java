@@ -21,7 +21,7 @@ public class InstantiationErrorConverter implements FromTermConverter<Compound, 
 	
 	@Override
 	public InstantiationError fromTerm(Compound term, Type type, Jpc context) {
-		if(!isInstantiationError(term) || !type.equals(InstantiationError.class))
+		if(!isInstantiationError(term))
 			throw new ConversionException();
 		return new InstantiationError(term);
 	}

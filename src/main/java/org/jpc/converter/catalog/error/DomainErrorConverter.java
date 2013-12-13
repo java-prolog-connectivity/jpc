@@ -21,7 +21,7 @@ public class DomainErrorConverter implements FromTermConverter<Compound, DomainE
 	
 	@Override
 	public DomainError fromTerm(Compound term, Type type, Jpc context) {
-		if(!isDomainError(term) || !type.equals(DomainError.class))
+		if(!isDomainError(term))
 			throw new ConversionException();
 		return new DomainError(term);
 	}

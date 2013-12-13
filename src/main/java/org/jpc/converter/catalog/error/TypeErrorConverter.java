@@ -21,7 +21,7 @@ public class TypeErrorConverter implements FromTermConverter<Compound, TypeError
 	
 	@Override
 	public TypeError fromTerm(Compound term, Type type, Jpc context) {
-		if(!isTypeError(term) || !type.equals(TypeError.class))
+		if(!isTypeError(term))
 			throw new ConversionException();
 		return new TypeError(term);
 	}

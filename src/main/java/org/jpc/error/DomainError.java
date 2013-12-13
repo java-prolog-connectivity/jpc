@@ -1,10 +1,10 @@
 package org.jpc.error;
 
-import org.jpc.term.Term;
+import org.jpc.term.Compound;
 
 public class DomainError extends IsoPrologError {
 	
-	public DomainError(Term exceptionTerm) {
+	public DomainError(Compound exceptionTerm) {
 		super(exceptionTerm);
 	}
 	

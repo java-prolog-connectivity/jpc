@@ -1,14 +1,10 @@
 package org.jpc.error;
 
-import org.jpc.term.Term;
+import org.jpc.term.Compound;
 
 public class EvaluationError extends IsoPrologError {
-
-	public static boolean isEvaluationError(Term term) {
-		return true;
-	}
 	
-	public EvaluationError(Term exceptionTerm) {
+	public EvaluationError(Compound exceptionTerm) {
 		super(exceptionTerm);
 	}
 

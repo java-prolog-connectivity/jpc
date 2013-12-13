@@ -21,7 +21,7 @@ public class EvaluationErrorConverter implements FromTermConverter<Compound, Eva
 	
 	@Override
 	public EvaluationError fromTerm(Compound term, Type type, Jpc context) {
-		if(!isEvaluationError(term) || !type.equals(EvaluationError.class))
+		if(!isEvaluationError(term))
 			throw new ConversionException();
 		return new EvaluationError(term);
 	}

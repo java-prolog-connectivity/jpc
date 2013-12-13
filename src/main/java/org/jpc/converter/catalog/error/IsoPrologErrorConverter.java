@@ -19,7 +19,7 @@ public class IsoPrologErrorConverter implements FromTermConverter<Compound, IsoP
 	
 	@Override
 	public IsoPrologError fromTerm(Compound term, Type type, Jpc context) {
-		if(!isIsoPrologError(term) || !type.equals(IsoPrologError.class))
+		if(!isIsoPrologError(term))
 			throw new ConversionException();
 		return new IsoPrologError(term);
 	}

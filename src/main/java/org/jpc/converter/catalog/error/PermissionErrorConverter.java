@@ -21,7 +21,7 @@ public class PermissionErrorConverter implements FromTermConverter<Compound, Per
 	
 	@Override
 	public PermissionError fromTerm(Compound term, Type type, Jpc context) {
-		if(!isPermissionError(term) || !type.equals(PermissionError.class))
+		if(!isPermissionError(term))
 			throw new ConversionException();
 		return new PermissionError(term);
 	}

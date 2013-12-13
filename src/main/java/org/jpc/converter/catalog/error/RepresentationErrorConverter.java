@@ -21,7 +21,7 @@ public class RepresentationErrorConverter implements FromTermConverter<Compound,
 	
 	@Override
 	public RepresentationError fromTerm(Compound term, Type type, Jpc context) {
-		if(!isRepresentationError(term) || !type.equals(RepresentationError.class))
+		if(!isRepresentationError(term))
 			throw new ConversionException();
 		return new RepresentationError(term);
 	}

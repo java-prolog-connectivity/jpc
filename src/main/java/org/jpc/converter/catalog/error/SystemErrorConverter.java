@@ -21,7 +21,7 @@ public class SystemErrorConverter implements FromTermConverter<Compound, SystemE
 	
 	@Override
 	public SystemError fromTerm(Compound term, Type type, Jpc context) {
-		if(!isSystemError(term) || !type.equals(SystemError.class))
+		if(!isSystemError(term))
 			throw new ConversionException();
 		return new SystemError(term);
 	}

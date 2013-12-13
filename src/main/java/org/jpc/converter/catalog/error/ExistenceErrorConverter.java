@@ -21,7 +21,7 @@ public class ExistenceErrorConverter implements FromTermConverter<Compound, Exis
 	
 	@Override
 	public ExistenceError fromTerm(Compound term, Type type, Jpc context) {
-		if(!isExistenceError(term) || !type.equals(ExistenceError.class))
+		if(!isExistenceError(term))
 			throw new ConversionException();
 		return new ExistenceError(term);
 	}

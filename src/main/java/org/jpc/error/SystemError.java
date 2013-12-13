@@ -1,14 +1,10 @@
 package org.jpc.error;
 
-import org.jpc.term.Term;
+import org.jpc.term.Compound;
 
 public class SystemError extends IsoPrologError {
 
-	public static boolean isSystemError(Term term) {
-		return true;
-	}
-	
-	public SystemError(Term exceptionTerm) {
+	public SystemError(Compound exceptionTerm) {
 		super(exceptionTerm);
 	}
 

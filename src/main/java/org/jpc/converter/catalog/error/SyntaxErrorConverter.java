@@ -21,7 +21,7 @@ public class SyntaxErrorConverter implements FromTermConverter<Compound, SyntaxE
 	
 	@Override
 	public SyntaxError fromTerm(Compound term, Type type, Jpc context) {
-		if(!isSyntaxError(term) || !type.equals(SyntaxError.class))
+		if(!isSyntaxError(term))
 			throw new ConversionException();
 		return new SyntaxError(term);
 	}

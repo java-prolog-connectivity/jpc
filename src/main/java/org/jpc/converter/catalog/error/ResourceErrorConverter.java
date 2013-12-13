@@ -21,7 +21,7 @@ public class ResourceErrorConverter implements FromTermConverter<Compound, Resou
 	
 	@Override
 	public ResourceError fromTerm(Compound term, Type type, Jpc context) {
-		if(!isResourceError(term) || !type.equals(ResourceError.class))
+		if(!isResourceError(term))
 			throw new ConversionException();
 		return new ResourceError(term);
 	}

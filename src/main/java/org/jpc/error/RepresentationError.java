@@ -1,14 +1,10 @@
 package org.jpc.error;
 
-import org.jpc.term.Term;
+import org.jpc.term.Compound;
 
 public class RepresentationError extends IsoPrologError {
 
-	public static boolean isRepresentationError(Term term) {
-		return true;
-	}
-	
-	public RepresentationError(Term exceptionTerm) {
+	public RepresentationError(Compound exceptionTerm) {
 		super(exceptionTerm);
 	}
 

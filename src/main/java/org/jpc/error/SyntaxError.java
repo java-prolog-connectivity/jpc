@@ -1,14 +1,10 @@
 package org.jpc.error;
 
-import org.jpc.term.Term;
+import org.jpc.term.Compound;
 
 public class SyntaxError extends IsoPrologError {
 
-	public static boolean isSyntaxError(Term term) {
-		return true;
-	}
-	
-	public SyntaxError(Term exceptionTerm) {
+	public SyntaxError(Compound exceptionTerm) {
 		super(exceptionTerm);
 	}
 

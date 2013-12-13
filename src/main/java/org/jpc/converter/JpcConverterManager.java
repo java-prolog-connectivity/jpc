@@ -19,13 +19,13 @@ import org.jpc.converter.catalog.error.DomainErrorConverter;
 import org.jpc.converter.catalog.error.EvaluationErrorConverter;
 import org.jpc.converter.catalog.error.ExistenceErrorConverter;
 import org.jpc.converter.catalog.error.InstantiationErrorConverter;
-import org.jpc.converter.catalog.error.IsoPrologErrorConverter;
 import org.jpc.converter.catalog.error.PermissionErrorConverter;
 import org.jpc.converter.catalog.error.RepresentationErrorConverter;
 import org.jpc.converter.catalog.error.ResourceErrorConverter;
 import org.jpc.converter.catalog.error.SyntaxErrorConverter;
 import org.jpc.converter.catalog.error.SystemErrorConverter;
 import org.jpc.converter.catalog.error.TypeErrorConverter;
+import org.jpc.converter.catalog.error.UnknownIsoPrologErrorConverter;
 import org.jpc.converter.catalog.list.ArrayConverter;
 import org.jpc.converter.catalog.list.CollectionConverter;
 import org.jpc.converter.catalog.list.EnumerationConverter;
@@ -96,7 +96,7 @@ public class JpcConverterManager extends JGumConverterManager {
 			JpcBuilder.register(converterManager, new TermToMapEntryConverter(mapEntrySeparator));
 		}
 		
-		JpcBuilder.register(converterManager, new IsoPrologErrorConverter());
+		JpcBuilder.register(converterManager, new UnknownIsoPrologErrorConverter()); //this should be the first registered error.
 		JpcBuilder.register(converterManager, new DomainErrorConverter());
 		JpcBuilder.register(converterManager, new EvaluationErrorConverter());
 		JpcBuilder.register(converterManager, new ExistenceErrorConverter());
