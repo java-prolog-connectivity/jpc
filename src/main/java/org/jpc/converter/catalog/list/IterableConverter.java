@@ -5,13 +5,14 @@ import java.util.List;
 
 import org.jconverter.converter.ConversionException;
 import org.jpc.Jpc;
-import org.jpc.converter.BidirectionalTermConverter;
+import org.jpc.converter.FromTermConverter;
+import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Term;
 import org.minitoolbox.reflection.javatype.ParameterizedTypeImpl;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
 
-public class IterableConverter<T extends Term> implements BidirectionalTermConverter<Iterable, T> {
+public class IterableConverter<T extends Term> implements ToTermConverter<Iterable, T>, FromTermConverter<T, Iterable> {
 
 	@Override
 	public T  toTerm(Iterable it, Class<T> termClass, Jpc context) {

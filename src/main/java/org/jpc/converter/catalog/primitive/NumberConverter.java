@@ -10,7 +10,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.jconverter.converter.ConversionException;
 import org.jpc.Jpc;
-import org.jpc.converter.BidirectionalTermConverter;
+import org.jpc.converter.FromTermConverter;
+import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Atom;
 import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
@@ -19,7 +20,7 @@ import org.jpc.term.Term;
 import org.minitoolbox.reflection.ReflectionUtil;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
-public class NumberConverter<T extends Number, U extends Term> implements BidirectionalTermConverter<T, U> {
+public class NumberConverter<T extends Number, U extends Term> implements ToTermConverter<T, U>, FromTermConverter<U, T> {
 
 	@Override
 	public U toTerm(T number, Class<U> termClass, Jpc context) {

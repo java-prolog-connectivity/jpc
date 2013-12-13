@@ -8,10 +8,11 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.jpc.Jpc;
-import org.jpc.converter.BidirectionalTermConverter;
+import org.jpc.converter.FromTermConverter;
+import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Term;
 
-public class XmlGregorianCalendarConverter<T extends Term> implements BidirectionalTermConverter<XMLGregorianCalendar, T> {
+public class XmlGregorianCalendarConverter<T extends Term> implements ToTermConverter<XMLGregorianCalendar, T>, FromTermConverter<T, XMLGregorianCalendar> {
 
 	@Override
 	public T toTerm(XMLGregorianCalendar calendar, Class<T> termClass, Jpc context) {

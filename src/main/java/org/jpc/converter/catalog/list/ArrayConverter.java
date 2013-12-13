@@ -8,13 +8,14 @@ import java.util.List;
 
 import org.jconverter.converter.ConversionException;
 import org.jpc.Jpc;
-import org.jpc.converter.BidirectionalTermConverter;
+import org.jpc.converter.FromTermConverter;
+import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Term;
 import org.minitoolbox.reflection.javatype.ParameterizedTypeImpl;
 import org.minitoolbox.reflection.typewrapper.ArrayTypeWrapper;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
-public class ArrayConverter<T, U extends Term> implements BidirectionalTermConverter<T[], U> {
+public class ArrayConverter<T, U extends Term> implements ToTermConverter<T[], U>, FromTermConverter<U, T[]> {
 
 	@Override
 	public U toTerm(T[] objects, Class<U> termClass, Jpc context) {

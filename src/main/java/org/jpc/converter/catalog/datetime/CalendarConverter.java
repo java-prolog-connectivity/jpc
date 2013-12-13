@@ -4,11 +4,12 @@ import java.lang.reflect.Type;
 import java.util.Calendar;
 
 import org.jpc.Jpc;
-import org.jpc.converter.BidirectionalTermConverter;
+import org.jpc.converter.FromTermConverter;
+import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Atom;
 import org.jpc.term.Term;
 
-public class CalendarConverter<T extends Calendar, U extends Term> implements BidirectionalTermConverter<T, U> {
+public class CalendarConverter<T extends Calendar, U extends Term> implements ToTermConverter<T, U>, FromTermConverter<U, T> {
 
 	@Override
 	public U toTerm(T calendar, Class<U> termClass, Jpc context) {

@@ -7,12 +7,13 @@ import java.util.List;
 
 import org.jconverter.converter.ConversionException;
 import org.jpc.Jpc;
-import org.jpc.converter.BidirectionalTermConverter;
+import org.jpc.converter.FromTermConverter;
+import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Term;
 import org.minitoolbox.reflection.javatype.ParameterizedTypeImpl;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
-public class EnumerationConverter<T extends Term> implements BidirectionalTermConverter<Enumeration, T> {
+public class EnumerationConverter<T extends Term> implements ToTermConverter<Enumeration, T>, FromTermConverter<T, Enumeration> {
 
 	@Override
 	public T toTerm(Enumeration en, Class<T> termClass, Jpc context) {

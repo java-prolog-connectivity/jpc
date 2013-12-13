@@ -8,10 +8,11 @@ import java.lang.reflect.Type;
 
 import org.jconverter.converter.ConversionException;
 import org.jpc.Jpc;
-import org.jpc.converter.BidirectionalTermConverter;
+import org.jpc.converter.FromTermConverter;
+import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Atom;
 
-public class BooleanConverter implements BidirectionalTermConverter<Boolean, Atom> {
+public class BooleanConverter implements ToTermConverter<Boolean, Atom>, FromTermConverter<Atom, Boolean> {
 
 	@Override
 	public Atom toTerm(Boolean bool, Class<Atom> termClass, Jpc context) {

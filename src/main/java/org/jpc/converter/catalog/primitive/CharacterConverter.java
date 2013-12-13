@@ -4,12 +4,13 @@ import java.lang.reflect.Type;
 
 import org.jconverter.converter.ConversionException;
 import org.jpc.Jpc;
-import org.jpc.converter.BidirectionalTermConverter;
+import org.jpc.converter.FromTermConverter;
+import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Atom;
 import org.jpc.term.NumberTerm;
 import org.jpc.term.Term;
 
-public class CharacterConverter<T extends Term> implements BidirectionalTermConverter<Character, T> {
+public class CharacterConverter<T extends Term> implements ToTermConverter<Character, T>, FromTermConverter<T, Character> {
 
 	@Override
 	public T toTerm(Character c, Class<T> termClass, Jpc context) {
