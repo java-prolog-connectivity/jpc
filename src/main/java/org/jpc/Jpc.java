@@ -8,7 +8,6 @@ import java.util.List;
 import org.jconverter.JConverter;
 import org.jconverter.converter.ConverterManager;
 import org.jconverter.instantiation.InstantiationManager;
-import org.jgum.JGum;
 import org.jpc.converter.typesolver.TypeSolverManager;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
@@ -25,16 +24,16 @@ public abstract class Jpc extends JConverter {
 
 	public static final Version version = new Version(0,0,1,"alpha");
 	
+	/*
 	public Jpc() {
 		this(new JGum());
 	}
 
-	/**
-	 * @param categorizationContext a categorization context.
-	 */
+
 	protected Jpc(JGum categorizationContext) {
 		super(categorizationContext);
 	}
+	*/
 	
 	/**
 	 * @param converterManager a converter manager responsible of converting objects.

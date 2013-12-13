@@ -67,8 +67,6 @@ public class DefaultTermConverterTest {
 	@Test
 	public void testStringToTerm() {
 		assertEquals(new Atom("apple"), jpc.toTerm("apple"));
-		assertEquals(new Atom("apple"), jpc.toTerm(new StringBuffer("apple")));
-		assertEquals(new Atom("apple"), jpc.toTerm(new StringBuilder("apple")));
 		assertEquals(new Atom("1"), jpc.toTerm("1"));
 		assertEquals(new Atom("1"), jpc.toTerm("1", Atom.class));
 		assertEquals(new IntegerTerm(1), jpc.toTerm("1", IntegerTerm.class));
@@ -199,7 +197,6 @@ public class DefaultTermConverterTest {
 		System.gc();
 		try {
 			Object x = jpc.fromTerm(jRef);
-			
 			fail();
 		} catch(RuntimeException e) {}
 	}

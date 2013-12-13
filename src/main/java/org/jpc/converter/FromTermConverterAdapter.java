@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.jconverter.JConverter;
+import org.jconverter.converter.ConversionException;
 import org.jconverter.converter.Converter;
 import org.jconverter.converter.TypedConverter;
 import org.jgum.strategy.ChainOfResponsibility;
@@ -21,7 +22,7 @@ public class FromTermConverterAdapter<T extends Term, V> extends TypedConverter<
 		List<Converter<T,V>> typedConverters = new ArrayList<>();
 		for(FromTermConverter<T,V> converter : converters)
 			typedConverters.add(forConverter(converter));
-		ChainOfResponsibility<Converter<T,V>,V> chain = new ChainOfResponsibility<>(typedConverters);
+		ChainOfResponsibility<Converter<T,V>,V> chain = new ChainOfResponsibility<>(typedConverters, ConversionException.class);
 		return chain;
 	}
 

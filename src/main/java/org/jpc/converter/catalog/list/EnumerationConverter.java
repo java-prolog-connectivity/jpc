@@ -20,7 +20,9 @@ public class EnumerationConverter<T extends Term> implements BidirectionalTermCo
 	}
 	
 	@Override
-	public Enumeration fromTerm(T term, Type type, Jpc context) {
+	public Enumeration fromTerm(T listTerm, Type type, Jpc context) {
+		if(!listTerm.isList())
+			throw new ConversionException();
 		Type elementType = null;
 		try {
 			elementType = TypeWrapper.wrap(type).as(Enumeration.class).getActualTypeArgumentsOrUpperBounds()[0]; //will throw an exception if the type is not compatible with Enumeration
@@ -29,7 +31,7 @@ public class EnumerationConverter<T extends Term> implements BidirectionalTermCo
 		}
 		
 		Type listType = new ParameterizedTypeImpl(new Type[]{elementType}, null, List.class);
-		List collection = context.fromTerm(term, listType);
+		List collection = context.fromTerm(listTerm, listType);
 		return Collections.enumeration(collection);
 	}
 	

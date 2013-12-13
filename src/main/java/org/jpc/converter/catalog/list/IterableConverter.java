@@ -3,6 +3,7 @@ package org.jpc.converter.catalog.list;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import org.jconverter.converter.ConversionException;
 import org.jpc.Jpc;
 import org.jpc.converter.BidirectionalTermConverter;
 import org.jpc.term.Term;
@@ -18,7 +19,9 @@ public class IterableConverter<T extends Term> implements BidirectionalTermConve
 	}
 
 	@Override
-	public Iterable fromTerm(T term, Type targetType, Jpc context) {
+	public Iterable fromTerm(T listTerm, Type targetType, Jpc context) {
+		if(!listTerm.isList())
+			throw new ConversionException();
 		TypeWrapper wrappedTargetType = TypeWrapper.wrap(targetType);
 		Type componentType = null;
 		TypeWrapper iterableTypeWrapper = wrappedTargetType.as(Iterable.class);
@@ -28,7 +31,7 @@ public class IterableConverter<T extends Term> implements BidirectionalTermConve
 			componentType = Object.class;
 		
 		Type listType = new ParameterizedTypeImpl(new Type[]{componentType}, null, List.class);
-		return (List) new CollectionConverter().fromTerm(term, listType, context);
+		return (List) new CollectionConverter().fromTerm(listTerm, listType, context);
 	}
 
 }

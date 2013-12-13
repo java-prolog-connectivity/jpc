@@ -23,9 +23,9 @@ public class JGumTypeSolverManager extends TypeSolverManager {
 	
 	/**
 	 * @param jgum a JGum categorization context.
-	 * @return an instance of TypeSolverManager configured with default type solvers.
+	 * @return an instance of JGumTypeSolverManager configured with default type solvers.
 	 */
-	public static TypeSolverManager createDefault(JGum jgum) {
+	public static JGumTypeSolverManager createDefault(JGum jgum) {
 		JGumTypeSolverManager typeSolverManager = new JGumTypeSolverManager(jgum);
 		registerDefaults(typeSolverManager);
 		return typeSolverManager;

@@ -31,12 +31,7 @@ public abstract class MapConverter {
 		this.entrySeparator = entrySeparator;
 	}
 	
-	
-	
-	
-	
-	
-	
+
 	public static class MapToTermConverter<T extends Map,U extends Term> extends MapConverter implements ToTermConverter<T,U> {
 		
 		public MapToTermConverter() {
@@ -74,12 +69,14 @@ public abstract class MapConverter {
 		}
 		
 		@Override
-		public U fromTerm(T term, Type type, Jpc context) {
+		public U fromTerm(T listTerm, Type type, Jpc context) {
+			if(!listTerm.isList())
+				throw new ConversionException();
 			U map = null;
 			List<Term> listMembers = null;
 			try {
 				map = context.instantiate(type); //will throw an exception if the type is not compatible with map
-				listMembers = term.asList(); //will throw an exception if the term is not a list term
+				listMembers = listTerm.asList(); //will throw an exception if the term is not a list term
 			}catch(Exception e) {
 				throw new ConversionException();
 			}

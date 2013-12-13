@@ -25,7 +25,9 @@ public class IteratorConverter<T extends Term> implements BidirectionalTermConve
 	}
 
 	@Override
-	public Iterator fromTerm(T term, Type targetType, Jpc context) {
+	public Iterator fromTerm(T listTerm, Type targetType, Jpc context) {
+		if(!listTerm.isList())
+			throw new ConversionException();
 		TypeWrapper wrappedTargetType = TypeWrapper.wrap(targetType);
 		Type componentType = null;
 		TypeWrapper iteratorTypeWrapper = wrappedTargetType.as(Iterator.class);
@@ -36,7 +38,7 @@ public class IteratorConverter<T extends Term> implements BidirectionalTermConve
 		
 		Type listType = new ParameterizedTypeImpl(new Type[]{componentType}, null, List.class);
 		
-		List list = (List) new CollectionConverter().fromTerm(term, listType, context);
+		List list = (List) new CollectionConverter().fromTerm(listTerm, listType, context);
 		return list.iterator();
 	}
 

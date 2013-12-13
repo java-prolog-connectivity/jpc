@@ -14,6 +14,8 @@ public class CollectionConverter<U extends Term,T extends Collection> implements
 	
 	@Override
 	public T fromTerm(Term listTerm, Type type, Jpc context) {
+		if(!listTerm.isList())
+			throw new ConversionException();
 		T collection = null;
 		List<Term> listMembers = null;
 		try {

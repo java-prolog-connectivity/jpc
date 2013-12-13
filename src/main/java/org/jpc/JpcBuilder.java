@@ -2,10 +2,13 @@ package org.jpc;
 
 import org.jconverter.JConverterBuilder;
 import org.jconverter.converter.ConverterManager;
+import org.jconverter.instantiation.InstantiationManager;
+import org.jconverter.instantiation.JGumInstantiationManager;
 import org.jgum.JGum;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.FromTermConverterAdapter;
 import org.jpc.converter.JpcConverter;
+import org.jpc.converter.JpcConverterManager;
 import org.jpc.converter.ToTermConverter;
 import org.jpc.converter.ToTermConverterAdapter;
 import org.jpc.converter.typesolver.JGumTypeSolverManager;
@@ -35,10 +38,11 @@ public class JpcBuilder extends JConverterBuilder {
 		converterManager.register(ToTermConverterAdapter.forConverter(converter));
 	}
 	
-	
-	private ErrorHandlerManager errorHandlerManager;
-	private JTermManager jTermManager;
 	private final TypeSolverManager typeSolverManager;
+	private JTermManager jTermManager;
+	private final ErrorHandlerManager errorHandlerManager;
+	
+	
 	
 	public static JpcBuilder create() {
 		return new JpcBuilder();
@@ -49,14 +53,22 @@ public class JpcBuilder extends JConverterBuilder {
 	}
 	
 	private JpcBuilder(JGum jgum) {
-		super(jgum);
-		this.errorHandlerManager = new DefaultJpcErrorHandler();
-		this.jTermManager = JTermUtil.getJTermManager();
-		this.typeSolverManager = JGumTypeSolverManager.createDefault(jgum);
+		this(JpcConverterManager.createDefault(jgum),
+				JGumInstantiationManager.createDefault(jgum), 
+				JGumTypeSolverManager.createDefault(jgum), 
+				JTermUtil.getJTermManager(), 
+				new DefaultJpcErrorHandler());
+	}
+	
+	protected JpcBuilder(JpcConverterManager converterManager, InstantiationManager instantiationManager, TypeSolverManager typeSolverManager, JTermManager jTermManager, ErrorHandlerManager errorHandlerManager) {
+		super(converterManager, instantiationManager);
+		this.typeSolverManager = typeSolverManager;
+		this.jTermManager = jTermManager;
+		this.errorHandlerManager = errorHandlerManager;
 	}
 	
 	public Jpc build() {
-		return new DefaultJpc(converterManager, instantiationManager, typeSolverManager, jTermManager, errorHandlerManager);
+		return new DefaultJpc((JpcConverterManager)converterManager, instantiationManager, typeSolverManager, jTermManager, errorHandlerManager);
 	}
 
 	public JpcBuilder register(JpcConverter converter) {

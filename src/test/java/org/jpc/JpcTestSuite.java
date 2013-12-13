@@ -1,7 +1,7 @@
 package org.jpc;
 
-import org.jconverter.typesolver.TypeSolverTest;
 import org.jpc.converter.DefaultTermConverterTest;
+import org.jpc.converter.TypeSolverTest;
 import org.jpc.salt.JpcTermWriterTest;
 import org.jpc.term.AbstractTermTest;
 import org.jpc.term.AtomTest;

@@ -6,6 +6,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import org.jconverter.converter.ConversionException;
 import org.jpc.Jpc;
 import org.jpc.converter.BidirectionalTermConverter;
 import org.jpc.term.Term;
@@ -21,14 +22,16 @@ public class ArrayConverter<T, U extends Term> implements BidirectionalTermConve
 	}
 	
 	@Override
-	public T[] fromTerm(Term term, Type targetType, Jpc context) {
+	public T[] fromTerm(Term listTerm, Type targetType, Jpc context) {
+		if(!listTerm.isList())
+			throw new ConversionException();
 		TypeWrapper wrappedType = TypeWrapper.wrap(targetType);
 		ArrayTypeWrapper arrayTypeWrapper = (ArrayTypeWrapper) wrappedType;
 		Type arrayComponentType = arrayTypeWrapper.getComponentType();
 		TypeWrapper componentTypeWrapper = TypeWrapper.wrap(arrayComponentType);
 		
 		Type listType = new ParameterizedTypeImpl(new Type[]{arrayComponentType}, null, List.class);
-		List list = (List)new CollectionConverter().fromTerm(term, listType, context);
+		List list = (List)new CollectionConverter().fromTerm(listTerm, listType, context);
 		T[] array = (T[]) Array.newInstance(componentTypeWrapper.getRawClass(), list.size());
 		return (T[]) list.toArray(array);
 	}
