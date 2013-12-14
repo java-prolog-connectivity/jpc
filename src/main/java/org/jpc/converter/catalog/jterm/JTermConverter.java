@@ -15,8 +15,11 @@ public class JTermConverter<T> implements FromTermConverter<Compound, T> {
 	public T fromTerm(Compound term, Type type, Jpc context) {
 		JTermManager jTermManager = context.getJTermManager();
 		T resolved = (T) jTermManager.resolve(term); //try with the context jTerm manager
-		if(resolved == null)
-			resolved = (T) JTermUtil.getJTermManager().resolve(term); //try with the default jTerm manager
+		if(resolved == null) {
+			JTermManager defaultJTermManager = JTermUtil.getJTermManager();
+			if(defaultJTermManager != jTermManager)
+				resolved = (T) defaultJTermManager.resolve(term); //try with the default jTerm manager
+		}
 		if(resolved == null)
 			throw new ConversionException();
 		return resolved;

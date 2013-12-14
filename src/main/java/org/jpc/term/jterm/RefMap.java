@@ -8,7 +8,7 @@ import org.jpc.term.Compound;
 import com.google.common.base.Function;
 
 /**
- * Instances of this class are maps of term-indexes to terms.
+ * Instances of this class encapsulates a map of terms (or term-indexes) to objects.
  * The index of a term is obtained by means of an index function provided in the constructor.
  * Such index is an arbitrary object uniquely identifying a term from other terms stored in the same map .
  * The purpose of indexes is to provide an efficient mechanism for manipulating terms stored in the internal hash table.

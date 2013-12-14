@@ -189,6 +189,20 @@ public class DefaultTermConverterTest {
 	}
 	
 	@Test
+	public void testJTerm() {
+		Object o = new Object();
+		Compound term = new Compound("x", asList(new Atom(""))); //arbitrary compound that will be associated to an object reference.
+		JTermUtil.jTerm(term, o); //associating the compound to a reference.
+		assertTrue(o == jpc.fromTerm(term));
+		o = null;
+		System.gc();
+		try {
+			jpc.fromTerm(term);
+			fail();
+		} catch(RuntimeException e) {}
+	}
+	
+	@Test
 	public void testJRef() {
 		Object o = new Object();
 		Term jRef = JTermUtil.jRefTerm(o);
@@ -196,7 +210,7 @@ public class DefaultTermConverterTest {
 		o = null;
 		System.gc();
 		try {
-			Object x = jpc.fromTerm(jRef);
+			jpc.fromTerm(jRef);
 			fail();
 		} catch(RuntimeException e) {}
 	}

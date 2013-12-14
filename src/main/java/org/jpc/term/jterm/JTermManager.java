@@ -17,7 +17,7 @@ import com.google.common.base.Function;
  */
 public class JTermManager {
 	
-	private Map<String, RefMap> knownReferences;
+	private Map<String, RefMap> knownReferences; //a map from compound names to reference maps.
 	private ReferenceQueue<?> referenceQueue; //weak references created by the JTermManager will be instantiated using this reference queue.
 	
 	public JTermManager(ReferenceQueue<?> referenceQueue) {
@@ -30,30 +30,26 @@ public class JTermManager {
 		return referenceQueue;
 	}
 
-	public void addIndexFunction(String name, Function<Compound, Object> indexFunction) {
-		createRefMap(name, indexFunction);
-	}
-	
-	private RefMap createRefMap(String name, Function<Compound, Object> indexFunction) {
+	/**
+	 * Registers an index function for the given compound name.
+	 * @param name the compound name associated to the given index function.
+	 * @param indexFunction the index function.
+	 * @return
+	 */
+	public RefMap addIndexFunction(String name, Function<Compound, Object> indexFunction) {
 		RefMap refMap = new RefMap(indexFunction);
 		putRefMap(name, refMap);
 		return refMap;
 	}
 	
-	private RefMap createRefMap(String name) {
+	private RefMap addDefaultIndexFunction(String name) {
 		RefMap refMap = new RefMap();
 		putRefMap(name, refMap);
 		return refMap;
 	}
 	
 	private RefMap createRefMap(Compound compound) {
-		return createRefMap(compound.getNameString());
-	}
-	
-	private void putRefMap(String name, RefMap refMap) {
-		if(getRefMap(name) != null)
-			throw new RuntimeException("Key: " + name + " already exists. Impossible to recreate it.");
-		knownReferences.put(name, refMap);
+		return addDefaultIndexFunction(compound.getNameString());
 	}
 	
 	private RefMap getRefMap(Compound compound) {
@@ -64,8 +60,13 @@ public class JTermManager {
 		return knownReferences.get(name);
 	}
 	
-
+	private void putRefMap(String name, RefMap refMap) {
+		if(getRefMap(name) != null)
+			throw new RuntimeException("Key: " + name + " already exists.");
+		knownReferences.put(name, refMap);
+	}
 	
+
 	
 	
 	public boolean containsKey(Compound compound) {
@@ -126,11 +127,12 @@ public class JTermManager {
 
 	public <T>JTerm<T> jTerm(Compound compound, T o) {
 		JTerm<?> jTerm = null;
-		RefMap refMap = getRefMap(compound);
-		if(refMap == null)
+		RefMap refMap = getRefMap(compound); //null if there is no refmap for this kind of compound.
+		if(refMap == null) {
 			refMap = createRefMap(compound);
-		else
-			jTerm = refMap.get(compound);
+		} else {
+			jTerm = refMap.get(compound); //null if the compound has not been associated with a jterm value.
+		}
 		
 		if(jTerm == null) {
 			jTerm = new JTerm<Object>(o, (ReferenceQueue<Object>) getReferenceQueue(), compound, this);

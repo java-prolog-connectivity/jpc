@@ -9,7 +9,7 @@ import com.google.common.base.Function;
 
 /**
  * An IndexArgumentFunction maps the index of a compound term to one of its arguments in a given position.
- * If the argument is a number of an atom, it will be converted to its equivalent Java type.
+ * If the argument is a number or an atom, it will be converted to its equivalent Java type.
  * @see RefMap
  * @author sergioc
  *
