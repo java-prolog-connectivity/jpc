@@ -9,7 +9,7 @@ import org.jpc.term.Compound;
 import org.jpc.term.jterm.JTermManager;
 import org.jpc.term.jterm.JTermUtil;
 
-public class JTermConverter<T> implements FromTermConverter<Compound, T> {
+public class FromJTermConverter<T> implements FromTermConverter<Compound, T> {
 
 	@Override
 	public T fromTerm(Compound term, Type type, Jpc context) {

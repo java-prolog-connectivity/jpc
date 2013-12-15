@@ -16,13 +16,12 @@ import javax.xml.bind.DatatypeConverter;
 import org.jpc.converter.TermConvertable;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
-import org.jpc.term.Term;
 
 public class Serialized implements TermConvertable<Compound> {
 
 	public static final String SERIALIZED_TERM_FUNCTOR = "jserialized";
 	
-	public static Term jSerializedTerm(Serializable serializable) {
+	public static Compound jSerializedTerm(Serializable serializable) {
 		return new Serialized(serializable).asTerm();
 	}
 	

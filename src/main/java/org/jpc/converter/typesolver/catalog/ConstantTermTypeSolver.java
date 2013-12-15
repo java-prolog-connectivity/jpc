@@ -10,7 +10,7 @@ import org.jpc.term.IntegerTerm;
 import org.jpc.term.Term;
 
 
-public class PrimitiveTypeSolver implements TypeSolver<Term> {
+public class ConstantTermTypeSolver implements TypeSolver<Term> {
 
 	@Override
 	public Type getType(Term term) {

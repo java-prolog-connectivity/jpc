@@ -12,7 +12,7 @@ import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Term;
 
-public class XmlGregorianCalendarConverter<T extends Term> implements ToTermConverter<XMLGregorianCalendar, T>, FromTermConverter<T, XMLGregorianCalendar> {
+public class XMLGregorianCalendarConverter<T extends Term> implements ToTermConverter<XMLGregorianCalendar, T>, FromTermConverter<T, XMLGregorianCalendar> {
 
 	@Override
 	public T toTerm(XMLGregorianCalendar calendar, Class<T> termClass, Jpc context) {

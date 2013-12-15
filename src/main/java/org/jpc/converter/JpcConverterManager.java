@@ -13,8 +13,9 @@ import org.jgum.category.CategoryProperty.PropertyIterable;
 import org.jgum.category.type.TypeCategory;
 import org.jpc.Jpc;
 import org.jpc.JpcBuilder;
-import org.jpc.converter.catalog.datetime.CalendarConverter;
-import org.jpc.converter.catalog.datetime.XmlGregorianCalendarConverter;
+import org.jpc.converter.catalog.datetime.CalendarToAtomConverter;
+import org.jpc.converter.catalog.datetime.CalendarToNumberTermConverter;
+import org.jpc.converter.catalog.datetime.XMLGregorianCalendarConverter;
 import org.jpc.converter.catalog.error.DomainErrorConverter;
 import org.jpc.converter.catalog.error.EvaluationErrorConverter;
 import org.jpc.converter.catalog.error.ExistenceErrorConverter;
@@ -36,12 +37,15 @@ import org.jpc.converter.catalog.map.MapConverter.TermToMapConverter;
 import org.jpc.converter.catalog.map.MapEntryConverter.MapEntryToTermConverter;
 import org.jpc.converter.catalog.map.MapEntryConverter.TermToMapEntryConverter;
 import org.jpc.converter.catalog.primitive.BooleanConverter;
-import org.jpc.converter.catalog.primitive.CharacterConverter;
-import org.jpc.converter.catalog.primitive.NumberConverter;
-import org.jpc.converter.catalog.primitive.StringConverter;
+import org.jpc.converter.catalog.primitive.CharacterToNumberTermConverter;
+import org.jpc.converter.catalog.primitive.NumberToNumberTermConverter;
+import org.jpc.converter.catalog.primitive.ObjectToAtomConverter;
+import org.jpc.converter.catalog.primitive.StringToNumberTermConverter;
 import org.jpc.converter.catalog.termconvertable.TermConvertableConverter;
 import org.jpc.converter.catalog.var.VarConverter;
 import org.jpc.converter.typesolver.catalog.MapTypeSolver;
+import org.jpc.term.Atom;
+import org.jpc.term.NumberTerm;
 import org.jpc.term.Term;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,13 +77,21 @@ public class JpcConverterManager extends JGumConverterManager {
 		JpcBuilder.register(converterManager, new TermConvertableConverter());
 		JpcBuilder.register(converterManager, new VarConverter());
 		
-		JpcBuilder.register(converterManager, new CharacterConverter());
-		JpcBuilder.register(converterManager, new StringConverter());
+		JpcBuilder.register(converterManager, new CharacterToNumberTermConverter());
+		JpcBuilder.register(converterManager, new ObjectToAtomConverter<Character>(){});
+		JpcBuilder.register(converterManager, new StringToNumberTermConverter());
+		JpcBuilder.register(converterManager, new ObjectToAtomConverter<String>(){});
 		JpcBuilder.register(converterManager, new BooleanConverter());
-		JpcBuilder.register(converterManager, new NumberConverter());
+		//JpcBuilder.register(converterManager, new NumberConverter());
+		JpcBuilder.register(converterManager, new NumberToNumberTermConverter());
+		class NumberToAtomConverter<T extends Number> extends ObjectToAtomConverter<T>{};
+		JpcBuilder.register(converterManager, new NumberToAtomConverter());
 		
-		JpcBuilder.register(converterManager, new XmlGregorianCalendarConverter());
-		JpcBuilder.register(converterManager, new CalendarConverter());
+		JpcBuilder.register(converterManager, new CalendarToNumberTermConverter());
+		JpcBuilder.register(converterManager, new CalendarToAtomConverter());
+		JpcBuilder.register(converterManager, new XMLGregorianCalendarConverter<Atom>(){});
+		class XMLGregorianCalendarConverterToNumberTerm<T extends NumberTerm> extends XMLGregorianCalendarConverter<T>{}
+		JpcBuilder.register(converterManager, new XMLGregorianCalendarConverterToNumberTerm());
 
 		JpcBuilder.register(converterManager, new ArrayConverter());
 		JpcBuilder.register(converterManager, new CollectionConverter());

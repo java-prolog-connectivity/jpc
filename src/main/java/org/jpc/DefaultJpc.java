@@ -15,8 +15,8 @@ import org.jgum.strategy.ChainOfResponsibility;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.FromTermConverterAdapter;
 import org.jpc.converter.JpcConverterManager;
-import org.jpc.converter.catalog.jterm.JTermConverter;
-import org.jpc.converter.catalog.jterm.SerializedConverter;
+import org.jpc.converter.catalog.jterm.FromJTermConverter;
+import org.jpc.converter.catalog.jterm.FromSerializedConverter;
 import org.jpc.converter.typesolver.JGumTypeSolverManager;
 import org.jpc.converter.typesolver.TypeSolverManager;
 import org.jpc.converter.typesolver.UnrecognizedObjectException;
@@ -62,7 +62,7 @@ public class DefaultJpc extends Jpc {
 	}
 	
 	private ChainOfResponsibility<Converter<?,?>,?> getFromTermSystemConverter() {
-		List<FromTermConverter<?,?>> systemConverters = Arrays.<FromTermConverter<?,?>>asList(new JTermConverter(), new SerializedConverter());
+		List<FromTermConverter<?,?>> systemConverters = Arrays.<FromTermConverter<?,?>>asList(new FromJTermConverter(), new FromSerializedConverter());
 		return FromTermConverterAdapter.chainConverters((List)systemConverters);
 	}
 	
@@ -70,6 +70,7 @@ public class DefaultJpc extends Jpc {
 	@Override
 	public <T> T fromTerm(Term term, Type targetType) {
 		Objects.requireNonNull(term);
+		
 		if(!targetType.equals(Object.class) && TypeWrapper.wrap(targetType).isAssignableFrom(term.getClass()))
 			return (T) term;
 			
@@ -78,27 +79,40 @@ public class DefaultJpc extends Jpc {
 		} catch(ConversionException e) {}
 		
 		try {
-			Type termType = getType(term);
-			if(termType != null) {
+			Type typeSolverType = getType(term);
+			if(typeSolverType != null) {
 				try {
-					targetType = TypeWrapper.wrap(termType).mostSpecificType(targetType); //will throw an exception if the types are not compatible.
+					targetType = TypeWrapper.wrap(typeSolverType).mostSpecificType(targetType); //will throw an exception if the types are not compatible.
 				} catch(IncompatibleTypesException e) {} // the most specific type is not compatible with the target type. Just ignore it and do nothing.
 			}
 		} catch(UnrecognizedObjectException e){} //a type recommendation cannot be found (do nothing).
+		
 		return getJpcConverterManager().fromTerm(term, targetType, this);
 	}
 	
+	
 	@Override
-	public <T extends Term> T toTerm(Object object, Class<T> termClass) {
+	public <T extends Term> T toTerm(Object object, Class<T> targetType) {
 		if(object==null) {
-			if(termClass.isAssignableFrom(Var.class))
+			if(targetType.isAssignableFrom(Var.class))
 				return (T) Var.ANONYMOUS_VAR;
 			else
-				throw new NullPointerException("A Null object cannot be transformed to a logic term of class " + termClass);
+				throw new NullPointerException("A Null object cannot be transformed to a logic term of class " + targetType);
 		}
-		if(termClass.isAssignableFrom(object.getClass()))
+		
+		if(targetType.isAssignableFrom(object.getClass()))
 			return (T) object;
-		return getJpcConverterManager().toTerm(object, termClass, this);
+		
+		try {
+			Type typeSolverType = getType(object);
+			if(typeSolverType != null) {
+				try {
+					targetType = (Class) TypeWrapper.wrap(typeSolverType).mostSpecificType(targetType); //will throw an exception if the types are not compatible.
+				} catch(IncompatibleTypesException e) {} // the most specific type is not compatible with the target type. Just ignore it and do nothing.
+			}
+		} catch(UnrecognizedObjectException e){} //a type recommendation cannot be found (do nothing).
+		
+		return getJpcConverterManager().toTerm(object, targetType, this);
 	}
 	
 	

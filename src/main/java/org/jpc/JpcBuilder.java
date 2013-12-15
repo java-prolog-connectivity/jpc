@@ -82,7 +82,7 @@ public class JpcBuilder extends JConverterBuilder {
 //		return this;
 //	}
 //	
-//	private JpcBuilder register(ToTermConverter<?,?> converter) {
+//	private JpcBuilder register(ToJTermTermConverter<?,?> converter) {
 //		register(converterManager, converter);
 //		return this;
 //	}

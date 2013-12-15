@@ -1,5 +1,6 @@
 package org.jpc.converter.catalog.jterm;
 
+import java.io.Serializable;
 import java.lang.reflect.Type;
 
 import javax.xml.bind.DatatypeConverter;
@@ -11,7 +12,7 @@ import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.jterm.Serialized;
 
-public class SerializedConverter<T> implements FromTermConverter<Compound,T> {
+public class FromSerializedConverter<T extends Serializable> implements FromTermConverter<Compound,T> {
 
 	@Override
 	public T fromTerm(Compound term, Type type, Jpc context) {
