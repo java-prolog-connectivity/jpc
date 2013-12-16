@@ -32,8 +32,6 @@ import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
 public class DefaultJpc extends Jpc {
 	
-	
-	
 	//private final VarConverter nullConverter = new VarConverter();
 	private final ChainOfResponsibility<Converter<?,?>,?> fromTermSystemConverter;
 	private final JTermManager jTermManager;
@@ -45,7 +43,7 @@ public class DefaultJpc extends Jpc {
 		this(new JGum());
 	}
 	
-	private DefaultJpc(JGum jgum) {
+	protected DefaultJpc(JGum jgum) {
 		this(JpcConverterManager.createDefault(jgum),
 				JGumInstantiationManager.createDefault(jgum), 
 				JGumTypeSolverManager.createDefault(jgum), 
@@ -53,7 +51,7 @@ public class DefaultJpc extends Jpc {
 				new DefaultJpcErrorHandler());
 	}
 	
-	public DefaultJpc(JpcConverterManager converterManager, InstantiationManager instantiationManager, TypeSolverManager typeSolverManager, JTermManager jTermManager, ErrorHandler errorHandler) {
+	protected DefaultJpc(JpcConverterManager converterManager, InstantiationManager instantiationManager, TypeSolverManager typeSolverManager, JTermManager jTermManager, ErrorHandler errorHandler) {
 		super(converterManager, instantiationManager, typeSolverManager);
 		this.typeSolverManager = typeSolverManager;
 		this.jTermManager = jTermManager;
