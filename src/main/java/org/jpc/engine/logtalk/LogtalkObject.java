@@ -31,7 +31,7 @@ import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
 
-public class LogtalkObject implements TermConvertable, PrologDatabase {
+public class LogtalkObject<T extends Term> implements TermConvertable<T>, PrologDatabase {
 
 	public static Compound logtalkMessage(Term receiver, String message) {
 		return logtalkMessage(receiver, new Atom(message));
@@ -52,7 +52,7 @@ public class LogtalkObject implements TermConvertable, PrologDatabase {
 	
 	
 	private PrologEngine prologEngine;
-	private Term term;
+	private T term;
 	private Jpc context;
 	
 	public LogtalkObject(Object object, PrologEngine prologEngine) {
@@ -60,7 +60,7 @@ public class LogtalkObject implements TermConvertable, PrologDatabase {
 	}
 	
 	public LogtalkObject(Object object, PrologEngine prologEngine, Jpc context) {
-		this.term = context.toTerm(object);
+		this.term = (T) context.toTerm(object);
 		this.prologEngine = prologEngine;
 		this.context = context;
 	}
@@ -80,7 +80,7 @@ public class LogtalkObject implements TermConvertable, PrologDatabase {
 	}
 	
 	@Override
-	public Term asTerm() {
+	public T asTerm() {
 		return term;
 	}
 
