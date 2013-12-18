@@ -26,6 +26,14 @@ public class PrologEngineManager {
 		return prologEngineManager;
 	}
 	
+	static {
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				prologEngineManager.shutdownAll(true);
+			}
+		});
+	}
 	
 	
 	private JGum jgum;
@@ -67,7 +75,7 @@ public class PrologEngineManager {
 				try {
 					prologEngine.close();
 				} catch(Exception e) {
-					logger.error("Error attempting to shutdown prolog engine: " + prologEngine.toString() + ".");
+					logger.warn("Exception when attempting to shutdown prolog engine: " + prologEngine.toString() + ".");
 					if(!force)
 						throw e;
 				}
