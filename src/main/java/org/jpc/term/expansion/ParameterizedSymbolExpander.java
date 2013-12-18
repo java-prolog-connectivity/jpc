@@ -1,12 +1,12 @@
 package org.jpc.term.expansion;
 
-import static org.jpc.JpcPreferences.CONVERSION_SPECIFIER_OPERATOR;
-import static org.jpc.JpcPreferences.DEFAULT_TERM_CONVERSION_SYMBOL;
-import static org.jpc.JpcPreferences.SUBSTITUTION_OPERATOR;
-import static org.jpc.JpcPreferences.TERM_CONVERSION_BY_MAPPING_AND_REFERENCE_SYMBOL;
-import static org.jpc.JpcPreferences.TERM_CONVERSION_BY_MAPPING_SYMBOL;
-import static org.jpc.JpcPreferences.TERM_CONVERSION_BY_REFERENCE_SYMBOL;
-import static org.jpc.JpcPreferences.TERM_CONVERSION_BY_SERIALIZATION_SYMBOL;
+import static org.jpc.util.JpcPreferences.CONVERSION_SPECIFIER_OPERATOR;
+import static org.jpc.util.JpcPreferences.DEFAULT_TERM_CONVERSION_SYMBOL;
+import static org.jpc.util.JpcPreferences.SUBSTITUTION_OPERATOR;
+import static org.jpc.util.JpcPreferences.TERM_CONVERSION_BY_MAPPING_AND_REFERENCE_SYMBOL;
+import static org.jpc.util.JpcPreferences.TERM_CONVERSION_BY_MAPPING_SYMBOL;
+import static org.jpc.util.JpcPreferences.TERM_CONVERSION_BY_REFERENCE_SYMBOL;
+import static org.jpc.util.JpcPreferences.TERM_CONVERSION_BY_SERIALIZATION_SYMBOL;
 
 import java.io.Serializable;
 

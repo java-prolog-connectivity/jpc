@@ -4,8 +4,8 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 
-import org.jpc.JpcPreferences;
 import org.jpc.engine.prolog.PrologEngine;
+import org.jpc.util.JpcPreferences;
 
 public class CachedPrologEngineWriter extends PrologFileWriter implements Closeable {
 

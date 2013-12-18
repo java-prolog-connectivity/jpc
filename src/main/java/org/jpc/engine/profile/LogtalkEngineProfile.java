@@ -1,8 +1,8 @@
 package org.jpc.engine.profile;
 
-import org.jpc.JpcPreferences;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.engine.prolog.driver.PrologEngineFactory;
+import org.jpc.util.JpcPreferences;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

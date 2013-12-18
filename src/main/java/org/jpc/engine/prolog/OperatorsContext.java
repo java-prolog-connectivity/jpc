@@ -1,9 +1,9 @@
 package org.jpc.engine.prolog;
 
 import static java.util.Arrays.asList;
-import static org.jpc.JpcPreferences.JPC_ANON_VAR_PREFIX;
 import static org.jpc.engine.prolog.PrologConstants.CURRENT_OP;
 import static org.jpc.engine.prolog.PrologConstants.FINDALL;
+import static org.jpc.util.JpcPreferences.JPC_ANON_VAR_PREFIX;
 
 import java.util.Collection;
 

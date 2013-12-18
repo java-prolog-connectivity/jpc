@@ -1,13 +1,13 @@
 package org.jpc.engine.prolog.driver;
 
-import static org.jpc.JpcPreferences.JPC_LOADER_FILE;
+import static org.jpc.util.JpcPreferences.JPC_LOADER_FILE;
 
 import java.util.Collection;
 
-import org.jpc.JpcPreferences;
 import org.jpc.engine.listener.DriverStateListener;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.engine.prolog.PrologEngineInitializationException;
+import org.jpc.util.JpcPreferences;
 import org.jpc.util.PrologResourceLoader;
 import org.jpc.util.supportedengines.EngineDescription;
 import org.minitoolbox.collections.CollectionsUtil;

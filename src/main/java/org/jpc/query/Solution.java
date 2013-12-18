@@ -1,6 +1,6 @@
 package org.jpc.query;
 
-import static org.jpc.JpcPreferences.JPC_ANON_VAR_PREFIX;
+import static org.jpc.util.JpcPreferences.JPC_ANON_VAR_PREFIX;
 
 import java.lang.reflect.Type;
 import java.util.Collection;

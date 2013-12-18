@@ -1,12 +1,12 @@
 package org.jpc.term.expansion;
 
 import static java.util.Arrays.asList;
-import static org.jpc.JpcPreferences.CONVERSION_SPECIFIER_OPERATOR;
-import static org.jpc.JpcPreferences.SUBSTITUTION_OPERATOR;
-import static org.jpc.JpcPreferences.TERM_CONVERSION_BY_MAPPING_AND_REFERENCE_SYMBOL;
-import static org.jpc.JpcPreferences.TERM_CONVERSION_BY_MAPPING_SYMBOL;
-import static org.jpc.JpcPreferences.TERM_CONVERSION_BY_REFERENCE_SYMBOL;
-import static org.jpc.JpcPreferences.TERM_CONVERSION_BY_SERIALIZATION_SYMBOL;
+import static org.jpc.util.JpcPreferences.CONVERSION_SPECIFIER_OPERATOR;
+import static org.jpc.util.JpcPreferences.SUBSTITUTION_OPERATOR;
+import static org.jpc.util.JpcPreferences.TERM_CONVERSION_BY_MAPPING_AND_REFERENCE_SYMBOL;
+import static org.jpc.util.JpcPreferences.TERM_CONVERSION_BY_MAPPING_SYMBOL;
+import static org.jpc.util.JpcPreferences.TERM_CONVERSION_BY_REFERENCE_SYMBOL;
+import static org.jpc.util.JpcPreferences.TERM_CONVERSION_BY_SERIALIZATION_SYMBOL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

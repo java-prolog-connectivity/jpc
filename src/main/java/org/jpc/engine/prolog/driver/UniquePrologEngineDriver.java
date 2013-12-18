@@ -2,9 +2,9 @@ package org.jpc.engine.prolog.driver;
 
 import java.util.Collection;
 
-import org.jpc.JpcPreferences;
 import org.jpc.engine.listener.DriverStateListener;
 import org.jpc.engine.prolog.PrologEngine;
+import org.jpc.util.JpcPreferences;
 
 /**
  * This class describes logic engines that are unique per process

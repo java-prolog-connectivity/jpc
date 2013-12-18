@@ -1,7 +1,6 @@
 package org.jpc.engine.prolog;
 
 import static java.util.Arrays.asList;
-import static org.jpc.JpcPreferences.JPC_VAR_PREFIX;
 import static org.jpc.engine.prolog.PrologConstants.ABOLISH;
 import static org.jpc.engine.prolog.PrologConstants.ASSERTA;
 import static org.jpc.engine.prolog.PrologConstants.ASSERTZ;
@@ -21,6 +20,7 @@ import static org.jpc.engine.prolog.PrologConstants.SETOF;
 import static org.jpc.engine.prolog.PrologConstants.SET_PROLOG_FLAG;
 import static org.jpc.term.ListTerm.listTerm;
 import static org.jpc.term.Var.ANONYMOUS_VAR;
+import static org.jpc.util.JpcPreferences.JPC_VAR_PREFIX;
 import static org.jpc.util.PrologUtil.termSequence;
 
 import java.util.ArrayList;
