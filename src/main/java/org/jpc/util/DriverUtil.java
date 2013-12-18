@@ -44,7 +44,8 @@ public class DriverUtil {
 		for(Class<? extends PrologEngineDriver> clazz : findDriverClasses(classLoaders, urls)) {
 			try {
 				PrologEngineDriver driver = clazz.newInstance();
-				drivers.add(driver);
+				if(!driver.isDisabled())
+					drivers.add(driver);
 			} catch (InstantiationException | IllegalAccessException e) {
 			} //do nothing if the configuration class cannot be instantiated
 		}
