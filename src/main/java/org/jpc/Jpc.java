@@ -87,7 +87,7 @@ public abstract class Jpc extends JConverter {
 	 * @param object the object which conversion target type to recommend.
 	 * @return the recommended type.
 	 */
-	public abstract Type getType(Object key, Object object);
+	protected abstract Type getType(Object key, Object object);
 	
 	public abstract JTermManager getJTermManager();
 	

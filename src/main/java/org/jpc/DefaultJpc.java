@@ -129,7 +129,7 @@ public class DefaultJpc extends Jpc {
 	}
 
 	@Override
-	public Type getType(Object key, Object object) {
+	protected Type getType(Object key, Object object) {
 		return typeSolverManager.getType(TypeSolverManager.DEFAULT_KEY, object);
 	}
 	

@@ -18,7 +18,7 @@ import org.jpc.term.Var;
 
 /**
  * An utility class for general purpose queries and term manipulation
- * Disclaimer: Some methods were inspired or taken from the JPL library
+ * Disclaimer: Some methods were inspired or adapted from the JPL library
  * @author scastro
  *
  */
