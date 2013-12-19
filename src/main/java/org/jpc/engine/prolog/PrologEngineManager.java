@@ -105,6 +105,7 @@ public class PrologEngineManager {
 			return name;
 	}
 	
+	//TODO move the getPrologEngine(...) methods to the interface PrologEngineFactory when Java8 is available.
 	public synchronized <T extends PrologEngine> T getPrologEngine(String categoryName) {
 		LazyEngineProvider<T> provider = jgum.forName(categoryName).<LazyEngineProvider<T>>getProperty(LazyEngineProvider.class).get();
 		return provider.getPrologEngine();
