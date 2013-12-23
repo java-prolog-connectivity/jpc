@@ -56,7 +56,7 @@ public abstract class Jpc extends JConverter {
 	
 	public abstract <T extends Term> T toTerm(Object object, Class<T> termClass);
 	
-	public final Compound toTerm(Object name, List<?> args) {
+	public final Compound toCompound(Object name, List<?> args) {
 		return new Compound(toTerm(name), listTerm(args));
 	}
 	
