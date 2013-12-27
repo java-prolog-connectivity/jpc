@@ -4,14 +4,19 @@ import static org.jpc.engine.prolog.PrologConstants.ANONYMOUS_VAR_NAME;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.jpc.JpcException;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.JpcTermWriter;
 import org.jpc.salt.TermContentHandler;
 import org.jpc.term.expansion.DefaultTermExpander;
+import org.jpc.term.unification.NonUnifiableException;
+import org.jpc.term.unification.VarCell;
+import org.jpc.term.unification.VariableAnonymizerTermExpander;
 import org.jpc.term.visitor.TermVisitor;
 import org.jpc.util.salt.ChangeVariableNameAdapter;
 import org.jpc.util.salt.ReplaceVariableAdapter;
@@ -68,28 +73,28 @@ public abstract class Term {
 		return getArgs().size();
 	}
 
-	public boolean hasFunctor(String nameTermObject, int arity) {
-		return hasFunctor(new Atom(nameTermObject), arity);
-	}
 	
 	/**
-	 * whether this term has a functor with a given id and arity
-	 * @param nameTermObject the id of this term
-	 * @param arity the arity of this term
-	 * @return true if the term has the given id and arity. False otherwise
+	 * Whether this term has a given functor.
+	 * @param functor the functor of this term.
+	 * @return true if the term has the given functor. False otherwise.
 	 */
-	public abstract boolean hasFunctor(Term nameTermObject, int arity);
+	public abstract boolean hasFunctor(Functor functor);
 
+	public boolean hasFunctor(String nameTermObject, int arity) {
+		return hasFunctor(new Functor(new Atom(nameTermObject), arity));
+	}
+	
 	public boolean hasFunctor(boolean nameTermObject, int arity) {
-		return hasFunctor(new Atom(Boolean.toString(nameTermObject)), arity);
+		return hasFunctor(new Functor(new Atom(Boolean.toString(nameTermObject)), arity));
 	}
 	
 	public boolean hasFunctor(double nameTermObject, int arity) {
-		return hasFunctor(new FloatTerm(nameTermObject), arity);
+		return hasFunctor(new Functor(new FloatTerm(nameTermObject), arity));
 	}
 	
 	public boolean hasFunctor(long nameTermObject, int arity) {
-		return hasFunctor(new IntegerTerm(nameTermObject), arity);
+		return hasFunctor(new Functor(new IntegerTerm(nameTermObject), arity));
 	}
 	
 	/**
@@ -139,7 +144,7 @@ public abstract class Term {
 	public boolean isBound() {
 		return getVariablesNames().isEmpty();
 	}
-
+	
 	/**
 	 * Returns a term with all the occurrences of the variables in the parameter map replaced with its associated value (converted to a term)
 	 * @param map maps variable names to values.
@@ -239,6 +244,70 @@ public abstract class Term {
 	 * @param termVisitor the accepted visitor
 	 */
 	public abstract void accept(TermVisitor termVisitor);
+	
+	/**
+	 * 
+	 * @param term a term.
+	 * @param sameLexicalScope boolean indicating if this term share the same variable name space than the term sent as parameter.
+	 * @return true if this term is unifiable with the term sent as parameter, false otherwise.
+	 */
+	public boolean isUnifiable(Term term, boolean sameLexicalScope) {
+		try {
+			unifyVars(term, sameLexicalScope);
+			return true;
+		} catch(NonUnifiableException e) {
+			return false;
+		}
+	}
+	
+//	public Term unify(Term term) {
+//	return unify(term, true);
+//}
+	
+	/**
+	 * @param term a term.
+	 * @param sameLexicalScope boolean indicating if this term share the same variable name space than the term sent as parameter.
+	 * @return this term unified with the term sent as parameter.
+	 */
+	public Term unify(Term term, boolean sameLexicalScope) {
+		Map<Var, Term> unificationVars = unifyVars(term, sameLexicalScope);
+		Map<String, Term> replacementMap = new HashMap<>();
+		for(Entry<Var, Term> entry : unificationVars.entrySet()) {
+			replacementMap.put(entry.getKey().getName(), entry.getValue());
+		}
+		return replaceVariables(replacementMap);
+	}
+	
+//	public Map<Var, Term> unifyVars(Term term) {
+//		return unifyVars(term, true);
+//	}
+	
+	/**
+	 * @param term a term.
+	 * @param sameLexicalScope boolean indicating if this term share the same variable name space than the term sent as parameter.
+	 * @return a map of variables to terms according to the accomplished unification.
+	 */
+	public Map<Var, Term> unifyVars(Term term, boolean sameLexicalScope) {
+		if(!sameLexicalScope) {
+			term = term.termExpansion(new VariableAnonymizerTermExpander());
+		}
+		Map<Var, VarCell> context = new HashMap<>();
+		unifyVars(term, context);
+		Map<Var, Term> result = new HashMap<>();
+		for(Entry<Var, VarCell> contextEntry : context.entrySet()) {
+			result.put(contextEntry.getKey(), contextEntry.getValue().getValue());
+		}
+		return result;
+	}
+	
+	protected void unifyVars(Term term, Map<Var, VarCell> context) {
+		if(term instanceof Var) {
+			term.unifyVars(this, context);
+		} else {
+			if(!equals(term))
+				throw new NonUnifiableException(this, term);
+		}
+	}
 	
 	public Term termExpansion(Function<Term, Term> termExpander) {
 		JpcTermWriter termWriter = new JpcTermWriter();

@@ -5,9 +5,11 @@ import static org.jpc.engine.prolog.PrologConstants.ANONYMOUS_VAR_NAME;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.TermContentHandler;
+import org.jpc.term.unification.VarCell;
 import org.jpc.term.visitor.TermVisitor;
 
 import com.google.common.base.Function;
@@ -70,6 +72,41 @@ public final class Var extends Term {
 		return this.name;
 	}
 	
+	@Override
+	protected void unifyVars(Term term, Map<Var, VarCell> context) {
+		if(!(termEquals(Var.ANONYMOUS_VAR) || term.termEquals(Var.ANONYMOUS_VAR))) {
+			VarCell thisVarCell = context.get(this);
+			if(thisVarCell == null) {
+				thisVarCell = new VarCell(this);
+				context.put(this, thisVarCell);
+			}
+			if(term instanceof Var) {
+				VarCell thatVarCell = context.get(term);
+				if(thatVarCell == null) {
+					thatVarCell = thisVarCell;
+					context.put((Var)term, thatVarCell);
+				} 
+				if(thisVarCell != thatVarCell) {
+					Term thatVarBoundTerm = thatVarCell.getValue();
+					unifyCell(thisVarCell, thatVarBoundTerm, context);
+					thatVarCell.getRegister().becomes(thisVarCell.getRegister());
+				}
+			} else {
+				unifyCell(thisVarCell, term, context);
+			}
+		}
+	}
+	
+	private void unifyCell(VarCell varCell, Term term, Map<Var, VarCell> context) {
+		Term oldTerm = varCell.getValue();
+		if(oldTerm instanceof Var) {
+			if(!(term instanceof Var))
+				varCell.setValue(term);
+		} else {
+			oldTerm.unifyVars(term, context);
+		}
+	}
+	
 	/**
 	 * Returns a Prolog source text representation of this Variable
 	 * 
@@ -108,8 +145,8 @@ public final class Var extends Term {
 	}
 	
 	@Override
-	public boolean hasFunctor(Term nameTerm, int arity) {
-		return arity == 0 && termEquals(nameTerm);
+	public boolean hasFunctor(Functor functor) {
+		return functor.getArity() == 0 && termEquals(functor.getName());
 	}
 
 	@Override

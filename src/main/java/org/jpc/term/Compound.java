@@ -6,12 +6,15 @@ import static org.jpc.engine.prolog.PrologConstants.CONS_FUNCTOR;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.jpc.JpcException;
 import org.jpc.engine.prolog.Operator;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.TermContentHandler;
+import org.jpc.term.unification.NonUnifiableException;
+import org.jpc.term.unification.VarCell;
 import org.jpc.term.visitor.TermVisitor;
 
 import com.google.common.base.Function;
@@ -28,11 +31,13 @@ public final class Compound extends Term {
 	 * the id of this Compound
 	 */
 	private final Term name;
+	
 	/**
 	 * the arguments of this Compound
 	 */
 	private final List<Term> args;
 
+	private final Functor functor;
 	
 	public Compound(String name, List<? extends Term> args) {
 		this(new Atom(name), args);
@@ -48,6 +53,7 @@ public final class Compound extends Term {
 		checkArgument(!args.isEmpty(), "A compound term must have at least one argument");
 		this.name = name;
 		this.args = (List<Term>) args;
+		functor = new Functor(name, args.size());
 	}
 	
 	@Override
@@ -86,17 +92,15 @@ public final class Compound extends Term {
 		return name.termEquals(term);
 	}
 
-	/**
-	 * Tests whether this Compound's functor has (String) 'id' and 'arity'.
-	 * 
-	 * @return whether this Compound's functor has (String) 'id' and 'arity'
-	 */
-	
+
 	@Override
-	public boolean hasFunctor(Term nameTermObject, int arity) {
-		return args.size() == arity && name.termEquals(nameTermObject);
+	public boolean hasFunctor(Functor functor) {
+		return args.size() == functor.getArity() && name.termEquals(functor.getName());
 	}
 	
+	public Functor getFunctor() {
+		return functor;
+	}
 	
 	/**
 	 * Returns the id of this Compound.
@@ -125,6 +129,21 @@ public final class Compound extends Term {
 		return args;
 	}
 	
+	@Override
+	protected void unifyVars(Term term, Map<Var, VarCell> context) {
+		if(this != term) {
+			if(term instanceof Var)
+				term.unifyVars(this, context);
+			else if(!(term instanceof Compound) || term.arity() != arity())
+				throw new NonUnifiableException(this, term);
+			else {
+				Compound compound = (Compound) term;
+				getName().unifyVars(compound.getName(), context);
+				for(int i=0; i<arity(); i++)
+					arg(i+1).unifyVars(term.arg(i+1), context);
+			}
+		}
+	}
 	
 	/**
 	 * Returns a prefix functional representation of a Compound of the form id(arg1,...),
