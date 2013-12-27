@@ -21,7 +21,7 @@ public class FloatTermTest {
 	
 	@Test
 	public void testHasFunctor() {
-		assertTrue(new FloatTerm(10.5).hasFunctor(new FloatTerm(10.5), 0));
+		assertTrue(new FloatTerm(10.5).hasFunctor(new Functor(new FloatTerm(10.5), 0)));
 	}
 	
 }

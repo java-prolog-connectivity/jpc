@@ -46,9 +46,9 @@ public class VariableTest {
 	
 	@Test
 	public void testHasFunctor() {
-		assertTrue(new Var("A").hasFunctor(new Var("A"), 0));
-		assertTrue(new Var("_A").hasFunctor(new Var("_A"), 0));
-		assertTrue(new Var("_").hasFunctor(new Var("_"), 0));
+		assertTrue(new Var("A").hasFunctor(new Functor(new Var("A"), 0)));
+		assertTrue(new Var("_A").hasFunctor(new Functor(new Var("_A"), 0)));
+		assertTrue(new Var("_").hasFunctor(new Functor(new Var("_"), 0)));
 	}
 	
 }

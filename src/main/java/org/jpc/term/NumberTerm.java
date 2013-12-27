@@ -40,8 +40,8 @@ public abstract class NumberTerm extends Term {
 	}
 	
 	@Override
-	public boolean hasFunctor(Term nameTerm, int arity) {
-		return arity == 0 && equals(nameTerm);
+	public boolean hasFunctor(Functor functor) {
+		return functor.getArity() == 0 && termEquals(functor.getName());
 	}
 
 	@Override

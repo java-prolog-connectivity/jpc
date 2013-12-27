@@ -51,8 +51,8 @@ public final class Atom extends Term {
 	}
 	
 	@Override
-	public boolean hasFunctor(Term nameTermObject, int arity) {
-		return arity == 0 && termEquals(nameTermObject);
+	public boolean hasFunctor(Functor functor) {
+		return functor.getArity() == 0 && termEquals(functor.getName());
 	}
 	
 	public boolean isBoolean() {

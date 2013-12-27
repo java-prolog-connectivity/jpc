@@ -3,7 +3,6 @@ package org.jpc.term;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import org.jpc.term.IntegerTerm;
 import org.junit.Test;
 
 public class IntegerTermTest {
@@ -22,6 +21,6 @@ public class IntegerTermTest {
 	
 	@Test
 	public void testHasFunctor() {
-		assertTrue(new IntegerTerm(10).hasFunctor(new IntegerTerm(10), 0));
+		assertTrue(new IntegerTerm(10).hasFunctor(new Functor(new IntegerTerm(10), 0)));
 	}
 }
