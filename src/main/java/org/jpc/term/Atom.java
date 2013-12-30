@@ -26,7 +26,7 @@ public final class Atom extends Term {
 	public static final Atom EMPTY_LIST = new Atom(EMPTY_LIST_SYMBOL);
 	
 	private final String name;
-	private final String escapedName; //for efficiency sake this is calculated once at instantiation time
+	private String escapedName; //lazily initialized.
 	
 	public Atom(Boolean bool) {
 		this(bool.toString());
@@ -37,13 +37,6 @@ public final class Atom extends Term {
 	 */
 	public Atom(String name) {
 		this.name = name;
-		String escapedName = name;
-		if(!isList()) {
-			escapedName = escapedName.replaceAll("\\\\", Matcher.quoteReplacement("\\\\"));
-			escapedName = escapedName.replaceAll("'", Matcher.quoteReplacement("''")); //escaping ' with \' does not work correctly in XSB, therefore it is escaped with the alternative ''
-			escapedName = "'" + escapedName + "'";
-		}
-		this.escapedName = escapedName;
 	}
 
 	public String getName() {
@@ -84,6 +77,15 @@ public final class Atom extends Term {
 	
 	@Override
 	public String toEscapedString() {
+		if(this.escapedName == null) {
+			String escapedName = name;
+			if(!isList()) {
+				escapedName = escapedName.replaceAll("\\\\", Matcher.quoteReplacement("\\\\"));
+				escapedName = escapedName.replaceAll("'", Matcher.quoteReplacement("''")); //escaping ' with \' does not work correctly in XSB, therefore it is escaped with the alternative ''
+				escapedName = "'" + escapedName + "'";
+			}
+			this.escapedName = escapedName;
+		}
 		return escapedName;
 	}
 	
