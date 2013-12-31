@@ -11,7 +11,7 @@ import com.google.common.base.Function;
  * @author scastro
  *
  */
-public final class FloatTerm extends NumberTerm {
+public class FloatTerm extends NumberTerm {
 
 	/**
 	 * @param   value  This FloatTerm's (double) value

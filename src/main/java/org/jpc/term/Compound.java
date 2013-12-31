@@ -13,6 +13,7 @@ import org.jpc.JpcException;
 import org.jpc.engine.prolog.Operator;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.TermContentHandler;
+import org.jpc.term.CompiledVar.CompilationContext;
 import org.jpc.term.unification.NonUnifiableException;
 import org.jpc.term.unification.VarCell;
 import org.jpc.term.visitor.TermVisitor;
@@ -25,8 +26,10 @@ import com.google.common.base.Joiner;
  * @author scastro
  *
  */
-public final class Compound extends Term {
+public class Compound extends Term {
 
+	private Boolean ground;
+	private Integer hash;
 	/**
 	 * the id of this Compound
 	 */
@@ -130,9 +133,9 @@ public final class Compound extends Term {
 	}
 	
 	@Override
-	protected void unifyVars(Term term, Map<Var, VarCell> context) {
+	protected void unifyVars(Term term, Map<AbstractVar, VarCell> context) {
 		if(this != term) {
-			if(term instanceof Var)
+			if(term instanceof AbstractVar)
 				term.unifyVars(this, context);
 			else if(!(term instanceof Compound) || term.arity() != arity())
 				throw new NonUnifiableException(this, term);
@@ -145,45 +148,6 @@ public final class Compound extends Term {
 		}
 	}
 	
-	/**
-	 * Returns a prefix functional representation of a Compound of the form id(arg1,...),
-	 * 
-	 * @return  string representation of an Compound
-	 */
-	@Override
-	public String toEscapedString() {
-		return getName().toEscapedString() + "(" + Term.toEscapedString(args) + ")";
-	}
-	
-	@Override
-	protected int basicHashCode() {
-		List<Term> allFields = new ArrayList<Term>(getArgs());
-		allFields.add(0, getName());
-		return Objects.hash(allFields.toArray());
-	}
-	
-	/**
-	 * Two Compounds are equal if they are identical (same object) or their names and arities are equal and their
-	 * respective arguments are equal.
-	 * 
-	 * @param   obj  the Object to compare (not necessarily another Compound)
-	 * @return  true if the Object satisfies the above condition
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		return (this == obj || (obj instanceof Compound && 
-				name.equals(((Compound) obj).name) && 
-				Arrays.equals(args.toArray(), ((Compound) obj).args.toArray())));
-	}
-	
-	@Override
-	public boolean termEquals(Term term) {
-		if(term instanceof Compound) {
-			Compound compound = (Compound) term;
-			return this.name.termEquals(compound.name) && termEquals(args, compound.args);
-		}
-		return false;
-	}
 	
 	public void accept(TermVisitor termVisitor) {
 		if(termVisitor.visitCompound(this)) {
@@ -210,6 +174,52 @@ public final class Compound extends Term {
 		contentHandler.endCompound();
 	}
 
+	@Override
+	public boolean isGround() {
+		if(ground == null) {
+			boolean tmpGround = true;
+			if(!getName().isGround())
+				tmpGround = false;
+			else {
+				for(Term arg : getArgs()) {
+					if(!arg.isGround()) {
+						tmpGround = false;
+						break;
+					}
+				}
+			}
+			ground = tmpGround;
+		}
+		return ground;
+	}
+	
+	@Override
+	public Term compile(int clauseId, CompilationContext context) {
+		List<Term> args = new ArrayList<>();
+		for(Term arg : getArgs()) {
+			args.add(arg.compile(clauseId, context));
+		}
+		return new Compound(getName().compile(clauseId, context), args);
+	}
+
+	@Override
+	public Term compileForQuery() {
+		List<Term> args = new ArrayList<>();
+		for(Term arg : getArgs()) {
+			args.add(arg.compileForQuery());
+		}
+		return new Compound(getName().compileForQuery(), args);
+	}
+	
+	@Override
+	public Term forEnvironment(int environmentId) {
+		List<Term> args = new ArrayList<>();
+		for(Term arg : getArgs()) {
+			args.add(arg.forEnvironment(environmentId));
+		}
+		return new Compound(getName().forEnvironment(environmentId), args);
+	}
+	
 	@Override
 	public String toString(OperatorsContext operatorsContext) {
 		StringBuilder sb = new StringBuilder();
@@ -242,6 +252,52 @@ public final class Compound extends Term {
 				sb.append(toString());
 		}
 		return sb.toString();
+	}
+	
+	/**
+	 * Returns a prefix functional representation of a Compound of the form id(arg1,...),
+	 * 
+	 * @return  string representation of an Compound
+	 */
+	@Override
+	public String toEscapedString() {
+		return getName().toEscapedString() + "(" + Term.toEscapedString(args) + ")";
+	}
+	
+	@Override
+	public final int hashCode() {
+		if(hash == null)
+			hash = basicHashCode();
+		return hash;
+	}
+
+	private int basicHashCode() {
+		List<Term> allFields = new ArrayList<Term>(getArgs());
+		allFields.add(0, getName());
+		return Objects.hash(allFields.toArray());
+	}
+	
+	/**
+	 * Two Compounds are equal if they are identical (same object) or their names and arities are equal and their
+	 * respective arguments are equal.
+	 * 
+	 * @param   obj  the Object to compare (not necessarily another Compound)
+	 * @return  true if the Object satisfies the above condition
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		return (this == obj || (obj.getClass().equals(getClass()) && 
+				name.equals(((Compound) obj).name) && 
+				Arrays.equals(args.toArray(), ((Compound) obj).args.toArray())));
+	}
+	
+	@Override
+	public boolean termEquals(Term term) {
+		if(term instanceof Compound) {
+			Compound compound = (Compound) term;
+			return this.name.termEquals(compound.name) && termEquals(args, compound.args);
+		}
+		return false;
 	}
 
 }

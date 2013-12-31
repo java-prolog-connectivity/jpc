@@ -10,7 +10,7 @@ import com.google.common.base.Function;
  * @author scastro
  *
  */
-public final class IntegerTerm extends NumberTerm {
+public class IntegerTerm extends NumberTerm {
 
 	/**
 	 * @param   value  This IntegerTerm's (long) value

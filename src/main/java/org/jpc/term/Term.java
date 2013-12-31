@@ -13,14 +13,14 @@ import org.jpc.JpcException;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.JpcTermWriter;
 import org.jpc.salt.TermContentHandler;
+import org.jpc.term.CompiledVar.CompilationContext;
 import org.jpc.term.expansion.DefaultTermExpander;
 import org.jpc.term.unification.NonUnifiableException;
 import org.jpc.term.unification.VarCell;
-import org.jpc.term.unification.VariableAnonymizerTermExpander;
 import org.jpc.term.visitor.TermVisitor;
 import org.jpc.util.salt.ChangeVariableNameAdapter;
 import org.jpc.util.salt.ReplaceVariableAdapter;
-import org.jpc.util.salt.VariableNamesCollectorHandler;
+import org.jpc.util.salt.VariablesCollectorHandler;
 
 import com.google.common.base.Function;
 
@@ -33,7 +33,6 @@ import com.google.common.base.Function;
  */
 public abstract class Term {
 
-	private Integer hash;
 	private Boolean list;
 	
 	/**
@@ -142,7 +141,7 @@ public abstract class Term {
 	 * @return
 	 */
 	public boolean isBound() {
-		return getVariablesNames().isEmpty();
+		return getVariableNames().isEmpty();
 	}
 	
 	/**
@@ -176,54 +175,55 @@ public abstract class Term {
 	 * @return whether the term has a variable with a given id
 	 */
 	public boolean hasVariable(String variableName) {
-		return getVariablesNames().contains(variableName);
+		return getVariableNames().contains(variableName);
 	}
 
 	/**
-	 * Returns the variables names present in the term
 	 * @return the variables names present in the term
 	 */
-	public List<Var> getVariables() {
-		return Var.asVariables(getVariablesNames());
+	public List<AbstractVar> getVariables() {
+		VariablesCollectorHandler varCollector = new VariablesCollectorHandler();
+		accept(varCollector);
+		return varCollector.getVariables();
 	}
 	
 	/**
-	 * Returns the variables names present in the term
 	 * @return the variables names present in the term
 	 */
-	public List<String> getVariablesNames() {
-		VariableNamesCollectorHandler variableNamesCollector = new VariableNamesCollectorHandler();
-		read(variableNamesCollector);
-		return variableNamesCollector.getVariableNames();
+	public List<String> getVariableNames() {
+		return AbstractVar.getVariableNames(getVariables());
 	}
 
 	/**
-	 * Returns a list with all the non anonymous variables (i.e., all variables that do not start with "_")
-	 * @return a list with all the non anonymous variables (i.e., all variables that do not start with "_")
+	 * @return a list with all the non underscore variables (i.e., all variables that do not start with "_")
 	 */
-	public List<Var> getNonAnonymousVariables() {
-		return Var.asVariables(getNamedVariablesNames());
-	}
-	
-	/**
-	 * Returns a list with all the non anonymous variables names (i.e., all variables that do not start with "_")
-	 * @return a list with all the non anonymous variables names (i.e., all variables that do not start with "_")
-	 */
-	public List<String> getNonAnonymousVariablesNames() {
-		List<String> nonAnonymousVariablesNames = new ArrayList<>();
-		for(String variableName : getVariablesNames()) {
-			if(!Var.isAnonymousVariableName(variableName))
-				nonAnonymousVariablesNames.add(variableName);
+	public List<AbstractVar> getNonUnderscoreVariables() {
+		List<AbstractVar> nonUnderscoreVariables = new ArrayList<>();
+		for(AbstractVar var : getVariables()) {
+			if(!Var.isUnderscoreVariableName(var.getName()))
+				nonUnderscoreVariables.add(var);
 		}
-		return nonAnonymousVariablesNames;
+		return nonUnderscoreVariables;
+	}
+	
+	/**
+	 * @return a list with all the variables that do not start with "_".
+	 */
+	public List<String> getNonUnderscoreVariableNames() {
+		return AbstractVar.getVariableNames(getNonUnderscoreVariables());
 	}
 	
 	/**
 	 * Returns a list with all the named variables (i.e., all variables but "_")
 	 * @return a list with all the named variables (i.e., all variables but "_")
 	 */
-	public List<Var> getNamedVariables() {
-		return Var.asVariables(getNamedVariablesNames());
+	public List<AbstractVar> getNamedVariables() {
+		List<AbstractVar> nonUnderscoreVariables = new ArrayList<>();
+		for(AbstractVar var : getVariables()) {
+			if(!ANONYMOUS_VAR_NAME.equals(var.getName()))
+				nonUnderscoreVariables.add(var);
+		}
+		return nonUnderscoreVariables;
 	}
 	
 	/**
@@ -231,12 +231,7 @@ public abstract class Term {
 	 * @return a list with all the named variables names (i.e., all variables but "_")
 	 */
 	public List<String> getNamedVariablesNames() {
-		List<String> namedVariablesNames = new ArrayList<>();
-		for(String variableName : getVariablesNames()) {
-			if(!variableName.equals(ANONYMOUS_VAR_NAME))
-				namedVariablesNames.add(variableName);
-		}
-		return namedVariablesNames;
+		return AbstractVar.getVariableNames(getNamedVariables());
 	}
 	
 	/**
@@ -245,69 +240,57 @@ public abstract class Term {
 	 */
 	public abstract void accept(TermVisitor termVisitor);
 	
+	
 	/**
 	 * 
 	 * @param term a term.
-	 * @param sameLexicalScope boolean indicating if this term share the same variable name space than the term sent as parameter.
 	 * @return true if this term is unifiable with the term sent as parameter, false otherwise.
 	 */
-	public boolean isUnifiable(Term term, boolean sameLexicalScope) {
+	public boolean isUnifiable(Term term) {
 		try {
-			unifyVars(term, sameLexicalScope);
+			unifyVars(term);
 			return true;
 		} catch(NonUnifiableException e) {
 			return false;
 		}
 	}
-	
-//	public Term unify(Term term) {
-//	return unify(term, true);
-//}
-	
+
 	/**
 	 * @param term a term.
-	 * @param sameLexicalScope boolean indicating if this term share the same variable name space than the term sent as parameter.
 	 * @return this term unified with the term sent as parameter.
 	 */
-	public Term unify(Term term, boolean sameLexicalScope) {
-		Map<Var, Term> unificationVars = unifyVars(term, sameLexicalScope);
+	public Term unify(Term term) {
+		Map<AbstractVar, Term> unificationVars = unifyVars(term);
 		Map<String, Term> replacementMap = new HashMap<>();
-		for(Entry<Var, Term> entry : unificationVars.entrySet()) {
+		for(Entry<AbstractVar, Term> entry : unificationVars.entrySet()) {
 			replacementMap.put(entry.getKey().getName(), entry.getValue());
 		}
 		return replaceVariables(replacementMap);
 	}
 	
-//	public Map<Var, Term> unifyVars(Term term) {
-//		return unifyVars(term, true);
-//	}
-	
 	/**
 	 * @param term a term.
-	 * @param sameLexicalScope boolean indicating if this term share the same variable name space than the term sent as parameter.
 	 * @return a map of variables to terms according to the accomplished unification.
 	 */
-	public Map<Var, Term> unifyVars(Term term, boolean sameLexicalScope) {
-		if(!sameLexicalScope) {
-			term = term.termExpansion(new VariableAnonymizerTermExpander());
-		}
-		Map<Var, VarCell> context = new HashMap<>();
+	public Map<AbstractVar, Term> unifyVars(Term term) {
+		Map<AbstractVar, VarCell> context = new HashMap<>();
 		unifyVars(term, context);
-		Map<Var, Term> result = new HashMap<>();
-		for(Entry<Var, VarCell> contextEntry : context.entrySet()) {
+		Map<AbstractVar, Term> result = new HashMap<>();
+		for(Entry<AbstractVar, VarCell> contextEntry : context.entrySet()) {
 			result.put(contextEntry.getKey(), contextEntry.getValue().getValue());
 		}
 		return result;
 	}
 	
-	protected void unifyVars(Term term, Map<Var, VarCell> context) {
-		if(term instanceof Var) {
+	protected void unifyVars(Term term, Map<AbstractVar, VarCell> context) {
+		if(term instanceof AbstractVar) {
 			term.unifyVars(this, context);
 		} else {
 			if(!equals(term))
 				throw new NonUnifiableException(this, term);
 		}
 	}
+	
 	
 	public Term termExpansion(Function<Term, Term> termExpander) {
 		JpcTermWriter termWriter = new JpcTermWriter();
@@ -355,15 +338,6 @@ public abstract class Term {
 	public boolean termEquals(Term t) {
 		return equals(t); //default implementation, to be overridden.
 	}
-
-	@Override
-	public final int hashCode() {
-		if(hash == null)
-			hash = basicHashCode();
-		return hash;
-	}
-	
-	protected abstract int basicHashCode();
 	
 	
 	/**
@@ -410,5 +384,23 @@ public abstract class Term {
 	public static <T extends Term> String toEscapedString(List<T> terms) {
 		return toEscapedString(terms.toArray(new Term[]{}));
 	}
+	
+	public abstract boolean isGround();
+	
+	public final Term compile(int clauseId) {
+		return compile(clauseId, new CompilationContext());
+	}
+	
+	public abstract Term compile(int clauseId, CompilationContext context);
+	
+	public abstract Term compileForQuery();
+	
+	/**
+	 * Method only required for internal usage of the JPC Prolog engine.
+	 * Every time a new clause is visited when backtracking, a new environment should be created.
+	 * @param environmentId the environment id.
+	 * @return a term to be used in a new environment.
+	 */
+	public abstract Term forEnvironment(int environmentId);
 	
 }

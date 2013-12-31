@@ -10,6 +10,7 @@ import java.util.regex.Matcher;
 import org.jpc.JpcException;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.TermContentHandler;
+import org.jpc.term.CompiledVar.CompilationContext;
 import org.jpc.term.visitor.TermVisitor;
 
 import com.google.common.base.Function;
@@ -19,7 +20,7 @@ import com.google.common.base.Function;
  * @author scastro
  *
  */
-public final class Atom extends Term {
+public class Atom extends Term {
 
 	public static final Atom TRUE_TERM = new Atom(TRUE);
 	public static final Atom FAIL_TERM = new Atom(FAIL); //preferring 'fail' over 'false' since 'fail' is ISO.
@@ -76,6 +77,26 @@ public final class Atom extends Term {
 	}
 	
 	@Override
+	public boolean isGround() {
+		return true;
+	}
+
+	@Override
+	public Term compile(int clauseId, CompilationContext context) {
+		return new InternedAtom(name);
+	}
+
+	@Override
+	public Term compileForQuery() {
+		return new InternedAtom(name);
+	}
+
+	@Override
+	public Term forEnvironment(int environmentId) {
+		throw new UnsupportedOperationException(); //a call to this method should never happen.
+	}
+	
+	@Override
 	public String toEscapedString() {
 		if(this.escapedName == null) {
 			String escapedName = name;
@@ -90,18 +111,56 @@ public final class Atom extends Term {
 	}
 	
 	@Override
-	protected int basicHashCode() {
+	public String toString(OperatorsContext operatorsContext) {
+		return toString();
+	}
+	
+	@Override
+	public int hashCode() {
 		return name.hashCode();
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
-		return (this == obj || (obj instanceof Atom && name.equals(((Atom)obj).name)));
+		return (this == obj || (obj.getClass().equals(getClass()) && name.equals(((Atom)obj).name)));
 	}
 
-	@Override
-	public String toString(OperatorsContext operatorsContext) {
-		return toString();
+
+	
+	
+	
+	public class InternedAtom extends Atom {
+		
+		public InternedAtom(String name) {
+			super(name.intern());
+		}
+		
+		@Override
+		public Term compile(int clauseId, CompilationContext context) {
+			return this;
+		}
+
+		@Override
+		public Term compileForQuery() {
+			return this;
+		}
+
+		@Override
+		public Term forEnvironment(int environmentId) {
+			return this;
+		}
+		
+		@Override
+		public int hashCode() {
+			return System.identityHashCode(name);
+		}
+		
+		@Override
+		public boolean equals(Object obj) {
+			return (this == obj || (obj.getClass().equals(InternedAtom.class) && name == (((Atom)obj).name)));
+		}
+		
 	}
 
+	
 }

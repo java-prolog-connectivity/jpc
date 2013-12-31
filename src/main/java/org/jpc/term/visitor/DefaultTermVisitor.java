@@ -1,10 +1,10 @@
 package org.jpc.term.visitor;
 
+import org.jpc.term.AbstractVar;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
-import org.jpc.term.Var;
 
 public class DefaultTermVisitor implements TermVisitor {
 
@@ -17,7 +17,7 @@ public class DefaultTermVisitor implements TermVisitor {
 	}
 
 	@Override
-	public void visitVariable(Var term) {
+	public void visitVariable(AbstractVar term) {
 	}
 	
 	@Override

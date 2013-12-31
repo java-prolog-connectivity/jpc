@@ -15,6 +15,7 @@ import com.google.common.base.Function;
  * @author sergioc
  *
  */
+//TODO delete
 public class VariableAnonymizerTermExpander implements Function<Term, Term> {
 
 	private final Map<String, Integer> context;

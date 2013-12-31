@@ -1,6 +1,7 @@
 package org.jpc.term;
 
 import org.jpc.engine.prolog.OperatorsContext;
+import org.jpc.term.CompiledVar.CompilationContext;
 
 
 public abstract class NumberTerm extends Term {
@@ -45,7 +46,27 @@ public abstract class NumberTerm extends Term {
 	}
 
 	@Override
-	protected int basicHashCode() {
+	public boolean isGround() {
+		return true;
+	}
+	
+	@Override
+	public Term compile(int clauseId, CompilationContext context) {
+		return this;
+	}
+
+	@Override
+	public Term compileForQuery() {
+		return this;
+	}
+
+	@Override
+	public Term forEnvironment(int environmentId) {
+		return this;
+	}
+	
+	@Override
+	public int hashCode() {
 		return value.hashCode();
 	}
 

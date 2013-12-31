@@ -10,6 +10,7 @@ import java.util.List;
 import org.jpc.salt.JpcTermWriter;
 import org.jpc.salt.TermAdapter;
 import org.jpc.salt.TermContentHandler;
+import org.jpc.term.AbstractVar;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
@@ -51,7 +52,7 @@ public class PrologUtil {
 	
 	public static Term varDictionaryTerm(Term term) {
 		ListTerm mapVarsNames = new ListTerm();
-		for(Var var : term.getNamedVariables()) {
+		for(AbstractVar var : term.getNamedVariables()) {
 			Compound varNameEntry = new Compound("=", asList(new Atom(var.getName()), var));
 			mapVarsNames.add(varNameEntry);
 		}

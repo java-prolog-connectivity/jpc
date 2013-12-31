@@ -7,12 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.jpc.engine.prolog.OperatorsContext;
-import org.jpc.salt.TermContentHandler;
+import org.jpc.term.CompiledVar.CompilationContext;
 import org.jpc.term.unification.VarCell;
-import org.jpc.term.visitor.TermVisitor;
-
-import com.google.common.base.Function;
 
 /**
  * A class reifying a logic variable
@@ -20,9 +16,13 @@ import com.google.common.base.Function;
  * @author scastro
  *
  */
-public final class Var extends Term {
+public class Var extends AbstractVar {
 
 	public static final Var ANONYMOUS_VAR = new Var(ANONYMOUS_VAR_NAME);
+	
+	public static boolean isUnderscoreVariableName(String variableName) {
+		return variableName.substring(0, 1).equals(ANONYMOUS_VAR_NAME); //the variable id is equals to "_" or starts with "_"
+	}
 	
 	public static List<Var> asVariables(Iterable<String> variablesNames) {
 		List<Var> variables = new ArrayList<>();
@@ -30,10 +30,6 @@ public final class Var extends Term {
 			variables.add(new Var(variableName));
 		}
 		return variables;
-	}
-
-	public static boolean isAnonymousVariableName(String variableName) {
-		return variableName.substring(0, 1).equals(ANONYMOUS_VAR_NAME); //the variable id is equals to "_" or starts with "_"
 	}
 	
 	/**
@@ -44,11 +40,11 @@ public final class Var extends Term {
 	public static boolean isValidVariableName(String variableName) {
 		if(variableName.isEmpty())
 			return false;
-		return isAnonymousVariableName(variableName) || Character.isUpperCase(variableName.toCharArray()[0]); //additional checks could be added here
+		return isUnderscoreVariableName(variableName) || Character.isUpperCase(variableName.toCharArray()[0]); //additional checks could be added here
 	}
 	
 	
-	private final String name; // the id of this Variable
+	protected final String name; // the id of this Variable
 	
 	public Var() {
 		this.name = ANONYMOUS_VAR_NAME;
@@ -59,8 +55,9 @@ public final class Var extends Term {
 		this.name = name;
 	}
 	
+	@Override
 	public boolean isAnonymous() {
-		return termEquals(ANONYMOUS_VAR);
+		return name.equals(ANONYMOUS_VAR_NAME);
 	}
 	
 	/**
@@ -68,101 +65,65 @@ public final class Var extends Term {
 	 * 
 	 * @return the lexical id of this Variable
 	 */
+	@Override
 	public final String getName() {
 		return this.name;
 	}
 	
-	@Override
-	protected void unifyVars(Term term, Map<Var, VarCell> context) {
-		if(!(termEquals(Var.ANONYMOUS_VAR) || term.termEquals(Var.ANONYMOUS_VAR))) {
-			VarCell thisVarCell = context.get(this);
-			if(thisVarCell == null) {
-				thisVarCell = new VarCell(this);
-				context.put(this, thisVarCell);
-			}
-			if(term instanceof Var) {
-				VarCell thatVarCell = context.get(term);
-				if(thatVarCell == null) {
-					thatVarCell = thisVarCell;
-					context.put((Var)term, thatVarCell);
-				} 
-				if(thisVarCell != thatVarCell) {
-					Term thatVarBoundTerm = thatVarCell.getValue();
-					unifyCell(thisVarCell, thatVarBoundTerm, context);
-					thatVarCell.getRegister().becomes(thisVarCell.getRegister());
-				}
-			} else {
-				unifyCell(thisVarCell, term, context);
-			}
-		}
-	}
-	
-	private void unifyCell(VarCell varCell, Term term, Map<Var, VarCell> context) {
-		Term oldTerm = varCell.getValue();
-		if(oldTerm instanceof Var) {
-			if(!(term instanceof Var))
-				varCell.setValue(term);
-		} else {
-			oldTerm.unifyVars(term, context);
-		}
-	}
-	
-	/**
-	 * Returns a Prolog source text representation of this Variable
-	 * 
-	 * @return  a Prolog source text representation of this Variable
-	 */
-	public String toString() {
-		return this.name;
-	}
 	
 	@Override
-	public String toEscapedString() {
-		return toString();
+	public Term compile(int clauseId, CompilationContext context) {
+		return context.compile(this, clauseId);
+	}
+
+	@Override
+	public Term compileForQuery() {
+		return new InternedVar(name);
+	}
+
+	@Override
+	public Term forEnvironment(int environmentId) {
+		throw new UnsupportedOperationException(); //a call to this method should never happen.
 	}
 	
+
 	@Override
-	protected int basicHashCode() {
+	public int hashCode() {
 		return name.hashCode();
 	}
-	
-	/**
-	 * A Variable is equal to another if their names are the same and they are not anonymous.
-	 * 
-	 * @param   obj  The Object to compare.
-	 * @return  true if the Object is a Variable and the above condition apply.
-	 */
+		
 	@Override
-	public boolean equals(Object obj) {
-		return obj instanceof Var && 
-				!this.name.equals("_") && 
-				this.name.equals(((Var) obj).name);
-	}
-	
-	@Override
-	public final boolean termEquals(Term term) {
-		return (term instanceof Var) && this.name.equals(((Var) term).name);
-	}
-	
-	@Override
-	public boolean hasFunctor(Functor functor) {
-		return functor.getArity() == 0 && termEquals(functor.getName());
+	public boolean termEquals(Term term) {
+		return this == term || (term.getClass().equals(getClass()) && this.name.equals(((Var) term).name));
 	}
 
-	@Override
-	public void accept(TermVisitor termVisitor) {
-		termVisitor.visitVariable(this);
-	}
+	
+	
+	public static class InternedVar extends Var {
+		
+		public InternedVar(String name) {
+			super(name.intern());
+		}
+		
+		@Override
+		public boolean isAnonymous() {
+			return name == ANONYMOUS_VAR_NAME;
+		}
 
-	@Override
-	protected void basicRead(TermContentHandler contentHandler, Function<Term, Term> termExpander) {
-		contentHandler.startVariable(name);
+		@Override
+		public Term compileForQuery() {
+			return this;
+		}
+		
+		@Override
+		public int hashCode() {
+			return System.identityHashCode(name);
+		}
+		
+		@Override
+		public boolean termEquals(Term term) {
+			return (this == term || (term.getClass().equals(getClass()) && name == (((InternedVar)term).name)));
+		}
 		
 	}
-
-	@Override
-	public String toString(OperatorsContext operatorsContext) {
-		return toString();
-	}
-	
 }

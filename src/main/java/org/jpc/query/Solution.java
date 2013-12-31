@@ -31,13 +31,13 @@ public class Solution implements Map<String,Term> {
 		this.prologEngine = prologEngine;
 		this.context = context;
 		configure(); //The original solution may be modified. 
-		nonAnonymousVariablesSolution = nonAnonymousVariablesSolutions(allVariablesSolution);
+		nonAnonymousVariablesSolution = nonUnderscoreVariablesSolutions(allVariablesSolution);
 	}
 	
-	private static Map<String, Term> nonAnonymousVariablesSolutions(Map<String, Term> allVariablesSolution) {
+	private static Map<String, Term> nonUnderscoreVariablesSolutions(Map<String, Term> allVariablesSolution) {
 		Map<String, Term> nonAnonymousVariablesSolution = new HashMap<>();
 		for(String varName : allVariablesSolution.keySet()) {
-			if(!Var.isAnonymousVariableName(varName)) {
+			if(!Var.isUnderscoreVariableName(varName)) {
 				nonAnonymousVariablesSolution.put(varName, allVariablesSolution.get(varName));
 			}
 		}
@@ -163,7 +163,7 @@ public class Solution implements Map<String,Term> {
 	@Override
 	public Term put(String key, Term value) {
 		allVariablesSolution.put(key, value);
-		if(!Var.isAnonymousVariableName((String)key))
+		if(!Var.isUnderscoreVariableName((String)key))
 			allVariablesSolution.put(key, value);
 		return value;
 	}
@@ -171,7 +171,7 @@ public class Solution implements Map<String,Term> {
 	@Override
 	public Term remove(Object key) {
 		Term term = allVariablesSolution.remove(key);
-		if(!Var.isAnonymousVariableName((String)key))
+		if(!Var.isUnderscoreVariableName((String)key))
 			nonAnonymousVariablesSolution.remove(key);
 		return term;
 	}
