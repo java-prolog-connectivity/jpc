@@ -36,8 +36,7 @@ public abstract class AbstractVar extends Term {
 
 	@Override
 	protected void basicRead(TermContentHandler contentHandler, Function<Term, Term> termExpander) {
-		contentHandler.startVariable(getName());
-		
+		contentHandler.startVariable(getName());	
 	}
 
 	@Override

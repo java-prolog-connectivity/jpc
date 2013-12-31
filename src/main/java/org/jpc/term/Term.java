@@ -13,7 +13,7 @@ import org.jpc.JpcException;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.JpcTermWriter;
 import org.jpc.salt.TermContentHandler;
-import org.jpc.term.CompiledVar.CompilationContext;
+import org.jpc.term.compiled.CompilationContext;
 import org.jpc.term.expansion.DefaultTermExpander;
 import org.jpc.term.unification.NonUnifiableException;
 import org.jpc.term.unification.VarCell;
@@ -391,9 +391,13 @@ public abstract class Term {
 		return compile(clauseId, new CompilationContext());
 	}
 	
-	public abstract Term compile(int clauseId, CompilationContext context);
+	protected abstract Term compile(int clauseId, CompilationContext context);
 	
-	public abstract Term compileForQuery();
+	public final Term compileForQuery() {
+		return compileForQuery(new CompilationContext());
+	}
+	
+	protected abstract Term compileForQuery(CompilationContext context);
 	
 	/**
 	 * Method only required for internal usage of the JPC Prolog engine.

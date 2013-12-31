@@ -6,12 +6,12 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.jpc.term.Atom;
-import org.jpc.term.CompiledVar;
 import org.jpc.term.Compound;
 import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
+import org.jpc.term.compiled.CompiledVar;
 import org.junit.Test;
 
 public class UnificationTest {
@@ -115,7 +115,7 @@ public class UnificationTest {
 	@Test
 	public void testSimpleUnification() {
 		assertTrue(Var.ANONYMOUS_VAR.termEquals(Var.ANONYMOUS_VAR.unify(new Var("X"))));
-		CompiledVar anonymousCompiledVar = new CompiledVar(0);
+		CompiledVar anonymousCompiledVar = CompiledVar.anonymousVar(0);
 		assertTrue(Var.ANONYMOUS_VAR.termEquals(anonymousCompiledVar.unify(new Var("X"))));
 		assertEquals(new Var("X"), new Var("X").unify(Var.ANONYMOUS_VAR));
 		assertEquals(new IntegerTerm(0), new Var("X").unify(new IntegerTerm(0)));

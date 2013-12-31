@@ -5,10 +5,8 @@ import static org.jpc.engine.prolog.PrologConstants.ANONYMOUS_VAR_NAME;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import org.jpc.term.CompiledVar.CompilationContext;
-import org.jpc.term.unification.VarCell;
+import org.jpc.term.compiled.CompilationContext;
 
 /**
  * A class reifying a logic variable
@@ -72,13 +70,13 @@ public class Var extends AbstractVar {
 	
 	
 	@Override
-	public Term compile(int clauseId, CompilationContext context) {
+	protected Term compile(int clauseId, CompilationContext context) {
 		return context.compile(this, clauseId);
 	}
 
 	@Override
-	public Term compileForQuery() {
-		return new InternedVar(name);
+	protected Term compileForQuery(CompilationContext context) {
+		return context.compileForQuery(this);
 	}
 
 	@Override
@@ -97,33 +95,4 @@ public class Var extends AbstractVar {
 		return this == term || (term.getClass().equals(getClass()) && this.name.equals(((Var) term).name));
 	}
 
-	
-	
-	public static class InternedVar extends Var {
-		
-		public InternedVar(String name) {
-			super(name.intern());
-		}
-		
-		@Override
-		public boolean isAnonymous() {
-			return name == ANONYMOUS_VAR_NAME;
-		}
-
-		@Override
-		public Term compileForQuery() {
-			return this;
-		}
-		
-		@Override
-		public int hashCode() {
-			return System.identityHashCode(name);
-		}
-		
-		@Override
-		public boolean termEquals(Term term) {
-			return (this == term || (term.getClass().equals(getClass()) && name == (((InternedVar)term).name)));
-		}
-		
-	}
 }

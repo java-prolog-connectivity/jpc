@@ -10,7 +10,8 @@ import java.util.regex.Matcher;
 import org.jpc.JpcException;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.TermContentHandler;
-import org.jpc.term.CompiledVar.CompilationContext;
+import org.jpc.term.compiled.CompilationContext;
+import org.jpc.term.compiled.InternedAtom;
 import org.jpc.term.visitor.TermVisitor;
 
 import com.google.common.base.Function;
@@ -82,12 +83,12 @@ public class Atom extends Term {
 	}
 
 	@Override
-	public Term compile(int clauseId, CompilationContext context) {
+	protected Term compile(int clauseId, CompilationContext context) {
 		return new InternedAtom(name);
 	}
 
 	@Override
-	public Term compileForQuery() {
+	protected Term compileForQuery(CompilationContext context) {
 		return new InternedAtom(name);
 	}
 
@@ -124,43 +125,5 @@ public class Atom extends Term {
 	public boolean equals(Object obj) {
 		return (this == obj || (obj.getClass().equals(getClass()) && name.equals(((Atom)obj).name)));
 	}
-
-
-	
-	
-	
-	public class InternedAtom extends Atom {
-		
-		public InternedAtom(String name) {
-			super(name.intern());
-		}
-		
-		@Override
-		public Term compile(int clauseId, CompilationContext context) {
-			return this;
-		}
-
-		@Override
-		public Term compileForQuery() {
-			return this;
-		}
-
-		@Override
-		public Term forEnvironment(int environmentId) {
-			return this;
-		}
-		
-		@Override
-		public int hashCode() {
-			return System.identityHashCode(name);
-		}
-		
-		@Override
-		public boolean equals(Object obj) {
-			return (this == obj || (obj.getClass().equals(InternedAtom.class) && name == (((Atom)obj).name)));
-		}
-		
-	}
-
 	
 }

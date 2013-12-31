@@ -13,7 +13,7 @@ import org.jpc.JpcException;
 import org.jpc.engine.prolog.Operator;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.TermContentHandler;
-import org.jpc.term.CompiledVar.CompilationContext;
+import org.jpc.term.compiled.CompilationContext;
 import org.jpc.term.unification.NonUnifiableException;
 import org.jpc.term.unification.VarCell;
 import org.jpc.term.visitor.TermVisitor;
@@ -194,30 +194,38 @@ public class Compound extends Term {
 	}
 	
 	@Override
-	public Term compile(int clauseId, CompilationContext context) {
+	protected Term compile(int clauseId, CompilationContext context) {
 		List<Term> args = new ArrayList<>();
 		for(Term arg : getArgs()) {
 			args.add(arg.compile(clauseId, context));
 		}
-		return new Compound(getName().compile(clauseId, context), args);
+		Compound compound = new Compound(getName().compile(clauseId, context), args);
+		if(ground != null)
+			compound.ground = ground;
+		return compound;
 	}
 
 	@Override
-	public Term compileForQuery() {
+	protected Term compileForQuery(CompilationContext context) {
 		List<Term> args = new ArrayList<>();
 		for(Term arg : getArgs()) {
-			args.add(arg.compileForQuery());
+			args.add(arg.compileForQuery(context));
 		}
-		return new Compound(getName().compileForQuery(), args);
+		return new Compound(getName().compileForQuery(context), args);
 	}
 	
 	@Override
 	public Term forEnvironment(int environmentId) {
 		List<Term> args = new ArrayList<>();
 		for(Term arg : getArgs()) {
-			args.add(arg.forEnvironment(environmentId));
+			if(!arg.isGround())
+				arg = arg.forEnvironment(environmentId);
+			args.add(arg);
 		}
-		return new Compound(getName().forEnvironment(environmentId), args);
+		Term name = getName();
+		if(!name.isBound())
+			name = name.forEnvironment(environmentId);
+		return new Compound(name, args);
 	}
 	
 	@Override

@@ -1,7 +1,7 @@
 package org.jpc.term;
 
 import org.jpc.engine.prolog.OperatorsContext;
-import org.jpc.term.CompiledVar.CompilationContext;
+import org.jpc.term.compiled.CompilationContext;
 
 
 public abstract class NumberTerm extends Term {
@@ -51,12 +51,12 @@ public abstract class NumberTerm extends Term {
 	}
 	
 	@Override
-	public Term compile(int clauseId, CompilationContext context) {
+	protected Term compile(int clauseId, CompilationContext context) {
 		return this;
 	}
 
 	@Override
-	public Term compileForQuery() {
+	protected Term compileForQuery(CompilationContext context) {
 		return this;
 	}
 
