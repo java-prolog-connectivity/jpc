@@ -131,7 +131,7 @@ public abstract class AbstractPrologEngineDriver<T extends PrologEngine> impleme
 	}
 	
 	public void removeStateListener(DriverStateListener listener) {
-		getListeners().add(listener); //it is important to use the getter here instead of direct access since the listeners may be managed in a different way by descendant classes
+		getListeners().remove(listener); //it is important to use the getter here instead of direct access since the listeners may be managed in a different way by descendant classes
 	}
 	
 	/**
