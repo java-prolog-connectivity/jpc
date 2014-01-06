@@ -5,12 +5,17 @@ import java.util.Map;
 
 import org.jpc.term.Var;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+
 public class CompilationContext {
 	
+	private final BiMap<Var, CompiledVar> compilationMap;
 	private final Map<String, Integer> idMap;
 	private int varCount;
 	
 	public CompilationContext() {
+		compilationMap = HashBiMap.create();
 		idMap = new HashMap<>();
 	}
 	
@@ -27,15 +32,26 @@ public class CompilationContext {
 	public CompiledVar compile(Var var, int clauseId) {
 		if(var.isAnonymous())
 			return CompiledVar.anonymousVar(clauseId);
-		else
-			return new CompiledVar(clauseId, getVarId(var));
+		else {
+			CompiledVar compiledVar = new CompiledVar(clauseId, getVarId(var));
+			compilationMap.put(var, compiledVar);
+			return compiledVar;
+		}
 	}
 	
 	public CompiledVar compileForQuery(Var var) {
 		if(var.isAnonymous())
 			return CompiledVar.anonymousVar(QueryVar.QUERY_CODE);
-		else
-			return new QueryVar(var.getName(), getVarId(var));
+		else {
+			CompiledVar compiledVar = new QueryVar(var.getName(), getVarId(var));
+			compilationMap.put(var, compiledVar);
+			return compiledVar;
+		}
+	}
+	
+	public BiMap<Var, CompiledVar> getCompilationMap() {
+		return compilationMap;
 	}
 	
 }
+

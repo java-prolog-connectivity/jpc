@@ -51,12 +51,12 @@ public abstract class NumberTerm extends Term {
 	}
 	
 	@Override
-	protected Term compile(int clauseId, CompilationContext context) {
+	public Term compile(int clauseId, CompilationContext context) {
 		return this;
 	}
 
 	@Override
-	protected Term compileForQuery(CompilationContext context) {
+	public Term compileForQuery(CompilationContext context) {
 		return this;
 	}
 

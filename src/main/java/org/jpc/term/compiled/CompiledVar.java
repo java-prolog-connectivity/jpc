@@ -35,12 +35,12 @@ public class CompiledVar extends AbstractVar {
 	}
 
 	@Override
-	protected Term compile(int clauseId, CompilationContext context) {
+	public Term compile(int clauseId, CompilationContext context) {
 		return this;
 	}
 
 	@Override
-	protected Term compileForQuery(CompilationContext context) {
+	public Term compileForQuery(CompilationContext context) {
 		throw new UnsupportedOperationException();
 	}
 

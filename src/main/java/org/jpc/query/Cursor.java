@@ -159,6 +159,10 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 * @return
 	 */
 	protected List<T> basicAllSolutions() {
+		return iterativeAllSolutions();
+	}
+	
+	protected List<T> iterativeAllSolutions() {
 		List<T> allSolutions = new ArrayList<>();
 		while (cachedHasNext()) { 
 			allSolutions.add(cachedNext());

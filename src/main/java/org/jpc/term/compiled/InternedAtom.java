@@ -3,6 +3,7 @@ package org.jpc.term.compiled;
 import org.jpc.term.Atom;
 import org.jpc.term.Term;
 
+//TODO delete
 public class InternedAtom extends Atom {
 	
 	public InternedAtom(String name) {

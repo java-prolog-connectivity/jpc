@@ -70,12 +70,12 @@ public class Var extends AbstractVar {
 	
 	
 	@Override
-	protected Term compile(int clauseId, CompilationContext context) {
+	public Term compile(int clauseId, CompilationContext context) {
 		return context.compile(this, clauseId);
 	}
 
 	@Override
-	protected Term compileForQuery(CompilationContext context) {
+	public Term compileForQuery(CompilationContext context) {
 		return context.compileForQuery(this);
 	}
 

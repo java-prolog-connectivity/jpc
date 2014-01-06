@@ -135,14 +135,7 @@ public abstract class Term {
 			throw new JpcException("term" + compound.toString() + "is not a list");
 		}
 	}
-	
-	/**
-	 * whether this term does not have unbound variables
-	 * @return
-	 */
-	public boolean isBound() {
-		return getVariableNames().isEmpty();
-	}
+
 	
 	/**
 	 * Returns a term with all the occurrences of the variables in the parameter map replaced with its associated value (converted to a term)
@@ -391,13 +384,13 @@ public abstract class Term {
 		return compile(clauseId, new CompilationContext());
 	}
 	
-	protected abstract Term compile(int clauseId, CompilationContext context);
+	public abstract Term compile(int clauseId, CompilationContext context);
 	
 	public final Term compileForQuery() {
 		return compileForQuery(new CompilationContext());
 	}
 	
-	protected abstract Term compileForQuery(CompilationContext context);
+	public abstract Term compileForQuery(CompilationContext context);
 	
 	/**
 	 * Method only required for internal usage of the JPC Prolog engine.

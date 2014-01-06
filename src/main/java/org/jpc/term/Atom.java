@@ -11,7 +11,6 @@ import org.jpc.JpcException;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.TermContentHandler;
 import org.jpc.term.compiled.CompilationContext;
-import org.jpc.term.compiled.InternedAtom;
 import org.jpc.term.visitor.TermVisitor;
 
 import com.google.common.base.Function;
@@ -83,18 +82,21 @@ public class Atom extends Term {
 	}
 
 	@Override
-	protected Term compile(int clauseId, CompilationContext context) {
-		return new InternedAtom(name);
+	public Term compile(int clauseId, CompilationContext context) {
+		return new Atom(name.intern());
+		//return new InternedAtom(name);
 	}
 
 	@Override
-	protected Term compileForQuery(CompilationContext context) {
-		return new InternedAtom(name);
+	public Term compileForQuery(CompilationContext context) {
+		return new Atom(name.intern());
+		//return new InternedAtom(name);
 	}
 
 	@Override
 	public Term forEnvironment(int environmentId) {
-		throw new UnsupportedOperationException(); //a call to this method should never happen.
+		return this; //the Atom should be already compiled.
+		//throw new UnsupportedOperationException(); //a call to this method should never happen.
 	}
 	
 	@Override

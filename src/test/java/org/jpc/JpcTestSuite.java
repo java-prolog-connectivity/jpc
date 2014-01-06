@@ -2,6 +2,7 @@ package org.jpc;
 
 import org.jpc.converter.DefaultTermConverterTest;
 import org.jpc.converter.TypeSolverTest;
+import org.jpc.engine.embedded.JpcQueryTest;
 import org.jpc.salt.JpcTermWriterTest;
 import org.jpc.term.AbstractTermTest;
 import org.jpc.term.AtomTest;
@@ -28,9 +29,10 @@ import org.junit.runners.Suite;
 	ListTermTest.class,
 	AbstractTermTest.class,
 	HilogTermTest.class,
-	UnificationTest.class,
 	JpcTermWriterTest.class,
 	ParameterizedSymbolExpanderTest.class,
+	UnificationTest.class,
+	JpcQueryTest.class,	
 	JTermTest.class,
 	TypeSolverTest.class,
 	DefaultTermConverterTest.class,

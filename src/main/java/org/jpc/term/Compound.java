@@ -56,7 +56,7 @@ public class Compound extends Term {
 		checkArgument(!args.isEmpty(), "A compound term must have at least one argument");
 		this.name = name;
 		this.args = (List<Term>) args;
-		functor = new Functor(name, args.size());
+		functor = new Functor(name, arity());
 	}
 	
 	@Override
@@ -194,7 +194,7 @@ public class Compound extends Term {
 	}
 	
 	@Override
-	protected Term compile(int clauseId, CompilationContext context) {
+	public Term compile(int clauseId, CompilationContext context) {
 		List<Term> args = new ArrayList<>();
 		for(Term arg : getArgs()) {
 			args.add(arg.compile(clauseId, context));
@@ -206,7 +206,7 @@ public class Compound extends Term {
 	}
 
 	@Override
-	protected Term compileForQuery(CompilationContext context) {
+	public Term compileForQuery(CompilationContext context) {
 		List<Term> args = new ArrayList<>();
 		for(Term arg : getArgs()) {
 			args.add(arg.compileForQuery(context));
@@ -223,7 +223,7 @@ public class Compound extends Term {
 			args.add(arg);
 		}
 		Term name = getName();
-		if(!name.isBound())
+		if(!name.isGround())
 			name = name.forEnvironment(environmentId);
 		return new Compound(name, args);
 	}
