@@ -46,5 +46,9 @@ public class Functor {
 		return true;
 	}
 
-	
+	@Override
+	public String toString() {
+		return name.toString() + "/" + arity;
+	}
+
 }
