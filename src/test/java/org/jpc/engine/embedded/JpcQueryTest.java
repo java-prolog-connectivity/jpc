@@ -5,7 +5,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.jpc.engine.embedded.indexing.ArgumentIndexFunction;
+import org.jpc.engine.embedded.database.ArgumentIndexFunction;
+import org.jpc.engine.embedded.database.IndexDescriptor;
+import org.jpc.engine.embedded.database.UpdatableIndexFunction;
 import org.jpc.query.Query;
 import org.jpc.query.Solution;
 import org.jpc.term.Atom;
@@ -89,7 +91,8 @@ public class JpcQueryTest {
 	@Test
 	public void testQueryIndexedCompound() {
 		JpcEngine engine = new JpcEngine();
-		engine.getIndexManager().setIndex(new Functor(new Atom("a"), 3), ArgumentIndexFunction.firstArgumentFunction());
+		IndexDescriptor indexDescriptor = new IndexDescriptor(new UpdatableIndexFunction(ArgumentIndexFunction.firstArgumentFunction()));
+		engine.getIndexManager().setIndexDescriptor(new Functor(new Atom("a"), 3), indexDescriptor);
 		queryingCompound(engine);
 	}
 }

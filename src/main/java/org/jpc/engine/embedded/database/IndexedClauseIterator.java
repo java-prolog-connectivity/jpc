@@ -1,4 +1,4 @@
-package org.jpc.engine.embedded.indexing;
+package org.jpc.engine.embedded.database;
 
 import java.util.Iterator;
 
@@ -9,9 +9,9 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Iterators;
 
-public class ClauseIterator extends AbstractIterator<Clause> {
+public class IndexedClauseIterator extends AbstractIterator<Clause> {
 
-	private final AbstractIndex index;
+	private final Index index;
 	private final Term head;
 	private Iterator<Clause> nonIndexedIterator;
 	private Iterator<Clause> indexedIterator;
@@ -19,16 +19,13 @@ public class ClauseIterator extends AbstractIterator<Clause> {
 	private Clause cachedNextNonIndexedClause;
 	private Clause cachedNextIndexedClause;
 	
-	public ClauseIterator(AbstractIndex index, final Term head) {
+	public IndexedClauseIterator(Index index, final Term head) {
 		this.index = index;
 		this.head = head;
-		if(index.isIndexable(head)) {
-			indexedIterator = index.getNextIndex(head).clausesIterator(head);
-			nonIndexedIterator = index.getNonIndexedClauses().iterator();
-		} else {
-			indexedIterator = null;
-			nonIndexedIterator = index.getAllClauses().iterator();
-		}
+		ClauseList indexedClauseList = index.getNextClauseList(head);
+		if(indexedClauseList != null)
+			indexedIterator = indexedClauseList.clausesIterator(head);
+		nonIndexedIterator = index.getNonIndexedClauses().iterator();
 		nonIndexedIterator = Iterators.filter(nonIndexedIterator, new Predicate<Clause>() {
 			@Override
 			public boolean apply(Clause clause) {

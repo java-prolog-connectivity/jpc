@@ -1,4 +1,4 @@
-package org.jpc.engine.embedded.indexing;
+package org.jpc.engine.embedded.database;
 
 import org.jpc.term.Term;
 

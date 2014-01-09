@@ -5,4 +5,4 @@
  * @author sergioc
  *
  */
-package org.jpc.engine.embedded.indexing;
+package org.jpc.engine.embedded.database;

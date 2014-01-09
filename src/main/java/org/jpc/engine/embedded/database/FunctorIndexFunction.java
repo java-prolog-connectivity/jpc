@@ -1,4 +1,4 @@
-package org.jpc.engine.embedded.indexing;
+package org.jpc.engine.embedded.database;
 
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
@@ -6,7 +6,7 @@ import org.jpc.term.Term;
 
 import com.google.common.base.Function;
 
-public class CompoundFunctorIndexFunction implements Function<Term, Object> {
+public class FunctorIndexFunction implements Function<Term, Object> {
 
 	@Override
 	public Object apply(Term term) {

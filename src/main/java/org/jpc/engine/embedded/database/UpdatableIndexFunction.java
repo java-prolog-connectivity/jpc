@@ -1,4 +1,4 @@
-package org.jpc.engine.embedded.indexing;
+package org.jpc.engine.embedded.database;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -30,7 +30,7 @@ public class UpdatableIndexFunction<T extends Term, U> implements Function<T, U>
 		Objects.requireNonNull(indexFunction);
 		if(!indexFunction.equals(this.indexFunction)) {
 			this.indexFunction = indexFunction;
-			notifyListeners();
+			notifyChangeListeners();
 		}
 	}
 	
@@ -52,18 +52,18 @@ public class UpdatableIndexFunction<T extends Term, U> implements Function<T, U>
 	 * Notify the listeners that a new index has been associated to a functor.
 	 * 
 	 */
-	private void notifyListeners() {
+	private void notifyChangeListeners() {
 		for(IndexChangeListener listener : indexChangeListeners) {
 			listener.onIndexChange((UpdatableIndexFunction) this);
 		}
 	}
 	
-	public void addListener(IndexChangeListener listener) {
+	public void addChangeListener(IndexChangeListener listener) {
 		if(!indexChangeListeners.contains(listener))
 			indexChangeListeners.add(listener); 
 	}
 	
-	public void removeListener(IndexChangeListener listener) {
+	public void removeChangeListener(IndexChangeListener listener) {
 		indexChangeListeners.remove(listener); 
 	}
 	

@@ -1,8 +1,8 @@
 package org.jpc.engine.embedded;
 
 import org.jpc.Jpc;
-import org.jpc.engine.embedded.indexing.ClauseDatabase;
-import org.jpc.engine.embedded.indexing.IndexManager;
+import org.jpc.engine.embedded.database.ClauseDatabase;
+import org.jpc.engine.embedded.database.IndexManager;
 import org.jpc.engine.prolog.AbstractPrologEngine;
 import org.jpc.query.Query;
 import org.jpc.term.Term;
