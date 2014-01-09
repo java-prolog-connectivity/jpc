@@ -6,6 +6,11 @@ import org.jpc.term.Term;
 
 import com.google.common.base.Function;
 
+/**
+ * Index function mapping a term to its functor name.
+ * @author sergioc
+ *
+ */
 public class FunctorIndexFunction implements Function<Term, Object> {
 
 	@Override

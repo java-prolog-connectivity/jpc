@@ -11,9 +11,9 @@ import org.minitoolbox.exception.NotYetImplementedException;
 
 public class Index implements IndexChangeListener {
 
-	protected final IndexDescriptor indexDescriptor;
-	protected final Map<Object, ClauseList> map;
-	protected final List<Clause> nonIndexedClauses;
+	private final IndexDescriptor indexDescriptor;
+	private final Map<Object, ClauseList> map;
+	private final List<Clause> nonIndexedClauses;
 	
 	public Index(IndexDescriptor indexDescriptor) {
 		this.indexDescriptor = indexDescriptor;
@@ -36,10 +36,6 @@ public class Index implements IndexChangeListener {
 		} catch(NonIndexableTermException e) {
 			return false;
 		}
-	}
-	
-	public boolean isEnabled() {
-		return getIndexFunction().isEnabled();
 	}
 	
 	public void reset() {

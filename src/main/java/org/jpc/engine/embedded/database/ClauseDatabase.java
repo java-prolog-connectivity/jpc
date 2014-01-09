@@ -21,13 +21,17 @@ public class ClauseDatabase extends ClauseList {
 	
 	public ClauseDatabase(final IndexManager indexManager) {
 		super(new IndexDescriptor(
-				new UpdatableIndexFunction<Term, Object>(new FunctorIndexFunction()), 
+				new UpdatableIndexFunction<Term, Object>(new FunctorIndexFunction()), //the index function maps a term to its functor name.
+				/**
+				 * The next indexes function makes use of the index manager to find the user-defined indexes for a given term.
+				 * This function is invoked when instantiating an indexed ClauseList associated with the index of a term.
+				 */
 				new Function<Term, List<IndexDescriptor>>() {
 					@Override
-					public List<IndexDescriptor> apply(Term term) {
-						if(term instanceof Compound) {
+					public List<IndexDescriptor> apply(Term term) { 
+						if(term instanceof Compound) { //indexes can be defined only for compounds.
 							Compound compound = (Compound) term;
-							return indexManager.getOrCreateIndexDescriptors(compound.getFunctor());
+							return indexManager.getOrCreateIndexDescriptors(compound.getFunctor()); // <-- ground term.
 						} else {
 							return Collections.<IndexDescriptor>emptyList();
 						}

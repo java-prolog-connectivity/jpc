@@ -8,10 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.jpc.engine.embedded.Clause;
-import org.jpc.term.Compound;
 import org.jpc.term.Term;
 
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
 
@@ -19,22 +17,6 @@ public class ClauseList {
 
 	private final List<Clause> allClauses;
 	private final List<Index> indexes;
-	
-	public static ClauseList forIndexManager(final IndexManager indexManager) {
-		return new ClauseList(new IndexDescriptor(
-				new UpdatableIndexFunction<Term, Object>(new FunctorIndexFunction()), 
-				new Function<Term, List<IndexDescriptor>>() {
-					@Override
-					public List<IndexDescriptor> apply(Term term) {
-						if(term instanceof Compound) {
-							Compound compound = (Compound) term;
-							return indexManager.getOrCreateIndexDescriptors(compound.getFunctor());
-						} else {
-							return Collections.<IndexDescriptor>emptyList();
-						}
-					}
-				}));
-	}
 	
 	public ClauseList() {
 		this(Collections.<IndexDescriptor>emptyList());
