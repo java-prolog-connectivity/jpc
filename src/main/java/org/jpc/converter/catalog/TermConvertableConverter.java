@@ -1,4 +1,4 @@
-package org.jpc.converter.catalog.termconvertable;
+package org.jpc.converter.catalog;
 
 import org.jpc.Jpc;
 import org.jpc.converter.TermConvertable;

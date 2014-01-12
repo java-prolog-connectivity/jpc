@@ -1,4 +1,4 @@
-package org.jpc.term.jterm;
+package org.jpc.term;
 
 import static java.util.Arrays.asList;
 
@@ -14,18 +14,16 @@ import java.io.Serializable;
 import javax.xml.bind.DatatypeConverter;
 
 import org.jpc.converter.TermConvertable;
-import org.jpc.term.Atom;
-import org.jpc.term.Compound;
 
-public class Serialized implements TermConvertable<Compound> {
+public class SerializedTerm implements TermConvertable<Compound> {
 
 	public static final String SERIALIZED_TERM_FUNCTOR = "jserialized";
 	
-	public static Compound jSerializedTerm(Serializable serializable) {
-		return new Serialized(serializable).asTerm();
+	public static Compound serialize(Serializable serializable) {
+		return new SerializedTerm(serializable).asTerm();
 	}
 	
-	public static <T> T deserialize(byte[] bytes) {
+	public static <T extends Serializable> T deserialize(byte[] bytes) {
 		try(ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
 				ObjectInput in = new ObjectInputStream(bis)) {
 			return (T) in.readObject();
@@ -37,7 +35,7 @@ public class Serialized implements TermConvertable<Compound> {
 	private Serializable serializable;
 	private String encodedBytes;
 	
-	public Serialized(Serializable serializable) {
+	public SerializedTerm(Serializable serializable) {
 		this.serializable = serializable;
 		byte[] bytes;
 		try(ByteArrayOutputStream bos = new ByteArrayOutputStream(); 

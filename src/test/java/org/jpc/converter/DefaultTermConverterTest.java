@@ -34,8 +34,6 @@ import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
-import org.jpc.term.jterm.JTermUtil;
-import org.jpc.term.jterm.Serialized;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -188,53 +186,6 @@ public class DefaultTermConverterTest {
 		assertEquals(jpc.toTerm(new ArrayList()), new Atom("[]"));
 	}
 	
-	@Test
-	public void testJTerm() {
-		Object o = new Object();
-		Compound term = new Compound("x", asList(new Atom(""))); //arbitrary compound that will be associated to an object reference.
-		JTermUtil.jTerm(term, o); //associating the compound to a reference.
-		assertTrue(o == jpc.fromTerm(term));
-		o = null;
-		System.gc();
-		try {
-			jpc.fromTerm(term);
-			fail();
-		} catch(RuntimeException e) {}
-	}
-	
-	@Test
-	public void testJRef() {
-		Object o = new Object();
-		Term jRef = JTermUtil.jRefTerm(o);
-		assertTrue(o == jpc.fromTerm(jRef));
-		o = null;
-		System.gc();
-		try {
-			jpc.fromTerm(jRef);
-			fail();
-		} catch(RuntimeException e) {}
-	}
-	
-	@Test
-	public void testJRef2() {
-		//s1 and s2 are equals but have different references.
-		String s1 = "hello";
-		String s2 = new String("hello");
-		JTermUtil.jRefTerm(s1);
-		Term jRef2 = JTermUtil.jRefTerm(s2);
-		String stringFromTerm = jpc.fromTerm(jRef2);
-		assertFalse(stringFromTerm == s1);
-		assertTrue(stringFromTerm == s2);
-	}
-	
-	@Test
-	public void testSerializedTerm() {
-		String s = "hello";
-		Term term = Serialized.jSerializedTerm(s);
-		String s2 = jpc.fromTerm(term);
-		assertFalse(s == s2);
-		assertEquals(s, s2);
-	}
 	
 	
 	// *** TERM TO OBJECTS TESTS ***

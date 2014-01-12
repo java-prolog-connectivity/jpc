@@ -89,8 +89,24 @@ public abstract class Jpc extends JConverter {
 	 */
 	protected abstract Type getType(Object key, Object object);
 	
-	public abstract JTermManager getJTermManager();
-	
 	public abstract boolean handleError(Term errorTerm, Term goal);
 
+	public abstract JTermManager getJTermManager();
+
+	public abstract Compound newWeakJTerm(Object ref, Compound compound);
+	
+	public abstract Compound newWeakJTerm(Object ref);
+	
+	public abstract Compound newJTerm(Object ref);
+	
+	public abstract Compound newJTerm(Object ref, Compound compound);
+	
+	public abstract void forgetJTerm(Compound term);
+	
+	public abstract void forgetJTermRef(Object ref);
+	
+	public abstract Compound jTerm(Object o);
+	
+	public abstract Object resolveJTerm(Compound compound);
+	
 }

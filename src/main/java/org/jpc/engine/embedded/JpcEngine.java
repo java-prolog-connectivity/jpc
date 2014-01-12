@@ -13,7 +13,11 @@ public class JpcEngine extends AbstractPrologEngine {
 	private final IndexManager indexManager;
 	
 	public JpcEngine() {
-		indexManager = new IndexManager();
+		this(new IndexManager());
+	}
+	
+	private JpcEngine(IndexManager indexManager) {
+		this.indexManager = indexManager;
 		clauseDatabase = new ClauseDatabase(indexManager);
 	}
 	

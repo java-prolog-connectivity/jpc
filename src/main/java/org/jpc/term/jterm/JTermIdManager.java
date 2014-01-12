@@ -9,12 +9,12 @@ import com.google.common.collect.MapMaker;
  * @author sergioc
  *
  */
-public class JRefIdManager {
+public class JTermIdManager {
 	
-	private static JRefIdManager defaultJRefIdManager = new JRefIdManager();
+	private static JTermIdManager defaultJTermIdManager = new JTermIdManager();
 	
-	public static JRefIdManager getJRefIdManager() {
-		return defaultJRefIdManager;
+	public static JTermIdManager getJRefIdManager() {
+		return defaultJTermIdManager;
 	}
 	
 	private int counter = 0;
@@ -30,26 +30,26 @@ public class JRefIdManager {
 	 * 
 	 * Therefore, our map uses identity comparisons. This is a desirable property, since we need different references ids for objects with different references, and this is independent of the equals() method being overridden.
 	 */
-	private Map<Object, JRefId> currentRefs = new MapMaker().weakKeys().makeMap(); 
+	private final Map<Object, JTermId> currentRefs = new MapMaker().weakKeys().makeMap();
 	
-	JRefIdManager(){}
+	private JTermIdManager(){}
 	
 	/**
 	 * 
 	 * @param o the object to which has been assigned a reference id
 	 * @return the reference id
 	 */
-	public JRefId get(Object o) {
+	public JTermId get(Object o) {
 		return currentRefs.get(o);
 	}
 
-	public synchronized JRefId getOrCreate(Object o) {
-		JRefId ref = get(o);
-		if(ref == null) {
-			ref = new JRefId(++counter);
-			currentRefs.put(o, ref);
+	public synchronized JTermId getOrCreate(Object o) {
+		JTermId id = get(o);
+		if(id == null) {
+			id = new JTermId(++counter);
+			currentRefs.put(o, id);
 		}
-		return ref;	
+		return id;	
 	}
 	
 }

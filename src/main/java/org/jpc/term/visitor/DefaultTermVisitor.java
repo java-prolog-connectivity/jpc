@@ -5,6 +5,7 @@ import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
+import org.jpc.term.JRef;
 
 public class DefaultTermVisitor implements TermVisitor {
 
@@ -25,9 +26,12 @@ public class DefaultTermVisitor implements TermVisitor {
 	}
 
 	@Override
+	public void visitJRef(JRef jRef) {
+	}
+	
+	@Override
 	public boolean visitCompound(Compound term) {
 		return true;
 	}
-
 
 }

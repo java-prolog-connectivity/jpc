@@ -12,15 +12,20 @@ import org.jpc.term.Compound;
  *
  * @param <REF_TYPE> the reference type
  */
-public class JTerm<REF_TYPE> extends WeakReference<REF_TYPE> implements TermConvertable<Compound> {
+public class JTermRef<REF_TYPE> extends WeakReference<REF_TYPE> implements TermConvertable<Compound> {
 	
-	private Compound refId; //the term identifier for this reference.
-	private JTermManager jTermManager; //the term manager of this reference.
+	private final Compound refId; //the term identifier for this reference.
+	private final Runnable cleaningTask;
 	
-	public JTerm(REF_TYPE referent, ReferenceQueue<REF_TYPE> referenceQueue, Compound refId, JTermManager jTermManager) {
+	JTermRef(REF_TYPE referent, ReferenceQueue<REF_TYPE> referenceQueue, Compound refId) {
+		this(referent, referenceQueue, refId, null);
+	}
+	
+	//todo change to private ...
+	JTermRef(REF_TYPE referent, ReferenceQueue<REF_TYPE> referenceQueue, Compound refId, Runnable cleaningTask) {
 		super(referent, referenceQueue);
 		this.refId = refId;
-		this.jTermManager = jTermManager;
+		this.cleaningTask = cleaningTask;
 	}
 
 	public Compound getRefId() {
@@ -31,7 +36,8 @@ public class JTerm<REF_TYPE> extends WeakReference<REF_TYPE> implements TermConv
 	 * Callback method that should be invoked when the referenced object has been garbage collected.
 	 */
 	void cleanUp() {
-		jTermManager.remove(getRefId());
+		if(cleaningTask != null)
+			cleaningTask.run();
 	}
 	
 	@Override
@@ -53,9 +59,9 @@ public class JTerm<REF_TYPE> extends WeakReference<REF_TYPE> implements TermConv
 	public boolean equals(Object obj) {
 		if(this == obj)
 			return true;
-		if(obj instanceof JTerm) {
-			return refId.equals(((JTerm<?>)obj).getRefId()) && 
-					(this.get() == ((JTerm<?>)obj).get());
+		if(obj instanceof JTermRef) {
+			return refId.equals(((JTermRef<?>)obj).getRefId()) && 
+					(this.get() == ((JTermRef<?>)obj).get());
 		}
 		return false;
 	}

@@ -15,25 +15,29 @@ import org.jgum.strategy.ChainOfResponsibility;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.FromTermConverterAdapter;
 import org.jpc.converter.JpcConverterManager;
+import org.jpc.converter.ToTermConverter;
+import org.jpc.converter.ToTermConverterAdapter;
 import org.jpc.converter.catalog.jterm.FromJTermConverter;
-import org.jpc.converter.catalog.jterm.FromSerializedConverter;
+import org.jpc.converter.catalog.jterm.ToJTermTermConverter;
+import org.jpc.converter.catalog.serialized.FromSerializedConverter;
 import org.jpc.converter.typesolver.JGumTypeSolverManager;
 import org.jpc.converter.typesolver.TypeSolverManager;
 import org.jpc.converter.typesolver.UnrecognizedObjectException;
 import org.jpc.error.handling.DefaultJpcErrorHandler;
 import org.jpc.error.handling.ErrorHandler;
+import org.jpc.term.Compound;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
 import org.jpc.term.jterm.JTermManager;
-import org.jpc.term.jterm.JTermUtil;
 import org.minitoolbox.reflection.IncompatibleTypesException;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
-
+//TODO merge with JPC ?
 public class DefaultJpc extends Jpc {
 	
 	//private final VarConverter nullConverter = new VarConverter();
 	private final ChainOfResponsibility<Converter<?,?>,?> fromTermSystemConverter;
+	private final ChainOfResponsibility<Converter<?,?>,?> toTermSystemConverter;
 	private final JTermManager jTermManager;
 	private final ErrorHandler errorHandler;
 	//private final JpcPreferences preferences;
@@ -47,7 +51,7 @@ public class DefaultJpc extends Jpc {
 		this(JpcConverterManager.createDefault(jgum),
 				JGumInstantiationManager.createDefault(jgum), 
 				JGumTypeSolverManager.createDefault(jgum), 
-				JTermUtil.getJTermManager(), 
+				JTermManager.createDefault(),
 				new DefaultJpcErrorHandler());
 	}
 	
@@ -57,6 +61,7 @@ public class DefaultJpc extends Jpc {
 		this.jTermManager = jTermManager;
 		this.errorHandler = errorHandler;
 		fromTermSystemConverter = getFromTermSystemConverter();
+		toTermSystemConverter = getToTermSystemConverter();
 	}
 	
 	private ChainOfResponsibility<Converter<?,?>,?> getFromTermSystemConverter() {
@@ -64,6 +69,10 @@ public class DefaultJpc extends Jpc {
 		return FromTermConverterAdapter.chainConverters((List)systemConverters);
 	}
 	
+	private ChainOfResponsibility<Converter<?,?>,?> getToTermSystemConverter() {
+		List<ToTermConverter<?,?>> systemConverters = Arrays.<ToTermConverter<?,?>>asList(new ToJTermTermConverter());
+		return ToTermConverterAdapter.chainConverters((List)systemConverters);
+	}
 	
 	@Override
 	public <T> T fromTerm(Term term, Type targetType) {
@@ -102,6 +111,10 @@ public class DefaultJpc extends Jpc {
 			return (T) object;
 		
 		try {
+			return (T) toTermSystemConverter.apply(new CheckedConverterEvaluator(object, targetType, this));
+		} catch(ConversionException e) {}
+		
+		try {
 			Type typeSolverType = getType(object);
 			if(typeSolverType != null) {
 				try {
@@ -117,11 +130,6 @@ public class DefaultJpc extends Jpc {
 	private JpcConverterManager getJpcConverterManager() {
 		return (JpcConverterManager) converterManager;
 	}
-	
-	@Override
-	public JTermManager getJTermManager() {
-		return jTermManager;
-	}
 
 	@Override
 	public boolean handleError(Term errorTerm, Term goal) {
@@ -131,6 +139,51 @@ public class DefaultJpc extends Jpc {
 	@Override
 	protected Type getType(Object key, Object object) {
 		return typeSolverManager.getType(TypeSolverManager.DEFAULT_KEY, object);
+	}
+	
+	@Override
+	public JTermManager getJTermManager() {
+		return jTermManager;
+	}
+	
+	@Override
+	public Compound newWeakJTerm(Object ref, Compound compound) {
+		return jTermManager.newWeakJTerm(ref, compound);
+	}
+	
+	@Override
+	public Compound newWeakJTerm(Object ref) {
+		return jTermManager.newWeakJTerm(ref);
+	}
+	
+	@Override
+	public Compound newJTerm(Object ref) {
+		return jTermManager.newJTerm(ref);
+	}
+	
+	@Override
+	public Compound newJTerm(Object ref, Compound compound) {
+		return jTermManager.newJTerm(ref, compound);
+	}
+	
+	@Override
+	public void forgetJTerm(Compound term) {
+		jTermManager.forgetJTerm(term);
+	}
+	
+	@Override
+	public void forgetJTermRef(Object ref) {
+		jTermManager.forgetJTermRef(ref);
+	}
+	
+	@Override
+	public Compound jTerm(Object o) {
+		return jTermManager.jTerm(o);
+	}
+	
+	@Override
+	public Object resolveJTerm(Compound compound) {
+		return jTermManager.resolve(compound);
 	}
 	
 }

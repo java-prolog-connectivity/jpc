@@ -6,6 +6,7 @@ import static org.jpc.engine.prolog.PrologConstants.ANONYMOUS_VAR_NAME;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
 
 import org.jpc.salt.JpcTermWriter;
 import org.jpc.salt.TermAdapter;
@@ -135,6 +136,14 @@ public class PrologUtil {
 		};
 		term.read(variableAdapter);
 		return termWriter.getTerms().get(0);
+	}
+	
+	public static String escapeString(String s) {
+		String escapedString = s;
+		escapedString = escapedString.replaceAll("\\\\", Matcher.quoteReplacement("\\\\"));
+		escapedString = escapedString.replaceAll("'", Matcher.quoteReplacement("''")); //escaping ' with \' does not work correctly in XSB, therefore it is escaped with the alternative ''
+		escapedString = "'" + escapedString + "'";
+		return escapedString;
 	}
 	
 }

@@ -1,6 +1,7 @@
 package org.jpc.engine.embedded.database;
 
 import org.jpc.term.Atom;
+import org.jpc.term.JRef;
 import org.jpc.term.NumberTerm;
 import org.jpc.term.Term;
 
@@ -8,7 +9,7 @@ import com.google.common.base.Function;
 
 /**
  * An ArgumentIndexFunction maps the index of a compound term to one of its arguments in a given position.
- * If the argument is a number or an atom, it will be converted to its equivalent Java type.
+ * If the argument is not a compound, it will be converted to its wrapped equivalent Java type.
  * @see CompoundIndex
  * @author sergioc
  *
@@ -43,6 +44,8 @@ public class ArgumentIndexFunction implements Function<Term, Object> {
 			key = ((NumberTerm)keyTerm).getValue();
 		else if(keyTerm instanceof Atom)
 			key = ((Atom)keyTerm).getName();
+		else if(keyTerm instanceof JRef)
+			key = ((JRef)keyTerm).getRef();
 		else
 			key = keyTerm;
 		return key;

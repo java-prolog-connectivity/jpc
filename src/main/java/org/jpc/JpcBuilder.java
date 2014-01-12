@@ -18,7 +18,6 @@ import org.jpc.error.handling.DefaultJpcErrorHandler;
 import org.jpc.error.handling.ErrorHandler;
 import org.jpc.error.handling.ErrorHandlerManager;
 import org.jpc.term.jterm.JTermManager;
-import org.jpc.term.jterm.JTermUtil;
 
 public class JpcBuilder extends JConverterBuilder {
 
@@ -56,7 +55,7 @@ public class JpcBuilder extends JConverterBuilder {
 		this(JpcConverterManager.createDefault(jgum),
 				JGumInstantiationManager.createDefault(jgum), 
 				JGumTypeSolverManager.createDefault(jgum), 
-				JTermUtil.getJTermManager(), 
+				JTermManager.createDefault(), 
 				new DefaultJpcErrorHandler());
 	}
 	

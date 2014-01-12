@@ -3,6 +3,7 @@ package org.jpc.salt;
 import org.jpc.term.Atom;
 import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
+import org.jpc.term.JRef;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
 
@@ -32,6 +33,12 @@ public class JpcTermWriter extends TermWriter<Term> {
 		return this;
 	}
 
+	@Override
+	public TermContentHandler startJRef(Object ref) {
+		process(new JRef(ref));
+		return this;
+	}
+	
 	protected TermBuilder<Term> createCompoundBuilder() {
 		return new JpcTermBuilder();
 	}

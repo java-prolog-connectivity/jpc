@@ -9,11 +9,22 @@ import java.util.Map;
 
 import org.jpc.JpcException;
 import org.jpc.term.Functor;
+import org.jpc.term.jterm.JTermId;
 
 
 public class IndexManager {
 
 	private final Map<Functor, List<IndexDescriptor>> functorIndexes;
+	
+	private static void checkIndexableFunctor(Functor functor) {
+		if(!isIndexable(functor))
+			throw new JpcException("Functor " + functor + " is not indexable.");
+	}
+	
+	public static boolean isIndexable(Functor functor) {
+		return functor.getArity() > 0 //only compounds can be indexed.
+				&& functor.getName().isGround();
+	}
 	
 	public IndexManager() {
 		functorIndexes = new HashMap<>();
@@ -26,6 +37,7 @@ public class IndexManager {
 	public List<IndexDescriptor> getOrCreateIndexDescriptors(Functor functor) {
 		List<IndexDescriptor> indexDescriptors = getIndexDescriptors(functor);
 		if(indexDescriptors == null) {
+			checkIndexableFunctor(functor);
 			indexDescriptors = Collections.emptyList();
 			functorIndexes.put(functor, indexDescriptors);
 		}
@@ -37,15 +49,16 @@ public class IndexManager {
 	}
 	
 	public void setIndexDescriptors(Functor functor, List<IndexDescriptor> indexDescriptors) {
-		if(!functor.getName().isGround())
-			throw new JpcException("Functor name " + functor.getName() + " must be ground in order to be associated with an index.");
+		checkIndexableFunctor(functor);
 		List<IndexDescriptor> oldIndexFunctions = getIndexDescriptors(functor);
 		if(oldIndexFunctions != null) {
 			//TODO: change this so indexes will be rebuild instead.
-			throw new JpcException("New indexes cannot be defined for functor: " + functor + ". Entry already existing.");
+			throw new JpcException("New indexes cannot be defined for functor: " + functor + ". Entry already exists.");
 		} else {
 			functorIndexes.put(functor, indexDescriptors);
 		}
 	}
+	
+
 	
 }

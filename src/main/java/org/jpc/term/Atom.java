@@ -5,13 +5,12 @@ import static org.jpc.engine.prolog.PrologConstants.FAIL;
 import static org.jpc.engine.prolog.PrologConstants.FALSE;
 import static org.jpc.engine.prolog.PrologConstants.TRUE;
 
-import java.util.regex.Matcher;
-
 import org.jpc.JpcException;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.TermContentHandler;
 import org.jpc.term.compiled.CompilationContext;
 import org.jpc.term.visitor.TermVisitor;
+import org.jpc.util.PrologUtil;
 
 import com.google.common.base.Function;
 
@@ -101,14 +100,11 @@ public class Atom extends Term {
 	
 	@Override
 	public String toEscapedString() {
-		if(this.escapedName == null) {
-			String escapedName = name;
+		if(escapedName == null) {
+			escapedName = name;
 			if(!isList()) {
-				escapedName = escapedName.replaceAll("\\\\", Matcher.quoteReplacement("\\\\"));
-				escapedName = escapedName.replaceAll("'", Matcher.quoteReplacement("''")); //escaping ' with \' does not work correctly in XSB, therefore it is escaped with the alternative ''
-				escapedName = "'" + escapedName + "'";
+				this.escapedName = PrologUtil.escapeString(escapedName);
 			}
-			this.escapedName = escapedName;
 		}
 		return escapedName;
 	}

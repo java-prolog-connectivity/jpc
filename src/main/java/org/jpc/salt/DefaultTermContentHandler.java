@@ -31,6 +31,11 @@ public class DefaultTermContentHandler implements TermContentHandler {
 	}
 
 	@Override
+	public TermContentHandler startJRef(Object ref) {
+		return this;
+	}
+	
+	@Override
 	public TermContentHandler startCompound() {
 		return this;
 	}

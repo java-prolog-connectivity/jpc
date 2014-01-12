@@ -1,4 +1,4 @@
-package org.jpc.converter.catalog.var;
+package org.jpc.converter.catalog;
 
 import java.lang.reflect.Type;
 

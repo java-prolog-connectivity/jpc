@@ -7,20 +7,20 @@ import org.jpc.term.Compound;
 import org.jpc.term.IntegerTerm;
 
 /**
- * The id of an object reference.
+ * The system-generated term representation of a Java object reference.
  * @author sergioc
  *
  */
-public class JRefId implements TermConvertable<Compound> {
+public class JTermId implements TermConvertable<Compound> {
 
-	public static final String JREF_FUNCTOR = "jref";
+	public static final String JTERM_FUNCTOR_NAME = "jterm";
 	
 	private final int id;
 	private final Compound term;
 	
-	public JRefId(int id) {
+	public JTermId(int id) {
 		this.id = id;
-		term = new Compound(JREF_FUNCTOR, asList(new IntegerTerm(id)));
+		term = new Compound(JTERM_FUNCTOR_NAME, asList(new IntegerTerm(id)));
 	}
 
 	public int getId() {
@@ -50,7 +50,7 @@ public class JRefId implements TermConvertable<Compound> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		JRefId other = (JRefId) obj;
+		JTermId other = (JTermId) obj;
 		if (id != other.id)
 			return false;
 		return true;

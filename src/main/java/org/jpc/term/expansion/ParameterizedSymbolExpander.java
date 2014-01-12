@@ -14,9 +14,8 @@ import org.jpc.Jpc;
 import org.jpc.JpcBuilder;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
+import org.jpc.term.SerializedTerm;
 import org.jpc.term.Term;
-import org.jpc.term.jterm.JTermUtil;
-import org.jpc.term.jterm.Serialized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +31,10 @@ public abstract class ParameterizedSymbolExpander extends CachedTermExpander {
 	
 	public ParameterizedSymbolExpander(Jpc context) {
 		this.context = context;
+	}
+	
+	public Jpc getContext() {
+		return context;
 	}
 	
 	@Override
@@ -58,15 +61,15 @@ public abstract class ParameterizedSymbolExpander extends CachedTermExpander {
 					case TERM_CONVERSION_BY_MAPPING_AND_REFERENCE_SYMBOL:
 						expanded = context.toTerm(resolved);
 						if(expanded instanceof Compound)
-							context.getJTermManager().jTerm((Compound)expanded, resolved);
+							context.newWeakJTerm(resolved, (Compound)expanded);
 						else
 							throw new RuntimeException("Wrong conversion specifier: " + TERM_CONVERSION_BY_MAPPING_AND_REFERENCE_SYMBOL + " for non compound term: " + expanded);
 						break;
 					case TERM_CONVERSION_BY_REFERENCE_SYMBOL:
-						expanded = JTermUtil.jRefTerm(resolved);
+						expanded = context.newWeakJTerm(resolved);
 						break;
 					case TERM_CONVERSION_BY_SERIALIZATION_SYMBOL:
-						expanded = Serialized.jSerializedTerm((Serializable)resolved);
+						expanded = SerializedTerm.serialize((Serializable)resolved);
 						break;
 				}
 			}

@@ -49,8 +49,9 @@ public class ParameterizedSymbolExpanderTest {
 	public void testExpandingMappedObject() {
 		Object o = "hello";
 		Term term = new Compound(CONVERSION_SPECIFIER_OPERATOR, asList(new Compound(SUBSTITUTION_OPERATOR, asList(new IntegerTerm(1))), new Atom(TERM_CONVERSION_BY_MAPPING_SYMBOL)));
-		Term expandedTerm = new PositionalSymbolExpander(asList(o)).apply(term);
-		Object o2 = new DefaultJpc().fromTerm(expandedTerm);
+		Jpc jpc = new DefaultJpc();
+		Term expandedTerm = new PositionalSymbolExpander(asList(o), jpc).apply(term);
+		Object o2 = jpc.fromTerm(expandedTerm);
 		assertEquals(o, o2);
 	}
 	
@@ -78,8 +79,9 @@ public class ParameterizedSymbolExpanderTest {
 	public void testExpandingReferencedObject() {
 		Object o = "hello";
 		Term term = new Compound(CONVERSION_SPECIFIER_OPERATOR, asList(new Compound(SUBSTITUTION_OPERATOR, asList(new IntegerTerm(1))), new Atom(TERM_CONVERSION_BY_REFERENCE_SYMBOL)));
-		Term expandedTerm = new PositionalSymbolExpander(asList(o)).apply(term);
-		Object o2 = new DefaultJpc().fromTerm(expandedTerm);
+		Jpc jpc = new DefaultJpc();
+		Term expandedTerm = new PositionalSymbolExpander(asList(o), jpc).apply(term);
+		Object o2 = jpc.fromTerm(expandedTerm);
 		assertTrue(o==o2);
 	}
 	
@@ -87,8 +89,9 @@ public class ParameterizedSymbolExpanderTest {
 	public void testExpandingSerializedObject() {
 		Object o = "hello";
 		Term term = new Compound(CONVERSION_SPECIFIER_OPERATOR, asList(new Compound(SUBSTITUTION_OPERATOR, asList(new IntegerTerm(1))), new Atom(TERM_CONVERSION_BY_SERIALIZATION_SYMBOL)));
-		Term expandedTerm = new PositionalSymbolExpander(asList(o)).apply(term);
-		Object o2 = new DefaultJpc().fromTerm(expandedTerm);
+		Jpc jpc = new DefaultJpc();
+		Term expandedTerm = new PositionalSymbolExpander(asList(o), jpc).apply(term);
+		Object o2 = jpc.fromTerm(expandedTerm);
 		assertEquals(o, o2);
 		assertFalse(o==o2);
 	}

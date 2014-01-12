@@ -42,7 +42,12 @@ public class TermAdapter implements TermContentHandler {
 		return this;
 	}
 
-
+	@Override
+	public TermContentHandler startJRef(Object ref) {
+		contentHandler.startJRef(ref);
+		return this;
+	}
+	
 	public TermContentHandler startCompound() {
 		contentHandler.startCompound();
 		return this;
@@ -52,8 +57,7 @@ public class TermAdapter implements TermContentHandler {
 		contentHandler.endCompound();
 		return this;
 	}
-	
-	
+
 
 //	public TermContentHandler startDirective() {
 //		contentHandler.startDirective();

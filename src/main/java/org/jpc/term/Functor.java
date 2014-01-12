@@ -5,6 +5,10 @@ public class Functor {
 	private final Term name;
 	private final int arity;
 	
+	public Functor(String name, int arity) {
+		this(new Atom(name), arity);
+	}
+	
 	public Functor(Term name, int arity) {
 		this.name = name;
 		this.arity = arity;

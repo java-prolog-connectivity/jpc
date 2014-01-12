@@ -13,6 +13,7 @@ import org.jpc.query.Solution;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Functor;
+import org.jpc.term.JRef;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
 import org.junit.Test;
@@ -95,4 +96,36 @@ public class JpcQueryTest {
 		engine.getIndexManager().setIndexDescriptor(new Functor(new Atom("a"), 3), indexDescriptor);
 		queryingCompound(engine);
 	}
+	
+	@Test
+	public void testQueryJRef() {
+		JpcEngine engine = new JpcEngine();
+		Object o1 = new Object();
+		Object o2 = new Object();
+		Term jref = new JRef(o1);
+		String cmpName = "jref";
+		Compound compound1 = new Compound(cmpName, asList(jref));
+		Compound compound2 = new Compound(cmpName, asList(new JRef(o1)));
+		Compound compound3 = new Compound(cmpName, asList(new JRef(o2)));
+		engine.assertz(compound1);
+		assertTrue(engine.query(compound1).hasSolution());
+		assertTrue(engine.query(compound2).hasSolution());
+		assertFalse(engine.query(compound3).hasSolution());
+		engine.assertz(compound3);
+		String varName = "X";
+		Query query = engine.query(new Compound(cmpName, asList(new Var("X"))));
+		
+		Solution solution = query.next();
+		//assertEquals(o1, solution.getObject(varName));
+		JRef jrefSolution = (JRef)solution.get(varName);
+		assertEquals(o1, jrefSolution.getRef());
+		
+		solution = query.next();
+		//assertEquals(o2, solution.getObject(varName));
+		jrefSolution = (JRef) solution.get(varName);
+		assertEquals(o2, jrefSolution.getRef());
+		
+		assertFalse(query.hasNext());
+	}
+
 }

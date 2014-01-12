@@ -11,6 +11,7 @@ public interface TermContentHandler {
 	public abstract TermContentHandler startFloatTerm(double value);
 	public abstract TermContentHandler startVariable(String name);
 	public abstract TermContentHandler startAtom(String name);
+	public abstract TermContentHandler startJRef(Object ref);
 	//compound events
 	public abstract TermContentHandler startCompound();
 	public abstract TermContentHandler endCompound();

@@ -3,6 +3,7 @@ package org.jpc.term.jterm;
 import java.lang.ref.ReferenceQueue;
 
 
+
 public class WeakReferencesCleaner extends Thread {
 
 	private static WeakReferencesCleaner referencesCleaner = new WeakReferencesCleaner(new ReferenceQueue<Object>());
@@ -35,7 +36,7 @@ public class WeakReferencesCleaner extends Thread {
 	public void run() {
 		while(true) {
 			try {
-				JTerm<?> weakRef = (JTerm<?>) referenceQueue.remove();
+				JTermRef<?> weakRef = (JTermRef<?>) referenceQueue.remove();
 				weakRef.cleanUp();
 			} catch (InterruptedException e) {}
 		}
