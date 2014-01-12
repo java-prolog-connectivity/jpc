@@ -15,19 +15,22 @@ import org.jpc.term.Compound;
 public class JTermRef<REF_TYPE> extends WeakReference<REF_TYPE> implements TermConvertable<Compound> {
 	
 	private final Compound refId; //the term identifier for this reference.
-	private final Runnable cleaningTask;
+	private final Runnable cleaningTask; //an arbitrary cleaning task to be executed when the referent is garbage collected.
 	
 	JTermRef(REF_TYPE referent, ReferenceQueue<REF_TYPE> referenceQueue, Compound refId) {
 		this(referent, referenceQueue, refId, null);
 	}
 	
-	//todo change to private ...
 	JTermRef(REF_TYPE referent, ReferenceQueue<REF_TYPE> referenceQueue, Compound refId, Runnable cleaningTask) {
 		super(referent, referenceQueue);
 		this.refId = refId;
 		this.cleaningTask = cleaningTask;
 	}
 
+	/**
+	 * 
+	 * @return the term representation of the referent.
+	 */
 	public Compound getRefId() {
 		return refId;
 	}

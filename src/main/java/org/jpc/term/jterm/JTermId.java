@@ -7,7 +7,7 @@ import org.jpc.term.Compound;
 import org.jpc.term.IntegerTerm;
 
 /**
- * The system-generated term representation of a Java object reference.
+ * A system-generated term representation of a Java object reference.
  * @author sergioc
  *
  */
@@ -15,8 +15,8 @@ public class JTermId implements TermConvertable<Compound> {
 
 	public static final String JTERM_FUNCTOR_NAME = "jterm";
 	
-	private final int id;
-	private final Compound term;
+	private final int id; //numeric identifier uniquely associated with the JTerm reference.
+	private final Compound term; //compound term mapped to the JTerm reference.
 	
 	public JTermId(int id) {
 		this.id = id;

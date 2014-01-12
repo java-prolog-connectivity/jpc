@@ -28,7 +28,7 @@ public class JTermIdManager {
 	 * However, if weakKeys() was specified, the map uses identity (==) comparisons instead for keys. 
 	 * Likewise, if weakValues() or softValues() was specified, the map uses identity comparisons for values. "
 	 * 
-	 * Therefore, our map uses identity comparisons. This is a desirable property, since we need different references ids for objects with different references, and this is independent of the equals() method being overridden.
+	 * Therefore, our map uses identity (reference) comparisons. This is a desirable property, since we need different references ids for objects with different references, and this is independent of how these objects define their equal() methods.
 	 */
 	private final Map<Object, JTermId> currentRefs = new MapMaker().weakKeys().makeMap();
 	
@@ -36,18 +36,18 @@ public class JTermIdManager {
 	
 	/**
 	 * 
-	 * @param o the object to which has been assigned a reference id
+	 * @param ref the object to which has been assigned a reference id
 	 * @return the reference id
 	 */
-	public JTermId get(Object o) {
-		return currentRefs.get(o);
+	public JTermId get(Object ref) {
+		return currentRefs.get(ref);
 	}
 
-	public synchronized JTermId getOrCreate(Object o) {
-		JTermId id = get(o);
+	public synchronized JTermId getOrCreate(Object ref) {
+		JTermId id = get(ref);
 		if(id == null) {
 			id = new JTermId(++counter);
-			currentRefs.put(o, id);
+			currentRefs.put(ref, id);
 		}
 		return id;	
 	}
