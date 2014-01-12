@@ -1,9 +1,13 @@
 package org.jpc.converter;
 
+import static java.util.Arrays.asList;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jconverter.converter.CheckedConverterEvaluator;
+import org.jconverter.converter.ConversionException;
 import org.jconverter.converter.ConverterManager;
 import org.jconverter.converter.ConverterRegister;
 import org.jconverter.converter.JGumConverterManager;
@@ -44,12 +48,22 @@ import org.jpc.converter.catalog.primitive.NumberToNumberTermConverter;
 import org.jpc.converter.catalog.primitive.ObjectToAtomConverter;
 import org.jpc.converter.catalog.primitive.StringToNumberTermConverter;
 import org.jpc.converter.typesolver.catalog.MapTypeSolver;
+import org.jpc.engine.embedded.JpcEngine;
+import org.jpc.engine.embedded.database.IndexDescriptor;
+import org.jpc.engine.embedded.database.IndexManager;
+import org.jpc.query.Query;
+import org.jpc.query.Solution;
 import org.jpc.term.Atom;
+import org.jpc.term.Compound;
+import org.jpc.term.Functor;
+import org.jpc.term.JRef;
 import org.jpc.term.NumberTerm;
 import org.jpc.term.Term;
+import org.jpc.term.Var;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
@@ -57,6 +71,8 @@ import com.google.common.collect.Lists;
 public class JpcConverterManager extends JGumConverterManager {
 
 	private static Logger logger = LoggerFactory.getLogger(JpcConverterManager.class);
+	
+	private static final String CONVERTER_FUNCTOR_NAME = "converter";
 	
 	/**
 	 * @param jgum a JGum categorization context.
@@ -121,11 +137,31 @@ public class JpcConverterManager extends JGumConverterManager {
 		JpcBuilder.register(converterManager, new TypeErrorConverter());
 	}
 	
+	
+	private final JpcEngine embeddedEngine; //embedded Jpc Prolog engine.
+	
+	
 	public JpcConverterManager(JGum jgum) {
 		super(jgum);
+		this.embeddedEngine = new JpcEngine();
+		IndexManager indexManager = embeddedEngine.getIndexManager();
+		indexManager.setIndexDescriptor( new Functor(CONVERTER_FUNCTOR_NAME, 2), 
+				IndexDescriptor.argumentIndexDescriptor(1, indexManager) ); //clause heads having converter as a functor name will be indexed according to the first argument of the term head.
 	}
 
+	public IndexManager getIndexManager() {
+		return embeddedEngine.getIndexManager();
+	}
+	
 	public <T> T fromTerm(Term term, Type targetType, Jpc jpc) {
+		FromTermConverter engineFromTermConverter = null;
+		if(term instanceof Compound)
+			engineFromTermConverter = getConverter((Compound)term);
+		if(engineFromTermConverter != null) {
+			try {
+				return (T)new CheckedConverterEvaluator(term, targetType, jpc).apply(FromTermConverterAdapter.forConverter(engineFromTermConverter));
+			} catch(ConversionException e) {}
+		} 
 		Category sourceTypeCategory = jgum.forClass(term.getClass());
 		List<TypeCategory<?>> typeCategories = sourceTypeCategory.<TypeCategory<?>>bottomUpCategories();
 		typeCategories = new ArrayList<TypeCategory<?>>(Collections2.filter(typeCategories, new Predicate<TypeCategory<?>>() {
@@ -142,83 +178,23 @@ public class JpcConverterManager extends JGumConverterManager {
 		return convert(object, termClass, jpc);
 	}
 	
-	
-	/*
-	
-	
-	private List<Converter<?,?>> converters;
-	
-	public JpcConverterManager() {
-		converters = new ArrayList<Converter<?,?>>();
+	public void registerConverter(Compound term, FromTermConverter<Compound, ?> fromTermConverter) {
+		embeddedEngine.assertz(new Compound(CONVERTER_FUNCTOR_NAME, asList(term, new JRef(fromTermConverter))));
 	}
 	
-	public void register(Converter<?,?> converter) {
-		converters.add(0, converter);
+	public void removeConverters(Compound term) {
+		embeddedEngine.retractAll(new Compound(CONVERTER_FUNCTOR_NAME, asList(term, Var.ANONYMOUS_VAR)));
 	}
 	
-	public void registerLast(Converter<?,?> converter) {
-		converters.add(converter);
-	}
-
-	@Override
-	public ObjectType fromTerm(TermType term, Type type, Jpc context) {
-		TypeWrapper typeWrapper = TypeWrapper.wrap(type);
-
-		for(Converter converter : converters) {
-			Type bestTypeForConverter;
-			Type converterObjectType = converter.getObjectType();
-		
-			try {
-				bestTypeForConverter = typeWrapper.mostSpecificType(converterObjectType); //will throw an exception if the types are not compatible
-			} catch(IncompatibleTypesException e) {
-				continue; //do nothing, just try the next converter
-			} 
-
-			if(converter.canConvertFromTerm(term, bestTypeForConverter)) {
-				try {
-					//this check is because in the call to fromTerm/2 the type argument would be lost. If the type is more specific than the converter type, a call to fromTerm/3 is more appropriate.
-					if(bestTypeForConverter.equals(converterObjectType)) { 
-						return (ObjectType) converter.fromTerm(term, context); //by default will delegate to fromTerm/3 unless overridden by the programmer
-					} else {
-						return (ObjectType) converter.fromTerm(term, bestTypeForConverter, context); //the idea of these two alternatives is to allow the programmer to override either fromTerm/2 (if the type argument is not necessary) or fromTerm/3 (more verbose)
-					}
-				} catch(UnsupportedOperationException|//exception thrown if the converter does not support conversion from term to objects
-						ConversionException e){//converters should throw this exception if they are not able to convert a term to a Java object.
-					//just try the next converter if any of these exceptions occurs
-				}
-			}
+	private FromTermConverter getConverter(Compound term) {
+		FromTermConverter fromTermConverter = null;
+		String converterVarName = "Converter";
+		Query query = embeddedEngine.query(new Compound(CONVERTER_FUNCTOR_NAME, asList(term, new Var(converterVarName))));
+		Optional<Solution> solutionOpt = query.oneSolution();
+		if(solutionOpt.isPresent()) {
+			fromTermConverter = (FromTermConverter)((JRef)solutionOpt.get().get(converterVarName)).getRef();
 		}
-		throw new ConversionException(term.toString(), type.toString()); //no converter was able to convert the term to the desired type
+		return fromTermConverter;
 	}
 	
-	@Override
-	public <T extends TermType> T toTerm(ObjectType object, Class<T> termClass, Jpc context) {
-		TypeWrapper termClassWrapper = TypeWrapper.wrap(termClass);
-		
-		for(Converter converter : converters) {
-			Class<? extends Term> bestTermClassForConverter;
-			Type converterTermType = converter.getTermType();
-			
-			try {
-				bestTermClassForConverter = (Class<? extends Term>)termClassWrapper.mostSpecificType(converterTermType); //will throw an exception if the types are not compatible
-			} catch(IncompatibleTypesException e) {
-				continue; //do nothing, just try the next converter
-			}
-			
-			if(converter.canConvertToTerm(object, bestTermClassForConverter)) {
-				try {
-					if(bestTermClassForConverter.equals(converterTermType)) {
-						return (T) converter.toTerm(object, context);
-					} else {
-						return (T) converter.toTerm(object, bestTermClassForConverter, context);
-					}
-				} catch(UnsupportedOperationException|//exception thrown if the converter does not support conversion to terms
-						ConversionException e) { //exception thrown if the converter finds that it is unable to convert certain object to a term.
-					//just try the next converter if any of these exceptions occurs
-				} 
-			}
-		}
-		throw new ConversionException(object.toString(), Term.class.getName());
-	}
-	*/
 }

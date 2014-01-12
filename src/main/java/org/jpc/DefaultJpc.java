@@ -18,7 +18,7 @@ import org.jpc.converter.JpcConverterManager;
 import org.jpc.converter.ToTermConverter;
 import org.jpc.converter.ToTermConverterAdapter;
 import org.jpc.converter.catalog.jterm.FromJTermConverter;
-import org.jpc.converter.catalog.jterm.ToJTermTermConverter;
+import org.jpc.converter.catalog.jterm.ToJTermConverter;
 import org.jpc.converter.catalog.serialized.FromSerializedConverter;
 import org.jpc.converter.typesolver.JGumTypeSolverManager;
 import org.jpc.converter.typesolver.TypeSolverManager;
@@ -38,10 +38,10 @@ public class DefaultJpc extends Jpc {
 	//private final VarConverter nullConverter = new VarConverter();
 	private final ChainOfResponsibility<Converter<?,?>,?> fromTermSystemConverter;
 	private final ChainOfResponsibility<Converter<?,?>,?> toTermSystemConverter;
+	private final TypeSolverManager typeSolverManager; //responsible of recommending types for the result of a conversion.
 	private final JTermManager jTermManager;
 	private final ErrorHandler errorHandler;
 	//private final JpcPreferences preferences;
-	private final TypeSolverManager typeSolverManager; //responsible of recommending types for the result of a conversion.
 	
 	public DefaultJpc() {
 		this(new JGum());
@@ -70,7 +70,7 @@ public class DefaultJpc extends Jpc {
 	}
 	
 	private ChainOfResponsibility<Converter<?,?>,?> getToTermSystemConverter() {
-		List<ToTermConverter<?,?>> systemConverters = Arrays.<ToTermConverter<?,?>>asList(new ToJTermTermConverter());
+		List<ToTermConverter<?,?>> systemConverters = Arrays.<ToTermConverter<?,?>>asList(new ToJTermConverter());
 		return ToTermConverterAdapter.chainConverters((List)systemConverters);
 	}
 	

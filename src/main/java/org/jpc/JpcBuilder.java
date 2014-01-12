@@ -17,6 +17,7 @@ import org.jpc.converter.typesolver.TypeSolverManager;
 import org.jpc.error.handling.DefaultJpcErrorHandler;
 import org.jpc.error.handling.ErrorHandler;
 import org.jpc.error.handling.ErrorHandlerManager;
+import org.jpc.term.Compound;
 import org.jpc.term.jterm.JTermManager;
 
 public class JpcBuilder extends JConverterBuilder {
@@ -75,24 +76,26 @@ public class JpcBuilder extends JConverterBuilder {
 		return this;
 	}
 	
-	
-//	private JpcBuilder register(FromTermConverter<?,?> converter) {
-//		register(converterManager, converter);
-//		return this;
-//	}
-//	
-//	private JpcBuilder register(ToJTermTermConverter<?,?> converter) {
-//		register(converterManager, converter);
-//		return this;
-//	}
-	
-	public JpcBuilder setRefManager(JTermManager jTermManager) {
-		this.jTermManager = jTermManager;
+	public JpcBuilder register(Compound compound, FromTermConverter<Compound, ?> fromTermConverter) {
+		((JpcConverterManager)converterManager).registerConverter(compound, fromTermConverter);
 		return this;
 	}
 	
-	public JpcBuilder registerErrorHandler(ErrorHandler errorHandler) {
+	/**
+	 * Registers a type solver.
+	 * @param typeSolver the type solver to register.
+	 */
+	public void register(TypeSolver<?> typeSolver) {
+		typeSolverManager.register(typeSolver);
+	}
+	
+	public JpcBuilder register(ErrorHandler errorHandler) {
 		errorHandlerManager.register(errorHandler);
+		return this;
+	}
+	
+	public JpcBuilder setJTermManager(JTermManager jTermManager) {
+		this.jTermManager = jTermManager;
 		return this;
 	}
 	
@@ -101,22 +104,5 @@ public class JpcBuilder extends JConverterBuilder {
 //		throw new NotYetImplementedException();
 //	}
 
-	
-	/**
-	 * Registers a type solver.
-	 * @param typeSolver the type solver to register.
-	 */
-	public void register(TypeSolver typeSolver) {
-		typeSolverManager.register(typeSolver);
-	}
-	
-	/**
-	 * Registers a type solver under a given key. 
-	 * @param key the key under which the instance creator is registered.
-	 * @param typeSolver the type solver to register.
-	 */
-	public void register(Object key, TypeSolver typeSolver) {
-		typeSolverManager.register(key, typeSolver);
-	}
 	
 }

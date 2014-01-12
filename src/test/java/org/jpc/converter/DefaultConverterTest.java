@@ -39,7 +39,7 @@ import org.junit.Test;
 
 import com.google.common.reflect.TypeToken;
 
-public class DefaultTermConverterTest {
+public class DefaultConverterTest {
 
 	private Jpc jpc = new DefaultJpc();
 	

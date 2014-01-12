@@ -1,6 +1,7 @@
 package org.jpc;
 
-import org.jpc.converter.DefaultTermConverterTest;
+import org.jpc.converter.CustomConverterTest;
+import org.jpc.converter.DefaultConverterTest;
 import org.jpc.converter.TypeSolverTest;
 import org.jpc.engine.embedded.JpcQueryTest;
 import org.jpc.salt.JpcTermWriterTest;
@@ -39,7 +40,8 @@ import org.junit.runners.Suite;
 	JTermTest.class,
 	SerializedTermTest.class,
 	TypeSolverTest.class,
-	DefaultTermConverterTest.class,
+	DefaultConverterTest.class,
+	CustomConverterTest.class,
 	PrologUtilTest.class
 	})
 public class JpcTestSuite {}
