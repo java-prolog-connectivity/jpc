@@ -3,6 +3,7 @@ package org.jpc.term;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -12,22 +13,22 @@ import org.junit.Test;
 
 public class JTermTest {
 
-	private Jpc jpc = new DefaultJpc();
-	
 	@Test
-	public void testEquality() {
-		Object o = new Object();
-		assertEquals(new JRef(o), new JRef(o));
-		assertFalse(new JRef(o).equals(new JRef(new Object())));
-		Compound compound1 = new Compound("jref", asList(new JRef(o)));
-		Compound compound2 = new Compound("jref", asList(new JRef(o)));
-		Compound compound3 = new Compound("jref", asList(new JRef(new Object())));
-		assertEquals(compound1, compound2);
-		assertFalse(compound1.equals(compound3));
+	public void testDifferentReferences() {
+		Jpc jpc = new DefaultJpc();
+		//s1 and s2 are equals but have different references.
+		String s1 = "hello";
+		String s2 = new String("hello");
+		jpc.newWeakJTerm(s1);
+		Term jRef2 = jpc.newWeakJTerm(s2);
+		String stringFromTerm = jpc.fromTerm(jRef2);
+		assertFalse(stringFromTerm == s1);
+		assertTrue(stringFromTerm == s2);
 	}
-	
+
 	@Test
-	public void testJTerm() {
+	public void testWeakJTerm() {
+		Jpc jpc = new DefaultJpc();
 		Object o = new Object();
 		Compound term = new Compound("x", asList(new Atom(""))); //arbitrary compound that will be associated to an object reference.
 		jpc.newWeakJTerm(o, term); //associating the compound to a reference.
@@ -42,50 +43,121 @@ public class JTermTest {
 	}
 	
 	@Test
-	public void testRemoveJTerm() {
+	public void testForgetWeakJTerm() {
+		Jpc jpc = new DefaultJpc();
 		Object o = new Object();
-		Compound term = new Compound("y", asList(new Atom(""))); //arbitrary compound that will be associated to an object reference.
-		jpc.newWeakJTerm(o, term);
+		Compound term = new Compound("x", asList(new Atom(""))); //arbitrary compound that will be associated to an object reference.
+		jpc.newWeakJTerm(o, term); //associating the compound to a reference.
 		jpc.forgetJTerm(term);
 		try {
 			jpc.fromTerm(term);
 			fail();
 		} catch(RuntimeException e) {}
 		
-	}
-	
-	@Test
-	public void testJRef() {
-		Object o = new Object();
-		Term jRef = jpc.newWeakJTerm(o);
-		assertTrue(o == jpc.fromTerm(jRef));
-		o = null;
-		System.gc();
+		jpc.newWeakJTerm(o, term); //associating again the compound to a reference.
+		jpc.forgetJTermRef(o);
 		try {
-			jpc.fromTerm(jRef);
+			jpc.fromTerm(term);
 			fail();
 		} catch(RuntimeException e) {}
 	}
 	
 	@Test
-	public void testJRef2() {
-		//s1 and s2 are equals but have different references.
-		String s1 = "hello";
-		String s2 = new String("hello");
-		jpc.newWeakJTerm(s1);
-		Term jRef2 = jpc.newWeakJTerm(s2);
-		String stringFromTerm = jpc.fromTerm(jRef2);
-		assertFalse(stringFromTerm == s1);
-		assertTrue(stringFromTerm == s2);
+	public void testJTerm() {
+		Jpc jpc = new DefaultJpc();
+		Object o = new Object();
+		Compound term = new Compound("x", asList(new Atom(""))); //arbitrary compound that will be associated to an object reference.
+		jpc.newJTerm(o, term); //associating the compound to a reference.
+		assertEquals(term, jpc.toTerm(o));
+		assertTrue(o == jpc.fromTerm(term));
+		o = null;
+		System.gc();
+		assertNotNull(jpc.fromTerm(term)); //it still should work, since the reference is maintained.
 	}
 	
 	@Test
-	public void testSerializedTerm() {
-		String s = "hello";
-		Term term = SerializedTerm.serialize(s);
-		String s2 = jpc.fromTerm(term);
-		assertFalse(s == s2);
-		assertEquals(s, s2);
+	public void testForgetJTerm() {
+		Jpc jpc = new DefaultJpc();
+		Object o = new Object();
+		Compound term = new Compound("x", asList(new Atom(""))); //arbitrary compound that will be associated to an object reference.
+		jpc.newJTerm(o, term); //associating the compound to a reference.
+		jpc.forgetJTerm(term);
+		try {
+			jpc.fromTerm(term);
+			fail();
+		} catch(RuntimeException e) {}
+		
+		jpc.newJTerm(o, term); //associating again the compound to a reference.
+		jpc.forgetJTermRef(o);
+		try {
+			jpc.fromTerm(term);
+			fail();
+		} catch(RuntimeException e) {}
+	}
+
+	@Test
+	public void testGeneratedWeakJTerm() {
+		Jpc jpc = new DefaultJpc();
+		Object o = new Object();
+		Compound term = jpc.newWeakJTerm(o); //associating the compound to a reference.
+		assertEquals(term, jpc.toTerm(o));
+		assertTrue(o == jpc.fromTerm(term));
+		o = null;
+		System.gc();
+		try {
+			jpc.fromTerm(term);
+			fail();
+		} catch(RuntimeException e) {}
+	}
+	
+	@Test
+	public void testForgetGeneratedWeakJTerm() {
+		Jpc jpc = new DefaultJpc();
+		Object o = new Object();
+		Compound term = jpc.newWeakJTerm(o); //associating the compound to a reference.
+		jpc.forgetJTerm(term);
+		try {
+			jpc.fromTerm(term);
+			fail();
+		} catch(RuntimeException e) {}
+		
+		jpc.newWeakJTerm(o, term); //associating again the compound to a reference.
+		jpc.forgetJTermRef(o);
+		try {
+			jpc.fromTerm(term);
+			fail();
+		} catch(RuntimeException e) {}
+	}
+	
+	@Test
+	public void testGeneratedJTerm() {
+		Jpc jpc = new DefaultJpc();
+		Object o = new Object();
+		Compound term = jpc.newJTerm(o); //associating the compound to a reference.
+		assertEquals(term, jpc.toTerm(o));
+		assertTrue(o == jpc.fromTerm(term));
+		o = null;
+		System.gc();
+		assertNotNull(jpc.fromTerm(term)); //it still should work, since the reference is maintained.
+	}
+	
+	@Test
+	public void testForgetGeneratedJTerm() {
+		Jpc jpc = new DefaultJpc();
+		Object o = new Object();
+		Compound term = jpc.newJTerm(o); //associating the compound to a reference.
+		jpc.forgetJTerm(term);
+		try {
+			jpc.fromTerm(term);
+			fail();
+		} catch(RuntimeException e) {}
+		
+		jpc.newJTerm(o, term); //associating again the compound to a reference.
+		jpc.forgetJTermRef(o);
+		try {
+			jpc.fromTerm(term);
+			fail();
+		} catch(RuntimeException e) {}
 	}
 	
 }
