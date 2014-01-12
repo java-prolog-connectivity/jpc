@@ -5,7 +5,7 @@ import org.jpc.Jpc;
 import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Compound;
 
-public class ToJTermTermConverter implements ToTermConverter<Object, Compound> {
+public class ToJTermConverter implements ToTermConverter<Object, Compound> {
 
 	@Override
 	public Compound toTerm(Object object, Class<Compound> termClass, Jpc context) {
