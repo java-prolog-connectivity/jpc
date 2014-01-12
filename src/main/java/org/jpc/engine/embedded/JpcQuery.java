@@ -27,7 +27,7 @@ public class JpcQuery extends PrologQuery {
 	public JpcQuery(JpcEngine prologEngine, Term goal, boolean errorHandledQuery, Jpc context) {
 		super(prologEngine, goal, errorHandledQuery, context);
 		queryCompilationContext = new CompilationContext();
-		//compiledQuery = getInstrumentedGoal().compileForQuery(queryCompilationContext);
+		//compiledQuery = getInstrumentedGoal().compileForQuery(queryCompilationContext); //the instrumented goal makes use of predicates that are currently not available in the embedded Jpc engine.
 		compiledQuery = getGoal().compileForQuery(queryCompilationContext);
 	}
 	

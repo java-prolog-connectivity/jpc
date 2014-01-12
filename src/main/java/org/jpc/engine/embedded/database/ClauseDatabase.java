@@ -8,7 +8,7 @@ import org.jpc.term.Term;
 
 import com.google.common.collect.Lists;
 
-public class ClauseDatabase extends ClauseList {
+public class ClauseDatabase extends IndexedClauses {
 
 	private final IndexManager indexManager;
 	

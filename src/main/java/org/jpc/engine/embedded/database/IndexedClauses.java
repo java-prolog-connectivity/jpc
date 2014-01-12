@@ -13,20 +13,25 @@ import org.jpc.term.Term;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
 
-public class ClauseList {
+/**
+ * A repository of indexed clauses.
+ * @author sergioc
+ *
+ */
+public class IndexedClauses {
 
 	private final List<Clause> allClauses;
-	private final List<Index> indexes;
+	private final List<Index> indexes; //indexes defined for clauses defined in this repository.
 	
-	public ClauseList() {
+	public IndexedClauses() {
 		this(Collections.<IndexDescriptor>emptyList());
 	}
 	
-	public ClauseList(IndexDescriptor indexDescriptor) {
+	public IndexedClauses(IndexDescriptor indexDescriptor) {
 		this(asList(indexDescriptor));
 	}
 	
-	public ClauseList(List<IndexDescriptor> indexDescriptors) {
+	public IndexedClauses(List<IndexDescriptor> indexDescriptors) {
 		allClauses = new ArrayList<>();
 		indexes = new ArrayList<>();
 		for(IndexDescriptor indexDescriptor : indexDescriptors) {

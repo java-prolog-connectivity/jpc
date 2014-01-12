@@ -40,7 +40,7 @@ public class IndexDescriptor {
 				new UpdatableIndexFunction<Term, Object>(new FunctorIndexFunction()), //the index function maps a term to its functor name.
 				/**
 				 * The next indexes function makes use of the index manager to find the user-defined indexes for a given term.
-				 * This function is invoked when instantiating an indexed ClauseList associated with the index of a term.
+				 * This function is invoked when instantiating an indexed IndexedClauses associated with the index of a term.
 				 */
 				new Function<Term, List<IndexDescriptor>>() {
 					@Override

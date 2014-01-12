@@ -12,7 +12,7 @@ import org.minitoolbox.exception.NotYetImplementedException;
 public class Index implements IndexChangeListener {
 
 	private final IndexDescriptor indexDescriptor;
-	private final Map<Object, ClauseList> map;
+	private final Map<Object, IndexedClauses> map;
 	private final List<Clause> nonIndexedClauses;
 	
 	public Index(IndexDescriptor indexDescriptor) {
@@ -43,19 +43,19 @@ public class Index implements IndexChangeListener {
 		nonIndexedClauses.clear();
 	}
 	
-	public ClauseList getNextClauseList(Term head) {
+	public IndexedClauses getNextClauseList(Term head) {
 		Object key = getIndexFunction().apply(head);
 		return map.get(key);
 	}
 	
-	public ClauseList getOrCreateNextClauseList(Term head) {
+	public IndexedClauses getOrCreateNextClauseList(Term head) {
 		Object key = getIndexFunction().apply(head);
-		ClauseList clauseList = map.get(key);
-		if(clauseList == null) {
-			clauseList = new ClauseList(indexDescriptor.getNextIndexDescriptorsFunction().apply(head));
-			map.put(key, clauseList);
+		IndexedClauses indexedClauses = map.get(key);
+		if(indexedClauses == null) {
+			indexedClauses = new IndexedClauses(indexDescriptor.getNextIndexDescriptorsFunction().apply(head));
+			map.put(key, indexedClauses);
 		}
-		return clauseList;
+		return indexedClauses;
 	}
 	
 	public void assertz(Clause clause) {
@@ -63,7 +63,7 @@ public class Index implements IndexChangeListener {
 		if(!isIndexable(head)) {
 			nonIndexedClauses.add(clause);	
 		} else {
-			ClauseList nextClauseList = getOrCreateNextClauseList(head);
+			IndexedClauses nextClauseList = getOrCreateNextClauseList(head);
 			nextClauseList.assertz(clause);
 		}
 	}
@@ -73,7 +73,7 @@ public class Index implements IndexChangeListener {
 		if(!isIndexable(head)) {
 			nonIndexedClauses.remove(clause);
 		} else {
-			ClauseList nextClauseList = getOrCreateNextClauseList(head);
+			IndexedClauses nextClauseList = getOrCreateNextClauseList(head);
 			nextClauseList.retract(clause);
 		}
 	}

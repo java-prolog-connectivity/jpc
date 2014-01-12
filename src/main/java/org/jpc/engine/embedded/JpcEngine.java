@@ -7,6 +7,12 @@ import org.jpc.engine.prolog.AbstractPrologEngine;
 import org.jpc.query.Query;
 import org.jpc.term.Term;
 
+/**
+ * The embedded Jpc Prolog engine.
+ * (Note: just a small subset of a Prolog engine has been implemented for testing and prototyping purposes).
+ * @author sergioc
+ *
+ */
 public class JpcEngine extends AbstractPrologEngine {
 
 	private final ClauseDatabase clauseDatabase;
