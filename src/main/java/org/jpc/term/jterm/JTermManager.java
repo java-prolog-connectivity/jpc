@@ -32,24 +32,28 @@ import com.google.common.collect.MapMaker;
  */
 public class JTermManager {
 	
-	private static final JTermManager defaultJTermManager;
+	public static final String JTERM_FUNCTOR_NAME = "jterm";
+	private static final JTermManager weakJTermManager;
 	
 	static {
-		defaultJTermManager = createDefault();
 		WeakReferencesCleaner.startWeakReferencesCleaner();
+		weakJTermManager = new JTermManager();
 	}
-	
+
 	/**
-	 * Different Jpc context may refer to the same JTermManager in order to share the same set of jterm definitions.
-	 * @return the default JTermManager.
+	 * This term manager is a singleton that stores jpc-generated term representations associated with (weak) object references.
+	 * The association persists until the reference is garbage collected.
+	 * If a term cannot be resolved by a jTermManager, the singleton manager will be queried.
+	 * @return the weak JTermManager.
 	 */
-	public static JTermManager getDefault() {
-		return defaultJTermManager;
+	private static JTermManager getWeakJTermManager() {
+		return weakJTermManager;
 	}
 	
-	public static JTermManager createDefault() {
-		return new JTermManager(WeakReferencesCleaner.getWeakReferencesCleaner().getReferenceQueue());
+	public static Compound weakJTerm(Object ref) {
+		return getWeakJTermManager().newWeakJTerm(ref);
 	}
+	
 	
 	/**
 	 * This map associates objects with their reference ids.
@@ -60,16 +64,30 @@ public class JTermManager {
 	private final JpcEngine embeddedEngine; //embedded Jpc Prolog engine.
 	private final ReferenceQueue<?> referenceQueue; //weak references created by the JTermManager will be instantiated using this reference queue.
 	
+	public JTermManager() {
+		this(WeakReferencesCleaner.getWeakReferencesCleaner().getReferenceQueue());
+	}
+	
 	public JTermManager(ReferenceQueue<?> referenceQueue) {
+		/**
+		 * Quoting from the Guava documentation (http://docs.guava-libraries.googlecode.com/git-history/release/javadoc/com/google/common/collect/MapMaker.html) :
+		 * 
+		 * "Note: by default, the returned map uses equality comparisons (the equals method) to determine equality for keys or values. 
+		 * However, if weakKeys() was specified, the map uses identity (==) comparisons instead for keys. 
+		 * Likewise, if weakValues() or softValues() was specified, the map uses identity comparisons for values. "
+		 * 
+		 * Therefore, our map uses identity (reference) comparisons. This is a desirable property, since we need different references ids for objects with different references, and this is independent of how these objects define their equals() methods.
+		 */
 		currentRefsMap = new MapMaker().weakKeys().makeMap();
 		storedReferences = Collections.newSetFromMap(new IdentityHashMap<Object, Boolean>()); //reference set (members are identified by their references, not by a call to equals()).
 		this.referenceQueue = referenceQueue;
 		this.embeddedEngine = new JpcEngine();
 		IndexManager indexManager = embeddedEngine.getIndexManager();
-		indexManager.setIndexDescriptor( new Functor(JTermId.JTERM_FUNCTOR_NAME, 2), 
+		indexManager.setIndexDescriptor( new Functor(JTERM_FUNCTOR_NAME, 2), 
 				IndexDescriptor.argumentIndexDescriptor(1, indexManager) ); //clause heads having jterm as a functor name will be indexed according to the first argument of the term head.
 	}
 
+	
 	public IndexManager getIndexManager() {
 		return embeddedEngine.getIndexManager();
 	}
@@ -79,20 +97,20 @@ public class JTermManager {
 	}
 
 	private void remove(Compound compound) {
-		embeddedEngine.retractOne(new Compound(JTermId.JTERM_FUNCTOR_NAME, asList(compound, Var.ANONYMOUS_VAR)));
+		embeddedEngine.retractOne(new Compound(JTERM_FUNCTOR_NAME, asList(compound, Var.ANONYMOUS_VAR)));
 	}
 	
 	private void remove(JTermRef<?> jTerm) {
-		embeddedEngine.retractOne(new Compound(JTermId.JTERM_FUNCTOR_NAME, asList(Var.ANONYMOUS_VAR, new JRef(jTerm))));
+		embeddedEngine.retractOne(new Compound(JTERM_FUNCTOR_NAME, asList(Var.ANONYMOUS_VAR, new JRef(jTerm))));
 	}
 	
 	private void put(Compound compound, JTermRef<?> jTerm) {
-		embeddedEngine.assertz(new Compound(JTermId.JTERM_FUNCTOR_NAME, asList(compound, new JRef(jTerm))));
+		embeddedEngine.assertz(new Compound(JTERM_FUNCTOR_NAME, asList(compound, new JRef(jTerm))));
 	}
 	
 	private JTermRef<?> get(Compound compound) {
 		String jTermVarName = "X";
-		Query query = embeddedEngine.query(new Compound(JTermId.JTERM_FUNCTOR_NAME, asList(compound, new Var(jTermVarName))));
+		Query query = embeddedEngine.query(new Compound(JTERM_FUNCTOR_NAME, asList(compound, new Var(jTermVarName))));
 		Optional<Solution> optSolution = query.oneSolution();
 		if(optSolution.isPresent()) {
 			JRef jRef = (JRef) optSolution.get().get(jTermVarName);
@@ -142,8 +160,9 @@ public class JTermManager {
 	 * @return a JTermRef reference for the object sent as argument.
 	 */
 	private <T> JTermRef<T> newWeakJTermRef(T ref) {
-		JTermId refId = JTermIdManager.getJRefIdManager().getOrCreate(ref);
-		return newWeakJTermRef(ref, refId.asTerm());
+		Compound refId = WeakJTermIdManager.getDefault().newWeakJTerm(ref);
+		getWeakJTermManager().newWeakJTermRef(ref, refId);
+		return newWeakJTermRef(ref, refId);
 	}
 	
 	
@@ -241,6 +260,20 @@ public class JTermManager {
 		return term;
 	}
 	
+	private JTermRef<?> jTermRefFromCompound(Compound compound) {
+		JTermRef<?> jTermRef = get(compound);
+		if(jTermRef == null && this != getWeakJTermManager())
+			jTermRef = getWeakJTermManager().jTermRefFromCompound(compound);
+		return jTermRef;
+	}
+//	
+//	private JTermRef<?> jTermRefFromRef(Object ref) {
+//		JTermRef<?> jTermRef = currentRefsMap.get(ref);
+//		if(jTermRef == null && this != getDefault())
+//			jTermRef = getDefault().jTermRefFromRef(ref);
+//		return jTermRef;
+//	}
+	
 	/**
 	 * 
 	 * @param compound a (compound) term.
@@ -248,9 +281,9 @@ public class JTermManager {
 	 */
 	public synchronized Object resolve(Compound compound) {
 		Object resolved = null;
-		JTermRef<?> jTerm = get(compound);
-		if(jTerm != null) {
-			resolved = jTerm.get();
+		JTermRef<?> jTermRef = jTermRefFromCompound(compound);
+		if(jTermRef != null) {
+			resolved = jTermRef.get();
 			if(resolved == null)
 				throw new JpcException("Reference expired: " + compound + ".");
 		}

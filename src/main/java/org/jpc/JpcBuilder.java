@@ -56,7 +56,7 @@ public class JpcBuilder extends JConverterBuilder {
 		this(JpcConverterManager.createDefault(jgum),
 				JGumInstantiationManager.createDefault(jgum), 
 				JGumTypeSolverManager.createDefault(jgum), 
-				JTermManager.createDefault(), 
+				new JTermManager(), 
 				new DefaultJpcErrorHandler());
 	}
 	

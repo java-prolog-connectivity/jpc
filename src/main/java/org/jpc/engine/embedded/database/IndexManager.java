@@ -9,7 +9,6 @@ import java.util.Map;
 
 import org.jpc.JpcException;
 import org.jpc.term.Functor;
-import org.jpc.term.jterm.JTermId;
 
 
 public class IndexManager {
