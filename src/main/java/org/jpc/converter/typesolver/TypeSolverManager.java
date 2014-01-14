@@ -27,11 +27,11 @@ public abstract class TypeSolverManager {
 		typeSolverManager.register(new CharacterTypeSolver());
 	}
 	
-	public void register(TypeSolver typeSolver) {
+	public void register(TypeSolver<?> typeSolver) {
 		register(DEFAULT_KEY, typeSolver);
 	}
 	
-	public abstract void register(Object typeSolverKey, final TypeSolver typeSolver);
+	public abstract void register(Object typeSolverKey, TypeSolver<?>  typeSolver);
 	
 	public Type getType(Object object) {
 		return getType(DEFAULT_KEY, object);
