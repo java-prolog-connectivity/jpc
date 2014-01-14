@@ -143,6 +143,8 @@ public abstract class Term {
 	 * @return a new term with its variables replaced according to the map
 	 */
 	public Term replaceVariables(Map<String, ? extends Term> map) {
+		if(isGround())
+			return this;
 		JpcTermWriter termWriter = new JpcTermWriter();
 		ReplaceVariableAdapter replaceVariableAdapter = new ReplaceVariableAdapter(termWriter, map);
 		read(replaceVariableAdapter);
@@ -155,6 +157,8 @@ public abstract class Term {
 	 * @return a new term with its variables renamed according to the map
 	 */
 	public Term changeVariablesNames(Map<String, String> map) {
+		if(isGround())
+			return this;
 		JpcTermWriter termWriter = new JpcTermWriter();
 		ChangeVariableNameAdapter changeVariableNameAdapter = new ChangeVariableNameAdapter(termWriter, map);
 		read(changeVariableNameAdapter);
@@ -175,6 +179,8 @@ public abstract class Term {
 	 * @return the variables names present in the term
 	 */
 	public List<AbstractVar> getVariables() {
+		if(isGround())
+			return Collections.emptyList();
 		VariablesCollectorHandler varCollector = new VariablesCollectorHandler();
 		accept(varCollector);
 		return varCollector.getVariables();
