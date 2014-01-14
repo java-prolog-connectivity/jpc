@@ -60,6 +60,7 @@ import org.jpc.term.JRef;
 import org.jpc.term.NumberTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
+import org.jpc.util.JpcPreferences;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -156,12 +157,10 @@ public class JpcConverterManager extends JGumConverterManager {
 	public <T> T fromTerm(Term term, Type targetType, Jpc jpc) {
 		FromTermConverter engineFromTermConverter = null;
 		if(term instanceof Compound)
-			engineFromTermConverter = getConverter((Compound)term);
-		if(engineFromTermConverter != null) {
 			try {
-				return (T)new CheckedConverterEvaluator(term, targetType, jpc).apply(FromTermConverterAdapter.forConverter(engineFromTermConverter));
+				return this.<T>evalQuantifiedTermConverter((Compound)term, targetType, jpc);
 			} catch(ConversionException e) {}
-		} 
+		
 		Category sourceTypeCategory = jgum.forClass(term.getClass());
 		List<TypeCategory<?>> typeCategories = sourceTypeCategory.<TypeCategory<?>>bottomUpCategories();
 		typeCategories = new ArrayList<TypeCategory<?>>(Collections2.filter(typeCategories, new Predicate<TypeCategory<?>>() {
@@ -186,15 +185,18 @@ public class JpcConverterManager extends JGumConverterManager {
 		embeddedEngine.retractAll(new Compound(CONVERTER_FUNCTOR_NAME, asList(term, Var.ANONYMOUS_VAR)));
 	}
 	
-	private FromTermConverter getConverter(Compound term) {
+	private <T> T evalQuantifiedTermConverter(Compound term, Type targetType, Jpc jpc) {
 		FromTermConverter fromTermConverter = null;
-		String converterVarName = "Converter";
+		String converterVarName = JpcPreferences.JPC_VAR_PREFIX + "Converter";
 		Query query = embeddedEngine.query(new Compound(CONVERTER_FUNCTOR_NAME, asList(term, new Var(converterVarName))));
 		Optional<Solution> solutionOpt = query.oneSolution();
 		if(solutionOpt.isPresent()) {
-			fromTermConverter = (FromTermConverter)((JRef)solutionOpt.get().get(converterVarName)).getRef();
+			Solution solution = solutionOpt.get();
+			Term unifiedTerm = term.replaceVariables(solution);
+			fromTermConverter = (FromTermConverter)((JRef)solution.get(converterVarName)).getRef();
+			return (T)new CheckedConverterEvaluator(unifiedTerm, targetType, jpc).apply(FromTermConverterAdapter.forConverter(fromTermConverter));
 		}
-		return fromTermConverter;
+		throw new ConversionException();
 	}
 	
 }
