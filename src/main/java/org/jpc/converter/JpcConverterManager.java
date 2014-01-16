@@ -191,7 +191,7 @@ public class JpcConverterManager extends JGumConverterManager {
 						return Term.class.isAssignableFrom(typeCategory.getLabel());
 					}
 				}));
-				List<ConverterRegister> converterRegisters = Lists.newArrayList(new PropertyIterable(typeCategories, DEFAULT_KEY));
+				List<ConverterRegister> converterRegisters = Lists.newArrayList(new PropertyIterable(typeCategories, key));
 				return converterRegisters;
 			}
 			
