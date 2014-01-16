@@ -55,8 +55,8 @@ public class JpcBuilder extends JConverterBuilder {
 		return this;
 	}
 	
-	public JpcBuilder register(Term term, JpcConverter converter) {
-		((JpcConverterManager)converterManager).registerConverter(term, converter);
+	public JpcBuilder register(JpcConverter converter, Term term) {
+		((JpcConverterManager)converterManager).register(converter, term);
 		return this;
 	}
 	

@@ -28,7 +28,7 @@ public class CustomTermConverterTest {
 	public void testNonGroundQuantification() {
 		JpcBuilder builder = JpcBuilder.create();
 		Compound helloCompound = new Compound("hello",  asList(Var.ANONYMOUS_VAR)); //the converter will be applied for any term having the form: hello(_)
-		builder.register(helloCompound, new HelloConverter());
+		builder.register(new HelloConverter(), helloCompound);
 		Jpc jpc = builder.build();
 		Compound helloWorldCompound = new Compound("hello",  asList(new Atom("world")));
 		String s = jpc.fromTerm(helloWorldCompound);
@@ -45,7 +45,7 @@ public class CustomTermConverterTest {
 	public void testGroundQuantification() {
 		JpcBuilder builder = JpcBuilder.create();
 		Compound helloCompound = new Compound("hello",  asList(new Atom("world"))); //the converter will be applied for any term having the form: hello(world)
-		builder.register(helloCompound, new HelloConverter());
+		builder.register(new HelloConverter(), helloCompound);
 		Jpc jpc = builder.build();
 		Compound helloWorldCompound = new Compound("hello",  asList(new Atom("world")));
 		String s = jpc.fromTerm(helloWorldCompound);
@@ -104,7 +104,7 @@ public class CustomTermConverterTest {
 	public void testAtomQuantification() {
 		JpcBuilder builder = JpcBuilder.create();
 		Atom atom = new Atom(atomForMyClass);
-		builder.register(atom, new MyClassConverter());
+		builder.register(new MyClassConverter(), atom);
 		Jpc jpc = builder.build();
 		
 		assertEquals(atomForMyClass, jpc.fromTerm(new Atom(atomForMyClass)));

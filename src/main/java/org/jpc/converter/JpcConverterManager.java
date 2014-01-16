@@ -203,7 +203,7 @@ public class JpcConverterManager extends JGumConverterManager {
 		return convert(object, termClass, jpc);
 	}
 	
-	public void registerConverter(Term term, JpcConverter converter) {
+	public void register(JpcConverter converter, Term term) {
 		if(!isValidConvertableTerm(term))
 			throw new JpcException("Term " + term + " cannot be associated with a converter.");
 		embeddedEngine.assertz(new Compound(CONVERTER_FUNCTOR_NAME, asList(term, new JRef(converter))));
