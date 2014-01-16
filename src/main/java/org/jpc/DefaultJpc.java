@@ -19,13 +19,16 @@ import org.jpc.converter.ToTermConverter;
 import org.jpc.converter.ToTermConverterAdapter;
 import org.jpc.converter.catalog.jterm.FromJTermConverter;
 import org.jpc.converter.catalog.jterm.ToJTermConverter;
+import org.jpc.converter.catalog.primitive.NumberToNumberTermConverter;
 import org.jpc.converter.catalog.serialized.FromSerializedConverter;
 import org.jpc.converter.typesolver.JGumTypeSolverManager;
 import org.jpc.converter.typesolver.TypeSolverManager;
 import org.jpc.converter.typesolver.UnrecognizedObjectException;
 import org.jpc.error.handling.DefaultJpcErrorHandler;
 import org.jpc.error.handling.ErrorHandler;
+import org.jpc.term.Atom;
 import org.jpc.term.Compound;
+import org.jpc.term.NumberTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
 import org.jpc.term.jterm.JTermManager;
@@ -78,16 +81,28 @@ public class DefaultJpc extends Jpc {
 	public <T> T fromTerm(Term term, Type targetType) {
 		Objects.requireNonNull(term);
 		
-		if(!targetType.equals(Object.class) && TypeWrapper.wrap(targetType).isAssignableFrom(term.getClass()))
+		TypeWrapper wrappedTargetType = TypeWrapper.wrap(targetType);
+		
+		
+		//PERFORMANCE BLOCK (May be deleted. Hardcoding of few primitive conversions just to increase performance).
+		if(targetType.equals(String.class) && term instanceof Atom) { //if the target type is Object better do not take the shortcut below, since many options are possible.
+			Atom atom = (Atom)term;
+			return (T) atom.getName();
+		}
+		if((wrappedTargetType.equals(Object.class) || Number.class.isAssignableFrom(wrappedTargetType.getRawClass())) && term instanceof NumberTerm) {
+			return (T) new NumberToNumberTermConverter().fromTerm(term, targetType.equals(Object.class)?Number.class:targetType, this);
+		}
+		//--- END OF PERFORMANCE BLOCK
+		
+		
+		if(!targetType.equals(Object.class) && wrappedTargetType.isAssignableFrom(term.getClass()))
 			return (T) term;
 		
-		
-		if(term instanceof Compound) {
+		if(term instanceof Compound) { //condition added to increase performance, the check is not needed otherwise.
 			try {
 				return (T) fromTermSystemConverter.apply(new CheckedConverterEvaluator(term, targetType, this));
 			} catch(ConversionException e) {}
 		}
-		
 		
 		try {
 			Type typeSolverType = getType(term);
@@ -111,12 +126,25 @@ public class DefaultJpc extends Jpc {
 				throw new NullPointerException("A Null object cannot be transformed to a logic term of class " + targetType);
 		}
 		
-		if(targetType.isAssignableFrom(object.getClass()))
+		
+		//PERFORMANCE BLOCK (May be deleted. Hardcoding of few primitive conversions just to increase performance).
+		if(targetType.isAssignableFrom(Atom.class) && object instanceof String) {
+			return (T)new Atom((String)object);
+		}	
+		if((targetType.equals(Term.class) || NumberTerm.class.isAssignableFrom(targetType)) && object instanceof Number) {
+			return (T) new NumberToNumberTermConverter().toTerm(object, targetType.equals(Term.class)?NumberTerm.class:targetType, this);
+		}
+		//--- END OF PERFORMANCE BLOCK
+		
+		
+		if(targetType.isAssignableFrom(object.getClass())) //the object is already an instance of the desired term.
 			return (T) object;
 		
-		try {
-			return (T) toTermSystemConverter.apply(new CheckedConverterEvaluator(object, targetType, this));
-		} catch(ConversionException e) {}
+		if(!(object instanceof String || object instanceof Number || object instanceof Boolean || object instanceof Character)) { //condition added to increase performance, the check is not needed otherwise.
+			try {
+				return (T) toTermSystemConverter.apply(new CheckedConverterEvaluator(object, targetType, this));
+			} catch(ConversionException e) {}
+		}
 		
 		try {
 			Type typeSolverType = getType(object);

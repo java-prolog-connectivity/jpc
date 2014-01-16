@@ -2,8 +2,10 @@ package org.jpc.converter.typesolver;
 
 import java.lang.reflect.Type;
 
+import org.jpc.converter.typesolver.catalog.AtomTypeSolver;
 import org.jpc.converter.typesolver.catalog.CharacterTypeSolver;
-import org.jpc.converter.typesolver.catalog.ConstantTermTypeSolver;
+import org.jpc.converter.typesolver.catalog.FloatTermTypeSolver;
+import org.jpc.converter.typesolver.catalog.IntegerTermTypeSolver;
 import org.jpc.converter.typesolver.catalog.ListTypeSolver;
 import org.jpc.converter.typesolver.catalog.MapTypeSolver;
 import org.jpc.converter.typesolver.catalog.NumberTypeSolver;
@@ -19,7 +21,9 @@ public abstract class TypeSolverManager {
 	 * @param typeSolverManager a type solver manager.
 	 */
 	public static void registerDefaults(TypeSolverManager typeSolverManager) {
-		typeSolverManager.register(new ConstantTermTypeSolver());
+		typeSolverManager.register(new AtomTypeSolver());
+		typeSolverManager.register(new IntegerTermTypeSolver());
+		typeSolverManager.register(new FloatTermTypeSolver());
 		typeSolverManager.register(new ListTypeSolver());
 		typeSolverManager.register(new MapTypeSolver());
 		typeSolverManager.register(new StringTypeSolver());
