@@ -20,14 +20,14 @@ public class TypeSolverTest {
 
 	class ListClass {}
 	
-	class ExceptionTypeSolver implements TypeSolver<List> {
+	class UnrecognizedObjectExceptionTypeSolver implements TypeSolver<List> {
 		@Override
 		public Type getType(List object) {
 			throw new UnrecognizedObjectException();
 		}
 	}
 	
-	class NonGenericListTypeSolver implements TypeSolver {
+	class NonGenericTypeSolver implements TypeSolver {
 		@Override
 		public Type getType(Object object) {
 			return ListClass.class;
@@ -66,21 +66,30 @@ public class TypeSolverTest {
 	public void testNonGenericListTypeSolver() {
 		TypeSolverManager manager = new JGumTypeSolverManager(new JGum());
 		Object key = new Object();
-		manager.register(key, new NonGenericListTypeSolver());
+		manager.register(key, new NonGenericTypeSolver());
 		assertEquals(ListClass.class, manager.getType(key, new Object()));
 		assertEquals(ListClass.class, manager.getType(key, new ArrayList()));
 	}
 	
 	@Test
-	public void testExceptionTypeSolver() {
+	public void testUnrecognizedObjectExceptionTypeSolver() {
 		TypeSolverManager manager = new JGumTypeSolverManager(new JGum());
 		Object key = new Object();
-		manager.register(key, new ExceptionTypeSolver());
+		manager.register(key, new NonGenericTypeSolver());
+		manager.register(key, new UnrecognizedObjectExceptionTypeSolver());
+		assertEquals(ListClass.class, manager.getType(key, new ArrayList()));
+	}
+	
+	@Test
+	public void testUnrecognizedObjectExceptionTypeSolver2() {
+		TypeSolverManager manager = new JGumTypeSolverManager(new JGum());
+		Object key = new Object();
+		manager.register(key, new UnrecognizedObjectExceptionTypeSolver());
 		try {
 			manager.getType(new Object(), new Object());
 			fail();
 		} catch(UnrecognizedObjectException e) {}
-		manager.register(key, new NonGenericListTypeSolver());
+		manager.register(key, new NonGenericTypeSolver());
 		assertEquals(ListClass.class, manager.getType(key, new ArrayList()));
 	}
 	

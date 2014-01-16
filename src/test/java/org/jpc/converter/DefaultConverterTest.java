@@ -212,7 +212,9 @@ public class DefaultConverterTest {
 	@Test
 	public void testTermToChar() {
 		assertEquals('a', jpc.fromTerm(new Atom("a"), Character.class));
+		assertEquals('a', jpc.fromTerm(new Atom("a"), char.class));
 		assertEquals('1', jpc.fromTerm(new Atom("1"), Character.class));
+		assertEquals('1', jpc.fromTerm(new Atom("1"), char.class));
 		try {
 			jpc.fromTerm(new Atom("ab"), Character.class);
 			fail();
@@ -226,8 +228,11 @@ public class DefaultConverterTest {
 		assertEquals(false, jpc.fromTerm(new Atom(FAIL)));
 		assertEquals(false, jpc.fromTerm(new Atom(FALSE)));
 		assertEquals(true, jpc.fromTerm(new Atom(TRUE), Boolean.class));
+		assertEquals(true, jpc.fromTerm(new Atom(TRUE), boolean.class));
 		assertEquals(false, jpc.fromTerm(new Atom(FAIL), Boolean.class));
+		assertEquals(false, jpc.fromTerm(new Atom(FAIL), boolean.class));
 		assertEquals(false, jpc.fromTerm(new Atom(FALSE), Boolean.class));
+		assertEquals(false, jpc.fromTerm(new Atom(FALSE), boolean.class));
 		assertEquals(true, jpc.fromTerm(new Atom(TRUE), Object.class));
 		assertEquals(false, jpc.fromTerm(new Atom(FAIL), Object.class));
 		assertEquals(false, jpc.fromTerm(new Atom(FALSE), Object.class));
@@ -239,7 +244,9 @@ public class DefaultConverterTest {
 		assertFalse(jpc.fromTerm(new IntegerTerm(10)).equals(10)); //values in Prolog Integer terms are stored as a Java Long
 		assertEquals(10L, jpc.fromTerm(new IntegerTerm(10)));
 		assertEquals(10, jpc.fromTerm(new IntegerTerm(10), Integer.class));
+		assertEquals(10, jpc.fromTerm(new IntegerTerm(10), int.class));
 		assertEquals(10, jpc.fromTerm(new Atom("10"), Integer.class));
+		assertEquals(10, jpc.fromTerm(new Atom("10"), int.class));
 		try{
 			jpc.fromTerm(new Atom(TRUE), Integer.class);
 			fail();

@@ -1,6 +1,6 @@
 package org.jpc;
 
-import org.jpc.converter.QuantifiedTermConverterTest;
+import org.jpc.converter.CustomTermConverterTest;
 import org.jpc.converter.DefaultConverterTest;
 import org.jpc.converter.TypeSolverTest;
 import org.jpc.engine.embedded.JpcQueryTest;
@@ -41,7 +41,7 @@ import org.junit.runners.Suite;
 	SerializedTermTest.class,
 	TypeSolverTest.class,
 	DefaultConverterTest.class,
-	QuantifiedTermConverterTest.class,
+	CustomTermConverterTest.class,
 	PrologUtilTest.class
 	})
 public class JpcTestSuite {}

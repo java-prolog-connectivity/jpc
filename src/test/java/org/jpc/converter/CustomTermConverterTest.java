@@ -2,6 +2,7 @@ package org.jpc.converter;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.lang.reflect.Type;
@@ -14,7 +15,7 @@ import org.jpc.term.Compound;
 import org.jpc.term.Var;
 import org.junit.Test;
 
-public class QuantifiedTermConverterTest {
+public class CustomTermConverterTest {
 
 	class HelloConverter implements FromTermConverter<Compound, String> {
 		@Override
@@ -68,4 +69,48 @@ public class QuantifiedTermConverterTest {
 		} catch(ClassCastException e) {} //as expected, the anonymous variable cannot be cast to the expected atom in the HelloConverter.
 	}
 	
+	
+	class MyClass {}
+	private final String atomForMyClass = "my_class";
+	
+	class MyClassConverter implements FromTermConverter<Atom, MyClass>, ToTermConverter<MyClass, Atom> {
+
+		@Override
+		public Atom toTerm(MyClass object, Class<Atom> termClass, Jpc context) {
+			return new Atom(atomForMyClass);
+		}
+
+		@Override
+		public MyClass fromTerm(Atom term, Type targetType, Jpc context) {
+			return new MyClass();
+		}
+	}
+	
+	
+	@Test
+	public void testCustomAtomConverter() {
+		JpcBuilder builder = JpcBuilder.create();
+		builder.register(new MyClassConverter());
+		Jpc jpc = builder.build();
+		
+		assertEquals(atomForMyClass, jpc.fromTerm(new Atom(atomForMyClass)));
+		assertEquals(new Atom(atomForMyClass), jpc.toTerm(atomForMyClass));
+		
+		assertTrue(jpc.fromTerm(new Atom(atomForMyClass), MyClass.class) instanceof MyClass);
+		assertEquals(new Atom(atomForMyClass), jpc.toTerm(new MyClass()));
+	}
+	
+	@Test
+	public void testAtomQuantification() {
+		JpcBuilder builder = JpcBuilder.create();
+		Atom atom = new Atom(atomForMyClass);
+		builder.register(atom, new MyClassConverter());
+		Jpc jpc = builder.build();
+		
+		assertEquals(atomForMyClass, jpc.fromTerm(new Atom(atomForMyClass)));
+		assertEquals(new Atom(atomForMyClass), jpc.toTerm(atomForMyClass));
+		
+		assertTrue(jpc.fromTerm(new Atom(atomForMyClass), MyClass.class) instanceof MyClass);
+		assertEquals(new Atom(atomForMyClass), jpc.toTerm(new MyClass()));
+	}
 }

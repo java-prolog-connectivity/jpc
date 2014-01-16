@@ -80,10 +80,14 @@ public class DefaultJpc extends Jpc {
 		
 		if(!targetType.equals(Object.class) && TypeWrapper.wrap(targetType).isAssignableFrom(term.getClass()))
 			return (T) term;
-			
-		try {
-			return (T) fromTermSystemConverter.apply(new CheckedConverterEvaluator(term, targetType, this));
-		} catch(ConversionException e) {}
+		
+		
+		if(term instanceof Compound) {
+			try {
+				return (T) fromTermSystemConverter.apply(new CheckedConverterEvaluator(term, targetType, this));
+			} catch(ConversionException e) {}
+		}
+		
 		
 		try {
 			Type typeSolverType = getType(term);

@@ -10,13 +10,14 @@ import org.jconverter.converter.CheckedConverterEvaluator;
 import org.jconverter.converter.ConversionException;
 import org.jconverter.converter.ConverterManager;
 import org.jconverter.converter.ConverterRegister;
+import org.jconverter.converter.JGumConverter;
 import org.jconverter.converter.JGumConverterManager;
 import org.jgum.JGum;
 import org.jgum.category.Category;
 import org.jgum.category.CategoryProperty.PropertyIterable;
 import org.jgum.category.type.TypeCategory;
 import org.jpc.Jpc;
-import org.jpc.JpcBuilder;
+import org.jpc.JpcException;
 import org.jpc.converter.catalog.TermConvertableConverter;
 import org.jpc.converter.catalog.VarConverter;
 import org.jpc.converter.catalog.datetime.CalendarToAtomConverter;
@@ -64,7 +65,6 @@ import org.jpc.util.JpcPreferences;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
@@ -91,52 +91,73 @@ public class JpcConverterManager extends JGumConverterManager {
 	 * @param converterManager a converter manager.
 	 */
 	public static void registerJpcDefaults(ConverterManager converterManager) {
-		JpcBuilder.register(converterManager, new TermConvertableConverter());
-		JpcBuilder.register(converterManager, new VarConverter());
+		register(converterManager, new TermConvertableConverter());
+		register(converterManager, new VarConverter());
 		
-		JpcBuilder.register(converterManager, new CharacterToNumberTermConverter());
-		JpcBuilder.register(converterManager, new ObjectToAtomConverter<Character>(){});
-		JpcBuilder.register(converterManager, new StringToNumberTermConverter());
-		JpcBuilder.register(converterManager, new ObjectToAtomConverter<String>(){});
-		JpcBuilder.register(converterManager, new BooleanConverter());
-		//JpcBuilder.register(converterManager, new NumberConverter());
-		JpcBuilder.register(converterManager, new NumberToNumberTermConverter());
+		register(converterManager, new CharacterToNumberTermConverter());
+		register(converterManager, new ObjectToAtomConverter<Character>(){});
+		register(converterManager, new StringToNumberTermConverter());
+		register(converterManager, new ObjectToAtomConverter<String>(){});
+		register(converterManager, new BooleanConverter());
+		//register(converterManager, new NumberConverter());
+		register(converterManager, new NumberToNumberTermConverter());
 		class NumberToAtomConverter<T extends Number> extends ObjectToAtomConverter<T>{};
-		JpcBuilder.register(converterManager, new NumberToAtomConverter());
+		register(converterManager, new NumberToAtomConverter());
 		
-		JpcBuilder.register(converterManager, new CalendarToNumberTermConverter());
-		JpcBuilder.register(converterManager, new CalendarToAtomConverter());
-		JpcBuilder.register(converterManager, new XMLGregorianCalendarConverter<Atom>(){});
+		register(converterManager, new CalendarToNumberTermConverter());
+		register(converterManager, new CalendarToAtomConverter());
+		register(converterManager, new XMLGregorianCalendarConverter<Atom>(){});
 		class XMLGregorianCalendarConverterToNumberTerm<T extends NumberTerm> extends XMLGregorianCalendarConverter<T>{}
-		JpcBuilder.register(converterManager, new XMLGregorianCalendarConverterToNumberTerm());
+		register(converterManager, new XMLGregorianCalendarConverterToNumberTerm());
 
-		JpcBuilder.register(converterManager, new ArrayConverter());
-		JpcBuilder.register(converterManager, new CollectionConverter());
-		JpcBuilder.register(converterManager, new EnumerationConverter());
-		JpcBuilder.register(converterManager, new IterableConverter());
-		JpcBuilder.register(converterManager, new IteratorConverter());
-		JpcBuilder.register(converterManager, new MapToTermConverter(MapTypeSolver.DEFAULT_MAP_ENTRY_SEPARATOR));
+		register(converterManager, new ArrayConverter());
+		register(converterManager, new CollectionConverter());
+		register(converterManager, new EnumerationConverter());
+		register(converterManager, new IterableConverter());
+		register(converterManager, new IteratorConverter());
+		register(converterManager, new MapToTermConverter(MapTypeSolver.DEFAULT_MAP_ENTRY_SEPARATOR));
 		for(String mapEntrySeparator : MapTypeSolver.ALL_MAP_ENTRY_SEPARATORS) {
-			JpcBuilder.register(converterManager, new TermToMapConverter(mapEntrySeparator));
+			register(converterManager, new TermToMapConverter(mapEntrySeparator));
 		}
 		
-		JpcBuilder.register(converterManager, new MapEntryToTermConverter(MapTypeSolver.DEFAULT_MAP_ENTRY_SEPARATOR));
+		register(converterManager, new MapEntryToTermConverter(MapTypeSolver.DEFAULT_MAP_ENTRY_SEPARATOR));
 		for(String mapEntrySeparator : MapTypeSolver.ALL_MAP_ENTRY_SEPARATORS) {
-			JpcBuilder.register(converterManager, new TermToMapEntryConverter(mapEntrySeparator));
+			register(converterManager, new TermToMapEntryConverter(mapEntrySeparator));
 		}
 		
-		JpcBuilder.register(converterManager, new UnknownIsoPrologErrorConverter()); //this should be the first registered error.
-		JpcBuilder.register(converterManager, new DomainErrorConverter());
-		JpcBuilder.register(converterManager, new EvaluationErrorConverter());
-		JpcBuilder.register(converterManager, new ExistenceErrorConverter());
-		JpcBuilder.register(converterManager, new InstantiationErrorConverter());
-		JpcBuilder.register(converterManager, new PermissionErrorConverter());
-		JpcBuilder.register(converterManager, new RepresentationErrorConverter());
-		JpcBuilder.register(converterManager, new ResourceErrorConverter());
-		JpcBuilder.register(converterManager, new SyntaxErrorConverter());
-		JpcBuilder.register(converterManager, new SystemErrorConverter());
-		JpcBuilder.register(converterManager, new TypeErrorConverter());
+		register(converterManager, new UnknownIsoPrologErrorConverter()); //this should be the first registered error.
+		register(converterManager, new DomainErrorConverter());
+		register(converterManager, new EvaluationErrorConverter());
+		register(converterManager, new ExistenceErrorConverter());
+		register(converterManager, new InstantiationErrorConverter());
+		register(converterManager, new PermissionErrorConverter());
+		register(converterManager, new RepresentationErrorConverter());
+		register(converterManager, new ResourceErrorConverter());
+		register(converterManager, new SyntaxErrorConverter());
+		register(converterManager, new SystemErrorConverter());
+		register(converterManager, new TypeErrorConverter());
 	}
+	
+	//TODO move these methods to JpcConverter with Java8 (since then static methods will be allowed in interfaces)
+	public static void register(ConverterManager converterManager, JpcConverter converter) {
+		if(converter instanceof FromTermConverter)
+			registerFromTermConverter(converterManager, (FromTermConverter)converter);
+		if(converter instanceof ToTermConverter)
+			registerToTermConverter(converterManager, (ToTermConverter)converter);
+	}
+	
+	private static void registerFromTermConverter(ConverterManager converterManager, FromTermConverter<?,?> converter) {
+		converterManager.register(FromTermConverterAdapter.forConverter(converter));
+	}
+	
+	private static void registerToTermConverter(ConverterManager converterManager, ToTermConverter<?,?> converter) {
+		converterManager.register(ToTermConverterAdapter.forConverter(converter));
+	}
+	
+	private static boolean isValidConvertableTerm(Term term) {
+		return term instanceof Compound || term instanceof Atom;
+	}
+	
 	
 	
 	private final JpcEngine embeddedEngine; //embedded Jpc Prolog engine.
@@ -155,48 +176,64 @@ public class JpcConverterManager extends JGumConverterManager {
 	}
 	
 	public <T> T fromTerm(Term term, Type targetType, Jpc jpc) {
-		FromTermConverter engineFromTermConverter = null;
-		if(term instanceof Compound)
-			try {
-				return this.<T>evalQuantifiedTermConverter((Compound)term, targetType, jpc);
-			} catch(ConversionException e) {}
+		try {
+			return this.<T>evalQuantifiedTermConverter(term, targetType, jpc);
+		} catch(ConversionException e) {}
 		
-		Category sourceTypeCategory = jgum.forClass(term.getClass());
-		List<TypeCategory<?>> typeCategories = sourceTypeCategory.<TypeCategory<?>>bottomUpCategories();
-		typeCategories = new ArrayList<TypeCategory<?>>(Collections2.filter(typeCategories, new Predicate<TypeCategory<?>>() {
+		JGumConverter<Term, T> jgumConverter = new JGumConverter<Term, T>(jgum, DEFAULT_KEY) {
 			@Override
-			public boolean apply(TypeCategory<?> typeCategory) {
-				return Term.class.isAssignableFrom(typeCategory.getLabel());
+			protected List<ConverterRegister> getConverters(Class<?> clazz) {
+				Category sourceTypeCategory = jgum.forClass(clazz);
+				List<TypeCategory<?>> typeCategories = sourceTypeCategory.<TypeCategory<?>>bottomUpCategories();
+				typeCategories = new ArrayList<TypeCategory<?>>(Collections2.filter(typeCategories, new Predicate<TypeCategory<?>>() {
+					@Override
+					public boolean apply(TypeCategory<?> typeCategory) {
+						return Term.class.isAssignableFrom(typeCategory.getLabel());
+					}
+				}));
+				List<ConverterRegister> converterRegisters = Lists.newArrayList(new PropertyIterable(typeCategories, DEFAULT_KEY));
+				return converterRegisters;
 			}
-		}));
-		List<ConverterRegister> converterRegisters = Lists.newArrayList(new PropertyIterable(typeCategories, DEFAULT_KEY));
-		return evalConverters(converterRegisters, term, targetType, jpc);
+			
+		};
+		return convert(jgumConverter, term, targetType, jpc);
 	}
 	
 	public <T extends Term> T toTerm(Object object, Class<T> termClass, Jpc jpc) {
 		return convert(object, termClass, jpc);
 	}
 	
-	public void registerConverter(Compound term, FromTermConverter<Compound, ?> fromTermConverter) {
-		embeddedEngine.assertz(new Compound(CONVERTER_FUNCTOR_NAME, asList(term, new JRef(fromTermConverter))));
+	public void registerConverter(Term term, JpcConverter converter) {
+		if(!isValidConvertableTerm(term))
+			throw new JpcException("Term " + term + " cannot be associated with a converter.");
+		embeddedEngine.assertz(new Compound(CONVERTER_FUNCTOR_NAME, asList(term, new JRef(converter))));
+		if(converter instanceof ToTermConverter)
+			registerToTermConverter(this, (ToTermConverter)converter);
 	}
 	
-	public void removeConverters(Compound term) {
-		embeddedEngine.retractAll(new Compound(CONVERTER_FUNCTOR_NAME, asList(term, Var.ANONYMOUS_VAR)));
-	}
+//	public void removeConverters(Term term) {
+//		embeddedEngine.retractAll(new Compound(CONVERTER_FUNCTOR_NAME, asList(term, Var.ANONYMOUS_VAR)));
+//	}
 	
-	private <T> T evalQuantifiedTermConverter(Compound term, Type targetType, Jpc jpc) {
-		FromTermConverter fromTermConverter = null;
-		String converterVarName = JpcPreferences.JPC_VAR_PREFIX + "Converter";
-		Query query = embeddedEngine.query(new Compound(CONVERTER_FUNCTOR_NAME, asList(term, new Var(converterVarName))));
-		Optional<Solution> solutionOpt = query.oneSolution();
-		if(solutionOpt.isPresent()) {
-			Solution solution = solutionOpt.get();
-			Term unifiedTerm = term.replaceVariables(solution);
-			fromTermConverter = (FromTermConverter)((JRef)solution.get(converterVarName)).getRef();
-			return (T)new CheckedConverterEvaluator(unifiedTerm, targetType, jpc).apply(FromTermConverterAdapter.forConverter(fromTermConverter));
+	private <T> T evalQuantifiedTermConverter(Term term, Type targetType, Jpc jpc) {
+		T converted = null;
+		if(isValidConvertableTerm(term)) {
+			String converterVarName = JpcPreferences.JPC_VAR_PREFIX + "Converter";
+			Query query = embeddedEngine.query(new Compound(CONVERTER_FUNCTOR_NAME, asList(term, new Var(converterVarName))));
+			while(query.hasNext()) {
+				Solution solution = query.next();
+				Term unifiedTerm = term.replaceVariables(solution);
+				FromTermConverter fromTermConverter = (FromTermConverter)((JRef)solution.get(converterVarName)).getRef();
+				try {
+					converted = (T)new CheckedConverterEvaluator(unifiedTerm, targetType, jpc).apply(FromTermConverterAdapter.forConverter(fromTermConverter));
+				} catch(ConversionException e) {} //just try with the next converter.
+			}
+			query.close();
 		}
-		throw new ConversionException();
+		if(converted == null)
+			throw new ConversionException();
+		else
+			return converted;
 	}
 	
 }
