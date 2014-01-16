@@ -303,9 +303,15 @@ public class DefaultConverterTest {
 		Compound c2 = new Compound("#", asList(new Atom("orange"), new IntegerTerm(20)));
 		Term listTerm = listTerm(c1, c2);
 		try {
-			Object x = jpc.fromTerm(listTerm);
+			jpc.fromTerm(listTerm);
 			fail();
 		} catch(Exception e) {}
+	}
+	
+	@Test
+	public void testTermToEmptyList() {
+		List<?> list = jpc.fromTerm(Atom.EMPTY_LIST);
+		assertEquals(0, list.size());
 	}
 	
 	@Test
