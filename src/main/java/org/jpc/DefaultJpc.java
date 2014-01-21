@@ -8,8 +8,8 @@ import java.util.Objects;
 import org.jconverter.converter.CheckedConverterEvaluator;
 import org.jconverter.converter.ConversionException;
 import org.jconverter.converter.Converter;
-import org.jconverter.instantiation.InstantiationManager;
-import org.jconverter.instantiation.JGumInstantiationManager;
+import org.jconverter.factory.FactoryManager;
+import org.jconverter.factory.JGumFactoryManager;
 import org.jgum.JGum;
 import org.jgum.strategy.ChainOfResponsibility;
 import org.jpc.converter.FromTermConverter;
@@ -52,14 +52,14 @@ public class DefaultJpc extends Jpc {
 	
 	protected DefaultJpc(JGum jgum) {
 		this(JpcConverterManager.createDefault(jgum),
-				JGumInstantiationManager.createDefault(jgum), 
+				JGumFactoryManager.createDefault(jgum), 
 				JGumTypeSolverManager.createDefault(jgum), 
 				new JTermManager(),
 				new DefaultJpcErrorHandler());
 	}
 	
-	protected DefaultJpc(JpcConverterManager converterManager, InstantiationManager instantiationManager, TypeSolverManager typeSolverManager, JTermManager jTermManager, ErrorHandler errorHandler) {
-		super(converterManager, instantiationManager, typeSolverManager);
+	protected DefaultJpc(JpcConverterManager converterManager, FactoryManager factoryManager, TypeSolverManager typeSolverManager, JTermManager jTermManager, ErrorHandler errorHandler) {
+		super(converterManager, factoryManager, typeSolverManager);
 		this.typeSolverManager = typeSolverManager;
 		this.jTermManager = jTermManager;
 		this.errorHandler = errorHandler;

@@ -1,8 +1,8 @@
 package org.jpc;
 
 import org.jconverter.JConverterBuilder;
-import org.jconverter.instantiation.InstantiationManager;
-import org.jconverter.instantiation.JGumInstantiationManager;
+import org.jconverter.factory.FactoryManager;
+import org.jconverter.factory.JGumFactoryManager;
 import org.jgum.JGum;
 import org.jpc.converter.JpcConverter;
 import org.jpc.converter.JpcConverterManager;
@@ -33,21 +33,21 @@ public class JpcBuilder extends JConverterBuilder {
 	
 	private JpcBuilder(JGum jgum) {
 		this(JpcConverterManager.createDefault(jgum),
-				JGumInstantiationManager.createDefault(jgum), 
+				JGumFactoryManager.createDefault(jgum), 
 				JGumTypeSolverManager.createDefault(jgum), 
 				new JTermManager(), 
 				new DefaultJpcErrorHandler());
 	}
 	
-	protected JpcBuilder(JpcConverterManager converterManager, InstantiationManager instantiationManager, TypeSolverManager typeSolverManager, JTermManager jTermManager, ErrorHandlerManager errorHandlerManager) {
-		super(converterManager, instantiationManager);
+	protected JpcBuilder(JpcConverterManager converterManager, FactoryManager factoryManager, TypeSolverManager typeSolverManager, JTermManager jTermManager, ErrorHandlerManager errorHandlerManager) {
+		super(converterManager, factoryManager);
 		this.typeSolverManager = typeSolverManager;
 		this.jTermManager = jTermManager;
 		this.errorHandlerManager = errorHandlerManager;
 	}
 	
 	public Jpc build() {
-		return new DefaultJpc((JpcConverterManager)converterManager, instantiationManager, typeSolverManager, jTermManager, errorHandlerManager);
+		return new DefaultJpc((JpcConverterManager)converterManager, factoryManager, typeSolverManager, jTermManager, errorHandlerManager);
 	}
 
 	public JpcBuilder register(JpcConverter converter) {

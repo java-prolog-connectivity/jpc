@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.jconverter.JConverter;
 import org.jconverter.converter.ConverterManager;
-import org.jconverter.instantiation.InstantiationManager;
+import org.jconverter.factory.FactoryManager;
 import org.jpc.converter.typesolver.TypeSolverManager;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
@@ -37,11 +37,11 @@ public abstract class Jpc extends JConverter {
 	
 	/**
 	 * @param converterManager a converter manager responsible of converting objects.
-	 * @param instantiationManager an instance creator manager responsible of instantiating objects.
+	 * @param factoryManager an instance creator manager responsible of instantiating objects.
 	 * @param typeSolverManager a type solver manager responsible of recommending types for the result of a conversion.
 	 */
-	public Jpc(ConverterManager converterManager, InstantiationManager instantiationManager, TypeSolverManager typeSolverManager) {
-		super(converterManager, instantiationManager);
+	public Jpc(ConverterManager converterManager, FactoryManager factoryManager, TypeSolverManager typeSolverManager) {
+		super(converterManager, factoryManager);
 	}
 
 	public final <T> T fromTerm(Term term) {
