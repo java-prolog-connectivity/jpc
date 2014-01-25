@@ -90,7 +90,7 @@ public class DefaultJpc extends Jpc {
 			return (T) atom.getName();
 		}
 		if((wrappedTargetType.equals(Object.class) || Number.class.isAssignableFrom(wrappedTargetType.getRawClass())) && term instanceof NumberTerm) {
-			return (T) new NumberToNumberTermConverter().fromTerm(term, targetType.equals(Object.class)?Number.class:targetType, this);
+			return (T) new NumberToNumberTermConverter().fromTerm((NumberTerm)term, targetType.equals(Object.class)?Number.class:targetType, this);
 		}
 		//--- END OF PERFORMANCE BLOCK
 		
@@ -132,7 +132,7 @@ public class DefaultJpc extends Jpc {
 			return (T)new Atom((String)object);
 		}	
 		if((targetType.equals(Term.class) || NumberTerm.class.isAssignableFrom(targetType)) && object instanceof Number) {
-			return (T) new NumberToNumberTermConverter().toTerm(object, targetType.equals(Term.class)?NumberTerm.class:targetType, this);
+			return (T) new NumberToNumberTermConverter().toTerm((Number)object, targetType.equals(Term.class)?NumberTerm.class:targetType, this);
 		}
 		//--- END OF PERFORMANCE BLOCK
 		
