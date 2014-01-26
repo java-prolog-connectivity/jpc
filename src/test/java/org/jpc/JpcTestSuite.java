@@ -19,6 +19,8 @@ import org.jpc.term.VariableTest;
 import org.jpc.term.expansion.ParameterizedSymbolExpanderTest;
 import org.jpc.term.unification.UnificationTest;
 import org.jpc.util.PrologUtilTest;
+import org.jpc.util.config.EngineConfigurationDeserializerTest;
+import org.jpc.util.config.JpcConfigurationDeserializerTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -42,6 +44,8 @@ import org.junit.runners.Suite;
 	TypeSolverTest.class,
 	DefaultConverterTest.class,
 	CustomTermConverterTest.class,
-	PrologUtilTest.class
+	PrologUtilTest.class,
+	JpcConfigurationDeserializerTest.class,
+	EngineConfigurationDeserializerTest.class
 	})
 public class JpcTestSuite {}
