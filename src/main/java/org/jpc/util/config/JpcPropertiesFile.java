@@ -1,4 +1,4 @@
-package org.jpc.util;
+package org.jpc.util.config;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.jpc.engine.prolog.driver.PrologEngineFactory;
+import org.jpc.util.JpcPreferences;
 
 public class JpcPropertiesFile {
 

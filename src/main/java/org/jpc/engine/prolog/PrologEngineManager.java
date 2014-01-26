@@ -10,7 +10,7 @@ import java.util.Set;
 import org.jgum.JGum;
 import org.jpc.engine.prolog.driver.PrologEngineFactory;
 import org.jpc.engine.provider.LazyEngineProvider;
-import org.jpc.util.JpcPropertiesFile;
+import org.jpc.util.config.JpcPropertiesFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,10 +20,16 @@ public class PrologEngineManager {
 	
 	private static final Object PROVIDER_KEY = LazyEngineProvider.class;
 	
-	private static final PrologEngineManager prologEngineManager = new PrologEngineManager();
+	private static final PrologEngineManager prologEngineManager = createFromPropertiesFile();
 	
 	public static PrologEngineManager getDefault() {
 		return prologEngineManager;
+	}
+	
+	private static PrologEngineManager createFromPropertiesFile() {
+		PrologEngineManager manager = new PrologEngineManager();
+		manager.configureFromPropertiesFile();
+		return manager;
 	}
 	
 	static {
@@ -40,10 +46,9 @@ public class PrologEngineManager {
 	
 	private PrologEngineManager() {
 		this.jgum = new JGum();
-		loadFromPropertiesFile();
 	}
 
-	private void loadFromPropertiesFile() {
+	private void configureFromPropertiesFile() {
 		JpcPropertiesFile jpcProperties;
 		try {
 			jpcProperties = new JpcPropertiesFile();
@@ -57,7 +62,6 @@ public class PrologEngineManager {
 				}
 				LazyEngineProvider<?> provider = new LazyEngineProvider(factory);
 				String categoryName = entry.getKey();
-				System.out.println(categoryName);
 				jgum.forName(categoryName).setProperty(PROVIDER_KEY, provider);
 			}
 		} catch(FileNotFoundException e) {
@@ -88,10 +92,8 @@ public class PrologEngineManager {
 		Set<T> prologEngines = new HashSet<>();
 		for(LazyEngineProvider<T> provider : providers) {
 			if(provider.isInitialized()) {
-				T prologEngine = provider.getPrologEngine();
-				prologEngines.add(prologEngine);
-			}
-				
+				prologEngines.add(provider.getPrologEngine());
+			}	
 		}
 		return prologEngines;
 	}
