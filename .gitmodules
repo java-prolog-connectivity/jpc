@@ -1,0 +1,3 @@
+[submodule "docs"]
+	path = docs
+	url = https://github.com/java-prolog-connectivity/java-prolog-connectivity.github.io
