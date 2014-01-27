@@ -45,7 +45,7 @@ import org.junit.runners.Suite;
 	DefaultConverterTest.class,
 	CustomTermConverterTest.class,
 	PrologUtilTest.class,
-	JpcConfigurationDeserializerTest.class,
-	EngineConfigurationDeserializerTest.class
+	EngineConfigurationDeserializerTest.class,
+	JpcConfigurationDeserializerTest.class
 	})
 public class JpcTestSuite {}

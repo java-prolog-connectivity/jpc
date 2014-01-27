@@ -8,6 +8,7 @@ import static org.junit.Assert.fail;
 import java.util.Collections;
 
 import org.jpc.engine.embedded.JpcEngineDriver;
+import org.jpc.engine.profile.LogtalkEngineProfile;
 import org.junit.Test;
 
 public class EngineConfigurationDeserializerTest {
@@ -25,9 +26,14 @@ public class EngineConfigurationDeserializerTest {
 	public static final String jsonConfigNoAlias = "{" + EngineConfigurationDeserializer.PACKAGE_NAMES_PROPERTY_NAME + ": [\"p1\", \"p2\"], " + 
 			EngineConfigurationDeserializer.ENGINE_FACTORY + ": \"" + JpcEngineDriver.class.getCanonicalName() + "\"}";
 	
-	public static final String jsonConfigAllData = "{" + EngineConfigurationDeserializer.ALIAS_PROPERTY_NAME + ": \"alias\", " + 
+	public static final String jsonConfigNoProfile = "{" + EngineConfigurationDeserializer.ALIAS_PROPERTY_NAME + ": \"alias\", " + 
 			EngineConfigurationDeserializer.PACKAGE_NAMES_PROPERTY_NAME + ": [\"p1\", \"p2\"], " + 
 			EngineConfigurationDeserializer.ENGINE_FACTORY + ": \"" + JpcEngineDriver.class.getCanonicalName() + "\"}";
+	
+	public static final String jsonConfigWithProfile = "{" + EngineConfigurationDeserializer.ALIAS_PROPERTY_NAME + ": \"alias\", " + 
+			EngineConfigurationDeserializer.PACKAGE_NAMES_PROPERTY_NAME + ": [\"p1\", \"p2\"], " + 
+			EngineConfigurationDeserializer.ENGINE_FACTORY + ": \"" + JpcEngineDriver.class.getCanonicalName() + "\", " +
+			EngineConfigurationDeserializer.ENGINE_PROFILE + ": \"" + LogtalkEngineProfile.class.getCanonicalName()+ "\"}";
 	
 	@Test
 	public void testJsonConfigNoPackages() {
@@ -63,12 +69,21 @@ public class EngineConfigurationDeserializerTest {
 	}
 	
 	@Test
-	public void testJsonConfigAllData() {
-		EngineConfiguration engineConfiguration = JpcConfigurationDeserializer.getContext().fromJson(jsonConfigAllData, EngineConfiguration.class);
+	public void testJsonConfigNoProfile() {
+		EngineConfiguration engineConfiguration = JpcConfigurationDeserializer.getContext().fromJson(jsonConfigNoProfile, EngineConfiguration.class);
 		assertEquals("alias", engineConfiguration.getAlias());
 		assertTrue(engineConfiguration.getPackageNames().contains("p1"));
 		assertTrue(engineConfiguration.getPackageNames().contains("p2"));
 		assertTrue(engineConfiguration.getEngineFactory() instanceof JpcEngineDriver);
+	}
+	
+	@Test
+	public void testJsonConfigWithProfile() {
+		EngineConfiguration engineConfiguration = JpcConfigurationDeserializer.getContext().fromJson(jsonConfigWithProfile, EngineConfiguration.class);
+		assertEquals("alias", engineConfiguration.getAlias());
+		assertTrue(engineConfiguration.getPackageNames().contains("p1"));
+		assertTrue(engineConfiguration.getPackageNames().contains("p2"));
+		assertTrue(engineConfiguration.getEngineFactory() instanceof LogtalkEngineProfile);
 	}
 	
 }

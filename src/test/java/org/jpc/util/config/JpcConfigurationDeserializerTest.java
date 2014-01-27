@@ -16,7 +16,7 @@ public class JpcConfigurationDeserializerTest {
 	
 	public static final String jsonJpcConfigurationManyEngines = "{" + JpcConfigurationDeserializer.ENGINE_CONFIGURATIONS_PROPERTY_NAME + ": [" + EngineConfigurationDeserializerTest.jsonConfigNoPackages + ", " + 
 			EngineConfigurationDeserializerTest.jsonConfigNoAlias + ", " +
-			EngineConfigurationDeserializerTest.jsonConfigAllData + "]}";
+			EngineConfigurationDeserializerTest.jsonConfigWithProfile + "]}";
 	
 	@Test
 	public void testEmptyJpcConfiguration() {
