@@ -15,7 +15,7 @@ public class PrologConstants {
 	
 	public static final String FALSE = "false";
 	
-	public static final String EMPTY_LIST_SYMBOL = "[]";
+	public static final String NIL_SYMBOL = "[]";
 	
 	public static final String CONS_FUNCTOR = ".";
 	

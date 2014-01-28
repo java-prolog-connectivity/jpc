@@ -310,7 +310,7 @@ public class DefaultConverterTest {
 	
 	@Test
 	public void testTermToEmptyList() {
-		List<?> list = jpc.fromTerm(Atom.EMPTY_LIST);
+		List<?> list = jpc.fromTerm(Atom.NIL);
 		assertEquals(0, list.size());
 	}
 	

@@ -1,6 +1,6 @@
 package org.jpc.term;
 
-import static org.jpc.engine.prolog.PrologConstants.EMPTY_LIST_SYMBOL;
+import static org.jpc.engine.prolog.PrologConstants.NIL_SYMBOL;
 import static org.jpc.engine.prolog.PrologConstants.FAIL;
 import static org.jpc.engine.prolog.PrologConstants.FALSE;
 import static org.jpc.engine.prolog.PrologConstants.TRUE;
@@ -23,7 +23,7 @@ public class Atom extends Term {
 
 	public static final Atom TRUE_TERM = new Atom(TRUE);
 	public static final Atom FAIL_TERM = new Atom(FAIL); //preferring 'fail' over 'false' since 'fail' is ISO.
-	public static final Atom EMPTY_LIST = new Atom(EMPTY_LIST_SYMBOL);
+	public static final Atom NIL = new Atom(NIL_SYMBOL);
 	
 	private final String name;
 	private String escapedName; //lazily initialized.
@@ -54,7 +54,7 @@ public class Atom extends Term {
 	
 	@Override
 	protected boolean basicIsList() {
-		return name.equals(EMPTY_LIST_SYMBOL);
+		return name.equals(NIL_SYMBOL);
 	}
 
 	@Override

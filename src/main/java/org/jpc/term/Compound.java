@@ -78,7 +78,7 @@ public class Compound extends Term {
 		if(isList()) {
 			ListTerm list = new ListTerm();
 			Term current = this;
-			while(!current.equals(Atom.EMPTY_LIST)) {
+			while(!current.equals(Atom.NIL)) {
 				list.add(current.arg(1));
 				current = current.arg(2);
 			}
