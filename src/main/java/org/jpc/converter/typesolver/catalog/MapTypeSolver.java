@@ -14,8 +14,8 @@ import com.google.common.collect.Iterables;
 
 public class MapTypeSolver implements TypeSolver<Compound> {
 
-	public static final String DEFAULT_MAP_ENTRY_SEPARATOR = "-";
-	public static final String[] ALL_MAP_ENTRY_SEPARATORS = new String[]{DEFAULT_MAP_ENTRY_SEPARATOR, "="};
+	public static final String DEFAULT_MAP_ENTRY_SEPARATOR = ":";
+	public static final String[] ALL_MAP_ENTRY_SEPARATORS = new String[]{DEFAULT_MAP_ENTRY_SEPARATOR, "-", "="};
 	
 	@Override
 	public Type getType(Compound term) {
