@@ -29,7 +29,7 @@ public abstract class MapEntryConverter<K,V> {
 	}
 	
 
-	public static class MapEntryToTermConverter extends MapEntryConverter implements ToTermConverter<Map.Entry, Compound> {
+	public static class MapEntryToTermConverter<K,V> extends MapEntryConverter<K,V> implements ToTermConverter<Map.Entry<K,V>, Compound> {
 		
 		public MapEntryToTermConverter() {
 			super();
@@ -40,7 +40,7 @@ public abstract class MapEntryConverter<K,V> {
 		}
 		
 		@Override
-		public Compound toTerm(Entry entry, Class<Compound> termClass, Jpc context) {
+		public Compound toTerm(Entry<K,V> entry, Class<Compound> termClass, Jpc context) {
 			Term key = context.toTerm(entry.getKey());
 			Term value = context.toTerm(entry.getValue());
 			Compound term = new Compound(entrySeparator, asList(key, value));
@@ -50,7 +50,7 @@ public abstract class MapEntryConverter<K,V> {
 	}
 	
 	
-	public static class TermToMapEntryConverter<K,V> extends MapEntryConverter implements FromTermConverter<Compound, Map.Entry> {
+	public static class TermToMapEntryConverter<K,V> extends MapEntryConverter<K,V> implements FromTermConverter<Compound, Map.Entry<K,V>> {
 		
 		public TermToMapEntryConverter() {
 			super();

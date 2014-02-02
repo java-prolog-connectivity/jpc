@@ -10,7 +10,7 @@ import org.jpc.converter.FromTermConverter;
 import org.jpc.term.Term;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
-public class CollectionConverter<U extends Term,T extends Collection> implements FromTermConverter<U,T> {
+public class CollectionConverter<U extends Term,T extends Collection<?>> implements FromTermConverter<U,T> {
 	
 	@Override
 	public T fromTerm(Term listTerm, Type type, Jpc context) {
@@ -35,7 +35,7 @@ public class CollectionConverter<U extends Term,T extends Collection> implements
 		
 		for(Term term : listMembers) {
 			Object convertedMember = context.fromTerm(term, componentType);
-			collection.add(convertedMember);
+			((Collection)collection).add(convertedMember);
 		}
 		return collection;
 	}

@@ -13,10 +13,10 @@ import org.jpc.term.Term;
 import org.minitoolbox.reflection.javatype.ParameterizedTypeImpl;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
-public class IteratorConverter<T extends Term> implements ToTermConverter<Iterator, T>, FromTermConverter<T, Iterator> {
+public class IteratorConverter<T extends Term> implements ToTermConverter<Iterator<?>, T>, FromTermConverter<T, Iterator<?>> {
 
 	@Override
-	public T toTerm(Iterator it, Class<T> termClass, Jpc context) {
+	public T toTerm(Iterator<?> it, Class<T> termClass, Jpc context) {
 		if(!Term.class.isAssignableFrom(termClass))
 			throw new ConversionException();
 		ListTerm terms = new ListTerm();
@@ -26,7 +26,7 @@ public class IteratorConverter<T extends Term> implements ToTermConverter<Iterat
 	}
 
 	@Override
-	public Iterator fromTerm(T listTerm, Type targetType, Jpc context) {
+	public Iterator<?> fromTerm(T listTerm, Type targetType, Jpc context) {
 		if(!listTerm.isList())
 			throw new ConversionException();
 		TypeWrapper wrappedTargetType = TypeWrapper.wrap(targetType);

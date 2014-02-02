@@ -32,7 +32,7 @@ public abstract class MapConverter {
 	}
 	
 
-	public static class MapToTermConverter<T extends Map,U extends Term> extends MapConverter implements ToTermConverter<T,U> {
+	public static class MapToTermConverter<T extends Map<?,?>,U extends Term> extends MapConverter implements ToTermConverter<T,U> {
 		
 		public MapToTermConverter() {
 			super();
@@ -47,8 +47,8 @@ public abstract class MapConverter {
 			if(!Term.class.isAssignableFrom(termClass))
 				throw new ConversionException();
 			ListTerm terms = new ListTerm();
-			Set<Entry> entries = map.entrySet();
-			for(Entry entry : entries) {
+			Set<Entry<?,?>> entries = (Set)map.entrySet();
+			for(Entry<?,?> entry : entries) {
 				Term entryTerm = new MapEntryToTermConverter(entrySeparator).toTerm(entry, Compound.class, context);
 				terms.add(entryTerm);
 			}
@@ -58,7 +58,7 @@ public abstract class MapConverter {
 	}
 	
 	
-	public static class TermToMapConverter<T extends Term,U extends Map> extends MapConverter implements FromTermConverter<T,U> {
+	public static class TermToMapConverter<T extends Term,U extends Map<?,?>> extends MapConverter implements FromTermConverter<T,U> {
 		
 		public TermToMapConverter() {
 			super();
@@ -84,8 +84,8 @@ public abstract class MapConverter {
 			Type entryType = new ParameterizedTypeImpl(mapTypes, Map.class, Map.Entry.class);
 			
 			for(Term termMember : listMembers) {
-				Entry entry = new TermToMapEntryConverter(entrySeparator).fromTerm((Compound)termMember, entryType, context);
-				map.put(entry.getKey(), entry.getValue());
+				Entry<?,?> entry = new TermToMapEntryConverter(entrySeparator).fromTerm((Compound)termMember, entryType, context);
+				((Map)map).put(entry.getKey(), entry.getValue());
 			}
 			return map;
 		}

@@ -13,15 +13,15 @@ import org.jpc.term.Term;
 import org.minitoolbox.reflection.javatype.ParameterizedTypeImpl;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
-public class EnumerationConverter<T extends Term> implements ToTermConverter<Enumeration, T>, FromTermConverter<T, Enumeration> {
+public class EnumerationConverter<T extends Term> implements ToTermConverter<Enumeration<?>, T>, FromTermConverter<T, Enumeration<?>> {
 
 	@Override
-	public T toTerm(Enumeration en, Class<T> termClass, Jpc context) {
+	public T toTerm(Enumeration<?> en, Class<T> termClass, Jpc context) {
 		return (T) new IterableConverter().toTerm(Collections.list(en), termClass, context);
 	}
 	
 	@Override
-	public Enumeration fromTerm(T listTerm, Type type, Jpc context) {
+	public Enumeration<?> fromTerm(T listTerm, Type type, Jpc context) {
 		if(!listTerm.isList())
 			throw new ConversionException();
 		Type elementType = null;
