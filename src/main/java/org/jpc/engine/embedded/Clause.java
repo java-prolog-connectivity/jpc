@@ -14,10 +14,10 @@ import org.jpc.term.Term;
  */
 public class Clause implements Comparable<Clause> {
 
-	protected static int next_id;
+	protected static int nextId;
 	
 	protected void checkClauseHead(Term head) {
-		if(!(head instanceof Atom || head instanceof Compound))
+		if(!(head instanceof Atom || head instanceof Compound)) //only atoms and compounds are allowed in the clause head.
 			throw new JpcException("Invalid clause head: " + head + ".");
 	}
 	
@@ -26,7 +26,7 @@ public class Clause implements Comparable<Clause> {
 	
 	public Clause(Term head) {
 		checkClauseHead(head);
-		id = next_id++;
+		id = nextId++;
 		this.head = head.compile(id);
 	}
 	

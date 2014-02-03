@@ -21,7 +21,7 @@ public class InternedAtom extends Atom {
 	}
 
 	@Override
-	public Term forEnvironment(int environmentId) {
+	public Term forFrame(int frameId) {
 		return this;
 	}
 	

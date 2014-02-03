@@ -80,7 +80,7 @@ public class Var extends AbstractVar {
 	}
 
 	@Override
-	public Term forEnvironment(int environmentId) {
+	public Term forFrame(int frameId) {
 		throw new UnsupportedOperationException(); //a call to this method should never happen.
 	}
 	

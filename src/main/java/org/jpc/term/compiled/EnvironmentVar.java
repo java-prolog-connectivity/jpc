@@ -23,7 +23,7 @@ public class EnvironmentVar extends CompiledVar {
 	}
 
 	@Override
-	public Term forEnvironment(int environmentId) {
+	public Term forFrame(int frameId) {
 		throw new UnsupportedOperationException();
 	}
 	

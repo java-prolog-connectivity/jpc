@@ -11,10 +11,15 @@ import org.jpc.term.visitor.TermVisitor;
 
 import com.google.common.base.Function;
 
+/**
+ * An abstract Prolog variable.
+ * @author sergioc
+ *
+ */
 public abstract class AbstractVar extends Term {
 
 	/**
-	 * @return the variables names present in the term
+	 * @return the variables names present in the term.
 	 */
 	public static List<String> getVariableNames(List<AbstractVar> vars) {
 		List<String> names = new ArrayList<>();

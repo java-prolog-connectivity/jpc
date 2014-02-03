@@ -45,8 +45,8 @@ public class CompiledVar extends AbstractVar {
 	}
 
 	@Override
-	public Term forEnvironment(int environmentId) {
-		return new EnvironmentVar(clauseId, varId, environmentId);
+	public Term forFrame(int frameId) {
+		return new EnvironmentVar(clauseId, varId, frameId);
 	}
 	
 	@Override

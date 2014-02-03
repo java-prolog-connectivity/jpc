@@ -93,7 +93,7 @@ public class Atom extends Term {
 	}
 
 	@Override
-	public Term forEnvironment(int environmentId) {
+	public Term forFrame(int frameId) {
 		return this; //the Atom should be already compiled.
 		//throw new UnsupportedOperationException(); //a call to this method should never happen.
 	}

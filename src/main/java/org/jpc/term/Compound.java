@@ -215,16 +215,16 @@ public class Compound extends Term {
 	}
 	
 	@Override
-	public Term forEnvironment(int environmentId) {
+	public Term forFrame(int frameId) {
 		List<Term> args = new ArrayList<>();
 		for(Term arg : getArgs()) {
 			if(!arg.isGround())
-				arg = arg.forEnvironment(environmentId);
+				arg = arg.forFrame(frameId);
 			args.add(arg);
 		}
 		Term name = getName();
 		if(!name.isGround())
-			name = name.forEnvironment(environmentId);
+			name = name.forFrame(frameId);
 		return new Compound(name, args);
 	}
 	

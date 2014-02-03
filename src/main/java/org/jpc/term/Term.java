@@ -136,6 +136,11 @@ public abstract class Term {
 		}
 	}
 
+	/**
+	 * 
+	 * @return true if the term is ground (it does not have unbound variables). false otherwise.
+	 */
+	public abstract boolean isGround();
 	
 	/**
 	 * Returns a term with all the occurrences of the variables in the parameter map replaced with its associated value (converted to a term)
@@ -240,6 +245,112 @@ public abstract class Term {
 	public abstract void accept(TermVisitor termVisitor);
 	
 	
+	public Term termExpansion(Function<Term, Term> termExpander) {
+		JpcTermWriter termWriter = new JpcTermWriter();
+		read(termWriter, termExpander);
+		return termWriter.getTerms().get(0);
+	}
+	
+	public void read(TermContentHandler contentHandler) {
+		read(contentHandler, new DefaultTermExpander());
+	}
+	
+	public void read(TermContentHandler contentHandler, Function<Term, Term> termExpander) {
+		Term expandedTerm = termExpander.apply(this);
+		if(expandedTerm != null)
+			expandedTerm.read(contentHandler);
+		else
+			basicRead(contentHandler, termExpander);
+	}
+	
+	protected abstract void basicRead(TermContentHandler contentHandler, Function<Term, Term> termExpander);
+	
+	
+	/**
+	 * Test if this object is equivalent to the term representation of the object sent as parameter
+	 * This is not testing for equality in a mathematical sense, for example:
+	 * 		'new Variable("_").equals(new Variable("_"))'
+	 * is false, since both the receiver and the arguments are anonymous variables, not the same variable. But:
+	 * 		'new Variable("_").termEquals(new Variable("_"))'
+	 * is true, since they both have the same term representation
+	 * @param termAdaptable
+	 * @return
+	 */
+	public boolean termEquals(Term t) {
+		return equals(t); //default implementation, to be overridden.
+	}
+	
+	/**
+	 * @param   list1  a list of Terms
+	 * @param   list2  another list of Terms
+	 * @return  true if all of the Terms in the (same-length) lists are pairwise term equivalent
+	 */
+	public static boolean termEquals(List<? extends Term> list1, List<? extends Term> list2) {
+		if (list1.size() != list2.size()) {
+			return false;
+		}
+		for (int i = 0; i < list1.size(); ++i) {
+			Term term1 = list1.get(i);
+			Term term2 = list2.get(i);
+			if(!term1.termEquals(term2))
+				return false;
+		}
+		return true;
+	}
+	
+	
+	/* ********************************************************************************************************************************
+	 * STRING CONVERSION METHODS.
+     **********************************************************************************************************************************
+     */
+	
+	/**
+	 * Reads the contents of this term (i.e., generates events) to a content handler
+	 * @param contentHandler the content handler that will receive the events describing the structure of this term
+	 */
+	@Override
+	public String toString() {
+		return toEscapedString();
+	}
+	
+	public abstract String toEscapedString();
+	
+	public abstract String toString(OperatorsContext operatorsContext);
+
+
+	/**
+	 * Converts an array of Terms to its escaped String representation.
+	 * 
+	 * @param   terms    an array of Terms to convert
+	 * @return  String representation of an array of Terms
+	 */
+	public static <T extends Term> String toEscapedString(T... terms) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < terms.length; ++i) {
+			sb.append(terms[i].toEscapedString());
+			if (i != terms.length - 1) {
+				sb.append(", ");
+			}
+		}
+		return sb.toString();
+	}
+	
+	/**
+	 * Converts a list of Terms to a String.
+	 * 
+	 * @param terms
+	 * @return String representation of a list of Terms
+	 */
+	public static <T extends Term> String toEscapedString(List<T> terms) {
+		return toEscapedString(terms.toArray(new Term[]{}));
+	}
+	
+	
+	/* ********************************************************************************************************************************
+	 * UNIFICATION METHODS.
+     **********************************************************************************************************************************
+     */
+	
 	/**
 	 * 
 	 * @param term a term.
@@ -291,100 +402,10 @@ public abstract class Term {
 	}
 	
 	
-	public Term termExpansion(Function<Term, Term> termExpander) {
-		JpcTermWriter termWriter = new JpcTermWriter();
-		read(termWriter, termExpander);
-		return termWriter.getTerms().get(0);
-	}
-	
-	public void read(TermContentHandler contentHandler) {
-		read(contentHandler, new DefaultTermExpander());
-	}
-	
-	public void read(TermContentHandler contentHandler, Function<Term, Term> termExpander) {
-		Term expandedTerm = termExpander.apply(this);
-		if(expandedTerm != null)
-			expandedTerm.read(contentHandler);
-		else
-			basicRead(contentHandler, termExpander);
-	}
-	
-	protected abstract void basicRead(TermContentHandler contentHandler, Function<Term, Term> termExpander);
-	
-	/**
-	 * Reads the contents of this term (i.e., generates events) to a content handler
-	 * @param contentHandler the content handler that will receive the events describing the structure of this term
-	 */
-	@Override
-	public String toString() {
-		return toEscapedString();
-	}
-	
-	public abstract String toEscapedString();
-	
-	public abstract String toString(OperatorsContext operatorsContext);
-	
-	/**
-	 * Test if this object is equivalent to the term representation of the object sent as parameter
-	 * This is not testing for equality in a mathematical sense, for example:
-	 * 		'new Variable("_").equals(new Variable("_"))'
-	 * is false, since both the receiver and the arguments are anonymous variables, not the same variable. But:
-	 * 		'new Variable("_").termEquals(new Variable("_"))'
-	 * is true, since they both have the same term representation
-	 * @param termAdaptable
-	 * @return
-	 */
-	public boolean termEquals(Term t) {
-		return equals(t); //default implementation, to be overridden.
-	}
-	
-	
-	/**
-	 * @param   list1  a list of Terms
-	 * @param   list2  another list of Terms
-	 * @return  true if all of the Terms in the (same-length) lists are pairwise term equivalent
-	 */
-	public static boolean termEquals(List<? extends Term> list1, List<? extends Term> list2) {
-		if (list1.size() != list2.size()) {
-			return false;
-		}
-		for (int i = 0; i < list1.size(); ++i) {
-			Term term1 = list1.get(i);
-			Term term2 = list2.get(i);
-			if(!term1.termEquals(term2))
-				return false;
-		}
-		return true;
-	}
-
-	/**
-	 * Converts an array of Terms to its escaped String representation.
-	 * 
-	 * @param   terms    an array of Terms to convert
-	 * @return  String representation of an array of Terms
-	 */
-	public static <T extends Term> String toEscapedString(T... terms) {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < terms.length; ++i) {
-			sb.append(terms[i].toEscapedString());
-			if (i != terms.length - 1) {
-				sb.append(", ");
-			}
-		}
-		return sb.toString();
-	}
-	
-	/**
-	 * Converts a list of Terms to a String.
-	 * 
-	 * @param terms
-	 * @return String representation of a list of Terms
-	 */
-	public static <T extends Term> String toEscapedString(List<T> terms) {
-		return toEscapedString(terms.toArray(new Term[]{}));
-	}
-	
-	public abstract boolean isGround();
+	/* ********************************************************************************************************************************
+	 * COMPILATION METHODS. THE METHODS BELOW ARE NOT INTENDED TO BE DIRECTLY USED BY THE PROGRAMMER.
+     **********************************************************************************************************************************
+     */
 	
 	public final Term compile(int clauseId) {
 		return compile(clauseId, new CompilationContext());
@@ -400,10 +421,10 @@ public abstract class Term {
 	
 	/**
 	 * Method only required for internal usage of the JPC Prolog engine.
-	 * Every time a new clause is visited when backtracking, a new environment should be created.
-	 * @param environmentId the environment id.
-	 * @return a term to be used in a new environment.
+	 * Every time a new clause is visited when backtracking, a new frame is created.
+	 * @param frameId the frame id.
+	 * @return a term to be used in a new frame.
 	 */
-	public abstract Term forEnvironment(int environmentId);
+	public abstract Term forFrame(int frameId);
 	
 }

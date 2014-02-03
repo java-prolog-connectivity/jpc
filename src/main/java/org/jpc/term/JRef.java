@@ -66,7 +66,7 @@ public class JRef extends Term {
 	}
 
 	@Override
-	public Term forEnvironment(int environmentId) {
+	public Term forFrame(int frameId) {
 		return this;
 	}
 

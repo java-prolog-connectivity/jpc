@@ -9,7 +9,8 @@ import org.jpc.term.Term;
  * @author sergioc
  *
  */
-//Work in progress...
+//Work in progress... 
+//Rules are currently not supported in the embedded engine, only facts.
 public class Rule extends Clause {
 
 	private final List<Term> body;
