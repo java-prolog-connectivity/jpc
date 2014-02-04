@@ -168,7 +168,7 @@ public class JpcConverterManager extends JGumConverterManager {
 		this.embeddedEngine = new JpcEngine();
 		IndexManager indexManager = embeddedEngine.getIndexManager();
 		indexManager.setIndexDescriptor( new Functor(CONVERTER_FUNCTOR_NAME, 2), 
-				IndexDescriptor.argumentIndexDescriptor(1, indexManager) ); //clause heads having converter as a functor name will be indexed according to the first argument of the term head.
+				IndexDescriptor.forArgumentIndex(1, indexManager) ); //clause heads having converter as a functor name will be indexed according to the first argument of the term head.
 	}
 
 	public IndexManager getIndexManager() {

@@ -10,7 +10,12 @@ import java.util.Map;
 import org.jpc.JpcException;
 import org.jpc.term.Functor;
 
-
+/**
+ * A manager of term indexes.
+ * In the current implementation, indexes can only be defined for compounds having ground functor names.
+ * @author sergioc
+ *
+ */
 public class IndexManager {
 
 	private final Map<Functor, List<IndexDescriptor>> functorIndexes;
@@ -21,7 +26,7 @@ public class IndexManager {
 	}
 	
 	public static boolean isIndexable(Functor functor) {
-		return functor.getArity() > 0 //only compounds can be indexed.
+		return functor.getArity() > 0 //indexes can only be defined for ground compounds.
 				&& functor.getName().isGround();
 	}
 	

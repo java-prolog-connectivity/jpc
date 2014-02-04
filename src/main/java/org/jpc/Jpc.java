@@ -107,6 +107,6 @@ public abstract class Jpc extends JConverter {
 	
 	public abstract Compound jTerm(Object o);
 	
-	public abstract Object resolveJTerm(Compound compound);
+	public abstract <T> T resolveJTerm(Compound compound);
 	
 }

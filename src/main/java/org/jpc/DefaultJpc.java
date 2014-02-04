@@ -214,7 +214,7 @@ public class DefaultJpc extends Jpc {
 	}
 	
 	@Override
-	public Object resolveJTerm(Compound compound) {
+	public <T> T resolveJTerm(Compound compound) {
 		return jTermManager.resolve(compound);
 	}
 	

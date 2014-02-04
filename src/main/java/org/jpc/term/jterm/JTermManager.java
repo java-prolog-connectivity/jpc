@@ -57,7 +57,7 @@ public class JTermManager {
 	
 	/**
 	 * This map associates objects with their reference ids.
-	 * This map discards an entry if the key (the object associated with the reference id) is marked for garbage collection.
+	 * It discards an entry if the key (the object associated with the reference id) is marked for garbage collection.
 	 */
 	private final Map<Object, JTermRef<?>> currentRefsMap; //weak keys map.
 	private final Set<Object> storedReferences; //set storing references so they will not be garbage collected.
@@ -69,6 +69,7 @@ public class JTermManager {
 	}
 	
 	public JTermManager(ReferenceQueue<?> referenceQueue) {
+		this.referenceQueue = referenceQueue;
 		/**
 		 * Quoting from the Guava documentation (http://docs.guava-libraries.googlecode.com/git-history/release/javadoc/com/google/common/collect/MapMaker.html) :
 		 * 
@@ -80,14 +81,14 @@ public class JTermManager {
 		 */
 		currentRefsMap = new MapMaker().weakKeys().makeMap();
 		storedReferences = Collections.newSetFromMap(new IdentityHashMap<Object, Boolean>()); //reference set (members are identified by their references, not by a call to equals()).
-		this.referenceQueue = referenceQueue;
-		this.embeddedEngine = new JpcEngine();
+		embeddedEngine = new JpcEngine();
 		IndexManager indexManager = embeddedEngine.getIndexManager();
-		indexManager.setIndexDescriptor( new Functor(JTERM_FUNCTOR_NAME, 2), 
-				IndexDescriptor.argumentIndexDescriptor(1, indexManager) ); //clause heads having jterm as a functor name will be indexed according to the first argument of the term head.
+		Functor jtermFunctor = new Functor(JTERM_FUNCTOR_NAME, 2);
+		//IndexDescriptor indexDescriptor = IndexDescriptor.forArgument(1); //works, but inefficiently.
+		IndexDescriptor indexDescriptor = IndexDescriptor.forArgumentIndex(1, indexManager); //makes use of any index defined for the first argument.
+		indexManager.setIndexDescriptor(jtermFunctor, indexDescriptor); //clause heads having jterm/2 as a functor will be indexed according to their first argument.
 	}
 
-	
 	public IndexManager getIndexManager() {
 		return embeddedEngine.getIndexManager();
 	}
@@ -108,19 +109,22 @@ public class JTermManager {
 		embeddedEngine.assertz(new Compound(JTERM_FUNCTOR_NAME, asList(compound, new JRef(jTerm))));
 	}
 	
-	private JTermRef<?> get(Compound compound) {
+	private <T> Optional<JTermRef<T>> get(Compound compound) {
 		String jTermVarName = "X";
 		Query query = embeddedEngine.query(new Compound(JTERM_FUNCTOR_NAME, asList(compound, new Var(jTermVarName))));
 		Optional<Solution> optSolution = query.oneSolution();
+		JTermRef<T> jTermRef = null;
 		if(optSolution.isPresent()) {
 			JRef jRef = (JRef) optSolution.get().get(jTermVarName);
-			return (JTermRef<?>) jRef.getRef();
+			jTermRef = (JTermRef<T>) jRef.getRef();
 		}
-		else
-			return null;
+		return Optional.fromNullable(jTermRef);
 	}
 	
-	
+	private <T> Optional<JTermRef<T>> get(T ref) {
+		JTermRef<T> jTermRef = (JTermRef<T>)currentRefsMap.get(ref);
+		return Optional.<JTermRef<T>>fromNullable(jTermRef);
+	}
 	
 	
 	/**
@@ -130,28 +134,31 @@ public class JTermManager {
 	 * @return a JTermRef reference for the object sent as second argument, uniquely identified by the term sent as first argument.
 	 */
 	private <T>JTermRef<T> newWeakJTermRef(T ref, final Compound compound) {
-		JTermRef<?> jTermRef = currentRefsMap.get(ref);
-		if(jTermRef == null) {
-			jTermRef = get(compound);
-			if(jTermRef == null) {
+		Optional<JTermRef<T>> jTermRefOpt = get(ref);
+		JTermRef<T> jTermRef;
+		if(!jTermRefOpt.isPresent()) {
+			jTermRefOpt = get(compound);
+			if(!jTermRefOpt.isPresent()) {
 				Runnable cleaningTask = new Runnable() {
 					@Override
 					public void run() {
 						remove(compound);
 					}
 				};
-				jTermRef = new JTermRef<Object>(ref, (ReferenceQueue<Object>) getReferenceQueue(), compound, cleaningTask);
+				jTermRef = new JTermRef<T>(ref, (ReferenceQueue<T>) getReferenceQueue(), compound, cleaningTask);
 				currentRefsMap.put(ref, jTermRef);
 				put(compound, jTermRef);
 			} else {
+				jTermRef = jTermRefOpt.get();
 				if(jTermRef.get() != ref)
 					throw new JpcException("Term reference id " + compound + " is already registered with the object: " + jTermRef.get() + ".");
 			}
 		} else {
+			jTermRef = jTermRefOpt.get();
 			if(!compound.equals(jTermRef.asTerm()))
 				throw new JpcException("Reference " + ref + " is already registered with the term reference id: " + jTermRef.asTerm() + ".");
 		}
-		return (JTermRef<T>) jTermRef;
+		return jTermRef;
 	}
 	
 	/**
@@ -219,8 +226,9 @@ public class JTermManager {
 	 * @param term the term representation of a reference to forget.
 	 */
 	public synchronized void forgetJTerm(Compound term) {
-		JTermRef<?> jTermRef = get(term);
-		if(jTermRef != null) {
+		Optional<JTermRef<Object>> jTermRefOpt = get(term);
+		if(jTermRefOpt.isPresent()) {
+			JTermRef<?> jTermRef = jTermRefOpt.get();
 			Object ref = jTermRef.get();
 			jTermRef.cleanUp(); //should remove the reference from the embedded Prolog engine.
 			jTermRef.clear(); //so the reference will not be enqueued. Note that this is done before actually deleting remaining references, otherwise the GC may enqueue the reference before reaching this instruction.
@@ -247,9 +255,9 @@ public class JTermManager {
 	 */
 	public synchronized Compound jTerm(Object ref) {
 		Compound term = null;
-		JTermRef<?> jTermRef = currentRefsMap.get(ref);
-		if(jTermRef != null)
-			term = jTermRef.asTerm();
+		Optional<JTermRef<Object>> jTermRefOpt = get(ref);
+		if(jTermRefOpt.isPresent())
+			term = jTermRefOpt.get().asTerm();
 		return term;
 	}
 
@@ -260,11 +268,11 @@ public class JTermManager {
 		return term;
 	}
 	
-	private JTermRef<?> jTermRefFromCompound(Compound compound) {
-		JTermRef<?> jTermRef = get(compound);
-		if(jTermRef == null && this != getWeakJTermManager())
-			jTermRef = getWeakJTermManager().jTermRefFromCompound(compound);
-		return jTermRef;
+	private <T> Optional<JTermRef<T>> jTermRefFromCompound(Compound compound) {
+		Optional<JTermRef<T>> jTermRefOpt = get(compound);
+		if(!jTermRefOpt.isPresent() && this != getWeakJTermManager())
+			jTermRefOpt = getWeakJTermManager().jTermRefFromCompound(compound);
+		return jTermRefOpt;
 	}
 //	
 //	private JTermRef<?> jTermRefFromRef(Object ref) {
@@ -279,19 +287,19 @@ public class JTermManager {
 	 * @param compound a (compound) term.
 	 * @return the reference associated with the given term. Null if no reference is associated with such a term.
 	 */
-	public synchronized Object resolve(Compound compound) {
-		Object resolved = null;
-		JTermRef<?> jTermRef = jTermRefFromCompound(compound);
-		if(jTermRef != null) {
-			resolved = jTermRef.get();
+	public synchronized <T> T resolve(Compound compound) {
+		T resolved = null;
+		Optional<JTermRef<T>> jTermRefOpt = jTermRefFromCompound(compound);
+		if(jTermRefOpt.isPresent()) {
+			resolved = jTermRefOpt.get().get();
 			if(resolved == null)
 				throw new JpcException("Reference expired: " + compound + ".");
 		}
 		return resolved;
 	}
 	
-	public synchronized Object resolveOrThrow(Compound compound) {
-		Object resolved = resolve(compound);
+	public synchronized <T> T resolveOrThrow(Compound compound) {
+		T resolved = resolve(compound);
 		if(resolved == null)
 			throw new JpcException("No reference associated with: " + compound + ".");
 		return resolved;

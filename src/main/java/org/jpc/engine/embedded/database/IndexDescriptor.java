@@ -11,31 +11,25 @@ import org.jpc.term.Term;
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 
+/**
+ * An index descriptor is modelled by an index function and a list of next Index Descriptors.
+ * @author sergioc
+ *
+ */
 public class IndexDescriptor {
 	
 	/**
-	 * 
-	 * @param argPos the term argument position.
-	 * @param indexManager an index manager.
-	 * @return an IndexDescriptor based on the defined index of a term argument in the given position.
+	 * @param indexDescriptor an index descriptor of a subterm of the desired term to index.
+	 * @param adapterFunction the function obtaining the subterm.
+	 * @return a new index descriptor composing the subterm (adapter) function and the index descriptor sent as parameter.
 	 */
-	public static IndexDescriptor argumentIndexDescriptor(final int argPos, IndexManager indexManager) {
-		Function<Term, Term> termArgumentFunction = new Function<Term, Term>() {
-			@Override
-			public Term apply(Term term) {
-				return term.arg(argPos);
-			}
-		};
-		return indexDescriptorAdapter(defaultRootIndexDescriptor(indexManager), termArgumentFunction);
-	}
-	
-	public static IndexDescriptor indexDescriptorAdapter(IndexDescriptor indexDescriptor, Function<Term, Term> adapterFunction) {
-		Function<Term, Object> indexFunction = Functions.compose(indexDescriptor.getIndexFunction(), adapterFunction);
+	static IndexDescriptor indexDescriptorAdapter(IndexDescriptor indexDescriptor, Function<Term, Term> adapterFunction) {
+		Function<Term, ?> indexFunction = Functions.compose(indexDescriptor.getIndexFunction(), adapterFunction);
 		Function<Term, List<IndexDescriptor>> indexDescriptorFunction = Functions.compose(indexDescriptor.getNextIndexDescriptorsFunction(), adapterFunction);
 		return new IndexDescriptor(indexFunction, indexDescriptorFunction);
 	}
 	
-	public static IndexDescriptor defaultRootIndexDescriptor(final IndexManager indexManager) {
+	static IndexDescriptor defaultRootIndexDescriptor(final IndexManager indexManager) {
 		return new IndexDescriptor(
 				new UpdatableIndexFunction<Term, Object>(new FunctorIndexFunction()), //the index function maps a term to its functor name.
 				/**
@@ -47,12 +41,40 @@ public class IndexDescriptor {
 					public List<IndexDescriptor> apply(Term term) { 
 						if(term instanceof Compound) { //indexes can be defined only for compounds.
 							Compound compound = (Compound) term;
-							return indexManager.getOrCreateIndexDescriptors(compound.getFunctor()); //functor should be ground (otherwise FunctorIndexFunction would have complained).
+							return indexManager.getOrCreateIndexDescriptors(compound.getFunctor()); //functor should be ground (otherwise an exception will be thrown here).
 						} else {
 							return Collections.<IndexDescriptor>emptyList();
 						}
 					}
 				});
+	}
+	
+	private static Function<Term, Term> termArgumentFunction(final int argPos) {
+		return new Function<Term, Term>() {
+			@Override
+			public Term apply(Term term) {
+				return term.arg(argPos);
+			}
+		};
+	}
+	
+	/**
+	 * 
+	 * @param argPos the term argument position.
+	 * @param indexManager an index manager.
+	 * @return an IndexDescriptor based on the defined index of a term argument in the given position.
+	 */
+	public static IndexDescriptor forArgumentIndex(int argPos, IndexManager indexManager) {
+		return indexDescriptorAdapter(defaultRootIndexDescriptor(indexManager), termArgumentFunction(argPos));
+	}
+	
+	/**
+	 * 
+	 * @param argPos the term argument position.
+	 * @return an IndexDescriptor based on the term argument in the given position.
+	 */
+	public static IndexDescriptor forArgument(int argPos) {
+		return new IndexDescriptor(termArgumentFunction(argPos));
 	}
 	
 	public static IndexDescriptor forFunctions(final List<Function<Term, Object>> indexFunctions) {
@@ -70,18 +92,18 @@ public class IndexDescriptor {
 	}
 	
 	
-	private final UpdatableIndexFunction<Term, Object> indexFunction;
+	private final UpdatableIndexFunction<Term, ?> indexFunction;
 	private final Function<Term, List<IndexDescriptor>> nextIndexDescriptorsFunction;
 	
-	public IndexDescriptor(Function<Term, Object> indexFunction) {
+	public IndexDescriptor(Function<Term, ?> indexFunction) {
 		this(new UpdatableIndexFunction<>(indexFunction));
 	}
 	
-	public IndexDescriptor(Function<Term, Object> indexFunction, Function<Term, List<IndexDescriptor>> nextIndexDescriptorsFunction) {
+	public IndexDescriptor(Function<Term, ?> indexFunction, Function<Term, List<IndexDescriptor>> nextIndexDescriptorsFunction) {
 		this(new UpdatableIndexFunction<>(indexFunction), nextIndexDescriptorsFunction);
 	}
 	
-	public IndexDescriptor(UpdatableIndexFunction<Term, Object> indexFunction) {
+	public IndexDescriptor(UpdatableIndexFunction<Term, ?> indexFunction) {
 		this(indexFunction, new Function<Term, List<IndexDescriptor>>() {
 			@Override
 			public List<IndexDescriptor> apply(Term term) {
@@ -90,12 +112,12 @@ public class IndexDescriptor {
 		});
 	}
 	
-	public IndexDescriptor(UpdatableIndexFunction<Term, Object> indexFunction, Function<Term, List<IndexDescriptor>> nextIndexDescriptorsFunction) {
+	public IndexDescriptor(UpdatableIndexFunction<Term, ?> indexFunction, Function<Term, List<IndexDescriptor>> nextIndexDescriptorsFunction) {
 		this.indexFunction = indexFunction;
 		this.nextIndexDescriptorsFunction = nextIndexDescriptorsFunction;
 	}
 
-	public UpdatableIndexFunction<Term, Object> getIndexFunction() {
+	public UpdatableIndexFunction<Term, ?> getIndexFunction() {
 		return indexFunction;
 	}
 

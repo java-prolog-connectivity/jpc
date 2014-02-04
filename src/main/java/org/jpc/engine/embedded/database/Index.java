@@ -22,7 +22,7 @@ public class Index implements IndexChangeListener {
 		indexDescriptor.getIndexFunction().addChangeListener(this);
 	}
 	
-	public UpdatableIndexFunction<Term, Object> getIndexFunction() {
+	public UpdatableIndexFunction<Term, ?> getIndexFunction() {
 		return indexDescriptor.getIndexFunction();
 	}
 	

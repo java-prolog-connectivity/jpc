@@ -22,7 +22,7 @@ public class FunctorIndexFunction implements Function<Term, Object> {
 			if(name.isGround()) //the name of the compound should be ground in order to be indexable.
 				key = compound.getFunctor();
 		} else if(term instanceof Atom) {
-			return key = term;
+			return key = ((Atom)term).getName();
 		} 
 		if(key == null)
 			throw new NonIndexableTermException(term, this);
