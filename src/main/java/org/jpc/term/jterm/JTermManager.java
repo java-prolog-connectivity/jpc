@@ -134,10 +134,10 @@ public class JTermManager {
 	 * @return a JTermRef reference for the object sent as second argument, uniquely identified by the term sent as first argument.
 	 */
 	private <T>JTermRef<T> newWeakJTermRef(T ref, final Compound compound) {
-		Optional<JTermRef<T>> jTermRefOpt = get(ref);
 		JTermRef<T> jTermRef;
+		Optional<JTermRef<T>> jTermRefOpt = get(ref); //see if the reference has already been associated with a term.
 		if(!jTermRefOpt.isPresent()) {
-			jTermRefOpt = get(compound);
+			jTermRefOpt = get(compound); //see if the compound has already been associated with a reference.
 			if(!jTermRefOpt.isPresent()) {
 				Runnable cleaningTask = new Runnable() {
 					@Override
@@ -145,7 +145,7 @@ public class JTermManager {
 						remove(compound);
 					}
 				};
-				jTermRef = new JTermRef<T>(ref, (ReferenceQueue<T>) getReferenceQueue(), compound, cleaningTask);
+				jTermRef = new JTermRef<T>(ref, (ReferenceQueue) getReferenceQueue(), compound, cleaningTask);
 				currentRefsMap.put(ref, jTermRef);
 				put(compound, jTermRef);
 			} else {
@@ -168,14 +168,17 @@ public class JTermManager {
 	 */
 	private <T> JTermRef<T> newWeakJTermRef(T ref) {
 		Compound refId = WeakJTermIdManager.getDefault().newWeakJTerm(ref);
-		getWeakJTermManager().newWeakJTermRef(ref, refId);
-		return newWeakJTermRef(ref, refId);
+		if(this != getWeakJTermManager())
+			getWeakJTermManager().newWeakJTermRef(ref, refId); //registered in the global reference manager.
+		return newWeakJTermRef(ref, refId); //registered in this reference manager.
 	}
 	
 	
 	/**
 	 * Maps an object to a given term representation.
 	 * The mapping exists as long as the object is not garbage collected.
+	 * If the object is already associated to the compound sent as parameter the method returns without errors.
+	 * However, if the object or compound are already registered and associated to different objects (i.e., different to the ones in the method parameters), it will throw an exception.
 	 * @param ref the object to express as the term sent as second argument.
 	 * @param compound the term representation of the object sent as first argument.
 	 * @return the term representation of the object (the second parameter).
@@ -261,6 +264,12 @@ public class JTermManager {
 		return term;
 	}
 
+	/**
+	 * 
+	 * @param ref an object reference.
+	 * @return the term representation of a given object reference.
+	 * @throws JpcException if the reference is not associated with a term representation.
+	 */
 	public synchronized Compound jTermOrThrow(Object ref) {
 		Compound term = jTerm(ref);
 		if(term == null)
@@ -274,12 +283,12 @@ public class JTermManager {
 			jTermRefOpt = getWeakJTermManager().jTermRefFromCompound(compound);
 		return jTermRefOpt;
 	}
-//	
-//	private JTermRef<?> jTermRefFromRef(Object ref) {
-//		JTermRef<?> jTermRef = currentRefsMap.get(ref);
-//		if(jTermRef == null && this != getDefault())
-//			jTermRef = getDefault().jTermRefFromRef(ref);
-//		return jTermRef;
+	
+//	private <T> Optional<JTermRef<T>> jTermRefFromRef(T ref) {
+//		Optional<JTermRef<T>> jTermRefOpt = get(ref);
+//		if(!jTermRefOpt.isPresent() && this != getWeakJTermManager())
+//			jTermRefOpt = getWeakJTermManager().jTermRefFromRef(ref);
+//		return jTermRefOpt;
 //	}
 	
 	/**
@@ -298,6 +307,12 @@ public class JTermManager {
 		return resolved;
 	}
 	
+	/**
+	 * 
+	 * @param compound a (compound) term.
+	 * @return the reference associated with the given term.
+	 * @throws JpcException if no reference is associated with such a term.
+	 */
 	public synchronized <T> T resolveOrThrow(Compound compound) {
 		T resolved = resolve(compound);
 		if(resolved == null)
