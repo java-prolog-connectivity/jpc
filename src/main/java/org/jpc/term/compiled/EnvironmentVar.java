@@ -12,20 +12,6 @@ public class EnvironmentVar extends CompiledVar {
 		this.environmentId = environmentId;
 	}
 	
-	@Override
-	public Term compile(int clauseId, CompilationContext context) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Term compileForQuery(CompilationContext context) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Term forFrame(int frameId) {
-		throw new UnsupportedOperationException();
-	}
 	
 	@Override
 	public boolean termEquals(Term term) {
@@ -45,5 +31,21 @@ public class EnvironmentVar extends CompiledVar {
 		
 		return true;
 	}
+	
+	@Override
+	public Term compile(int clauseId, CompilationContext context) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Term compileForQuery(CompilationContext context) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Term forFrame(int frameId) {
+		throw new UnsupportedOperationException();
+	}
+
 	
 }

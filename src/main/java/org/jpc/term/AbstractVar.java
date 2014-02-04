@@ -18,6 +18,15 @@ import com.google.common.base.Function;
  */
 public abstract class AbstractVar extends Term {
 
+	public abstract boolean isAnonymous();
+	
+	public abstract String getName();
+	
+	@Override
+	public boolean isGround() {
+		return false;
+	}
+	
 	/**
 	 * @return the variables names present in the term.
 	 */
@@ -44,46 +53,6 @@ public abstract class AbstractVar extends Term {
 		contentHandler.startVariable(getName());	
 	}
 
-	@Override
-	public boolean isGround() {
-		return false;
-	}
-	
-	@Override
-	protected void unifyVars(Term term, Map<AbstractVar, VarCell> context) {
-		if(!(isAnonymous() || 
-				(term instanceof AbstractVar && ((AbstractVar)term).isAnonymous()))) {
-			VarCell thisVarCell = context.get(this);
-			if(thisVarCell == null) {
-				thisVarCell = new VarCell(this);
-				context.put(this, thisVarCell);
-			}
-			if(term instanceof AbstractVar) {
-				VarCell thatVarCell = context.get(term);
-				if(thatVarCell == null) {
-					thatVarCell = thisVarCell;
-					context.put((AbstractVar)term, thatVarCell);
-				} 
-				if(thisVarCell != thatVarCell) {
-					Term thatVarBoundTerm = thatVarCell.getValue();
-					unifyCell(thisVarCell, thatVarBoundTerm, context);
-					thatVarCell.getRegister().becomes(thisVarCell.getRegister());
-				}
-			} else {
-				unifyCell(thisVarCell, term, context);
-			}
-		}
-	}
-	
-	private void unifyCell(VarCell varCell, Term term, Map<AbstractVar, VarCell> context) {
-		Term oldTerm = varCell.getValue();
-		if(oldTerm instanceof AbstractVar) {
-			if(!(term instanceof AbstractVar))
-				varCell.setValue(term);
-		} else {
-			oldTerm.unifyVars(term, context);
-		}
-	}
 	
 	@Override
 	public String toString(OperatorsContext operatorsContext) {
@@ -120,8 +89,41 @@ public abstract class AbstractVar extends Term {
 		}
 	}
 	
-	public abstract boolean isAnonymous();
 	
-	public abstract String getName();
+	@Override
+	protected void unifyVars(Term term, Map<AbstractVar, VarCell> context) {
+		if(!(isAnonymous() || 
+				(term instanceof AbstractVar && ((AbstractVar)term).isAnonymous()))) {
+			VarCell thisVarCell = context.get(this);
+			if(thisVarCell == null) {
+				thisVarCell = new VarCell(this);
+				context.put(this, thisVarCell);
+			}
+			if(term instanceof AbstractVar) {
+				VarCell thatVarCell = context.get(term);
+				if(thatVarCell == null) {
+					thatVarCell = thisVarCell;
+					context.put((AbstractVar)term, thatVarCell);
+				} 
+				if(thisVarCell != thatVarCell) {
+					Term thatVarBoundTerm = thatVarCell.getValue();
+					unifyCell(thisVarCell, thatVarBoundTerm, context);
+					thatVarCell.getRegister().becomes(thisVarCell.getRegister());
+				}
+			} else {
+				unifyCell(thisVarCell, term, context);
+			}
+		}
+	}
 	
+	private void unifyCell(VarCell varCell, Term term, Map<AbstractVar, VarCell> context) {
+		Term oldTerm = varCell.getValue();
+		if(oldTerm instanceof AbstractVar) {
+			if(!(term instanceof AbstractVar))
+				varCell.setValue(term);
+		} else {
+			oldTerm.unifyVars(term, context);
+		}
+	}
+
 }

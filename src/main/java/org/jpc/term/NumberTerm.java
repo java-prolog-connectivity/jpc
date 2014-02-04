@@ -34,6 +34,11 @@ public abstract class NumberTerm extends Term {
 	public final double doubleValue() {
 		return value.doubleValue();
 	}
+
+	@Override
+	public boolean isGround() {
+		return true;
+	}
 	
 	@Override
 	public String toEscapedString() {
@@ -43,26 +48,6 @@ public abstract class NumberTerm extends Term {
 	@Override
 	public boolean hasFunctor(Functor functor) {
 		return functor.getArity() == 0 && termEquals(functor.getName());
-	}
-
-	@Override
-	public boolean isGround() {
-		return true;
-	}
-	
-	@Override
-	public Term compile(int clauseId, CompilationContext context) {
-		return this;
-	}
-
-	@Override
-	public Term compileForQuery(CompilationContext context) {
-		return this;
-	}
-
-	@Override
-	public Term forFrame(int frameId) {
-		return this;
 	}
 	
 	@Override
@@ -87,4 +72,20 @@ public abstract class NumberTerm extends Term {
 		return toString();
 	}
 
+	
+	@Override
+	public Term compile(int clauseId, CompilationContext context) {
+		return this;
+	}
+
+	@Override
+	public Term compileForQuery(CompilationContext context) {
+		return this;
+	}
+
+	@Override
+	public Term forFrame(int frameId) {
+		return this;
+	}
+	
 }

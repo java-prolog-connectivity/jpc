@@ -68,6 +68,16 @@ public class Var extends AbstractVar {
 		return this.name;
 	}
 	
+	@Override
+	public int hashCode() {
+		return name.hashCode();
+	}
+		
+	@Override
+	public boolean termEquals(Term term) {
+		return this == term || (term.getClass().equals(getClass()) && this.name.equals(((Var) term).name));
+	}
+
 	
 	@Override
 	public Term compile(int clauseId, CompilationContext context) {
@@ -82,17 +92,6 @@ public class Var extends AbstractVar {
 	@Override
 	public Term forFrame(int frameId) {
 		throw new UnsupportedOperationException(); //a call to this method should never happen.
-	}
-	
-
-	@Override
-	public int hashCode() {
-		return name.hashCode();
-	}
-		
-	@Override
-	public boolean termEquals(Term term) {
-		return this == term || (term.getClass().equals(getClass()) && this.name.equals(((Var) term).name));
 	}
 
 }

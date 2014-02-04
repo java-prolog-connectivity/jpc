@@ -1,8 +1,8 @@
 package org.jpc.term;
 
-import static org.jpc.engine.prolog.PrologConstants.NIL_SYMBOL;
 import static org.jpc.engine.prolog.PrologConstants.FAIL;
 import static org.jpc.engine.prolog.PrologConstants.FALSE;
+import static org.jpc.engine.prolog.PrologConstants.NIL_SYMBOL;
 import static org.jpc.engine.prolog.PrologConstants.TRUE;
 
 import org.jpc.JpcException;
@@ -66,6 +66,11 @@ public class Atom extends Term {
 	}
 
 	@Override
+	public boolean isGround() {
+		return true;
+	}
+	
+	@Override
 	public void accept(TermVisitor termVisitor) {
 		termVisitor.visitAtom(this);
 	}
@@ -73,29 +78,6 @@ public class Atom extends Term {
 	@Override
 	protected void basicRead(TermContentHandler contentHandler, Function<Term, Term> termExpander) {
 		contentHandler.startAtom(name);
-	}
-	
-	@Override
-	public boolean isGround() {
-		return true;
-	}
-
-	@Override
-	public Term compile(int clauseId, CompilationContext context) {
-		return new Atom(name.intern());
-		//return new InternedAtom(name);
-	}
-
-	@Override
-	public Term compileForQuery(CompilationContext context) {
-		return new Atom(name.intern());
-		//return new InternedAtom(name);
-	}
-
-	@Override
-	public Term forFrame(int frameId) {
-		return this; //the Atom should be already compiled.
-		//throw new UnsupportedOperationException(); //a call to this method should never happen.
 	}
 	
 	@Override
@@ -122,6 +104,25 @@ public class Atom extends Term {
 	@Override
 	public boolean equals(Object obj) {
 		return (this == obj || (obj.getClass().equals(getClass()) && name.equals(((Atom)obj).name)));
+	}
+	
+
+	@Override
+	public Term compile(int clauseId, CompilationContext context) {
+		return new Atom(name.intern());
+		//return new InternedAtom(name);
+	}
+
+	@Override
+	public Term compileForQuery(CompilationContext context) {
+		return new Atom(name.intern());
+		//return new InternedAtom(name);
+	}
+
+	@Override
+	public Term forFrame(int frameId) {
+		return this; //the Atom should be already compiled.
+		//throw new UnsupportedOperationException(); //a call to this method should never happen.
 	}
 	
 }

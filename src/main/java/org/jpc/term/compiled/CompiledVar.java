@@ -13,6 +13,11 @@ public class CompiledVar extends AbstractVar {
 	protected final int clauseId;
 	protected final int varId;
 	
+	/**
+	 * Implementation note: At the moment an anonymous variable keeps the clause id of the clause defining it for traceability reasons (e.g., to facilitate debugging).
+	 * @param clauseId the clause id where this anonymous variable was declared.
+	 * @return a compiled anonymous variable.
+	 */
 	public static CompiledVar anonymousVar(int clauseId) {
 		return new CompiledVar(clauseId, ANONYMOUS_VAR_CODE); //the anonymous var
 	}
@@ -34,20 +39,6 @@ public class CompiledVar extends AbstractVar {
 		return "_" + clauseId + "_"+ varId;
 	}
 
-	@Override
-	public Term compile(int clauseId, CompilationContext context) {
-		return this;
-	}
-
-	@Override
-	public Term compileForQuery(CompilationContext context) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Term forFrame(int frameId) {
-		return new EnvironmentVar(clauseId, varId, frameId);
-	}
 	
 	@Override
 	public int hashCode() {
@@ -72,6 +63,21 @@ public class CompiledVar extends AbstractVar {
 		if (varId != other.varId)
 			return false;
 		return true;
+	}
+	
+	@Override
+	public Term compile(int clauseId, CompilationContext context) {
+		return this;
+	}
+
+	@Override
+	public Term compileForQuery(CompilationContext context) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Term forFrame(int frameId) {
+		return new EnvironmentVar(clauseId, varId, frameId);
 	}
 	
 }

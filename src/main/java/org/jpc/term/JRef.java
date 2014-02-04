@@ -26,6 +26,11 @@ public class JRef extends Term {
 	}
 
 	@Override
+	public boolean isGround() {
+		return true;
+	}
+	
+	@Override
 	public void accept(TermVisitor termVisitor) {
 		termVisitor.visitJRef(this);
 	}
@@ -49,11 +54,18 @@ public class JRef extends Term {
 	public String toString() {
 		return getClass().getSimpleName() + "(" + ref.toString() + ")";
 	}
+
+	@Override
+	public boolean equals(Object term) {
+		return (this == term || 
+				(term.getClass().equals(getClass()) && ref == ((JRef)term).ref));
+	}
 	
 	@Override
-	public boolean isGround() {
-		return true;
+	public int hashCode() {
+		return ref.hashCode();
 	}
+	
 
 	@Override
 	public Term compile(int clauseId, CompilationContext context) {
@@ -68,17 +80,6 @@ public class JRef extends Term {
 	@Override
 	public Term forFrame(int frameId) {
 		return this;
-	}
-
-	@Override
-	public boolean equals(Object term) {
-		return (this == term || 
-				(term.getClass().equals(getClass()) && ref == ((JRef)term).ref));
-	}
-	
-	@Override
-	public int hashCode() {
-		return ref.hashCode();
 	}
 	
 }

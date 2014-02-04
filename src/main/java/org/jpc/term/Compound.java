@@ -131,23 +131,25 @@ public class Compound extends Term {
 	public List<Term> getArgs() {
 		return args;
 	}
-	
+
 	@Override
-	protected void unifyVars(Term term, Map<AbstractVar, VarCell> context) {
-		if(this != term) {
-			if(term instanceof AbstractVar)
-				term.unifyVars(this, context);
-			else if(!(term instanceof Compound) || term.arity() != arity())
-				throw new NonUnifiableException(this, term);
+	public boolean isGround() {
+		if(ground == null) {
+			boolean tmpGround = true;
+			if(!getName().isGround())
+				tmpGround = false;
 			else {
-				Compound compound = (Compound) term;
-				getName().unifyVars(compound.getName(), context);
-				for(int i=0; i<arity(); i++)
-					arg(i+1).unifyVars(term.arg(i+1), context);
+				for(Term arg : getArgs()) {
+					if(!arg.isGround()) {
+						tmpGround = false;
+						break;
+					}
+				}
 			}
+			ground = tmpGround;
 		}
+		return ground;
 	}
-	
 	
 	public void accept(TermVisitor termVisitor) {
 		if(termVisitor.visitCompound(this)) {
@@ -172,60 +174,6 @@ public class Compound extends Term {
 			child.read(contentHandler, termExpander);
 		}
 		contentHandler.endCompound();
-	}
-
-	@Override
-	public boolean isGround() {
-		if(ground == null) {
-			boolean tmpGround = true;
-			if(!getName().isGround())
-				tmpGround = false;
-			else {
-				for(Term arg : getArgs()) {
-					if(!arg.isGround()) {
-						tmpGround = false;
-						break;
-					}
-				}
-			}
-			ground = tmpGround;
-		}
-		return ground;
-	}
-	
-	@Override
-	public Term compile(int clauseId, CompilationContext context) {
-		List<Term> args = new ArrayList<>();
-		for(Term arg : getArgs()) {
-			args.add(arg.compile(clauseId, context));
-		}
-		Compound compound = new Compound(getName().compile(clauseId, context), args);
-		if(ground != null)
-			compound.ground = ground;
-		return compound;
-	}
-
-	@Override
-	public Term compileForQuery(CompilationContext context) {
-		List<Term> args = new ArrayList<>();
-		for(Term arg : getArgs()) {
-			args.add(arg.compileForQuery(context));
-		}
-		return new Compound(getName().compileForQuery(context), args);
-	}
-	
-	@Override
-	public Term forFrame(int frameId) {
-		List<Term> args = new ArrayList<>();
-		for(Term arg : getArgs()) {
-			if(!arg.isGround())
-				arg = arg.forFrame(frameId);
-			args.add(arg);
-		}
-		Term name = getName();
-		if(!name.isGround())
-			name = name.forFrame(frameId);
-		return new Compound(name, args);
 	}
 	
 	@Override
@@ -308,4 +256,55 @@ public class Compound extends Term {
 		return false;
 	}
 
+	
+	@Override
+	protected void unifyVars(Term term, Map<AbstractVar, VarCell> context) {
+		if(this != term) {
+			if(term instanceof AbstractVar)
+				term.unifyVars(this, context);
+			else if(!(term instanceof Compound) || term.arity() != arity())
+				throw new NonUnifiableException(this, term);
+			else {
+				Compound compound = (Compound) term;
+				getName().unifyVars(compound.getName(), context);
+				for(int i=0; i<arity(); i++)
+					arg(i+1).unifyVars(term.arg(i+1), context);
+			}
+		}
+	}
+	
+	@Override
+	public Term compile(int clauseId, CompilationContext context) {
+		List<Term> args = new ArrayList<>();
+		for(Term arg : getArgs()) {
+			args.add(arg.compile(clauseId, context));
+		}
+		Compound compound = new Compound(getName().compile(clauseId, context), args);
+		if(ground != null)
+			compound.ground = ground;
+		return compound;
+	}
+
+	@Override
+	public Term compileForQuery(CompilationContext context) {
+		List<Term> args = new ArrayList<>();
+		for(Term arg : getArgs()) {
+			args.add(arg.compileForQuery(context));
+		}
+		return new Compound(getName().compileForQuery(context), args);
+	}
+	
+	@Override
+	public Term forFrame(int frameId) {
+		List<Term> args = new ArrayList<>();
+		for(Term arg : getArgs()) {
+			if(!arg.isGround())
+				arg = arg.forFrame(frameId);
+			args.add(arg);
+		}
+		Term name = getName();
+		if(!name.isGround())
+			name = name.forFrame(frameId);
+		return new Compound(name, args);
+	}
 }

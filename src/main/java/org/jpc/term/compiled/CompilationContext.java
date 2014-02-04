@@ -8,6 +8,12 @@ import org.jpc.term.Var;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
+/**
+ * A compilation context keeps track of the ids assigned to variables as a map of strings (the variable names) to integers (the ids).
+ * It also keeps a bidirectional map of var to compiled vars.
+ * @author sergioc
+ *
+ */
 public class CompilationContext {
 	
 	private final BiMap<Var, CompiledVar> compilationMap;
@@ -29,6 +35,12 @@ public class CompilationContext {
 		return varId;
 	}
 	
+	/**
+	 * Compiles a variable for the given clause id according to this compilation context.
+	 * @param var a variable to compile.
+	 * @param clauseId a clause id.
+	 * @return the compiled variable.
+	 */
 	public CompiledVar compile(Var var, int clauseId) {
 		if(var.isAnonymous())
 			return CompiledVar.anonymousVar(clauseId);
@@ -39,6 +51,11 @@ public class CompilationContext {
 		}
 	}
 	
+	/**
+	 * Compiles a variable for a query according to this compilation context.
+	 * @param var a variable to compile.
+	 * @return the compiled variable.
+	 */
 	public CompiledVar compileForQuery(Var var) {
 		if(var.isAnonymous())
 			return CompiledVar.anonymousVar(QueryVar.QUERY_CODE);
