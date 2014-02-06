@@ -56,8 +56,11 @@ public class JTermManager {
 	
 	
 	/**
-	 * This map associates objects with their reference ids.
-	 * It discards an entry if the key (the object associated with the reference id) is marked for garbage collection.
+	 * This map associates objects with their jterm references (which can be used to obtain the term representation of the reference).
+	 * Instantiated as a weak map, it discards an entry if the key (the object associated with the jterm reference) is marked for garbage collection.
+	 * This map solely exists for performance reasons. The embedded JPC Prolog database could be used for querying the term representation of an object reference.
+	 * However, this would demand to wrap the reference in a JTermRef (a weak reference). 
+	 * This demands an additional table lookup since JTermRef instances of the same object reference are warrantied to be equals at the classloader level.
 	 */
 	private final Map<Object, JTermRef<?>> currentRefsMap; //weak keys map.
 	private final Set<Object> storedReferences; //set storing references so they will not be garbage collected.
@@ -247,9 +250,9 @@ public class JTermManager {
 	 * @param ref the reference to forget.
 	 */
 	public synchronized void forgetJTermRef(Object ref) {
-		JTermRef<?> jTermRef = currentRefsMap.get(ref);
-		if(jTermRef != null)
-			forgetJTerm(jTermRef.asTerm());
+		Optional<JTermRef<Object>> jTermRefOpt = get(ref);
+		if(jTermRefOpt.isPresent())
+			forgetJTerm(jTermRefOpt.get().asTerm());
 	}
 
 	/**
