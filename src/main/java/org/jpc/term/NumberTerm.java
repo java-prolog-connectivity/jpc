@@ -11,7 +11,7 @@ public abstract class NumberTerm extends Term {
 	 */
 	protected final Number value;
 	
-	public NumberTerm(Number number) {
+	NumberTerm(Number number) {
 		this.value = number;
 	}
 	
