@@ -110,19 +110,16 @@ public class Atom extends Term {
 	@Override
 	public Term compile(int clauseId, CompilationContext context) {
 		return new Atom(name.intern());
-		//return new InternedAtom(name);
 	}
 
 	@Override
 	public Term compileForQuery(CompilationContext context) {
 		return new Atom(name.intern());
-		//return new InternedAtom(name);
 	}
 
 	@Override
 	public Term forFrame(int frameId) {
 		return this; //the Atom should be already compiled.
-		//throw new UnsupportedOperationException(); //a call to this method should never happen.
 	}
 	
 }

@@ -23,7 +23,7 @@ public class JpcQuery extends PrologQuery {
 	private final Term compiledQuery;
 	private final CompilationContext queryCompilationContext;
 	private Iterator<Clause> clausesIt;
-
+	
 	public JpcQuery(JpcEngine prologEngine, Term goal, boolean errorHandledQuery, Jpc context) {
 		super(prologEngine, goal, errorHandledQuery, context);
 		queryCompilationContext = new CompilationContext();
@@ -31,7 +31,7 @@ public class JpcQuery extends PrologQuery {
 		compiledQuery = getGoal().compileForQuery(queryCompilationContext);
 	}
 	
-
+	
 	@Override
 	public boolean isAbortable() {
 		return false;
@@ -69,7 +69,13 @@ public class JpcQuery extends PrologQuery {
 		}
 	}
 	
-	
+	/**
+	 * Filters a solution so it keeps only the unbound variables originally in the query.
+	 * Also format the solution in the most convenient structure Map<String, Term>
+	 * @param allVars
+	 * @param queryCompilationContext
+	 * @return
+	 */
 	private Map<String, Term> filterSolution(Map<AbstractVar, Term> allVars, CompilationContext queryCompilationContext) {
 		Map<String, Term> solution = new HashMap<>();
 		BiMap<Var, CompiledVar> compilationMap = queryCompilationContext.getCompilationMap();

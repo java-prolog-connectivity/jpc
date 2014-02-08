@@ -260,7 +260,7 @@ public class Compound extends Term {
 	@Override
 	protected void unifyVars(Term term, Map<AbstractVar, VarCell> context) {
 		if(this != term) {
-			if(term instanceof AbstractVar)
+			if(term instanceof AbstractVar || term instanceof JRef)
 				term.unifyVars(this, context);
 			else if(!(term instanceof Compound) || term.arity() != arity())
 				throw new NonUnifiableException(this, term);
@@ -275,36 +275,40 @@ public class Compound extends Term {
 	
 	@Override
 	public Term compile(int clauseId, CompilationContext context) {
-		List<Term> args = new ArrayList<>();
+		Term compiledName = getName().compile(clauseId, context);
+		List<Term> compiledArgs = new ArrayList<>();
 		for(Term arg : getArgs()) {
-			args.add(arg.compile(clauseId, context));
+			compiledArgs.add(arg.compile(clauseId, context));
 		}
-		Compound compound = new Compound(getName().compile(clauseId, context), args);
-		if(ground != null)
-			compound.ground = ground;
-		return compound;
+		Compound compiledCompound = new Compound(compiledName, compiledArgs);
+		compiledCompound.ground = isGround();
+		return compiledCompound;
 	}
 
 	@Override
 	public Term compileForQuery(CompilationContext context) {
-		List<Term> args = new ArrayList<>();
+		Term compiledName = getName().compileForQuery(context);
+		List<Term> compiledArgs = new ArrayList<>();
 		for(Term arg : getArgs()) {
-			args.add(arg.compileForQuery(context));
+			compiledArgs.add(arg.compileForQuery(context));
 		}
-		return new Compound(getName().compileForQuery(context), args);
+		Compound compiledCompound = new Compound(compiledName, compiledArgs);
+		compiledCompound.ground = isGround();
+		return compiledCompound;
 	}
 	
 	@Override
 	public Term forFrame(int frameId) {
-		List<Term> args = new ArrayList<>();
+		Term framedName = getName();
+		if(!framedName.isGround())
+			framedName = framedName.forFrame(frameId);
+		List<Term> framedArgs = new ArrayList<>();
 		for(Term arg : getArgs()) {
 			if(!arg.isGround())
 				arg = arg.forFrame(frameId);
-			args.add(arg);
+			framedArgs.add(arg);
 		}
-		Term name = getName();
-		if(!name.isGround())
-			name = name.forFrame(frameId);
-		return new Compound(name, args);
+		return new Compound(framedName, framedArgs);
 	}
+
 }
