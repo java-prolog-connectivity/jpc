@@ -10,15 +10,12 @@ import com.google.common.collect.Lists;
 
 public class ClauseDatabase extends IndexedClauses {
 
-	private final IndexManager indexManager;
-	
 	public ClauseDatabase() {
-		this(new IndexManager());
+		this(new MutableIndexManager());
 	}
 	
 	public ClauseDatabase(final IndexManager indexManager) {
 		super(IndexDescriptor.defaultRootIndexDescriptor(indexManager));
-		this.indexManager = indexManager;
 	}
 	
 	public void assertz(Term term) {
@@ -42,10 +39,6 @@ public class ClauseDatabase extends IndexedClauses {
 		for(Clause clause : clauses) {
 			retract(clause);
 		}
-	}
-
-	public IndexManager getIndexManager() {
-		return indexManager;
 	}
 	
 }

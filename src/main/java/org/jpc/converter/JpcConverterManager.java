@@ -52,6 +52,7 @@ import org.jpc.converter.typesolver.catalog.MapTypeSolver;
 import org.jpc.engine.embedded.JpcEngine;
 import org.jpc.engine.embedded.database.IndexDescriptor;
 import org.jpc.engine.embedded.database.IndexManager;
+import org.jpc.engine.embedded.database.MutableIndexManager;
 import org.jpc.query.Query;
 import org.jpc.query.Solution;
 import org.jpc.term.Atom;
@@ -158,20 +159,19 @@ public class JpcConverterManager extends JGumConverterManager {
 		return term instanceof Compound || term instanceof Atom;
 	}
 	
-	
-	
 	private final JpcEngine embeddedEngine; //embedded Jpc Prolog engine.
 	
 	
 	public JpcConverterManager(JGum jgum) {
 		super(jgum);
 		this.embeddedEngine = new JpcEngine();
-		IndexManager indexManager = embeddedEngine.getIndexManager();
-		indexManager.setIndexDescriptor( new Functor(CONVERTER_FUNCTOR_NAME, 2), 
-				IndexDescriptor.forArgumentIndex(1, indexManager) ); //clause heads having converter as a functor name will be indexed according to the first argument of the term head.
+		MutableIndexManager indexManager = embeddedEngine.getIndexManager();
+		Functor converterFunctor = new Functor(CONVERTER_FUNCTOR_NAME, 2);
+		IndexDescriptor indexDescriptor = IndexDescriptor.forIndexedArgument(1, indexManager); //makes use of any index defined for the first argument.
+		indexManager.setIndexDescriptor(converterFunctor, indexDescriptor); //clause heads having converter as a functor name will be indexed according to the first argument of the term head.
 	}
 
-	public IndexManager getIndexManager() {
+	public MutableIndexManager getIndexManager() {
 		return embeddedEngine.getIndexManager();
 	}
 	

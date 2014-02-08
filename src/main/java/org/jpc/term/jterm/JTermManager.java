@@ -12,6 +12,7 @@ import org.jpc.JpcException;
 import org.jpc.engine.embedded.JpcEngine;
 import org.jpc.engine.embedded.database.IndexDescriptor;
 import org.jpc.engine.embedded.database.IndexManager;
+import org.jpc.engine.embedded.database.MutableIndexManager;
 import org.jpc.query.Query;
 import org.jpc.query.Solution;
 import org.jpc.term.Compound;
@@ -85,10 +86,10 @@ public class JTermManager {
 		currentRefsMap = new MapMaker().weakKeys().makeMap();
 		storedReferences = Collections.newSetFromMap(new IdentityHashMap<Object, Boolean>()); //reference set (members are identified by their references, not by a call to equals()).
 		embeddedEngine = new JpcEngine();
-		IndexManager indexManager = embeddedEngine.getIndexManager();
+		MutableIndexManager indexManager = embeddedEngine.getIndexManager();
 		Functor jtermFunctor = new Functor(JTERM_FUNCTOR_NAME, 2);
 		//IndexDescriptor indexDescriptor = IndexDescriptor.forArgument(1); //works, but inefficiently.
-		IndexDescriptor indexDescriptor = IndexDescriptor.forArgumentIndex(1, indexManager); //makes use of any index defined for the first argument.
+		IndexDescriptor indexDescriptor = IndexDescriptor.forIndexedArgument(1, indexManager); //makes use of any index defined for the first argument.
 		indexManager.setIndexDescriptor(jtermFunctor, indexDescriptor); //clause heads having jterm/2 as a functor will be indexed according to their first argument.
 	}
 

@@ -17,10 +17,23 @@ import org.jpc.term.Functor;
  *
  */
 public class IndexManager {
-
-	private final Map<Functor, List<IndexDescriptor>> functorIndexes;
 	
-	private static void checkIndexableFunctor(Functor functor) {
+	private static final String DIRECTIVE_FUNCTOR_NAME = "directive";
+	private static final IndexManager systemIndexManager;
+	
+	static {
+		Map<Functor, List<IndexDescriptor>> functorIndexes = new HashMap<>();
+		functorIndexes.put(new Functor(DIRECTIVE_FUNCTOR_NAME, 2), asList(IndexDescriptor.forArgumentFunctor(1)));
+		systemIndexManager = new IndexManager(functorIndexes);
+	}
+	
+	public static IndexManager getSystemIndexManager() {
+		return systemIndexManager;
+	}
+	
+	protected final Map<Functor, List<IndexDescriptor>> functorIndexes;
+	
+	protected static void checkIndexableFunctor(Functor functor) {
 		if(!isIndexable(functor))
 			throw new JpcException("Functor " + functor + " is not indexable.");
 	}
@@ -31,7 +44,11 @@ public class IndexManager {
 	}
 	
 	public IndexManager() {
-		functorIndexes = new HashMap<>();
+		this(new HashMap<Functor, List<IndexDescriptor>>());
+	}
+	
+	public IndexManager(Map<Functor, List<IndexDescriptor>> functorIndexes) {
+		this.functorIndexes = functorIndexes;;
 	}
 	
 	public List<IndexDescriptor> getIndexDescriptors(Functor functor) {
@@ -46,21 +63,6 @@ public class IndexManager {
 			functorIndexes.put(functor, indexDescriptors);
 		}
 		return indexDescriptors;
-	}
-	
-	public void setIndexDescriptor(Functor functor, IndexDescriptor indexDescriptor) {
-		setIndexDescriptors(functor, asList(indexDescriptor));
-	}
-	
-	public void setIndexDescriptors(Functor functor, List<IndexDescriptor> indexDescriptors) {
-		checkIndexableFunctor(functor);
-		List<IndexDescriptor> oldIndexFunctions = getIndexDescriptors(functor);
-		if(oldIndexFunctions != null) {
-			//TODO: change this so indexes will be rebuild instead.
-			throw new JpcException("New indexes cannot be defined for functor: " + functor + ". Entry already exists.");
-		} else {
-			functorIndexes.put(functor, indexDescriptors);
-		}
 	}
 	
 }

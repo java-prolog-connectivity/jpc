@@ -1,5 +1,9 @@
 package org.jpc.term;
 
+import java.util.ArrayList;
+import java.util.List;
+
+
 public class Functor {
 
 	private final Term name;
@@ -53,6 +57,18 @@ public class Functor {
 	@Override
 	public String toString() {
 		return name.toString() + "/" + arity;
+	}
+
+	public Term asTerm() {
+		if(arity == 0)
+			return name;
+		else {
+			List<Term> args = new ArrayList<>();
+			for(int i = 0 ; i<arity; i++) {
+				args.add(Var.ANONYMOUS_VAR);
+			}
+			return new Compound(name, args);
+		}
 	}
 
 }

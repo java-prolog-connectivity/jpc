@@ -31,7 +31,7 @@ public class IndexDescriptor {
 	
 	static IndexDescriptor defaultRootIndexDescriptor(final IndexManager indexManager) {
 		return new IndexDescriptor(
-				new UpdatableIndexFunction<Term, Object>(new FunctorIndexFunction()), //the index function maps a term to its functor name.
+				new FunctorIndexFunction(), //the index function maps a term to its functor name.
 				/**
 				 * The next indexes function makes use of the index manager to find the user-defined indexes for a given term.
 				 * This function is invoked when instantiating an indexed IndexedClauses associated with the index of a term.
@@ -62,9 +62,19 @@ public class IndexDescriptor {
 	 * 
 	 * @param argPos the term argument position.
 	 * @param indexManager an index manager.
+	 * @return an IndexDescriptor based on the functor of a term argument in the given position.
+	 */
+	public static IndexDescriptor forArgumentFunctor(int argPos) {
+		return indexDescriptorAdapter(new IndexDescriptor(new FunctorIndexFunction()), termArgumentFunction(argPos));
+	}
+	
+	/**
+	 * 
+	 * @param argPos the term argument position.
+	 * @param indexManager an index manager.
 	 * @return an IndexDescriptor based on the defined index of a term argument in the given position.
 	 */
-	public static IndexDescriptor forArgumentIndex(int argPos, IndexManager indexManager) {
+	public static IndexDescriptor forIndexedArgument(int argPos, MutableIndexManager indexManager) {
 		return indexDescriptorAdapter(defaultRootIndexDescriptor(indexManager), termArgumentFunction(argPos));
 	}
 	
@@ -99,10 +109,6 @@ public class IndexDescriptor {
 		this(new UpdatableIndexFunction<>(indexFunction));
 	}
 	
-	public IndexDescriptor(Function<Term, ?> indexFunction, Function<Term, List<IndexDescriptor>> nextIndexDescriptorsFunction) {
-		this(new UpdatableIndexFunction<>(indexFunction), nextIndexDescriptorsFunction);
-	}
-	
 	public IndexDescriptor(UpdatableIndexFunction<Term, ?> indexFunction) {
 		this(indexFunction, new Function<Term, List<IndexDescriptor>>() {
 			@Override
@@ -110,6 +116,10 @@ public class IndexDescriptor {
 				return Collections.<IndexDescriptor>emptyList();
 			}
 		});
+	}
+	
+	public IndexDescriptor(Function<Term, ?> indexFunction, Function<Term, List<IndexDescriptor>> nextIndexDescriptorsFunction) {
+		this(new UpdatableIndexFunction<>(indexFunction), nextIndexDescriptorsFunction);
 	}
 	
 	public IndexDescriptor(UpdatableIndexFunction<Term, ?> indexFunction, Function<Term, List<IndexDescriptor>> nextIndexDescriptorsFunction) {

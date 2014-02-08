@@ -3,6 +3,7 @@ package org.jpc.engine.embedded;
 import org.jpc.Jpc;
 import org.jpc.engine.embedded.database.ClauseDatabase;
 import org.jpc.engine.embedded.database.IndexManager;
+import org.jpc.engine.embedded.database.MutableIndexManager;
 import org.jpc.engine.prolog.AbstractPrologEngine;
 import org.jpc.query.Query;
 import org.jpc.term.Term;
@@ -15,24 +16,26 @@ import org.jpc.term.Term;
  */
 public class JpcEngine extends AbstractPrologEngine {
 
-	private final ClauseDatabase clauseDatabase;
-	private final IndexManager indexManager;
-	
+	private final ClauseDatabase systemDatabase;
+	private final ClauseDatabase userDatabase;
+	private final MutableIndexManager userIndexManager;
+
 	public JpcEngine() {
-		this(new IndexManager());
+		this(new MutableIndexManager());
+	}
+
+	private JpcEngine(MutableIndexManager indexManager) {
+		this.userIndexManager = indexManager;
+		userDatabase = new ClauseDatabase(indexManager);
+		systemDatabase = new ClauseDatabase(IndexManager.getSystemIndexManager()); 
 	}
 	
-	private JpcEngine(IndexManager indexManager) {
-		this.indexManager = indexManager;
-		clauseDatabase = new ClauseDatabase(indexManager);
-	}
-	
-	public IndexManager getIndexManager() {
-		return indexManager;
+	public MutableIndexManager getIndexManager() {
+		return userIndexManager;
 	}
 	
 	public ClauseDatabase getClauseDatabase() {
-		return clauseDatabase;
+		return userDatabase;
 	}
 	
 	@Override
@@ -57,7 +60,7 @@ public class JpcEngine extends AbstractPrologEngine {
 
 	@Override
 	public void close() {
-		clauseDatabase.reset();
+		userDatabase.reset();
 	}
 	
 	
@@ -66,17 +69,17 @@ public class JpcEngine extends AbstractPrologEngine {
 	
 	@Override
 	public boolean assertz(Term term) {
-		clauseDatabase.assertz(term);
+		userDatabase.assertz(term);
 		return true;
 	}
 
 	public boolean retractOne(Term term)  {
-		return clauseDatabase.retract(term);
+		return userDatabase.retract(term);
 	}
 	
 	@Override
 	public boolean retractAll(Term term)  {
-		clauseDatabase.retractAll(term);
+		userDatabase.retractAll(term);
 		return true;
 	}
 	
