@@ -6,7 +6,7 @@ import org.jpc.term.AbstractVar;
 import org.jpc.term.Term;
 
 
-public class CompiledVar extends AbstractVar {
+public final class CompiledVar extends AbstractVar {
 
 	public static final int ANONYMOUS_VAR_CODE = -1;
 	
@@ -65,19 +65,25 @@ public class CompiledVar extends AbstractVar {
 		return true;
 	}
 	
+	
+	@Override
+	public void doUnification(Term term) {
+		throw new UnsupportedOperationException();
+	}
+	
 	@Override
 	public Term compile(int clauseId, CompilationContext context) {
 		return this;
 	}
 
 	@Override
-	public Term compileForQuery(CompilationContext context) {
+	public Term prepareForQuery(CompilationContext context) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Term forFrame(int frameId) {
-		return new EnvironmentVar(clauseId, varId, frameId);
+	public Term prepareForFrame(CompilationContext context) {
+		return context.compileForFrame(this);
 	}
 	
 }

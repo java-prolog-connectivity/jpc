@@ -79,12 +79,12 @@ public abstract class NumberTerm extends Term {
 	}
 
 	@Override
-	public Term compileForQuery(CompilationContext context) {
+	public Term prepareForQuery(CompilationContext context) {
 		return this;
 	}
 
 	@Override
-	public Term forFrame(int frameId) {
+	public Term prepareForFrame(CompilationContext context) {
 		return this;
 	}
 	

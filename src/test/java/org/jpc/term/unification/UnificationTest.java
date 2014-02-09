@@ -9,25 +9,24 @@ import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
+import org.jpc.term.NonUnifiableException;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
-import org.jpc.term.compiled.CompiledVar;
 import org.junit.Test;
 
 public class UnificationTest {
-	
 	
 	private void allUnifications(Term t1, Term t2, Term expected) {
 		Term unification = t1.unify(t2);
 		assertTrue(expected.termEquals(unification));
 		
-		Term t1Compiled = t1.compile(0);
-		Term t2Compiled = t2.compile(1);
-		unification = t1Compiled.unify(t2Compiled);
+		Term t1Compiled = t1.compile(0).prepareForFrame();
+		Term t2Compiled = t2.compile(1).prepareForFrame();
+		unification = t1Compiled.unifyCompiled(t2Compiled);
 		assertTrue(expected.termEquals(unification));
 		
-		Term t1CompiledForQuery = t1.compileForQuery();
-		unification = t1CompiledForQuery.unify(t2Compiled);
+		Term t2CompiledForQuery = t2.prepareForQuery();
+		unification = t1Compiled.unifyCompiled(t2CompiledForQuery);
 		assertTrue(expected.termEquals(unification));
 	}
 	
@@ -38,24 +37,25 @@ public class UnificationTest {
 			fail();
 		} catch(NonUnifiableException e) {}
 		
-		Term t1Compiled = t1.compile(0);
-		Term t2Compiled = t2.compile(0);
+		Term t1Compiled = t1.compile(0).prepareForFrame();
+		Term t2Compiled = t2.compile(0).prepareForFrame();
 		try {
-			t1Compiled.unify(t2Compiled);
+			t1Compiled.unifyCompiled(t2Compiled);
 			fail();
 		} catch(NonUnifiableException e) {}
 		
-		Term t1CompiledForQuery = t1.compileForQuery();
+		Term t1CompiledForQuery = t1.prepareForQuery();
 		try {
-			t1CompiledForQuery.unify(t2Compiled);
+			t1CompiledForQuery.unifyCompiled(t2Compiled);
 			fail();
 		} catch(NonUnifiableException e) {}
 		
-		Term t2CompiledForQuery = t2.compileForQuery();
+		Term t2CompiledForQuery = t2.prepareForQuery();
 		try {
-			t2CompiledForQuery.unify(t1Compiled);
+			t1Compiled.unifyCompiled(t2CompiledForQuery);
 			fail();
 		} catch(NonUnifiableException e) {}
+
 	}
 	
 	
@@ -115,8 +115,6 @@ public class UnificationTest {
 	@Test
 	public void testSimpleUnification() {
 		assertTrue(Var.ANONYMOUS_VAR.termEquals(Var.ANONYMOUS_VAR.unify(new Var("X"))));
-		CompiledVar anonymousCompiledVar = CompiledVar.anonymousVar(0);
-		assertTrue(Var.ANONYMOUS_VAR.termEquals(anonymousCompiledVar.unify(new Var("X"))));
 		assertEquals(new Var("X"), new Var("X").unify(Var.ANONYMOUS_VAR));
 		assertEquals(new IntegerTerm(0), new Var("X").unify(new IntegerTerm(0)));
 		assertEquals(new IntegerTerm(0), new IntegerTerm(0).unify(new Var("X")));
@@ -125,6 +123,18 @@ public class UnificationTest {
 	
 	@Test
 	public void testCompoundUnification1() {
+		Compound compound1 = new Compound("x", asList(new Compound("x", asList(new Var("X"))), new Var("X")));
+		Compound compound2 = new Compound("x", asList(new Var("Y"), new IntegerTerm(0)));
+		Compound expected = new Compound("x", asList(new Compound("x", asList(new IntegerTerm(0))), new IntegerTerm(0)));
+		allUnifications(compound1, compound2, expected);
+		allUnifications(compound2, compound1, expected);
+		
+		compound2 = new Compound("x", asList(Var.ANONYMOUS_VAR, new IntegerTerm(0)));
+		allUnifications(compound1, compound2, expected);
+	}
+	
+	@Test
+	public void testCompoundUnification2() {
 		Compound compound1 = new Compound("x", asList(new IntegerTerm(0), new Var("X")));
 		Compound compound2 = new Compound("x", asList(new Var("Y"), new Var("Y")));
 		Compound expected = new Compound("x", asList(new IntegerTerm(0), new IntegerTerm(0)));
@@ -146,7 +156,7 @@ public class UnificationTest {
 	}
 	
 	@Test
-	public void testCompoundUnification2() {
+	public void testCompoundUnification3() {
 		Compound compound1 = new Compound("x", asList(new Var("X1"), new Var("X2"), new IntegerTerm(3), new Var("X3"), new Var("X4"), new Var("X2")));
 		Compound compound2 = new Compound("x", asList(new Var("Y"), new Var("Y"), new Var("Y"), new Var("Z"), new Var("Z"), new Var("Z")));
 		Compound expected = new Compound("x", asList(new IntegerTerm(3), new IntegerTerm(3), new IntegerTerm(3), 

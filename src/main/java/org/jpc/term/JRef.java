@@ -8,7 +8,7 @@ import org.jpc.util.PrologUtil;
 
 import com.google.common.base.Function;
 
-public class JRef extends Term {
+public final class JRef extends Term {
 
 	private final Object ref;
 	
@@ -66,19 +66,23 @@ public class JRef extends Term {
 		return ref.hashCode();
 	}
 	
-
+	public void doUnification(Term term) {
+		if(!equals(term))
+			throw new NonUnifiableException(this, term); //TODO implement open-unification
+	}
+	
 	@Override
 	public Term compile(int clauseId, CompilationContext context) {
 		return this;
 	}
 
 	@Override
-	public Term compileForQuery(CompilationContext context) {
+	public Term prepareForQuery(CompilationContext context) {
 		return this;
 	}
 
 	@Override
-	public Term forFrame(int frameId) {
+	public Term prepareForFrame(CompilationContext context) {
 		return this;
 	}
 	

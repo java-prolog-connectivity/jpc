@@ -14,7 +14,7 @@ import org.jpc.term.compiled.CompilationContext;
  * @author scastro
  *
  */
-public class Var extends AbstractVar {
+public final class Var extends AbstractVar {
 
 	public static final Var ANONYMOUS_VAR = new Var(ANONYMOUS_VAR_NAME);
 	
@@ -78,6 +78,10 @@ public class Var extends AbstractVar {
 		return this == term || (term.getClass().equals(getClass()) && this.name.equals(((Var) term).name));
 	}
 
+	@Override
+	public void doUnification(Term term) {
+		throw new UnsupportedOperationException();
+	}
 	
 	@Override
 	public Term compile(int clauseId, CompilationContext context) {
@@ -85,13 +89,13 @@ public class Var extends AbstractVar {
 	}
 
 	@Override
-	public Term compileForQuery(CompilationContext context) {
-		return context.compileForQuery(this);
+	public Term prepareForQuery(CompilationContext context) {
+		return context.compileForFrame(this);
 	}
-
+	
 	@Override
-	public Term forFrame(int frameId) {
-		throw new UnsupportedOperationException(); //a call to this method should never happen.
+	public Term prepareForFrame(CompilationContext context) {
+		return context.compileForFrame(this);
 	}
 
 }

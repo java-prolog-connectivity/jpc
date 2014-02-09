@@ -7,16 +7,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.jpc.JpcException;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.JpcTermWriter;
 import org.jpc.salt.TermContentHandler;
+import org.jpc.term.compiled.BindableVar;
 import org.jpc.term.compiled.CompilationContext;
 import org.jpc.term.expansion.DefaultTermExpander;
-import org.jpc.term.unification.NonUnifiableException;
-import org.jpc.term.unification.VarCell;
+import org.jpc.term.visitor.DefaultTermVisitor;
 import org.jpc.term.visitor.TermVisitor;
 import org.jpc.util.salt.ChangeVariableNameAdapter;
 import org.jpc.util.salt.ReplaceVariableAdapter;
@@ -347,60 +346,94 @@ public abstract class Term {
 	
 	
 	/* ********************************************************************************************************************************
-	 * UNIFICATION METHODS.
+	 * UNIFICATION METHODS. 
      **********************************************************************************************************************************
      */
-	
-	/**
-	 * 
-	 * @param term a term.
-	 * @return true if this term is unifiable with the term sent as parameter, false otherwise.
-	 */
-	public boolean isUnifiable(Term term) {
-		try {
-			unifyVars(term);
-			return true;
-		} catch(NonUnifiableException e) {
-			return false;
-		}
-	}
 
-	/**
-	 * @param term a term.
-	 * @return this term unified with the term sent as parameter.
-	 */
-	public Term unify(Term term) {
-		Map<AbstractVar, Term> unificationVars = unifyVars(term);
-		Map<String, Term> replacementMap = new HashMap<>();
-		for(Entry<AbstractVar, Term> entry : unificationVars.entrySet()) {
-			replacementMap.put(entry.getKey().getName(), entry.getValue());
-		}
-		return replaceVariables(replacementMap);
-	}
-	
+	private static final int NO_CLAUSE_CODE = -1;
+
 	/**
 	 * @param term a term.
 	 * @return a map of variables to terms according to the accomplished unification.
 	 */
-	public Map<AbstractVar, Term> unifyVars(Term term) {
-		Map<AbstractVar, VarCell> context = new HashMap<>();
-		unifyVars(term, context);
-		Map<AbstractVar, Term> result = new HashMap<>();
-		for(Entry<AbstractVar, VarCell> contextEntry : context.entrySet()) {
-			result.put(contextEntry.getKey(), contextEntry.getValue().getValue());
-		}
-		return result;
+	public final Map<String, Term> unifyVars(Term term) {
+		Term thisBindableTerm = prepareForQuery();
+		Term thatBindableTerm = term.compile(NO_CLAUSE_CODE).prepareForFrame();
+		return thisBindableTerm.unifyVarsCompiled(thatBindableTerm);
 	}
 	
-	protected void unifyVars(Term term, Map<AbstractVar, VarCell> context) {
-		if(term instanceof AbstractVar) {
-			term.unifyVars(this, context);
+	/**
+	 * @param term a term.
+	 * @return this term unified with the term sent as parameter.
+	 */
+	public final Term unify(Term term) {
+		Term thisBindableTerm = prepareForQuery();
+		Term thatBindableTerm = term.compile(NO_CLAUSE_CODE).prepareForFrame();
+		return thisBindableTerm.unifyCompiled(thatBindableTerm);
+	}
+	
+	
+	/**
+	 * THE METHODS BELOW ARE NOT INTENDED TO BE DIRECTLY USED BY THE PROGRAMMER.
+	 */
+	
+	/**
+	 * @param term a bindable term.
+	 * @return a map of variables to terms according to the accomplished unification.
+	 */
+	public final Map<String, Term> unifyVarsCompiled(Term term) {
+		doUnification(term);
+		return unifiedVars();
+	}
+
+	/**
+	 * @param term a bindable term.
+	 * @return this term unified with the term sent as parameter.
+	 */
+	public final Term unifyCompiled(Term term) {
+		doUnification(term);
+		return resolveBindings();
+	}
+	
+	public void doUnification(Term term) {
+		if(term instanceof AbstractVar || term instanceof JRef) {
+			term.doUnification(this);
 		} else {
 			if(!equals(term))
 				throw new NonUnifiableException(this, term);
 		}
 	}
 	
+	public final Term resolveBindings() {
+		return termExpansion(new Function<Term, Term>() {
+			public Term apply(Term term) {
+				if(term instanceof BindableVar) {
+					BindableVar bindableVar = (BindableVar) term;
+					if(!bindableVar.isAnonymous())
+						return bindableVar.getBinding().resolveBindings();
+					else
+						return bindableVar.getVar();
+				}
+				return null;
+			}
+		});
+	}
+	
+	public final Map<String, Term> unifiedVars() {
+		final Map<String, Term> varsMap = new HashMap<>();
+		accept(new DefaultTermVisitor() {
+			@Override
+			public void visitVariable(AbstractVar var) {
+				if(var instanceof BindableVar) {
+					BindableVar bindableVar = (BindableVar) var;
+					if(!bindableVar.isAnonymous()) {
+						varsMap.put(bindableVar.getName(), bindableVar.getBinding().resolveBindings());
+					}
+				}
+			}
+		});
+		return varsMap;
+	}
 	
 	/* ********************************************************************************************************************************
 	 * COMPILATION METHODS. THE METHODS BELOW ARE NOT INTENDED TO BE DIRECTLY USED BY THE PROGRAMMER.
@@ -413,18 +446,21 @@ public abstract class Term {
 	
 	public abstract Term compile(int clauseId, CompilationContext context);
 	
-	public final Term compileForQuery() {
-		return compileForQuery(new CompilationContext());
+	public final Term prepareForQuery() {
+		return prepareForQuery(new CompilationContext());
 	}
 	
-	public abstract Term compileForQuery(CompilationContext context);
+	public abstract Term prepareForQuery(CompilationContext context);
 	
 	/**
 	 * Method only required for internal usage of the JPC Prolog engine.
 	 * Every time a new clause is visited when backtracking, a new frame is created.
-	 * @param frameId the frame id.
 	 * @return a term to be used in a new frame.
 	 */
-	public abstract Term forFrame(int frameId);
+	public final Term prepareForFrame() {
+		return prepareForFrame(new CompilationContext());
+	}
+	
+	public abstract Term prepareForFrame(CompilationContext context);
 	
 }

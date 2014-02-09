@@ -2,11 +2,9 @@ package org.jpc.term;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.TermContentHandler;
-import org.jpc.term.unification.VarCell;
 import org.jpc.term.visitor.TermVisitor;
 
 import com.google.common.base.Function;
@@ -17,7 +15,7 @@ import com.google.common.base.Function;
  *
  */
 public abstract class AbstractVar extends Term {
-
+	
 	public abstract boolean isAnonymous();
 	
 	public abstract String getName();
@@ -86,43 +84,6 @@ public abstract class AbstractVar extends Term {
 			return !isAnonymous() && termEquals((Term) obj);
 		} catch(ClassCastException e) {
 			return false;
-		}
-	}
-	
-	
-	@Override
-	protected void unifyVars(Term term, Map<AbstractVar, VarCell> context) {
-		if(!(isAnonymous() || 
-				(term instanceof AbstractVar && ((AbstractVar)term).isAnonymous()))) {
-			VarCell thisVarCell = context.get(this);
-			if(thisVarCell == null) {
-				thisVarCell = new VarCell(this);
-				context.put(this, thisVarCell);
-			}
-			if(term instanceof AbstractVar) {
-				VarCell thatVarCell = context.get(term);
-				if(thatVarCell == null) {
-					thatVarCell = thisVarCell;
-					context.put((AbstractVar)term, thatVarCell);
-				} 
-				if(thisVarCell != thatVarCell) {
-					Term thatVarBoundTerm = thatVarCell.getValue();
-					unifyCell(thisVarCell, thatVarBoundTerm, context);
-					thatVarCell.getRegister().becomes(thisVarCell.getRegister());
-				}
-			} else {
-				unifyCell(thisVarCell, term, context);
-			}
-		}
-	}
-	
-	private void unifyCell(VarCell varCell, Term term, Map<AbstractVar, VarCell> context) {
-		Term oldTerm = varCell.getValue();
-		if(oldTerm instanceof AbstractVar) {
-			if(!(term instanceof AbstractVar))
-				varCell.setValue(term);
-		} else {
-			oldTerm.unifyVars(term, context);
 		}
 	}
 

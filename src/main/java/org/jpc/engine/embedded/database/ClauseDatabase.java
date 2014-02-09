@@ -23,7 +23,7 @@ public class ClauseDatabase extends IndexedClauses {
 	}
 	
 	public boolean retract(Term term) {
-		Term compiledTerm = term.compileForQuery();
+		Term compiledTerm = term.prepareForQuery();
 		Iterator<Clause> clausesIt = clausesIterator(compiledTerm);
 		if(clausesIt.hasNext()) {
 			retract(clausesIt.next());
@@ -33,7 +33,7 @@ public class ClauseDatabase extends IndexedClauses {
 	}
 	
 	public void retractAll(Term term) {
-		Term compiledTerm = term.compileForQuery();
+		Term compiledTerm = term.prepareForQuery();
 		Iterator<Clause> clausesIt = clausesIterator(compiledTerm);
 		List<Clause> clauses = Lists.newArrayList(clausesIt); //converting the iterator to a list first in order to avoid a ConcurrentModificationException.
 		for(Clause clause : clauses) {

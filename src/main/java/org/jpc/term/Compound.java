@@ -6,7 +6,6 @@ import static org.jpc.engine.prolog.PrologConstants.CONS_FUNCTOR;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import org.jpc.JpcException;
@@ -14,8 +13,6 @@ import org.jpc.engine.prolog.Operator;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.TermContentHandler;
 import org.jpc.term.compiled.CompilationContext;
-import org.jpc.term.unification.NonUnifiableException;
-import org.jpc.term.unification.VarCell;
 import org.jpc.term.visitor.TermVisitor;
 
 import com.google.common.base.Function;
@@ -26,7 +23,7 @@ import com.google.common.base.Joiner;
  * @author scastro
  *
  */
-public class Compound extends Term {
+public final class Compound extends Term {
 
 	private Boolean ground;
 	private Integer hash;
@@ -258,57 +255,66 @@ public class Compound extends Term {
 
 	
 	@Override
-	protected void unifyVars(Term term, Map<AbstractVar, VarCell> context) {
+	public void doUnification(Term term) {
 		if(this != term) {
 			if(term instanceof AbstractVar || term instanceof JRef)
-				term.unifyVars(this, context);
+				term.doUnification(this);
 			else if(!(term instanceof Compound) || term.arity() != arity())
 				throw new NonUnifiableException(this, term);
 			else {
 				Compound compound = (Compound) term;
-				getName().unifyVars(compound.getName(), context);
+				getName().doUnification(compound.getName());
 				for(int i=0; i<arity(); i++)
-					arg(i+1).unifyVars(term.arg(i+1), context);
+					arg(i+1).doUnification(term.arg(i+1));
 			}
 		}
 	}
 	
 	@Override
 	public Term compile(int clauseId, CompilationContext context) {
+		Compound compiledCompound;
 		Term compiledName = getName().compile(clauseId, context);
 		List<Term> compiledArgs = new ArrayList<>();
 		for(Term arg : getArgs()) {
 			compiledArgs.add(arg.compile(clauseId, context));
 		}
-		Compound compiledCompound = new Compound(compiledName, compiledArgs);
+		compiledCompound = new Compound(compiledName, compiledArgs);
 		compiledCompound.ground = isGround();
 		return compiledCompound;
 	}
 
 	@Override
-	public Term compileForQuery(CompilationContext context) {
-		Term compiledName = getName().compileForQuery(context);
+	public Term prepareForQuery(CompilationContext context) {
+		Compound compiledCompound;
+		Term compiledName = getName().prepareForQuery(context);
 		List<Term> compiledArgs = new ArrayList<>();
 		for(Term arg : getArgs()) {
-			compiledArgs.add(arg.compileForQuery(context));
+			compiledArgs.add(arg.prepareForQuery(context));
 		}
-		Compound compiledCompound = new Compound(compiledName, compiledArgs);
+		compiledCompound = new Compound(compiledName, compiledArgs);
 		compiledCompound.ground = isGround();
 		return compiledCompound;
 	}
 	
 	@Override
-	public Term forFrame(int frameId) {
-		Term framedName = getName();
-		if(!framedName.isGround())
-			framedName = framedName.forFrame(frameId);
-		List<Term> framedArgs = new ArrayList<>();
-		for(Term arg : getArgs()) {
-			if(!arg.isGround())
-				arg = arg.forFrame(frameId);
-			framedArgs.add(arg);
+	public Term prepareForFrame(CompilationContext context) {
+		Compound framedCompound;
+		if(isGround())
+			framedCompound = this;
+		else {
+			Term framedName = getName();
+			if(!framedName.isGround())
+				framedName = framedName.prepareForFrame(context);
+			List<Term> framedArgs = new ArrayList<>();
+			for(Term arg : getArgs()) {
+				if(!arg.isGround())
+					arg = arg.prepareForFrame(context);
+				framedArgs.add(arg);
+			}
+			framedCompound = new Compound(framedName, framedArgs);
+			framedCompound.ground = isGround();
 		}
-		return new Compound(framedName, framedArgs);
+		return framedCompound;
 	}
 
 }

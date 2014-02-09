@@ -10,9 +10,6 @@ import java.util.List;
 import org.jpc.engine.embedded.Clause;
 import org.jpc.term.Term;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterators;
-
 /**
  * A repository of indexed clauses.
  * @author sergioc
@@ -60,25 +57,20 @@ public class IndexedClauses {
 		allClauses.clear();
 	}
 	
-	public Iterator<Clause> clausesIterator(final Term compiledHead) {
+	public Iterator<Clause> clausesIterator(final Term head) {
 		Iterator<Clause> it;
 		Index matchedIndex = null;
 		
 		for(Index index : indexes) {
-			if(index.isIndexable(compiledHead)) {
+			if(index.isIndexable(head)) {
 				matchedIndex = index;
 				break;
 			}
 		}
 		if(matchedIndex != null) {
-			it = new IndexedClauseIterator(matchedIndex, compiledHead);
+			it = new IndexedClauseIterator(matchedIndex, head);
 		} else {
-			it =  Iterators.filter(allClauses.iterator(), new Predicate<Clause>() {
-				@Override
-				public boolean apply(Clause clause) {
-					return clause.getHead().isUnifiable(compiledHead);
-				}
-			});
+			it =  allClauses.iterator();
 		}
 		return it;
 	}

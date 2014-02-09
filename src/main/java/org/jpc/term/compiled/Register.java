@@ -1,4 +1,4 @@
-package org.jpc.term.unification;
+package org.jpc.term.compiled;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,30 +7,30 @@ import org.jpc.term.Term;
 
 /**
  * Internal class.
- * Represents a (term) value currently bound to one or more variable cells.
+ * Represents a (term) binding currently bound to one or more variable cells.
  * @author sergioc
  *
  */
 public class Register {
 
-	private Term value; //the bound value.
-	private final Collection<VarCell> cells; //a collection of var cells currently pointing to this register (hence to its current term value).
+	private Term binding; //the bound binding.
+	private final Collection<VarCell> cells; //a collection of var cells currently pointing to this register (hence to its current term binding).
 	
 	/**
 	 * 
-	 * @param value the initial term value associated to this register.
+	 * @param binding the initial term binding associated to this register.
 	 */
-	public Register(Term value) {
-		this.value = value;
+	public Register(Term binding) {
+		this.binding = binding;
 		cells = new ArrayList<>();
 	}
 
-	public Term getValue() {
-		return value;
+	public Term getBinding() {
+		return binding;
 	}
 
-	public void setValue(Term value) {
-		this.value = value;
+	public void setBinding(Term binding) {
+		this.binding = binding;
 	}
 	
 	public void addAll(Collection<VarCell> varCells) {

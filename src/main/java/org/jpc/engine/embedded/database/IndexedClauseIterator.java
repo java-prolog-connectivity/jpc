@@ -5,9 +5,7 @@ import java.util.Iterator;
 import org.jpc.engine.embedded.Clause;
 import org.jpc.term.Term;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.AbstractIterator;
-import com.google.common.collect.Iterators;
 
 public class IndexedClauseIterator extends AbstractIterator<Clause> {
 
@@ -26,12 +24,6 @@ public class IndexedClauseIterator extends AbstractIterator<Clause> {
 		if(indexedClauseList != null)
 			indexedIterator = indexedClauseList.clausesIterator(head);
 		nonIndexedIterator = index.getNonIndexedClauses().iterator();
-		nonIndexedIterator = Iterators.filter(nonIndexedIterator, new Predicate<Clause>() {
-			@Override
-			public boolean apply(Clause clause) {
-				return clause.getHead().isUnifiable(head);
-			}
-		});
 	}
 
 	@Override

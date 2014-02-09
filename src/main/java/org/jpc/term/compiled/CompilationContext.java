@@ -3,10 +3,8 @@ package org.jpc.term.compiled;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jpc.term.AbstractVar;
 import org.jpc.term.Var;
-
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 
 /**
  * A compilation context keeps track of the ids assigned to variables as a map of strings (the variable names) to integers (the ids).
@@ -16,24 +14,13 @@ import com.google.common.collect.HashBiMap;
  */
 public class CompilationContext {
 	
-	private final BiMap<Var, CompiledVar> compilationMap;
-	private final Map<String, Integer> idMap;
+	private final Map<String, AbstractVar> varMap;
 	private int varCount;
 	
 	public CompilationContext() {
-		compilationMap = HashBiMap.create();
-		idMap = new HashMap<>();
+		varMap = new HashMap<>();
 	}
-	
-	private int getVarId(Var var) {
-		String varName = var.getName();
-		Integer varId = idMap.get(varName);
-		if(varId == null) {
-			varId = varCount++;
-			idMap.put(varName, varId);
-		}
-		return varId;
-	}
+
 	
 	/**
 	 * Compiles a variable for the given clause id according to this compilation context.
@@ -42,33 +29,29 @@ public class CompilationContext {
 	 * @return the compiled variable.
 	 */
 	public CompiledVar compile(Var var, int clauseId) {
-		if(var.isAnonymous())
-			return CompiledVar.anonymousVar(clauseId);
-		else {
-			CompiledVar compiledVar = new CompiledVar(clauseId, getVarId(var));
-			compilationMap.put(var, compiledVar);
-			return compiledVar;
+		String varName = var.getName();
+		CompiledVar compiledVar = (CompiledVar)varMap.get(varName);
+		if(compiledVar == null) {
+			if(!var.isAnonymous()) {
+				compiledVar = new CompiledVar(clauseId, varCount++);
+				varMap.put(varName, compiledVar);
+			} else {
+				compiledVar = CompiledVar.anonymousVar(clauseId);
+			}
 		}
+		return compiledVar;
 	}
-	
-	/**
-	 * Compiles a variable for a query according to this compilation context.
-	 * @param var a variable to compile.
-	 * @return the compiled variable.
-	 */
-	public CompiledVar compileForQuery(Var var) {
-		if(var.isAnonymous())
-			return CompiledVar.anonymousVar(QueryVar.QUERY_CODE);
-		else {
-			CompiledVar compiledVar = new QueryVar(var.getName(), getVarId(var));
-			compilationMap.put(var, compiledVar);
-			return compiledVar;
+
+	public BindableVar compileForFrame(AbstractVar var) {
+		String varName = var.getName();
+		BindableVar bindableVar = (BindableVar)varMap.get(varName);
+		if(bindableVar == null) {
+			bindableVar = new BindableVar(var);
+			if(!var.isAnonymous())
+				varMap.put(varName, bindableVar);
 		}
+		return bindableVar;
 	}
-	
-	public BiMap<Var, CompiledVar> getCompilationMap() {
-		return compilationMap;
-	}
-	
+
 }
 

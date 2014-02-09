@@ -2,7 +2,6 @@ package org.jpc.engine.embedded;
 
 import org.jpc.Jpc;
 import org.jpc.engine.embedded.database.ClauseDatabase;
-import org.jpc.engine.embedded.database.IndexManager;
 import org.jpc.engine.embedded.database.MutableIndexManager;
 import org.jpc.engine.prolog.AbstractPrologEngine;
 import org.jpc.query.Query;
@@ -16,7 +15,7 @@ import org.jpc.term.Term;
  */
 public class JpcEngine extends AbstractPrologEngine {
 
-	private final ClauseDatabase systemDatabase;
+	//private final ClauseDatabase systemDatabase; //TODO make use of a system database for storing directives and so on...
 	private final ClauseDatabase userDatabase;
 	private final MutableIndexManager userIndexManager;
 
@@ -27,7 +26,7 @@ public class JpcEngine extends AbstractPrologEngine {
 	private JpcEngine(MutableIndexManager indexManager) {
 		this.userIndexManager = indexManager;
 		userDatabase = new ClauseDatabase(indexManager);
-		systemDatabase = new ClauseDatabase(IndexManager.getSystemIndexManager()); 
+		//systemDatabase = new ClauseDatabase(IndexManager.getSystemIndexManager()); 
 	}
 	
 	public MutableIndexManager getIndexManager() {

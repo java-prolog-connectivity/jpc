@@ -1,4 +1,4 @@
-package org.jpc.term.unification;
+package org.jpc.term.compiled;
 
 import org.jpc.term.Term;
 
@@ -12,8 +12,8 @@ public class VarCell {
 
 	private Register register;
 
-	public VarCell(Term value) {
-		this(new Register(value));
+	public VarCell(Term binding) {
+		this(new Register(binding));
 	}
 	
 	public VarCell(Register register) {
@@ -28,12 +28,12 @@ public class VarCell {
 		this.register = register;
 	}
 	
-	public Term getValue() {
-		return getRegister().getValue();
+	public Term getBinding() {
+		return getRegister().getBinding();
 	}
 	
-	public void setValue(Term term) {
-		getRegister().setValue(term);
+	public void setBinding(Term binding) {
+		getRegister().setBinding(binding);
 	}
 
 }

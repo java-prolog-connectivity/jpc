@@ -19,7 +19,7 @@ import com.google.common.base.Function;
  * @author scastro
  *
  */
-public class Atom extends Term {
+public final class Atom extends Term {
 
 	public static final Atom TRUE_TERM = new Atom(TRUE);
 	public static final Atom FAIL_TERM = new Atom(FAIL); //preferring 'fail' over 'false' since 'fail' is ISO.
@@ -113,12 +113,12 @@ public class Atom extends Term {
 	}
 
 	@Override
-	public Term compileForQuery(CompilationContext context) {
+	public Term prepareForQuery(CompilationContext context) {
 		return new Atom(name.intern());
 	}
 
 	@Override
-	public Term forFrame(int frameId) {
+	public Term prepareForFrame(CompilationContext context) {
 		return this; //the Atom should be already compiled.
 	}
 	
