@@ -67,8 +67,12 @@ public final class JRef extends Term {
 	}
 	
 	public void doUnification(Term term) {
-		if(!equals(term))
-			throw new NonUnifiableException(this, term); //TODO implement open-unification
+		if(term instanceof AbstractVar)
+			term.doUnification(this);
+		else {
+			if(!equals(term))
+				throw new NonUnifiableException(this, term); //TODO implement open-unification
+		}
 	}
 	
 	@Override

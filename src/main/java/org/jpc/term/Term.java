@@ -396,7 +396,7 @@ public abstract class Term {
 	}
 	
 	public void doUnification(Term term) {
-		if(term instanceof AbstractVar || term instanceof JRef) {
+		if(term instanceof AbstractVar || term instanceof JRef) { //classes overriding this method should repeat this check.
 			term.doUnification(this);
 		} else {
 			if(!equals(term))
