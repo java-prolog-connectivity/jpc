@@ -66,6 +66,7 @@ public final class JRef extends Term {
 		return ref.hashCode();
 	}
 	
+	@Override
 	public void doUnification(Term term) {
 		if(term instanceof AbstractVar)
 			term.doUnification(this);
