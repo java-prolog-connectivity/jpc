@@ -15,6 +15,7 @@ import org.jpc.salt.TermContentHandler;
 import org.jpc.term.compiled.BindableVar;
 import org.jpc.term.compiled.CompilationContext;
 import org.jpc.term.expansion.DefaultTermExpander;
+import org.jpc.term.unification.NonUnifiableException;
 import org.jpc.term.visitor.DefaultTermVisitor;
 import org.jpc.term.visitor.TermVisitor;
 import org.jpc.util.salt.ChangeVariableNameAdapter;

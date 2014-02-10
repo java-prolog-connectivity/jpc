@@ -1,4 +1,6 @@
-package org.jpc.term;
+package org.jpc.term.unification;
+
+import org.jpc.term.Term;
 
 
 public class NonUnifiableException extends RuntimeException {

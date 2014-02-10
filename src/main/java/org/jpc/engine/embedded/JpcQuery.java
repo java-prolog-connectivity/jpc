@@ -8,8 +8,8 @@ import java.util.NoSuchElementException;
 import org.jpc.Jpc;
 import org.jpc.query.PrologQuery;
 import org.jpc.query.Solution;
-import org.jpc.term.NonUnifiableException;
 import org.jpc.term.Term;
+import org.jpc.term.unification.NonUnifiableException;
 
 public class JpcQuery extends PrologQuery {
 	private Iterator<Clause> clausesIt;

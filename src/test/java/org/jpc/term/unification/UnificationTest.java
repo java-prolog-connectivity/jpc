@@ -9,7 +9,6 @@ import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
-import org.jpc.term.NonUnifiableException;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
 import org.junit.Test;

@@ -102,11 +102,11 @@ public class JpcQueryTest {
 		JpcEngine engine = new JpcEngine();
 		Object o1 = new Object();
 		Object o2 = new Object();
-		Term jref = new JRef(o1);
+		Term jref = JRef.jref(o1);
 		String cmpName = "jref";
 		Compound compound1 = new Compound(cmpName, asList(jref));
-		Compound compound2 = new Compound(cmpName, asList(new JRef(o1)));
-		Compound compound3 = new Compound(cmpName, asList(new JRef(o2)));
+		Compound compound2 = new Compound(cmpName, asList(JRef.jref(o1)));
+		Compound compound3 = new Compound(cmpName, asList(JRef.jref(o2)));
 		engine.assertz(compound1);
 		assertTrue(engine.query(compound1).hasSolution());
 		assertTrue(engine.query(compound2).hasSolution());

@@ -35,7 +35,7 @@ public class JpcTermWriter extends TermWriter<Term> {
 
 	@Override
 	public TermContentHandler startJRef(Object ref) {
-		process(new JRef(ref));
+		process(JRef.jref(ref));
 		return this;
 	}
 	

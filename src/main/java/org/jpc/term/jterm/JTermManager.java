@@ -19,6 +19,7 @@ import org.jpc.term.Compound;
 import org.jpc.term.Functor;
 import org.jpc.term.JRef;
 import org.jpc.term.Var;
+import org.minitoolbox.reference.ReferencesCleaner;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.MapMaker;
@@ -37,7 +38,7 @@ public class JTermManager {
 	private static final JTermManager weakJTermManager;
 	
 	static {
-		WeakReferencesCleaner.startWeakReferencesCleaner();
+		ReferencesCleaner.startDefault();
 		weakJTermManager = new JTermManager();
 	}
 
@@ -69,7 +70,7 @@ public class JTermManager {
 	private final ReferenceQueue<?> referenceQueue; //weak references created by the JTermManager will be instantiated using this reference queue.
 	
 	public JTermManager() {
-		this(WeakReferencesCleaner.getWeakReferencesCleaner().getReferenceQueue());
+		this(ReferencesCleaner.getDefault().getReferenceQueue());
 	}
 	
 	public JTermManager(ReferenceQueue<?> referenceQueue) {
@@ -106,11 +107,11 @@ public class JTermManager {
 	}
 	
 	private void remove(JTermRef<?> jTerm) {
-		embeddedEngine.retractOne(new Compound(JTERM_FUNCTOR_NAME, asList(Var.ANONYMOUS_VAR, new JRef(jTerm))));
+		embeddedEngine.retractOne(new Compound(JTERM_FUNCTOR_NAME, asList(Var.ANONYMOUS_VAR, JRef.jref(jTerm))));
 	}
 	
 	private void put(Compound compound, JTermRef<?> jTerm) {
-		embeddedEngine.assertz(new Compound(JTERM_FUNCTOR_NAME, asList(compound, new JRef(jTerm))));
+		embeddedEngine.assertz(new Compound(JTERM_FUNCTOR_NAME, asList(compound, JRef.jref(jTerm))));
 	}
 	
 	private <T> Optional<JTermRef<T>> get(Compound compound) {

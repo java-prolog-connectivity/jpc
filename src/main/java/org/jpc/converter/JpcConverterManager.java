@@ -206,7 +206,7 @@ public class JpcConverterManager extends JGumConverterManager {
 	public void register(JpcConverter converter, Term term) {
 		if(!isValidConvertableTerm(term))
 			throw new JpcException("Term " + term + " cannot be associated with a converter.");
-		embeddedEngine.assertz(new Compound(CONVERTER_FUNCTOR_NAME, asList(term, new JRef(converter))));
+		embeddedEngine.assertz(new Compound(CONVERTER_FUNCTOR_NAME, asList(term, JRef.jref(converter))));
 		if(converter instanceof ToTermConverter)
 			registerToTermConverter(this, (ToTermConverter)converter);
 	}

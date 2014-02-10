@@ -5,6 +5,7 @@ import java.lang.ref.WeakReference;
 
 import org.jpc.converter.TermConvertable;
 import org.jpc.term.Compound;
+import org.minitoolbox.reference.Cleanable;
 
 /**
  * A weak reference associated with an arbitrary term identifier (a Compound term).
@@ -12,7 +13,7 @@ import org.jpc.term.Compound;
  *
  * @param <REF_TYPE> the reference type
  */
-public class JTermRef<REF_TYPE> extends WeakReference<REF_TYPE> implements TermConvertable<Compound> {
+public class JTermRef<REF_TYPE> extends WeakReference<REF_TYPE> implements Cleanable, TermConvertable<Compound> {
 	
 	private final Compound refId; //the term identifier for this reference.
 	private final Runnable cleaningTask; //an arbitrary cleaning task to be executed when the referent is garbage collected.
@@ -38,7 +39,8 @@ public class JTermRef<REF_TYPE> extends WeakReference<REF_TYPE> implements TermC
 	/**
 	 * Callback method that should be invoked when the referenced object has been garbage collected.
 	 */
-	void cleanUp() {
+	@Override
+	public void cleanUp() {
 		if(cleaningTask != null)
 			cleaningTask.run();
 	}
