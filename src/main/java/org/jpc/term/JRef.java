@@ -31,22 +31,11 @@ public abstract class JRef<T> extends Term {
 		return defaultReferencesCleaner;
 	}
 	
+	
 	public static <T> JRef<T> jref(T ref) {
 		return new StrongJRef<T>(ref);
 	}
 
-	public static <T> JRef<T> weakJref(T ref) {
-		return weakJref(ref, (ReferenceQueue)getReferencesCleaner().getReferenceQueue(), null);
-	}
-	
-	public static <T> JRef<T> weakJref(T ref, Runnable cleaningTask) {
-		return weakJref(ref, (ReferenceQueue)getReferencesCleaner().getReferenceQueue(), cleaningTask);
-	}
-	
-	public static <T> JRef<T> weakJref(T ref, ReferenceQueue<? super T> referenceQueue, Runnable cleaningTask) {
-		Reference<T> reference = new CleanableWeakReference(ref, referenceQueue, cleaningTask);
-		return new WeakJRef<T>(reference);
-	}
 	
 	public static <T> JRef<T> softJref(T ref) {
 		return softJref(ref, (ReferenceQueue)getReferencesCleaner().getReferenceQueue(), null);
@@ -60,6 +49,21 @@ public abstract class JRef<T> extends Term {
 		Reference<T> reference = new CleanableSoftReference(ref, referenceQueue, cleaningTask);
 		return new WeakJRef<T>(reference);
 	}
+	
+	
+	public static <T> JRef<T> weakJref(T ref) {
+		return weakJref(ref, (ReferenceQueue)getReferencesCleaner().getReferenceQueue(), null);
+	}
+	
+	public static <T> JRef<T> weakJref(T ref, Runnable cleaningTask) {
+		return weakJref(ref, (ReferenceQueue)getReferencesCleaner().getReferenceQueue(), cleaningTask);
+	}
+	
+	public static <T> JRef<T> weakJref(T ref, ReferenceQueue<? super T> referenceQueue, Runnable cleaningTask) {
+		Reference<T> reference = new CleanableWeakReference(ref, referenceQueue, cleaningTask);
+		return new WeakJRef<T>(reference);
+	}
+
 	
 	JRef() {}
 	
@@ -75,11 +79,6 @@ public abstract class JRef<T> extends Term {
 	@Override
 	public boolean isGround() {
 		return true;
-	}
-	
-	@Override
-	public void accept(TermVisitor termVisitor) {
-		termVisitor.visitJRef(this);
 	}
 
 	@Override
@@ -118,7 +117,7 @@ public abstract class JRef<T> extends Term {
 		if(term instanceof AbstractVar)
 			term.doUnification(this);
 		else {
-			if(!equals(term))
+			if( !(term instanceof JRef && getRef().equals(((JRef)term).getRef())) )
 				throw new NonUnifiableException(this, term); //TODO implement open-unification
 		}
 	}
@@ -158,6 +157,12 @@ public abstract class JRef<T> extends Term {
 		public ReferenceType getReferenceType() {
 			return ReferenceType.STRONG;
 		}
+		
+		@Override
+		public void accept(TermVisitor termVisitor) {
+			termVisitor.visitJRef(this);
+		}
+		
 	}
 	
 	
@@ -183,6 +188,15 @@ public abstract class JRef<T> extends Term {
 			else
 				throw new JpcException("Unrecognized reference type."); //this should never happen
 		}
+		
+		@Override
+		public void accept(TermVisitor termVisitor) {
+			if(getReferenceType().equals(ReferenceType.SOFT))
+				termVisitor.visitSoftJRef(this);
+			else
+				termVisitor.visitWeakJRef(this);
+		}
+		
 	}
 	
 }

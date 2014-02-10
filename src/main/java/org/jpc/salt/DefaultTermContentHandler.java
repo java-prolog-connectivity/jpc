@@ -4,7 +4,7 @@ package org.jpc.salt;
 
 /**
  * Defines do-nothing methods for the Context Handler interface, facilitating in this way the implementation
- * TODO: this class will be removed when Java8 is released since apparently that release will incorporate the notion of Default methods in interfaces
+ * TODO: this class may be removed when Java8 is released since that release will incorporate the notion of Default methods in interfaces
  * @author sergioc
  *
  */
@@ -34,6 +34,18 @@ public class DefaultTermContentHandler implements TermContentHandler {
 	public TermContentHandler startJRef(Object ref) {
 		return this;
 	}
+	
+	@Override
+	public TermContentHandler startSoftJRef(Object ref) {
+		return this;
+	}
+	
+	@Override
+	public TermContentHandler startWeakJRef(Object ref) {
+		return this;
+	}
+	
+	
 	
 	@Override
 	public TermContentHandler startCompound() {

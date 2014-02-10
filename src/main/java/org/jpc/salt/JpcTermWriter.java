@@ -39,6 +39,18 @@ public class JpcTermWriter extends TermWriter<Term> {
 		return this;
 	}
 	
+	@Override
+	public TermContentHandler startSoftJRef(Object ref) {
+		process(JRef.softJref(ref));
+		return this;
+	}
+	
+	@Override
+	public TermContentHandler startWeakJRef(Object ref) {
+		process(JRef.weakJref(ref));
+		return this;
+	}
+	
 	protected TermBuilder<Term> createCompoundBuilder() {
 		return new JpcTermBuilder();
 	}

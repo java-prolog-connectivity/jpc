@@ -48,6 +48,18 @@ public class TermAdapter implements TermContentHandler {
 		return this;
 	}
 	
+	@Override
+	public TermContentHandler startSoftJRef(Object ref) {
+		contentHandler.startSoftJRef(ref);
+		return this;
+	}
+	
+	@Override
+	public TermContentHandler startWeakJRef(Object ref) {
+		contentHandler.startWeakJRef(ref);
+		return this;
+	}
+	
 	public TermContentHandler startCompound() {
 		contentHandler.startCompound();
 		return this;

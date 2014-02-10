@@ -13,7 +13,9 @@ public interface TermVisitor {
 	public abstract void visitFloat(FloatTerm floatTerm);
 	public abstract void visitVariable(AbstractVar variable);
 	public abstract void visitAtom(Atom atom);
-	public abstract void visitJRef(JRef jRef);
+	public abstract void visitJRef(JRef<?> jRef);
+	public abstract void visitSoftJRef(JRef<?> jRef);
+	public abstract void visitWeakJRef(JRef<?> jRef);
 	public abstract boolean visitCompound(Compound compound);
 	
 }

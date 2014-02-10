@@ -26,7 +26,15 @@ public class DefaultTermVisitor implements TermVisitor {
 	}
 
 	@Override
-	public void visitJRef(JRef jRef) {
+	public void visitJRef(JRef<?> jRef) {
+	}
+	
+	@Override
+	public void visitSoftJRef(JRef<?> jRef) {
+	}
+	
+	@Override
+	public void visitWeakJRef(JRef<?> jRef) {
 	}
 	
 	@Override
