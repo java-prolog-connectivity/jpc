@@ -414,7 +414,8 @@ public abstract class Term {
 						return bindableVar.getBinding().resolveBindings();
 					else
 						return bindableVar.getVar();
-				}
+				} else if(term.isGround())
+					return term;
 				return null;
 			}
 		});
@@ -431,6 +432,11 @@ public abstract class Term {
 						varsMap.put(bindableVar.getName(), bindableVar.getBinding().resolveBindings());
 					}
 				}
+			}
+			
+			@Override
+			public boolean visitCompound(Compound compound) {
+				return !compound.isGround();
 			}
 		});
 		return varsMap;
