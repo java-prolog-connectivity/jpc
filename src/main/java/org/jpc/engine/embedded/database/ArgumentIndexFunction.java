@@ -45,7 +45,7 @@ public class ArgumentIndexFunction implements Function<Term, Object> {
 		else if(keyTerm instanceof Atom)
 			key = ((Atom)keyTerm).getName();
 		else if(keyTerm instanceof JRef)
-			key = ((JRef)keyTerm).getRef();
+			key = ((JRef)keyTerm).getReferent();
 		else
 			key = keyTerm;
 		return key;

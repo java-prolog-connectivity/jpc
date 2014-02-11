@@ -179,6 +179,16 @@ public class DefaultJpc extends Jpc {
 	}
 	
 	@Override
+	public Compound newSoftJTerm(Object ref, Compound compound) {
+		return jTermManager.newSoftJTerm(ref, compound);
+	}
+	
+	@Override
+	public Compound newSoftJTerm(Object ref) {
+		return jTermManager.newSoftJTerm(ref);
+	}
+	
+	@Override
 	public Compound newWeakJTerm(Object ref, Compound compound) {
 		return jTermManager.newWeakJTerm(ref, compound);
 	}

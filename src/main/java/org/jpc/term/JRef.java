@@ -21,45 +21,52 @@ import com.google.common.base.Function;
 
 public abstract class JRef<T> extends Term {
 	
-	private static ReferencesCleaner defaultReferencesCleaner;
+	private static ReferencesCleaner defaultJRefCleaner;
 
-	private static synchronized ReferencesCleaner getReferencesCleaner() {
-		if(defaultReferencesCleaner == null) {
-			defaultReferencesCleaner = new ReferencesCleaner(new ReferenceQueue<Object>());
-			defaultReferencesCleaner.start();
+	private static synchronized ReferencesCleaner getDefaultCleaner() {
+		if(defaultJRefCleaner == null) {
+			defaultJRefCleaner = new ReferencesCleaner(new ReferenceQueue<Object>());
+			defaultJRefCleaner.start();
 		}
-		return defaultReferencesCleaner;
+		return defaultJRefCleaner;
 	}
 	
-	
-	public static <T> JRef<T> jref(T ref) {
+	public static <T> JRef<T> jRef(T ref) {
 		return new StrongJRef<T>(ref);
 	}
 
 	
-	public static <T> JRef<T> softJref(T ref) {
-		return softJref(ref, (ReferenceQueue)getReferencesCleaner().getReferenceQueue(), null);
+	public static <T> JRef<T> softJRef(T ref) {
+		return softJRef(ref, (ReferenceQueue)getDefaultCleaner().getReferenceQueue(), null);
 	}
 	
-	public static <T> JRef<T> softJref(T ref, Runnable cleaningTask) {
-		return softJref(ref, (ReferenceQueue)getReferencesCleaner().getReferenceQueue(), cleaningTask);
+	public static <T> JRef<T> softJRef(T ref, Runnable cleaningTask) {
+		return softJRef(ref, (ReferenceQueue)getDefaultCleaner().getReferenceQueue(), cleaningTask);
 	}
 	
-	public static <T> JRef<T> softJref(T ref, ReferenceQueue<? super T> referenceQueue, Runnable cleaningTask) {
+	public static <T> JRef<T> softJRef(T ref, ReferenceQueue<? super T> referenceQueue) {
+		return softJRef(ref, referenceQueue, null);
+	}
+	
+	public static <T> JRef<T> softJRef(T ref, ReferenceQueue<? super T> referenceQueue, Runnable cleaningTask) {
 		Reference<T> reference = new CleanableSoftReference(ref, referenceQueue, cleaningTask);
 		return new WeakJRef<T>(reference);
 	}
 	
 	
-	public static <T> JRef<T> weakJref(T ref) {
-		return weakJref(ref, (ReferenceQueue)getReferencesCleaner().getReferenceQueue(), null);
+	public static <T> JRef<T> weakJRef(T ref) {
+		return weakJRef(ref, (ReferenceQueue)getDefaultCleaner().getReferenceQueue(), null);
 	}
 	
-	public static <T> JRef<T> weakJref(T ref, Runnable cleaningTask) {
-		return weakJref(ref, (ReferenceQueue)getReferencesCleaner().getReferenceQueue(), cleaningTask);
+	public static <T> JRef<T> weakJRef(T ref, Runnable cleaningTask) {
+		return weakJRef(ref, (ReferenceQueue)getDefaultCleaner().getReferenceQueue(), cleaningTask);
 	}
 	
-	public static <T> JRef<T> weakJref(T ref, ReferenceQueue<? super T> referenceQueue, Runnable cleaningTask) {
+	public static <T> JRef<T> weakJRef(T ref, ReferenceQueue<? super T> referenceQueue) {
+		return weakJRef(ref, referenceQueue, null);
+	}
+	
+	public static <T> JRef<T> weakJRef(T ref, ReferenceQueue<? super T> referenceQueue, Runnable cleaningTask) {
 		Reference<T> reference = new CleanableWeakReference(ref, referenceQueue, cleaningTask);
 		return new WeakJRef<T>(reference);
 	}
@@ -67,7 +74,7 @@ public abstract class JRef<T> extends Term {
 	
 	JRef() {}
 	
-	public abstract T getRef();
+	public abstract T getReferent();
 	
 	public abstract ReferenceType getReferenceType();
 	
@@ -82,13 +89,8 @@ public abstract class JRef<T> extends Term {
 	}
 
 	@Override
-	protected void basicRead(TermContentHandler contentHandler, Function<Term, Term> termExpander) {
-		contentHandler.startJRef(getRef());
-	}
-
-	@Override
 	public String toEscapedString() {
-		return PrologUtil.escapeString(getRef().toString());
+		return PrologUtil.escapeString(getReferent().toString());
 	}
 
 	@Override
@@ -98,18 +100,18 @@ public abstract class JRef<T> extends Term {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + "(" + getRef().toString() + ")";
+		return getClass().getSimpleName() + "(" + getReferent().toString() + ")";
 	}
 
 	@Override
 	public boolean equals(Object term) {
 		return (this == term || 
-				(term.getClass().equals(getClass()) && getRef() == ((JRef)term).getRef()));
+				(term.getClass().equals(getClass()) && getReferent().equals(((JRef)term).getReferent())));
 	}
 	
 	@Override
 	public int hashCode() {
-		return getRef().hashCode();
+		return getReferent().hashCode();
 	}
 	
 	@Override
@@ -117,8 +119,8 @@ public abstract class JRef<T> extends Term {
 		if(term instanceof AbstractVar)
 			term.doUnification(this);
 		else {
-			if( !(term instanceof JRef && getRef().equals(((JRef)term).getRef())) )
-				throw new NonUnifiableException(this, term); //TODO implement open-unification
+			if( !(term instanceof JRef && getReferent().equals(((JRef)term).getReferent())) )
+				throw new NonUnifiableException(this, term); //TODO implement open-unification (?)
 		}
 	}
 	
@@ -140,7 +142,7 @@ public abstract class JRef<T> extends Term {
 	
 
 	
-	private static class StrongJRef<T> extends JRef<T> {
+	public static class StrongJRef<T> extends JRef<T> {
 		
 		private final T strongRef;
 		
@@ -149,13 +151,18 @@ public abstract class JRef<T> extends Term {
 		}
 		
 		@Override
-		public T getRef() {
+		public T getReferent() {
 			return strongRef;
 		}
 		
 		@Override
 		public ReferenceType getReferenceType() {
 			return ReferenceType.STRONG;
+		}
+		
+		@Override
+		protected void basicRead(TermContentHandler contentHandler, Function<Term, Term> termExpander) {
+			contentHandler.startJRef(getReferent());
 		}
 		
 		@Override
@@ -166,7 +173,7 @@ public abstract class JRef<T> extends Term {
 	}
 	
 	
-	private static class WeakJRef<T> extends JRef<T> {
+	public static class WeakJRef<T> extends JRef<T> {
 		
 		private final Reference<T> weakRef;
 		
@@ -175,9 +182,13 @@ public abstract class JRef<T> extends Term {
 		}
 		
 		@Override
-		public T getRef() {
+		public T getReferent() {
 			return weakRef.get();
 		}
+		
+		public Reference<T> getReference() {
+			return weakRef;
+		} 
 		
 		@Override
 		public ReferenceType getReferenceType() {
@@ -187,6 +198,14 @@ public abstract class JRef<T> extends Term {
 				return ReferenceType.WEAK;
 			else
 				throw new JpcException("Unrecognized reference type."); //this should never happen
+		}
+		
+		@Override
+		protected void basicRead(TermContentHandler contentHandler, Function<Term, Term> termExpander) {
+			if(getReferenceType().equals(ReferenceType.SOFT))
+				contentHandler.startSoftJRef(getReferent());
+			else
+				contentHandler.startWeakJRef(getReferent());
 		}
 		
 		@Override

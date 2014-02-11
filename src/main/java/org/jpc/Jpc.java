@@ -93,6 +93,10 @@ public abstract class Jpc extends JConverter {
 
 	public abstract JTermManager getJTermManager();
 
+	public abstract Compound newSoftJTerm(Object ref, Compound compound);
+	
+	public abstract Compound newSoftJTerm(Object ref);
+	
 	public abstract Compound newWeakJTerm(Object ref, Compound compound);
 	
 	public abstract Compound newWeakJTerm(Object ref);

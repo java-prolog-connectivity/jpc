@@ -102,30 +102,77 @@ public class JpcQueryTest {
 		JpcEngine engine = new JpcEngine();
 		Object o1 = new Object();
 		Object o2 = new Object();
-		Term jref = JRef.jref(o1);
 		String cmpName = "jref";
-		Compound compound1 = new Compound(cmpName, asList(jref));
-		Compound compound2 = new Compound(cmpName, asList(JRef.jref(o1)));
-		Compound compound3 = new Compound(cmpName, asList(JRef.jref(o2)));
+		Compound compound1 = new Compound(cmpName, asList(JRef.jRef(o1)));
+		Compound compound2 = new Compound(cmpName, asList(JRef.jRef(o2)));
 		engine.assertz(compound1);
 		assertTrue(engine.query(compound1).hasSolution());
-		assertTrue(engine.query(compound2).hasSolution());
-		assertFalse(engine.query(compound3).hasSolution());
-		engine.assertz(compound3);
+		assertFalse(engine.query(compound2).hasSolution());
+		engine.assertz(compound2);
 		String varName = "X";
 		Query query = engine.query(new Compound(cmpName, asList(new Var("X"))));
 		
 		Solution solution = query.next();
-		//assertEquals(o1, solution.getObject(varName));
 		JRef jrefSolution = (JRef)solution.get(varName);
-		assertEquals(o1, jrefSolution.getRef());
+		assertEquals(o1, jrefSolution.getReferent());
 		
 		solution = query.next();
-		//assertEquals(o2, solution.getObject(varName));
 		jrefSolution = (JRef) solution.get(varName);
-		assertEquals(o2, jrefSolution.getRef());
+		assertEquals(o2, jrefSolution.getReferent());
 		
 		assertFalse(query.hasNext());
 	}
 
+	@Test
+	public void testQueryJRefEquals() {
+		JpcEngine engine = new JpcEngine();
+		Object o1 = new String("hello");
+		Object o2 = new String("hello");
+		String cmpName = "jref";
+		Compound compound1 = new Compound(cmpName, asList(JRef.jRef(o1)));
+		Compound compound2 = new Compound(cmpName, asList(JRef.jRef(o2)));
+		engine.assertz(compound1);
+		assertTrue(engine.query(compound1).hasSolution());
+		assertTrue(engine.query(compound2).hasSolution());
+		engine.assertz(compound2);
+		String varName = "X";
+		Query query = engine.query(new Compound(cmpName, asList(new Var("X"))));
+		
+		Solution solution = query.next();
+		JRef jrefSolution = (JRef)solution.get(varName);
+		assertTrue(o1 == jrefSolution.getReferent());
+		
+		solution = query.next();
+		jrefSolution = (JRef) solution.get(varName);
+		assertTrue(o2 == jrefSolution.getReferent());
+		
+		assertFalse(query.hasNext());
+	}
+	
+	@Test
+	public void testQueryJRefEquals2() {
+		JpcEngine engine = new JpcEngine();
+		Object o1 = new String("hello");
+		Object o2 = new String("hello");
+		String cmpName = "jref";
+		Compound compound1 = new Compound(cmpName, asList(JRef.jRef(o1)));
+		Compound compound2 = new Compound(cmpName, asList(JRef.weakJRef(o2)));
+		engine.assertz(compound1);
+		assertTrue(engine.query(compound1).hasSolution());
+		assertTrue(engine.query(compound2).hasSolution());
+		engine.assertz(compound2);
+		String varName = "X";
+		Query query = engine.query(new Compound(cmpName, asList(new Var("X"))));
+		
+		Solution solution = query.next();
+		JRef jrefSolution = (JRef)solution.get(varName);
+		assertTrue(o1 == jrefSolution.getReferent());
+		
+		solution = query.next();
+		jrefSolution = (JRef) solution.get(varName);
+		assertTrue(o2 == jrefSolution.getReferent());
+		
+		assertFalse(query.hasNext());
+	}
+	
 }

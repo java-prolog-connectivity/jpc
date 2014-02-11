@@ -14,33 +14,33 @@ import com.google.common.collect.MapMaker;
  * @author sergioc
  *
  */
-public class WeakJTermIdManager {
+public class JTermIdManager {
 	
-	private static WeakJTermIdManager defaultJTermIdManager = new WeakJTermIdManager();
+	private static JTermIdManager defaultJTermIdManager = new JTermIdManager();
 	
-	public static WeakJTermIdManager getDefault() {
+	public static JTermIdManager getDefault() {
 		return defaultJTermIdManager;
 	}
 	
-	private int counter = 0;
+	private int counter;
 	
 	private final Map<Object, Compound> currentRefs = new MapMaker().weakKeys().makeMap();
 	
-	private WeakJTermIdManager(){}
+	private JTermIdManager(){}
 	
 	/**
 	 * 
 	 * @param ref the object to which has been assigned a reference id
 	 * @return the reference id
 	 */
-	public Compound weakJTerm(Object ref) {
+	public synchronized Compound jTermId(Object ref) {
 		return currentRefs.get(ref);
 	}
 
-	public synchronized Compound newWeakJTerm(Object ref) {
-		Compound id = weakJTerm(ref);
+	public synchronized Compound newJTermId(Object ref) {
+		Compound id = jTermId(ref);
 		if(id == null) {
-			id = new Compound(JTermManager.JTERM_FUNCTOR_NAME, asList(new IntegerTerm(++counter)));
+			id = new Compound(JTermManager.JTERM_FUNCTOR_NAME, asList(new IntegerTerm(counter++)));
 			currentRefs.put(ref, id);
 		}
 		return id;	

@@ -51,7 +51,6 @@ import org.jpc.converter.catalog.primitive.StringToNumberTermConverter;
 import org.jpc.converter.typesolver.catalog.MapTypeSolver;
 import org.jpc.engine.embedded.JpcEngine;
 import org.jpc.engine.embedded.database.IndexDescriptor;
-import org.jpc.engine.embedded.database.IndexManager;
 import org.jpc.engine.embedded.database.MutableIndexManager;
 import org.jpc.query.Query;
 import org.jpc.query.Solution;
@@ -206,7 +205,7 @@ public class JpcConverterManager extends JGumConverterManager {
 	public void register(JpcConverter converter, Term term) {
 		if(!isValidConvertableTerm(term))
 			throw new JpcException("Term " + term + " cannot be associated with a converter.");
-		embeddedEngine.assertz(new Compound(CONVERTER_FUNCTOR_NAME, asList(term, JRef.jref(converter))));
+		embeddedEngine.assertz(new Compound(CONVERTER_FUNCTOR_NAME, asList(term, JRef.jRef(converter))));
 		if(converter instanceof ToTermConverter)
 			registerToTermConverter(this, (ToTermConverter)converter);
 	}
@@ -223,7 +222,7 @@ public class JpcConverterManager extends JGumConverterManager {
 			while(query.hasNext()) {
 				Solution solution = query.next();
 				Term unifiedTerm = term.replaceVariables(solution);
-				FromTermConverter fromTermConverter = (FromTermConverter)((JRef)solution.get(converterVarName)).getRef();
+				FromTermConverter fromTermConverter = (FromTermConverter)((JRef)solution.get(converterVarName)).getReferent();
 				try {
 					converted = (T)new CheckedConverterEvaluator(unifiedTerm, targetType, jpc).apply(FromTermConverterAdapter.forConverter(fromTermConverter));
 				} catch(ConversionException e) {} //just try with the next converter.

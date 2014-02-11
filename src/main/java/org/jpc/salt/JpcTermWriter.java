@@ -35,19 +35,19 @@ public class JpcTermWriter extends TermWriter<Term> {
 
 	@Override
 	public TermContentHandler startJRef(Object ref) {
-		process(JRef.jref(ref));
+		process(JRef.jRef(ref));
 		return this;
 	}
 	
 	@Override
 	public TermContentHandler startSoftJRef(Object ref) {
-		process(JRef.softJref(ref));
+		process(JRef.softJRef(ref));
 		return this;
 	}
 	
 	@Override
 	public TermContentHandler startWeakJRef(Object ref) {
-		process(JRef.weakJref(ref));
+		process(JRef.weakJRef(ref));
 		return this;
 	}
 	
