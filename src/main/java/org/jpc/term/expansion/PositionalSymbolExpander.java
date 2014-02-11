@@ -11,7 +11,6 @@ public class PositionalSymbolExpander extends ParameterizedSymbolExpander {
 	private List<?> parameters;
 	
 	public PositionalSymbolExpander(List<?> parameters) {
-		super();
 		this.parameters = parameters;
 	}
 	
