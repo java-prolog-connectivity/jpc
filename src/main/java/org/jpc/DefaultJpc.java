@@ -1,26 +1,20 @@
 package org.jpc;
 
 import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
-import org.jconverter.converter.CheckedConverterEvaluator;
 import org.jconverter.converter.ConversionException;
 import org.jconverter.converter.Converter;
+import org.jconverter.converter.ConverterEvaluator;
 import org.jconverter.factory.FactoryManager;
 import org.jconverter.factory.JGumFactoryManager;
 import org.jgum.JGum;
-import org.jgum.strategy.ChainOfResponsibility;
-import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.FromTermConverterAdapter;
 import org.jpc.converter.JpcConverterManager;
-import org.jpc.converter.ToTermConverter;
 import org.jpc.converter.ToTermConverterAdapter;
 import org.jpc.converter.catalog.jterm.FromJTermConverter;
 import org.jpc.converter.catalog.jterm.ToJTermConverter;
 import org.jpc.converter.catalog.primitive.NumberToNumberTermConverter;
-import org.jpc.converter.catalog.serialized.FromSerializedConverter;
 import org.jpc.converter.typesolver.JGumTypeSolverManager;
 import org.jpc.converter.typesolver.TypeSolverManager;
 import org.jpc.converter.typesolver.UnrecognizedObjectException;
@@ -39,8 +33,8 @@ import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 public class DefaultJpc extends Jpc {
 	
 	//private final VarConverter nullConverter = new VarConverter();
-	private final ChainOfResponsibility<Converter<?,?>,?> fromTermSystemConverter;
-	private final ChainOfResponsibility<Converter<?,?>,?> toTermSystemConverter;
+	private final Converter<Compound, ?> fromJTermConverter;
+	private final Converter<?, Compound> toJTermConverter;
 	private final TypeSolverManager typeSolverManager; //responsible of recommending types for the result of a conversion.
 	private final JTermManager jTermManager;
 	private final ErrorHandler errorHandler;
@@ -63,20 +57,10 @@ public class DefaultJpc extends Jpc {
 		this.typeSolverManager = typeSolverManager;
 		this.jTermManager = jTermManager;
 		this.errorHandler = errorHandler;
-		fromTermSystemConverter = getFromTermSystemConverter();
-		toTermSystemConverter = getToTermSystemConverter();
+		fromJTermConverter = FromTermConverterAdapter.forConverter(new FromJTermConverter());
+		toJTermConverter = ToTermConverterAdapter.forConverter(new ToJTermConverter());
 	}
-	
-	private ChainOfResponsibility<Converter<?,?>,?> getFromTermSystemConverter() {
-		List<FromTermConverter<?,?>> systemConverters = Arrays.<FromTermConverter<?,?>>asList(new FromJTermConverter(), new FromSerializedConverter());
-		return FromTermConverterAdapter.chainConverters((List)systemConverters);
-	}
-	
-	private ChainOfResponsibility<Converter<?,?>,?> getToTermSystemConverter() {
-		List<ToTermConverter<?,?>> systemConverters = Arrays.<ToTermConverter<?,?>>asList(new ToJTermConverter());
-		return ToTermConverterAdapter.chainConverters((List)systemConverters);
-	}
-	
+
 	@Override
 	public <T> T fromTerm(Term term, Type targetType) {
 		Objects.requireNonNull(term);
@@ -100,7 +84,7 @@ public class DefaultJpc extends Jpc {
 		
 		if(term instanceof Compound) { //condition added to increase performance, the check is not needed otherwise.
 			try {
-				return (T) fromTermSystemConverter.apply(new CheckedConverterEvaluator(term, targetType, this));
+				return (T)new ConverterEvaluator(term, targetType, this).apply(fromJTermConverter);
 			} catch(ConversionException e) {}
 		}
 		
@@ -142,7 +126,7 @@ public class DefaultJpc extends Jpc {
 		
 		if(!(object instanceof String || object instanceof Number || object instanceof Boolean || object instanceof Character)) { //condition added to increase performance, the check is not needed otherwise.
 			try {
-				return (T) toTermSystemConverter.apply(new CheckedConverterEvaluator(object, targetType, this));
+				return (T) new ConverterEvaluator(object, targetType, this).apply(toJTermConverter);
 			} catch(ConversionException e) {}
 		}
 		

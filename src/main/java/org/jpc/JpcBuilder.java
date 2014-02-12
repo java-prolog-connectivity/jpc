@@ -46,17 +46,21 @@ public class JpcBuilder extends JConverterBuilder {
 		this.errorHandlerManager = errorHandlerManager;
 	}
 	
+	private JpcConverterManager getConverterManager() {
+		return (JpcConverterManager) converterManager;
+	}
+	
 	public Jpc build() {
-		return new DefaultJpc((JpcConverterManager)converterManager, factoryManager, typeSolverManager, jTermManager, errorHandlerManager);
+		return new DefaultJpc(getConverterManager(), factoryManager, typeSolverManager, jTermManager, errorHandlerManager);
 	}
 
 	public JpcBuilder register(JpcConverter converter) {
-		JpcConverterManager.register(converterManager, converter);
+		getConverterManager().register(converter);
 		return this;
 	}
 	
 	public JpcBuilder register(JpcConverter converter, Term term) {
-		((JpcConverterManager)converterManager).register(converter, term);
+		getConverterManager().register(converter, term);
 		return this;
 	}
 	
@@ -82,6 +86,5 @@ public class JpcBuilder extends JConverterBuilder {
 //	public JpcBuilder setPreferences(JpcPreferences preferences) {
 //		throw new NotYetImplementedException();
 //	}
-
 	
 }
