@@ -1,4 +1,4 @@
-package org.jpc.util.supportedengines;
+package org.jpc.util.engine.supported;
 
 public abstract class EngineDescription {
 

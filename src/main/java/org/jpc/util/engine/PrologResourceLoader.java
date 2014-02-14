@@ -1,4 +1,4 @@
-package org.jpc.util;
+package org.jpc.util.engine;
 
 import static java.util.Arrays.asList;
 
@@ -13,6 +13,7 @@ import org.jpc.engine.logtalk.LogtalkEngine;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Atom;
 import org.jpc.term.Term;
+import org.jpc.util.ResourceManager;
 import org.minitoolbox.reflection.ReflectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

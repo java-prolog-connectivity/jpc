@@ -2,7 +2,7 @@ package org.jpc.engine.prolog.driver;
 
 import org.jpc.engine.listener.DriverStateListener;
 import org.jpc.engine.prolog.PrologEngine;
-import org.jpc.util.supportedengines.EngineDescription;
+import org.jpc.util.engine.supported.EngineDescription;
 
 public class PrologEngineDriverProxy<T extends PrologEngine> implements PrologEngineDriver<T> {
 

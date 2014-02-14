@@ -2,8 +2,8 @@ package org.jpc.engine.embedded;
 
 import org.jpc.engine.prolog.driver.AbstractPrologEngineDriver;
 import org.jpc.util.JpcPreferences;
-import org.jpc.util.supportedengines.EngineDescription;
-import org.jpc.util.supportedengines.JpcEmbedded;
+import org.jpc.util.engine.supported.EngineDescription;
+import org.jpc.util.engine.supported.JpcEmbedded;
 
 public class JpcEngineDriver extends AbstractPrologEngineDriver<JpcEngine> {
 
