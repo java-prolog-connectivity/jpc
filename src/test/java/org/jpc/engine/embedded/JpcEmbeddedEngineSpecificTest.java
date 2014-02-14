@@ -18,7 +18,14 @@ import org.jpc.term.Term;
 import org.jpc.term.Var;
 import org.junit.Test;
 
-public class JpcQueryTest {
+/**
+ * Tests that are specific to the Jpc embedded engine (not intended to other engines).
+ * The reason this test class exists is that there are many tests that cannot be executed using the standard PrologEngine interface, since at the moment the Jpc embedded engine is not complete.
+ * This class eventually should disappear and these tests merged with standard tests for embedded engines.
+ * @author sergioc
+ *
+ */
+public class JpcEmbeddedEngineSpecificTest {
 
 	private void assertQueryAndRetract(JpcEngine engine, Term term) {
 		assertFalse(engine.query(term).hasSolution());

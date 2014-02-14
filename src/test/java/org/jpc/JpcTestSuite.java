@@ -3,7 +3,6 @@ package org.jpc;
 import org.jpc.converter.CustomTermConverterTest;
 import org.jpc.converter.DefaultConverterTest;
 import org.jpc.converter.TypeSolverTest;
-import org.jpc.engine.embedded.JpcQueryTest;
 import org.jpc.salt.JpcTermWriterTest;
 import org.jpc.term.AbstractTermTest;
 import org.jpc.term.AtomTest;
@@ -37,7 +36,7 @@ import org.junit.runners.Suite;
 	JpcTermWriterTest.class,
 	ParameterizedSymbolExpanderTest.class,
 	UnificationTest.class,
-	JpcQueryTest.class,
+	JpcEmbeddedEngineTestSuite.class,
 	JRefTest.class,
 	JTermTest.class,
 	SerializedTermTest.class,
@@ -47,5 +46,5 @@ import org.junit.runners.Suite;
 	PrologUtilTest.class,
 	EngineConfigurationDeserializerTest.class,
 	JpcConfigurationDeserializerTest.class
-	})
+})
 public class JpcTestSuite {}

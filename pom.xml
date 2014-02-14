@@ -35,7 +35,9 @@
 		</developer>
 	</developers>
 
+	
 	<dependencies>
+	    
  		<dependency>
     		<groupId>com.google.guava</groupId>
     		<artifactId>guava</artifactId>
@@ -65,6 +67,27 @@
 			<artifactId>minitoolbox</artifactId>
 			<version>0.0.1-alpha-SNAPSHOT</version>
 		</dependency>
+
 	</dependencies>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+<!-- 					<excludes>
+					    <exclude>org/jpc/engine/logtalk/**/*.java</exclude>
+					    <exclude>org/jpc/engine/prolog/**/*.java</exclude>
+				    	<exclude>org/jpc/util/engine/**/*.java</exclude>
+		      		</excludes> -->
+		      		<includes>
+        				<include>org/jpc/JpcTestSuite.java</include>
+      				</includes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
 </project>
