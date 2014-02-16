@@ -20,9 +20,9 @@ public class IndexedClauseIterator extends AbstractIterator<Clause> {
 	public IndexedClauseIterator(Index index, final Term head) {
 		this.index = index;
 		this.head = head;
-		IndexedClauses indexedClauseList = index.getNextClauseList(head);
-		if(indexedClauseList != null)
-			indexedIterator = indexedClauseList.clausesIterator(head);
+		IndexedClauses indexedClauses = index.getIndexedClauses(head);
+		if(indexedClauses != null)
+			indexedIterator = indexedClauses.clausesIterator(head);
 		nonIndexedIterator = index.getNonIndexedClauses().iterator();
 	}
 

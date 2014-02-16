@@ -15,8 +15,8 @@ public class Rule extends Clause {
 
 	private final List<Term> body;
 	
-	public Rule(Term head, List<Term> body) {
-		super(head);
+	public Rule(Term head, List<Term> body, int id) {
+		super(head, id);
 		this.body = body;
 	}
 

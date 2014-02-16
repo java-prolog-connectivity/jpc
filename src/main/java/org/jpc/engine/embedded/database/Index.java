@@ -1,9 +1,9 @@
 package org.jpc.engine.embedded.database;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.jpc.engine.embedded.Clause;
 import org.jpc.term.Term;
@@ -12,13 +12,17 @@ import org.minitoolbox.exception.NotYetImplementedException;
 public class Index implements IndexChangeListener {
 
 	private final IndexDescriptor indexDescriptor;
-	private final Map<Object, IndexedClauses> map;
-	private final List<Clause> nonIndexedClauses;
+	private final Map<Object, IndexedClauses> indexedClausesMap;
+	/**
+	 * Clauses that cannot be indexed (e.g., they have variables in the index term) are stored here.
+	 * This set should be inspected when attempting to resolve indexed goals (which do not have variables in the index term), since the goal may unify with the (non ground) head of one of the clauses in this list.
+	 */
+	private final Set<Clause> nonIndexedClauses; 
 	
 	public Index(IndexDescriptor indexDescriptor) {
 		this.indexDescriptor = indexDescriptor;
-		map = new HashMap<>();
-		nonIndexedClauses = new ArrayList<>();
+		indexedClausesMap = new HashMap<>();
+		nonIndexedClauses = new TreeSet<>();
 		indexDescriptor.getIndexFunction().addChangeListener(this);
 	}
 	
@@ -26,7 +30,11 @@ public class Index implements IndexChangeListener {
 		return indexDescriptor.getIndexFunction();
 	}
 	
-	public List<Clause> getNonIndexedClauses() {
+	/**
+	 * 
+	 * @return an ordered set according to the natural ordering of the clauses (by means of the Comparable interface).
+	 */
+	public Set<Clause> getNonIndexedClauses() {
 		return nonIndexedClauses;
 	}
 	
@@ -39,32 +47,32 @@ public class Index implements IndexChangeListener {
 	}
 	
 	public void reset() {
-		map.clear();
+		indexedClausesMap.clear();
 		nonIndexedClauses.clear();
 	}
 	
-	public IndexedClauses getNextClauseList(Term head) {
+	public IndexedClauses getIndexedClauses(Term head) {
 		Object key = getIndexFunction().apply(head);
-		return map.get(key);
+		return indexedClausesMap.get(key);
 	}
 	
-	public IndexedClauses getOrCreateNextClauseList(Term head) {
+	public IndexedClauses getOrCreateIndexedClauses(Term head) {
 		Object key = getIndexFunction().apply(head);
-		IndexedClauses indexedClauses = map.get(key);
+		IndexedClauses indexedClauses = indexedClausesMap.get(key);
 		if(indexedClauses == null) {
 			indexedClauses = new IndexedClauses(indexDescriptor.getNextIndexDescriptorsFunction().apply(head));
-			map.put(key, indexedClauses);
+			indexedClausesMap.put(key, indexedClauses);
 		}
 		return indexedClauses;
 	}
 	
-	public void assertz(Clause clause) {
+	public void addClause(Clause clause) {
 		Term head = clause.getHead();
 		if(!isIndexable(head)) {
 			nonIndexedClauses.add(clause);	
 		} else {
-			IndexedClauses nextClauseList = getOrCreateNextClauseList(head);
-			nextClauseList.assertz(clause);
+			IndexedClauses indexedClauses = getOrCreateIndexedClauses(head);
+			indexedClauses.addClause(clause);
 		}
 	}
 
@@ -73,8 +81,8 @@ public class Index implements IndexChangeListener {
 		if(!isIndexable(head)) {
 			nonIndexedClauses.remove(clause);
 		} else {
-			IndexedClauses nextClauseList = getOrCreateNextClauseList(head);
-			nextClauseList.retract(clause);
+			IndexedClauses indexedClauses = getOrCreateIndexedClauses(head);
+			indexedClauses.retract(clause);
 		}
 	}
 	

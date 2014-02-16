@@ -13,8 +13,6 @@ import org.jpc.term.Term;
  *
  */
 public class Clause implements Comparable<Clause> {
-
-	protected static int nextId;
 	
 	protected void checkClauseHead(Term head) {
 		if(!(head instanceof Atom || head instanceof Compound)) //only atoms and compounds are allowed in the clause head.
@@ -24,9 +22,9 @@ public class Clause implements Comparable<Clause> {
 	private final int id;
 	private final Term head;
 	
-	public Clause(Term head) {
+	public Clause(Term head, int id) {
 		checkClauseHead(head);
-		id = nextId++;
+		this.id = id;
 		this.head = head.compile(id);
 	}
 	

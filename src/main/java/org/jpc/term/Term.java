@@ -353,6 +353,15 @@ public abstract class Term {
 
 	private static final int NO_CLAUSE_CODE = -1;
 
+	public final boolean canUnify(Term term) {
+		try {
+			unifyVars(term);
+			return true;
+		} catch(NonUnifiableException e) {
+			return false;
+		}
+	}
+	
 	/**
 	 * @param term a term.
 	 * @return a map of variables to terms according to the accomplished unification.
@@ -379,6 +388,7 @@ public abstract class Term {
 	 */
 	
 	/**
+	 * Part of the internal unification API. This method should not be used by the programmer.
 	 * @param term a bindable term.
 	 * @return a map of variables to terms according to the accomplished unification.
 	 */
@@ -388,6 +398,7 @@ public abstract class Term {
 	}
 
 	/**
+	 * Part of the internal unification API. This method should not be used by the programmer.
 	 * @param term a bindable term.
 	 * @return this term unified with the term sent as parameter.
 	 */
@@ -396,6 +407,10 @@ public abstract class Term {
 		return resolveBindings();
 	}
 	
+	/**
+	 * Part of the internal unification API. This method should not be used by the programmer.
+	 * @param term
+	 */
 	public void doUnification(Term term) {
 		if(term instanceof AbstractVar || term instanceof JRef) { //classes overriding this method should repeat this check.
 			term.doUnification(this);
@@ -405,6 +420,10 @@ public abstract class Term {
 		}
 	}
 	
+	/**
+	 * Part of the internal unification API. This method should not be used by the programmer.
+	 * @return a term where the bindings of the variables of the receiver have been applied.
+	 */
 	public final Term resolveBindings() {
 		return termExpansion(new Function<Term, Term>() {
 			public Term apply(Term term) {
@@ -421,6 +440,10 @@ public abstract class Term {
 		});
 	}
 	
+	/**
+	 * Part of the internal unification API. This method should not be used by the programmer.
+	 * @return a map of variable names to their unified values.
+	 */
 	public final Map<String, Term> unifiedVars() {
 		final Map<String, Term> varsMap = new HashMap<>();
 		accept(new DefaultTermVisitor() {

@@ -67,6 +67,12 @@ public class JpcEngine extends AbstractPrologEngine {
 	//TODO The methods below should be replaced by a better implementation. They are fine just for prototyping and testing.
 	
 	@Override
+	public boolean asserta(Term term) {
+		userDatabase.asserta(term);
+		return true;
+	}
+	
+	@Override
 	public boolean assertz(Term term) {
 		userDatabase.assertz(term);
 		return true;
