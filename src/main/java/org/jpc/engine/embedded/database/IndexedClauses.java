@@ -59,7 +59,14 @@ public class IndexedClauses {
 		allClauses.clear();
 	}
 	
-	public Iterator<Clause> clausesIterator(final Term head) {
+	/**
+	 * This method answers an iterator of clauses which heads "may" unify with the parameter according to the existing indexes applicable to it.
+	 * The rationale of implementing it that way instead of answering only clauses which heads unify with the argument, is to avoid duplicated unification tasks.
+	 * This is because callers of this method may need to unify again the head of the clauses against the term parameter (for example, to find out the bindings of the variables in the unified term). 
+	 * @param head the term that may unify with the head of the clauses.
+	 * @return an iterator of clauses which heads may unify with the given term.
+	 */
+	public Iterator<Clause> indexedClausesIterator(final Term head) {
 		Iterator<Clause> it;
 		Index matchedIndex = null;
 		

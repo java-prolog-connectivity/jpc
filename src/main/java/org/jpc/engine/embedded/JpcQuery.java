@@ -43,7 +43,7 @@ public class JpcQuery extends PrologQuery {
 	@Override
 	public Solution basicNext() {
 		if(clausesIt == null) {
-			clausesIt = ((JpcEngine)getPrologEngine()).getClauseDatabase().clausesIterator(getGoal()); //change to getInstrumentedGoal();
+			clausesIt = ((JpcEngine)getPrologEngine()).getClauseDatabase().indexedClausesIterator(getGoal()); //change to getInstrumentedGoal();
 		}
 		while(clausesIt.hasNext()) {
 			Clause clause = clausesIt.next();
