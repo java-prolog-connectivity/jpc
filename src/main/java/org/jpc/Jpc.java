@@ -50,8 +50,8 @@ public abstract class Jpc extends JConverter {
 	
 	public abstract <T> T fromTerm(Term term, Type type);
 	
-	public final Term toTerm(Object object) {
-		return toTerm(object, Term.class);
+	public final <T extends Term> T toTerm(Object object) {
+		return (T) toTerm(object, Term.class);
 	}
 	
 	public abstract <T extends Term> T toTerm(Object object, Class<T> termClass);
