@@ -16,9 +16,9 @@ import org.jpc.term.Functor;
 import org.jpc.term.JRef;
 import org.jpc.term.JRef.WeakJRef;
 import org.jpc.term.Var;
-import org.minitoolbox.reference.CleanableWeakReference;
-import org.minitoolbox.reference.ReferenceType;
-import org.minitoolbox.reference.ReferencesCleaner;
+import org.minitoolbox.gc.CleanableWeakReference;
+import org.minitoolbox.gc.ReferenceType;
+import org.minitoolbox.gc.ReferencesCleaner;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.MapMaker;
@@ -336,8 +336,9 @@ public class JTermManager {
 				currentRefsMap.remove(referent);
 				if(jRef instanceof WeakJRef) {
 					CleanableWeakReference<?> reference = (CleanableWeakReference<?>) ((WeakJRef)jRef).getReference();
-					//reference.cleanUp();
 					reference.clear(); //so the reference will not be enqueued. Note that this is done before actually deleting the reference, otherwise the GC may enqueue the reference before reaching the deletion instruction.
+					reference.cleanUp(); //the cleanup implies removing the term from the database.
+					return;
 				}
 			}
 			remove(term); //remove the reference from the embedded Prolog engine.

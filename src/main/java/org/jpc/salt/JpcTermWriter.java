@@ -1,9 +1,12 @@
 package org.jpc.salt;
 
+import java.lang.ref.Reference;
+
 import org.jpc.term.Atom;
 import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
-import org.jpc.term.JRef;
+import org.jpc.term.JRef.StrongJRef;
+import org.jpc.term.JRef.WeakJRef;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
 
@@ -35,19 +38,10 @@ public class JpcTermWriter extends TermWriter<Term> {
 
 	@Override
 	public TermContentHandler startJRef(Object ref) {
-		process(JRef.jRef(ref));
-		return this;
-	}
-	
-	@Override
-	public TermContentHandler startSoftJRef(Object ref) {
-		process(JRef.softJRef(ref));
-		return this;
-	}
-	
-	@Override
-	public TermContentHandler startWeakJRef(Object ref) {
-		process(JRef.weakJRef(ref));
+		if(ref instanceof Reference)
+			process(new WeakJRef((Reference)ref));
+		else
+			process(new StrongJRef(ref));
 		return this;
 	}
 	

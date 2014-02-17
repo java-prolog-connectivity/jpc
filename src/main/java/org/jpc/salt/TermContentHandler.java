@@ -12,8 +12,6 @@ public interface TermContentHandler {
 	public abstract TermContentHandler startVariable(String name);
 	public abstract TermContentHandler startAtom(String name);
 	public abstract TermContentHandler startJRef(Object ref);
-	public abstract TermContentHandler startSoftJRef(Object ref);
-	public abstract TermContentHandler startWeakJRef(Object ref);
 	//compound events
 	public abstract TermContentHandler startCompound();
 	public abstract TermContentHandler endCompound();

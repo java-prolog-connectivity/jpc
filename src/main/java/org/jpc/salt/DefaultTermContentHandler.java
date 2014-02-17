@@ -35,16 +35,6 @@ public class DefaultTermContentHandler implements TermContentHandler {
 		return this;
 	}
 	
-	@Override
-	public TermContentHandler startSoftJRef(Object ref) {
-		return this;
-	}
-	
-	@Override
-	public TermContentHandler startWeakJRef(Object ref) {
-		return this;
-	}
-	
 	
 	
 	@Override

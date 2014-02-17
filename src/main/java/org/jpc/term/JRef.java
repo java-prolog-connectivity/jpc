@@ -1,5 +1,6 @@
 package org.jpc.term;
 
+import java.lang.ref.PhantomReference;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
@@ -12,10 +13,10 @@ import org.jpc.term.compiled.CompilationContext;
 import org.jpc.term.unification.NonUnifiableException;
 import org.jpc.term.visitor.TermVisitor;
 import org.jpc.util.PrologUtil;
-import org.minitoolbox.reference.CleanableSoftReference;
-import org.minitoolbox.reference.CleanableWeakReference;
-import org.minitoolbox.reference.ReferenceType;
-import org.minitoolbox.reference.ReferencesCleaner;
+import org.minitoolbox.gc.CleanableSoftReference;
+import org.minitoolbox.gc.CleanableWeakReference;
+import org.minitoolbox.gc.ReferenceType;
+import org.minitoolbox.gc.ReferencesCleaner;
 
 import com.google.common.base.Function;
 
@@ -72,7 +73,7 @@ public abstract class JRef<T> extends Term {
 	}
 
 	
-	JRef() {}
+	private JRef() {}
 	
 	public abstract T getReferent();
 	
@@ -139,14 +140,17 @@ public abstract class JRef<T> extends Term {
 		return this;
 	}
 	
-	
+	@Override
+	public void accept(TermVisitor termVisitor) {
+		termVisitor.visitJRef(this);
+	}
 
 	
-	public static class StrongJRef<T> extends JRef<T> {
+	public final static class StrongJRef<T> extends JRef<T> {
 		
 		private final T strongRef;
 		
-		StrongJRef(T ref) {
+		public StrongJRef(T ref) {
 			this.strongRef = ref;
 		}
 		
@@ -165,19 +169,14 @@ public abstract class JRef<T> extends Term {
 			contentHandler.startJRef(getReferent());
 		}
 		
-		@Override
-		public void accept(TermVisitor termVisitor) {
-			termVisitor.visitJRef(this);
-		}
-		
 	}
 	
 	
-	public static class WeakJRef<T> extends JRef<T> {
+	public final static class WeakJRef<T> extends JRef<T> {
 		
 		private final Reference<T> weakRef;
 		
-		WeakJRef(Reference<T> weakRef) {
+		public WeakJRef(Reference<T> weakRef) {
 			this.weakRef = weakRef;
 		}
 		
@@ -196,24 +195,15 @@ public abstract class JRef<T> extends Term {
 				return ReferenceType.SOFT;
 			else if(weakRef instanceof WeakReference)
 				return ReferenceType.WEAK;
+			else if(weakRef instanceof PhantomReference)
+				throw new JpcException("Phantom references are not supported.");
 			else
-				throw new JpcException("Unrecognized reference type."); //this should never happen
+				throw new JpcException("Unrecognized reference type."); //this should never happen (just in case future versions of Java add inadvertently new reference types).
 		}
 		
 		@Override
 		protected void basicRead(TermContentHandler contentHandler, Function<Term, Term> termExpander) {
-			if(getReferenceType().equals(ReferenceType.SOFT))
-				contentHandler.startSoftJRef(getReferent());
-			else
-				contentHandler.startWeakJRef(getReferent());
-		}
-		
-		@Override
-		public void accept(TermVisitor termVisitor) {
-			if(getReferenceType().equals(ReferenceType.SOFT))
-				termVisitor.visitSoftJRef(this);
-			else
-				termVisitor.visitWeakJRef(this);
+			contentHandler.startJRef(getReference());
 		}
 		
 	}
