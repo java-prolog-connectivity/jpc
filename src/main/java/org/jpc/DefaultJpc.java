@@ -1,6 +1,9 @@
 package org.jpc;
 
+import static java.util.Arrays.asList;
+
 import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Objects;
 
 import org.jconverter.converter.ConversionException;
@@ -15,13 +18,15 @@ import org.jpc.converter.ToTermConverterAdapter;
 import org.jpc.converter.catalog.jterm.FromJTermConverter;
 import org.jpc.converter.catalog.jterm.ToJTermConverter;
 import org.jpc.converter.catalog.primitive.NumberToNumberTermConverter;
-import org.jpc.converter.typesolver.JGumTypeSolverManager;
+import org.jpc.converter.typesolver.JpcTypeSolverManager;
 import org.jpc.converter.typesolver.TypeSolverManager;
 import org.jpc.converter.typesolver.UnrecognizedObjectException;
+import org.jpc.engine.embedded.JpcEngine;
 import org.jpc.error.handling.DefaultJpcErrorHandler;
 import org.jpc.error.handling.ErrorHandler;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
+import org.jpc.term.ListTerm;
 import org.jpc.term.NumberTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
@@ -29,7 +34,6 @@ import org.jpc.term.jterm.JTermManager;
 import org.minitoolbox.reflection.IncompatibleTypesException;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
-//TODO merge with JPC ?
 public class DefaultJpc extends Jpc {
 	
 	//private final VarConverter nullConverter = new VarConverter();
@@ -41,19 +45,27 @@ public class DefaultJpc extends Jpc {
 	//private final JpcPreferences preferences;
 	
 	public DefaultJpc() {
-		this(new JGum());
+		this(new JGum(), new JpcEngine());
 	}
 	
-	protected DefaultJpc(JGum jgum) {
-		this(JpcConverterManager.createDefault(jgum),
-				JGumFactoryManager.createDefault(jgum), 
-				JGumTypeSolverManager.createDefault(jgum), 
+	private DefaultJpc(JGum jgum, JpcEngine embeddedEngine) {
+		this(JpcConverterManager.registerDefaults(new JpcConverterManager(jgum, embeddedEngine)),
+				JGumFactoryManager.registerDefaults(new JGumFactoryManager(jgum)),
+				JpcTypeSolverManager.registerDefaults(new JpcTypeSolverManager(jgum, embeddedEngine)),
 				new JTermManager(),
 				new DefaultJpcErrorHandler());
 	}
 	
-	protected DefaultJpc(JpcConverterManager converterManager, FactoryManager factoryManager, TypeSolverManager typeSolverManager, JTermManager jTermManager, ErrorHandler errorHandler) {
-		super(converterManager, factoryManager, typeSolverManager);
+	/**
+	 * 
+	 * @param converterManager a converter manager responsible of converting objects.
+	 * @param factoryManager a factory manager responsible of instantiating objects.
+	 * @param typeSolverManager a type solver manager responsible of recommending types for the result of a conversion.
+	 * @param jTermManager an object keeping mappings between terms and Java object references.
+	 * @param errorHandler a error handler.
+	 */
+	public DefaultJpc(JpcConverterManager converterManager, FactoryManager factoryManager, TypeSolverManager typeSolverManager, JTermManager jTermManager, ErrorHandler errorHandler) {
+		super(converterManager, factoryManager);
 		this.typeSolverManager = typeSolverManager;
 		this.jTermManager = jTermManager;
 		this.errorHandler = errorHandler;
@@ -61,6 +73,14 @@ public class DefaultJpc extends Jpc {
 		toJTermConverter = ToTermConverterAdapter.forConverter(new ToJTermConverter());
 	}
 
+	private JpcConverterManager getJpcConverterManager() {
+		return (JpcConverterManager) converterManager;
+	}
+	
+	public final <T> T fromTerm(Term term) {
+		return fromTerm(term, Object.class);
+	}
+	
 	@Override
 	public <T> T fromTerm(Term term, Type targetType) {
 		Objects.requireNonNull(term);
@@ -100,6 +120,9 @@ public class DefaultJpc extends Jpc {
 		return getJpcConverterManager().fromTerm(term, targetType, this);
 	}
 	
+	public final <T extends Term> T toTerm(Object object) {
+		return (T) toTerm(object, Term.class);
+	}
 	
 	@Override
 	public <T extends Term> T toTerm(Object object, Class<T> targetType) {
@@ -142,10 +165,26 @@ public class DefaultJpc extends Jpc {
 		return getJpcConverterManager().toTerm(object, targetType, this);
 	}
 	
-	
-	private JpcConverterManager getJpcConverterManager() {
-		return (JpcConverterManager) converterManager;
+	@Override
+	public final Compound toCompound(Object name, List<?> args) {
+		return new Compound(toTerm(name), listTerm(args));
 	}
+	
+	@Override
+	public final ListTerm listTerm(Object ...objects) {
+		return listTerm(asList(objects));
+	}
+	
+	@Override
+	public final ListTerm listTerm(List<?> objects) {
+		ListTerm listTerm = new ListTerm();
+		for(Object o : objects) {
+			listTerm.add(toTerm(o));
+		}
+		return listTerm;
+	}
+	
+
 
 	@Override
 	public boolean handleError(Term errorTerm, Term goal) {
@@ -153,7 +192,17 @@ public class DefaultJpc extends Jpc {
 	}
 
 	@Override
-	protected Type getType(Object key, Object object) {
+	public Type getType(Object object) {
+		return getType(TypeSolverManager.DEFAULT_KEY, object);
+	}
+	
+	/**
+	 * 
+	 * @param key constrains the type solvers that will be looked up in this operation.
+	 * @param object the object which conversion target type to recommend.
+	 * @return the recommended type.
+	 */
+	private Type getType(Object key, Object object) {
 		return typeSolverManager.getType(TypeSolverManager.DEFAULT_KEY, object);
 	}
 	

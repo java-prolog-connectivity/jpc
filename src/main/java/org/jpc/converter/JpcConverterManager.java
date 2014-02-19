@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.jconverter.converter.CheckedConverterEvaluator;
 import org.jconverter.converter.ConversionException;
+import org.jconverter.converter.ConverterManager;
 import org.jconverter.converter.ConverterRegister;
 import org.jconverter.converter.JGumConverter;
 import org.jconverter.converter.JGumConverterManager;
@@ -77,21 +78,13 @@ public class JpcConverterManager extends JGumConverterManager {
 	private static final String CONVERTER_FUNCTOR_NAME = "converter";
 	
 	/**
-	 * @param jgum a JGum categorization context.
-	 * @return an instance of JpcConverterManager configured with default type solvers.
-	 */
-	public static JpcConverterManager createDefault(JGum jgum) {
-		JpcConverterManager converterManager = new JpcConverterManager(jgum);
-		registerDefaults(converterManager); //registering jconverter defaults.
-		registerJpcDefaults(converterManager); //registering jpcconverter defaults.
-		return converterManager;
-	}
-	
-	/**
 	 * Registers default Jpc converters in the given converter manager.
 	 * @param converterManager a converter manager.
+	 * @return the converter manager.
 	 */
-	public static void registerJpcDefaults(JpcConverterManager converterManager) {
+	public static JpcConverterManager registerDefaults(JpcConverterManager converterManager) {
+		ConverterManager.registerDefaults(converterManager); //registering jconverter defaults.
+		
 		converterManager.register(new FromSerializedConverter(), new Functor(SerializedTerm.SERIALIZED_TERM_FUNCTOR, 1).asTerm());
 		
 		converterManager.register(new TermConvertableConverter());
@@ -139,35 +132,41 @@ public class JpcConverterManager extends JGumConverterManager {
 		converterManager.register(new SyntaxErrorConverter());
 		converterManager.register(new SystemErrorConverter());
 		converterManager.register(new TypeErrorConverter());
+		
+		return converterManager;
 	}
 	
 	
 	private static boolean isValidConvertableTerm(Term term) {
-		return term instanceof Compound || term instanceof Atom;
+		return term instanceof Compound;// || term instanceof Atom;
 	}
 	
 	private final JpcEngine embeddedEngine; //embedded Jpc Prolog engine.
 	
 	
 	public JpcConverterManager(JGum jgum) {
+		this(jgum, new JpcEngine());
+	}
+
+	public JpcConverterManager(JGum jgum, JpcEngine embeddedEngine) {
 		super(jgum);
-		this.embeddedEngine = new JpcEngine();
+		this.embeddedEngine = embeddedEngine;
 		MutableIndexManager indexManager = embeddedEngine.getIndexManager();
 		Functor converterFunctor = new Functor(CONVERTER_FUNCTOR_NAME, 2);
 		IndexDescriptor indexDescriptor = IndexDescriptor.forIndexedArgument(1, indexManager); //makes use of any index defined for the first argument.
-		indexManager.setIndexDescriptor(converterFunctor, indexDescriptor); //clause heads having converter as a functor name will be indexed according to the first argument of the term head.
-	}
-
-	public MutableIndexManager getIndexManager() {
-		return embeddedEngine.getIndexManager();
+		indexManager.setIndexDescriptor(converterFunctor, indexDescriptor); //clause heads having CONVERTER_FUNCTOR_NAME as a functor name will be indexed according to the first argument of the term head.
 	}
 	
 	public <T> T fromTerm(Term term, Type targetType, Jpc jpc) {
+		return fromTerm(DEFAULT_KEY, term, targetType, jpc);
+	}
+	
+	public <T> T fromTerm(Object key, Term term, Type targetType, Jpc jpc) {
 		try {
-			return this.<T>evalQuantifiedTermConverter(term, targetType, jpc);
+			return this.<T>evalQuantifiedTermConverter(term, targetType, jpc); //the current implementation does not take into consideration the key for finding converters in the embedded Prolog database.
 		} catch(ConversionException e) {}
 		
-		JGumConverter<Term, T> jgumConverter = new JGumConverter<Term, T>(jgum, DEFAULT_KEY) {
+		JGumConverter<Term, T> jgumConverter = new JGumConverter<Term, T>(jgum, key) {
 			@Override
 			protected List<ConverterRegister> getConverters(Class<?> clazz) {
 				Category sourceTypeCategory = jgum.forClass(clazz);
@@ -181,43 +180,65 @@ public class JpcConverterManager extends JGumConverterManager {
 				List<ConverterRegister> converterRegisters = Lists.newArrayList(new PropertyIterable(typeCategories, key));
 				return converterRegisters;
 			}
-			
 		};
+		
 		return convert(jgumConverter, term, targetType, jpc);
 	}
 	
 	public <T extends Term> T toTerm(Object object, Class<T> termClass, Jpc jpc) {
+		return convert(DEFAULT_KEY, object, termClass, jpc);
+	}
+	
+	private <T extends Term> T toTerm(Object key, Object object, Class<T> termClass, Jpc jpc) {
 		return convert(object, termClass, jpc);
 	}
 	
 	
-	private void registerFromTermConverter(FromTermConverter<?,?> converter) {
-		register(FromTermConverterAdapter.forConverter(converter));
+	private void registerFromTermConverter(Object key, FromTermConverter<?,?> converter) {
+		register(key, FromTermConverterAdapter.forConverter(converter));
 	}
 	
-	private void registerToTermConverter(ToTermConverter<?,?> converter) {
-		register(ToTermConverterAdapter.forConverter(converter));
+	private void registerToTermConverter(Object key, ToTermConverter<?,?> converter) {
+		register(key, ToTermConverterAdapter.forConverter(converter));
 	}
 	
 	public void register(JpcConverter converter) {
+		register(DEFAULT_KEY, converter);
+	}
+	
+	private void register(Object key, JpcConverter converter) {
 		if(converter instanceof FromTermConverter)
-			registerFromTermConverter((FromTermConverter)converter);
+			registerFromTermConverter(key, (FromTermConverter)converter);
 		if(converter instanceof ToTermConverter)
-			registerToTermConverter((ToTermConverter)converter);
+			registerToTermConverter(key, (ToTermConverter)converter);
 	}
 	
 	public void register(JpcConverter converter, Term term) {
+		register(DEFAULT_KEY, converter, term);
+	}
+	
+	private void register(Object key, JpcConverter converter, Term term) {
 		if(!isValidConvertableTerm(term))
 			throw new JpcException("Term " + term + " cannot be associated with a converter.");
+		//the current implementation does not take into consideration the key when storing the converter in the Prolog database.
+		//an alternative implementation could add the key as another argument to the predicate with functor name CONVERTER_FUNCTOR_NAME.
 		embeddedEngine.assertz(new Compound(CONVERTER_FUNCTOR_NAME, asList(term, JRef.jRef(converter))));
 		if(converter instanceof ToTermConverter)
-			registerToTermConverter((ToTermConverter)converter);
+			registerToTermConverter(key, (ToTermConverter)converter);
 	}
 	
 //	public void removeConverters(Term term) {
 //		embeddedEngine.retractAll(new Compound(CONVERTER_FUNCTOR_NAME, asList(term, Var.ANONYMOUS_VAR)));
 //	}
 	
+	/**
+	 * Converts a term to a Java object looking for converters in the embedded Prolog database.
+	 * @param term the term to convert.
+	 * @param targetType the expected type of the conversion.
+	 * @param jpc the context.
+	 * @return the conversion of the term to an object.
+	 * @throws ConversionException if no converter can be found in the embedded database or if no converter can handle the conversion.
+	 */
 	private <T> T evalQuantifiedTermConverter(Term term, Type targetType, Jpc jpc) {
 		T converted = null;
 		if(isValidConvertableTerm(term)) {
