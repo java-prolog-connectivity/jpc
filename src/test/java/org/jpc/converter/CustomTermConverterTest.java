@@ -100,17 +100,18 @@ public class CustomTermConverterTest {
 		assertEquals(new Atom(atomForMyClass), jpc.toTerm(new MyClass()));
 	}
 	
-	@Test
-	public void testAtomQuantification() {
-		JpcBuilder builder = JpcBuilder.create();
-		Atom atom = new Atom(atomForMyClass);
-		builder.register(new MyClassConverter(), atom);
-		Jpc jpc = builder.build();
-		
-		assertEquals(atomForMyClass, jpc.fromTerm(new Atom(atomForMyClass)));
-		assertEquals(new Atom(atomForMyClass), jpc.toTerm(atomForMyClass));
-		
-		assertTrue(jpc.fromTerm(new Atom(atomForMyClass), MyClass.class) instanceof MyClass);
-		assertEquals(new Atom(atomForMyClass), jpc.toTerm(new MyClass()));
-	}
+//	@Test
+//	public void testAtomQuantifiedConverter() { //this test has been commented out since in the last JPC version atoms cannot be employed to quantify over the domain of term to object converters.
+//		JpcBuilder builder = JpcBuilder.create();
+//		Atom atom = new Atom(atomForMyClass);
+//		builder.register(new MyClassConverter(), atom);
+//		Jpc jpc = builder.build();
+//		
+//		assertEquals(atomForMyClass, jpc.fromTerm(new Atom(atomForMyClass)));
+//		assertEquals(new Atom(atomForMyClass), jpc.toTerm(atomForMyClass));
+//		
+//		assertTrue(jpc.fromTerm(new Atom(atomForMyClass), MyClass.class) instanceof MyClass);
+//		assertEquals(new Atom(atomForMyClass), jpc.toTerm(new MyClass()));
+//	}
+
 }
