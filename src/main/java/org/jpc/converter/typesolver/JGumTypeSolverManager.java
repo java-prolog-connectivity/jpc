@@ -17,21 +17,11 @@ import org.minitoolbox.reflection.typewrapper.VariableTypeWrapper;
 
 import com.google.common.base.Optional;
 
+//Implementation note: consider moving this class and its super class to the JConverter library (it looks like it can be generalized).
 public class JGumTypeSolverManager extends TypeSolverManager {
 
 	private final static Logger logger = Logger.getLogger(JGumTypeSolverManager.class);
-	
-	/**
-	 * @param jgum a JGum categorization context.
-	 * @return an instance of JGumTypeSolverManager configured with default type solvers.
-	 */
-	public static JGumTypeSolverManager createDefault(JGum jgum) {
-		JGumTypeSolverManager typeSolverManager = new JGumTypeSolverManager(jgum);
-		registerDefaults(typeSolverManager);
-		return typeSolverManager;
-	}
 
-	
 	private final JGum jgum;
 	
 	public JGumTypeSolverManager(JGum jgum) {
