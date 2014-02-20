@@ -9,8 +9,8 @@ import org.jpc.term.Term;
  * @author sergioc
  *
  */
-//Work in progress... 
-//Rules are currently not supported in the embedded engine, only facts.
+//Work in progress.
+//Rules are currently not supported in the JPC embedded engine. The current prototype only works with facts since that is enough to support the current requirements.
 public class Rule extends Clause {
 
 	private final List<Term> body;
