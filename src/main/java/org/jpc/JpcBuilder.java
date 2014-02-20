@@ -6,10 +6,8 @@ import org.jconverter.factory.JGumFactoryManager;
 import org.jgum.JGum;
 import org.jpc.converter.JpcConverter;
 import org.jpc.converter.JpcConverterManager;
-import org.jpc.converter.typesolver.JGumTypeSolverManager;
 import org.jpc.converter.typesolver.JpcTypeSolverManager;
 import org.jpc.converter.typesolver.TypeSolver;
-import org.jpc.converter.typesolver.TypeSolverManager;
 import org.jpc.engine.embedded.JpcEngine;
 import org.jpc.error.handling.DefaultJpcErrorHandler;
 import org.jpc.error.handling.ErrorHandler;
@@ -19,7 +17,7 @@ import org.jpc.term.jterm.JTermManager;
 
 public class JpcBuilder extends JConverterBuilder {
 	
-	private final TypeSolverManager typeSolverManager;
+	private final JpcTypeSolverManager typeSolverManager;
 	private JTermManager jTermManager;
 	private final ErrorHandlerManager errorHandlerManager;
 	
@@ -72,6 +70,10 @@ public class JpcBuilder extends JConverterBuilder {
 	 */
 	public void register(TypeSolver<?> typeSolver) {
 		typeSolverManager.register(typeSolver);
+	}
+	
+	public void register(TypeSolver<?> typeSolver, Term term) {
+		typeSolverManager.register(typeSolver, term);
 	}
 	
 	public JpcBuilder register(ErrorHandler errorHandler) {
