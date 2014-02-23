@@ -8,12 +8,10 @@ import com.google.common.base.Function;
 
 public class TypeSolverChainEvaluator<T> implements Function<Object, Type> {
 
-	private final T sourceObject;
 	private final Function<TypeSolver<T>, Type> typeSolverEvaluator;
 	
-	public TypeSolverChainEvaluator(Function<TypeSolver<T>, Type> typeSolverEvaluator, T sourceObject) {
+	public TypeSolverChainEvaluator(Function<TypeSolver<T>, Type> typeSolverEvaluator) {
 		this.typeSolverEvaluator = typeSolverEvaluator;
-		this.sourceObject = sourceObject;
 	}
 	
 	@Override
@@ -24,17 +22,12 @@ public class TypeSolverChainEvaluator<T> implements Function<Object, Type> {
 			return applyChain((TypeSolverChain)processingObject);
 		else
 			throw new RuntimeException("Wrong processing object.");
-		
 	}
 
-	public Type applyTypeSolver(TypeSolver<T> typeSolver) {
-		return typeSolver.getType(sourceObject);
-	}
 	
 	public Type applyChain(TypeSolverChain<T> typeSolverChain) {
 		return typeSolverChain.apply((Function)this);
 	}
-	
 	
 	static class NonRedundantTypeSolverEvaluator<T> extends NonRedundantEvaluator<TypeSolver<T>,Type> {
 

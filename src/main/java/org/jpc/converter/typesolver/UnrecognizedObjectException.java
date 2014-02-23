@@ -6,4 +6,6 @@ package org.jpc.converter.typesolver;
  *
  */
 public class UnrecognizedObjectException extends RuntimeException {
+
+	private static final long serialVersionUID = 1L;
 }

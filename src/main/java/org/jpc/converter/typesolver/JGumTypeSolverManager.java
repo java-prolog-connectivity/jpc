@@ -28,6 +28,18 @@ public class JGumTypeSolverManager extends TypeSolverManager {
 		this.jgum = jgum;
 	}
 	
+	private TypeSolverChain getOrCreateChain(Object key, TypeCategory<?> typeCategory) {
+		Optional<TypeSolverChain> chainOpt = typeCategory.getLocalProperty(key);
+		TypeSolverChain chain;
+		if(chainOpt.isPresent()) {
+			chain =  chainOpt.get();
+		} else {
+			chain = new TypeSolverChain();
+			typeCategory.setProperty(key, chain);
+		}
+		return chain;
+	}
+	
 	@Override
 	public void register(final Object key, final TypeSolver<?> typeSolver) {
 		Type typeSolverType = TypeWrapper.wrap(typeSolver.getClass()).asType(TypeSolver.class);
@@ -61,27 +73,15 @@ public class JGumTypeSolverManager extends TypeSolverManager {
 			});
 		}
 	}
-
-	private TypeSolverChain getOrCreateChain(Object key, TypeCategory<?> typeCategory) {
-		Optional<TypeSolverChain> chainOpt = typeCategory.getLocalProperty(key);
-		TypeSolverChain chain;
-		if(chainOpt.isPresent()) {
-			chain =  chainOpt.get();
-		} else {
-			chain = new TypeSolverChain();
-			typeCategory.setProperty(key, chain);
-		}
-		return chain;
-	}
 	
 	@Override
 	public Type getType(Object key, Object object) {
 		Category sourceTypeCategory = jgum.forClass(object.getClass());
 		List<TypeSolverChain<?>> typeSolverChains = sourceTypeCategory.<TypeSolverChain<?>>bottomUpProperties(key);
 		TypeSolverChain<?> chain = new TypeSolverChain(typeSolverChains);
-		TypeSolverEvaluator typeSolverEvaluator = new TypeSolverEvaluator(object);
-		TypeSolverChainEvaluator evaluator = new TypeSolverChainEvaluator(new NonRedundantTypeSolverEvaluator(typeSolverEvaluator), object);
-		return (Type) chain.apply(evaluator);
+		TypeSolverEvaluator<?> typeSolverEvaluator = new TypeSolverEvaluator<>(object);
+		TypeSolverChainEvaluator<?> evaluator = new TypeSolverChainEvaluator<>(new NonRedundantTypeSolverEvaluator(typeSolverEvaluator));
+		return chain.apply((TypeSolverChainEvaluator)evaluator);
 	}
 	
 }
