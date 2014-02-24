@@ -21,14 +21,27 @@ public class JpcBuilder extends JConverterBuilder {
 	private JTermManager jTermManager;
 	private final ErrorHandlerManager errorHandlerManager;
 	
-	
-	
+	/**
+	 * @return a JpcBuilder.
+	 */
 	public static JpcBuilder create() {
 		return new JpcBuilder();
 	}
 	
+	/**
+	 * @param jgum a categorization context.
+	 * @return a JpcBuilder.
+	 */
+	public static JpcBuilder create(JGum jgum) {
+		return new JpcBuilder(jgum);
+	}
+	
 	private JpcBuilder() {
-		this(new JGum(), new JpcEngine());
+		this(new JGum());
+	}
+	
+	private JpcBuilder(JGum jgum) {
+		this(jgum, new JpcEngine());
 	}
 	
 	private JpcBuilder(JGum jgum, JpcEngine embeddedEngine) {
