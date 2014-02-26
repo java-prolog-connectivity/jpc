@@ -10,28 +10,28 @@ import com.google.common.base.Preconditions;
 
 public class EngineConfiguration<T extends PrologEngine> {
 
-	private final Object alias;
+	private final String name;
 	private final Set<String> packageNames;
 	private final PrologEngineFactory<T> engineFactory;
 	
-	public EngineConfiguration(Object alias, PrologEngineFactory<T> engineFactory) {
-		this(alias, Collections.<String>emptySet(), engineFactory);
+	public EngineConfiguration(String name, PrologEngineFactory<T> engineFactory) {
+		this(name, Collections.<String>emptySet(), engineFactory);
 	}
 	
 	public EngineConfiguration(Set<String> packageNames, PrologEngineFactory<T> engineFactory) {
 		this(null, packageNames, engineFactory);
 	}
 	
-	public EngineConfiguration(Object alias, Set<String> packageNames, PrologEngineFactory<T> engineFactory) {
-		Preconditions.checkArgument( alias != null || !packageNames.isEmpty());
+	public EngineConfiguration(String name, Set<String> packageNames, PrologEngineFactory<T> engineFactory) {
+		Preconditions.checkArgument( name != null || !packageNames.isEmpty());
 		Preconditions.checkNotNull(engineFactory);
-		this.alias = alias;
+		this.name = name;
 		this.packageNames = packageNames;
 		this.engineFactory = engineFactory;
 	}
 
-	public Object getAlias() {
-		return alias;
+	public Object getName() {
+		return name;
 	}
 
 	public Set<String> getPackageNames() {

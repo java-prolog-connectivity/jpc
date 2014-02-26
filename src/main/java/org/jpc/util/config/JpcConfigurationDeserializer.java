@@ -3,6 +3,8 @@ package org.jpc.util.config;
 import java.lang.reflect.Type;
 import java.util.Set;
 
+import org.jpc.engine.prolog.PrologEngine;
+
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -39,8 +41,8 @@ public class JpcConfigurationDeserializer implements JsonDeserializer<JpcConfigu
 		JpcConfiguration jpcConfiguration = null;
 		JsonElement engineConfigurationsJson = jObject.get(ENGINE_CONFIGURATIONS_PROPERTY_NAME);
 		if(engineConfigurationsJson != null) {
-			Type collectionType = new TypeToken<Set<EngineConfiguration>>(){}.getType();
-			Set<EngineConfiguration> engineConfigurations = context.deserialize(engineConfigurationsJson, collectionType);
+			Type collectionType = new TypeToken<Set<EngineConfiguration<? extends PrologEngine>>>(){}.getType();
+			Set<EngineConfiguration<? extends PrologEngine>> engineConfigurations = context.deserialize(engineConfigurationsJson, collectionType);
 			jpcConfiguration = new JpcConfiguration(engineConfigurations);
 		}
 		return jpcConfiguration;

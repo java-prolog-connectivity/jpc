@@ -19,7 +19,7 @@ import com.google.gson.JsonParseException;
 
 public class EngineConfigurationDeserializer implements JsonDeserializer<EngineConfiguration<?>> {
 	
-	public static final String ALIAS_PROPERTY_NAME = "alias";
+	public static final String NAME_PROPERTY_NAME = "name";
 	public static final String PACKAGE_NAMES_PROPERTY_NAME = "packageNames";
 	public static final String ENGINE_FACTORY = "factory";
 	public static final String ENGINE_PROFILE = "profile";
@@ -27,13 +27,13 @@ public class EngineConfigurationDeserializer implements JsonDeserializer<EngineC
 	@Override
 	public EngineConfiguration<?> deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws JsonParseException {
 		JsonObject jObject = (JsonObject)json;
-		Object alias = null;
+		String engineName = null;
 		Set<String> packageNames = Collections.emptySet();
 		PrologEngineFactory<?> engineFactory;
 		
-		JsonElement aliasJson = jObject.get(ALIAS_PROPERTY_NAME);
-		if(aliasJson != null)
-			alias = context.deserialize(aliasJson, Object.class);
+		JsonElement engineNameJson = jObject.get(NAME_PROPERTY_NAME);
+		if(engineNameJson != null)
+			engineName = context.deserialize(engineNameJson, Object.class);
 		
 		JsonElement packageNamesJson = jObject.get(PACKAGE_NAMES_PROPERTY_NAME);
 		if(packageNamesJson != null) {
@@ -63,7 +63,7 @@ public class EngineConfigurationDeserializer implements JsonDeserializer<EngineC
 				throw new RuntimeException(e);
 			}
 		}
-		return new EngineConfiguration<>(alias, packageNames, engineFactory);
+		return new EngineConfiguration<>(engineName, packageNames, engineFactory);
 	}
 	
 }

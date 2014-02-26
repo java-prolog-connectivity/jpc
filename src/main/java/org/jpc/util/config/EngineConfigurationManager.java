@@ -27,29 +27,45 @@ public class EngineConfigurationManager {
 	
 	private static final Object PROVIDER_KEY = LazyEngineProvider.class;
 	
-	private static final EngineConfigurationManager engineConfigurationManager = createFromPropertiesFile();
+	private static EngineConfigurationManager engineConfigurationManager;
 	
-	public static EngineConfigurationManager getDefault() {
+	public static synchronized EngineConfigurationManager getDefault() {
+		if(engineConfigurationManager == null)
+			engineConfigurationManager = createFromFile();
 		return engineConfigurationManager;
 	}
 	
-	private static EngineConfigurationManager createFromPropertiesFile() {
-		EngineConfigurationManager manager = new EngineConfigurationManager();
-		manager.configureFromFile();
-		return manager;
+	public static synchronized void setDefault(EngineConfigurationManager engineConfigurationManager) {
+		EngineConfigurationManager.engineConfigurationManager = engineConfigurationManager;
 	}
 	
 	static {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
-				engineConfigurationManager.shutdownAll(true);
+				if(engineConfigurationManager != null)
+					engineConfigurationManager.shutdownAll(true);
 			}
 		});
 	}
 	
+	/**
+	 * @return a configuration manager configured according to the default configuration file.
+	 */
+	public static EngineConfigurationManager createFromFile() {
+		return new EngineConfigurationManager().configureFromFile();
+	}
+	
+	/**
+	 * @param resource a (class path) filename.
+	 * @return a configuration manager configured according to the configuration file passed as parameter.
+	 */
+	public static EngineConfigurationManager createFromFile(String resource) {
+		return new EngineConfigurationManager().configureFromFile(resource);
+	}
+	
 	private final JGum jgum; //manages a name categorization for providers.
-	private final Map<Object,LazyEngineProvider<?>> map; //a map of alias to providers (not all engine configurations declare an alias).
+	private final Map<Object,LazyEngineProvider<?>> map; //a map of engine names to providers (not all engine configurations declare a name).
 	private final Set<LazyEngineProvider<?>> allProviders; //a separate set is maintained to efficiently find all the providers.
 	
 	private EngineConfigurationManager() {
@@ -58,13 +74,26 @@ public class EngineConfigurationManager {
 		allProviders = new HashSet<>();
 	}
 
-	private void configureFromFile() {
+	/**
+	 * Configures the configuration manager according to the default configuration file.
+	 * @return the configured configuration manager.
+	 */
+	private EngineConfigurationManager configureFromFile() {
+		return configureFromFile(CONFIGURATION_FILE);
+	}
+	
+	/**
+	 * Configures the configuration manager according to the configuration file passed as parameter.
+	 * @param resource a (class path) filename.
+	 * @return the configured configuration manager.
+	 */
+	private EngineConfigurationManager configureFromFile(String resource) {
 		String content = null;
-		try(InputStream stream = getClass().getClassLoader().getResourceAsStream(CONFIGURATION_FILE)) {
+		try(InputStream stream = getClass().getClassLoader().getResourceAsStream(resource)) {
 			if(stream != null)
 				content = CharStreams.toString(new InputStreamReader(stream, Charsets.UTF_8));
 			else
-				logger.trace("Configuration file " + CONFIGURATION_FILE + " not found.");
+				logger.trace("Configuration file " + resource + " not found.");
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -72,16 +101,17 @@ public class EngineConfigurationManager {
 			JpcConfiguration jpcConfiguration = JpcConfigurationDeserializer.fromJson(content);
 			configure(jpcConfiguration);
 		}
+		return this;
 	}
 
-	private void configure(JpcConfiguration jpcConfiguration) {
+	private EngineConfigurationManager configure(JpcConfiguration jpcConfiguration) {
 		for(EngineConfiguration<?> engineConfiguration : jpcConfiguration.getEngineConfigurations()) {
 			LazyEngineProvider<?> provider = new LazyEngineProvider<>(engineConfiguration.getEngineFactory());
 			allProviders.add(provider);
-			if(engineConfiguration.getAlias() != null) {
-				logger.trace("Registering Prolog engine for alias: " + engineConfiguration.getAlias());
-				if(map.put(engineConfiguration.getAlias(), provider) != null)
-					throw new JpcException("An engine configuration with alias " + engineConfiguration.getAlias() + " has already been registered.");
+			if(engineConfiguration.getName() != null) {
+				logger.trace("Registering Prolog engine with name: " + engineConfiguration.getName());
+				if(map.put(engineConfiguration.getName(), provider) != null)
+					throw new JpcException("An engine configuration with name " + engineConfiguration.getName() + " has already been registered.");
 			}
 			for(String packageName : engineConfiguration.getPackageNames()) {
 				logger.trace("Registering Prolog engine for package: " + packageName);
@@ -91,6 +121,7 @@ public class EngineConfigurationManager {
 					throw new JpcException("An engine configuration has already been registered for package " + packageName + ".");
 			}
 		}
+		return this;
 	}
 	
 	public void shutdownAll() {
@@ -129,12 +160,12 @@ public class EngineConfigurationManager {
 			return name;
 	}
 	
-	public <T extends PrologEngine> T getAliasedPrologEngine(Object alias) {
-		LazyEngineProvider<T> provider = (LazyEngineProvider<T>) map.get(alias);
+	public <T extends PrologEngine> T getNamedPrologEngine(Object name) {
+		LazyEngineProvider<T> provider = (LazyEngineProvider<T>) map.get(name);
 		if(provider != null)
 			return provider.getPrologEngine();
 		else
-			throw new JpcException("No engine with alias: " + alias + ".");
+			throw new JpcException("No engine with name: " + name + ".");
 	}
 	
 	public <T extends PrologEngine> T getPrologEngine(String categoryName) {
