@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jgum.JGum;
+import org.jgum.category.CategoryProperty;
 import org.jpc.JpcException;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.engine.provider.LazyEngineProvider;
@@ -128,21 +129,28 @@ public class EngineConfigurationManager {
 			return name;
 	}
 	
-	public PrologEngine forAlias(Object alias) {
-		return map.get(alias).getPrologEngine();
+	public <T extends PrologEngine> T getAliasedPrologEngine(Object alias) {
+		LazyEngineProvider<T> provider = (LazyEngineProvider<T>) map.get(alias);
+		if(provider != null)
+			return provider.getPrologEngine();
+		else
+			throw new JpcException("No engine with alias: " + alias + ".");
 	}
 	
-	public <T extends PrologEngine> T forCategoryName(String categoryName) {
-		LazyEngineProvider<T> provider = jgum.forName(categoryName).<LazyEngineProvider<T>>getProperty(LazyEngineProvider.class).get();
-		return provider.getPrologEngine();
+	public <T extends PrologEngine> T getPrologEngine(String categoryName) {
+		CategoryProperty<LazyEngineProvider<T>> providerProperty = jgum.forName(categoryName).<LazyEngineProvider<T>>getProperty(LazyEngineProvider.class);
+		if(providerProperty.isPresent())
+			return providerProperty.get().getPrologEngine();
+		else
+			throw new JpcException("No engine associated with category name: " + categoryName + ".");
 	}
 	
-	public PrologEngine forPackage(Package pakkage) {
-		return forCategoryName(pakkage.getName());
+	public PrologEngine getPrologEngine(Package pakkage) {
+		return getPrologEngine(pakkage.getName());
 	}
 	
-	public PrologEngine forClass(Class<?> clazz) {
-		return forCategoryName(getClassCategoryName(clazz));
+	public PrologEngine getPrologEngine(Class<?> clazz) {
+		return getPrologEngine(getClassCategoryName(clazz));
 	}
 
 }
