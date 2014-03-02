@@ -3,6 +3,7 @@ package org.jpc;
 import org.jpc.converter.CustomTermConverterTest;
 import org.jpc.converter.DefaultConverterTest;
 import org.jpc.converter.TypeSolverTest;
+import org.jpc.engine.embedded.JpcEmbeddedEngineTestSuite;
 import org.jpc.salt.JpcTermWriterTest;
 import org.jpc.term.AbstractTermTest;
 import org.jpc.term.AtomTest;

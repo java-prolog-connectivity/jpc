@@ -1,9 +1,7 @@
-package org.jpc;
+package org.jpc.engine.embedded;
 
 import static org.jpc.engine.provider.PrologEngineProviderManager.setPrologEngineProvider;
 
-import org.jpc.engine.embedded.EmbeddedEngineTestSuite;
-import org.jpc.engine.embedded.JpcEmbeddedEngineSpecificTest;
 import org.jpc.engine.embedded.JpcEngine;
 import org.jpc.engine.provider.SimpleEngineProvider;
 import org.junit.BeforeClass;
