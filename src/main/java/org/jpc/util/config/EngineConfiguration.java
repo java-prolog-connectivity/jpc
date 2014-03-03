@@ -10,34 +10,57 @@ import com.google.common.base.Preconditions;
 
 public class EngineConfiguration<T extends PrologEngine> {
 
-	private final String name;
-	private final Set<String> packageNames;
+	/**
+	 * The id of this engine configuration.
+	 */
+	private final Object id;
+	
+	/**
+	 * A set of named categories to which this configuration applies.
+	 */
+	private final Set<String> namedCategories;
+	
+	/**
+	 * An engine factory creating Prolog engines specified by this configuration.
+	 */
 	private final PrologEngineFactory<T> engineFactory;
 	
-	public EngineConfiguration(String name, PrologEngineFactory<T> engineFactory) {
-		this(name, Collections.<String>emptySet(), engineFactory);
+	public EngineConfiguration(Object id, PrologEngineFactory<T> engineFactory) {
+		this(id, Collections.<String>emptySet(), engineFactory);
 	}
 	
-	public EngineConfiguration(Set<String> packageNames, PrologEngineFactory<T> engineFactory) {
-		this(null, packageNames, engineFactory);
+	public EngineConfiguration(Set<String> namedCategories, PrologEngineFactory<T> engineFactory) {
+		this(null, namedCategories, engineFactory);
 	}
 	
-	public EngineConfiguration(String name, Set<String> packageNames, PrologEngineFactory<T> engineFactory) {
-		Preconditions.checkArgument( name != null || !packageNames.isEmpty());
+	public EngineConfiguration(Object id, Set<String> namedCategories, PrologEngineFactory<T> engineFactory) {
+		Preconditions.checkArgument( id != null || !namedCategories.isEmpty());
 		Preconditions.checkNotNull(engineFactory);
-		this.name = name;
-		this.packageNames = packageNames;
+		this.id = id;
+		this.namedCategories = namedCategories;
 		this.engineFactory = engineFactory;
 	}
 
-	public Object getName() {
-		return name;
+	/**
+	 * 
+	 * @return the id of this engine configuration.
+	 */
+	public Object getId() {
+		return id;
 	}
 
-	public Set<String> getPackageNames() {
-		return packageNames;
+	/**
+	 * 
+	 * @return the set of named categories to which this configuration applies.
+	 */
+	public Set<String> getNamedCategories() {
+		return namedCategories;
 	}
 
+	/**
+	 * 
+	 * @return the engine factory creating Prolog engines specified by this configuration.
+	 */
 	public PrologEngineFactory<T> getEngineFactory() {
 		return engineFactory;
 	}

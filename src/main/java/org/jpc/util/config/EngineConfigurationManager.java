@@ -108,12 +108,12 @@ public class EngineConfigurationManager {
 		for(EngineConfiguration<?> engineConfiguration : jpcConfiguration.getEngineConfigurations()) {
 			LazyEngineProvider<?> provider = new LazyEngineProvider<>(engineConfiguration.getEngineFactory());
 			allProviders.add(provider);
-			if(engineConfiguration.getName() != null) {
-				logger.trace("Registering Prolog engine with name: " + engineConfiguration.getName());
-				if(map.put(engineConfiguration.getName(), provider) != null)
-					throw new JpcException("An engine configuration with name " + engineConfiguration.getName() + " has already been registered.");
+			if(engineConfiguration.getId() != null) {
+				logger.trace("Registering Prolog engine with name: " + engineConfiguration.getId());
+				if(map.put(engineConfiguration.getId(), provider) != null)
+					throw new JpcException("An engine configuration with name " + engineConfiguration.getId() + " has already been registered.");
 			}
-			for(String packageName : engineConfiguration.getPackageNames()) {
+			for(String packageName : engineConfiguration.getNamedCategories()) {
 				logger.trace("Registering Prolog engine for package: " + packageName);
 				if(!jgum.forName(packageName).getLocalProperty(PROVIDER_KEY).isPresent())
 					jgum.forName(packageName).setProperty(PROVIDER_KEY, provider);
@@ -160,12 +160,12 @@ public class EngineConfigurationManager {
 			return name;
 	}
 	
-	public <T extends PrologEngine> T getNamedPrologEngine(Object name) {
-		LazyEngineProvider<T> provider = (LazyEngineProvider<T>) map.get(name);
+	public <T extends PrologEngine> T getPrologEngineById(Object id) {
+		LazyEngineProvider<T> provider = (LazyEngineProvider<T>) map.get(id);
 		if(provider != null)
 			return provider.getPrologEngine();
 		else
-			throw new JpcException("No engine with name: " + name + ".");
+			throw new JpcException("No engine with id: " + id + ".");
 	}
 	
 	public <T extends PrologEngine> T getPrologEngine(String categoryName) {
