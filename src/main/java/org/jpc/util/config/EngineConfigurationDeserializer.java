@@ -20,7 +20,7 @@ import com.google.gson.JsonParseException;
 public class EngineConfigurationDeserializer implements JsonDeserializer<EngineConfiguration<?>> {
 	
 	public static final String ID_PROPERTY_NAME = "id";
-	public static final String PACKAGE_NAMES_PROPERTY_NAME = "packageNames";
+	public static final String CATEGORY_NAMES_PROPERTY_NAME = "categoryNames";
 	public static final String ENGINE_FACTORY = "factory";
 	public static final String ENGINE_PROFILE = "profile";
 	
@@ -28,17 +28,17 @@ public class EngineConfigurationDeserializer implements JsonDeserializer<EngineC
 	public EngineConfiguration<?> deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws JsonParseException {
 		JsonObject jObject = (JsonObject)json;
 		String engineId = null;
-		Set<String> packageNames = Collections.emptySet();
+		Set<String> categoryNames = Collections.emptySet();
 		PrologEngineFactory<?> engineFactory;
 		
 		JsonElement engineIdJson = jObject.get(ID_PROPERTY_NAME);
 		if(engineIdJson != null)
 			engineId = context.deserialize(engineIdJson, Object.class);
 		
-		JsonElement packageNamesJson = jObject.get(PACKAGE_NAMES_PROPERTY_NAME);
-		if(packageNamesJson != null) {
-			JsonArray packageNamesJsonArray = packageNamesJson.getAsJsonArray();
-			packageNames = context.deserialize(packageNamesJsonArray, Set.class);
+		JsonElement categoryNamesJson = jObject.get(CATEGORY_NAMES_PROPERTY_NAME);
+		if(categoryNamesJson != null) {
+			JsonArray packageNamesJsonArray = categoryNamesJson.getAsJsonArray();
+			categoryNames = context.deserialize(packageNamesJsonArray, Set.class);
 		}
 		
 		JsonElement factoryClassNameJson = jObject.get(ENGINE_FACTORY);
@@ -63,7 +63,7 @@ public class EngineConfigurationDeserializer implements JsonDeserializer<EngineC
 				throw new RuntimeException(e);
 			}
 		}
-		return new EngineConfiguration<>(engineId, packageNames, engineFactory);
+		return new EngineConfiguration<>(engineId, categoryNames, engineFactory);
 	}
 	
 }

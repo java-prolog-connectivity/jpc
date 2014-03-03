@@ -17,21 +17,21 @@ public class EngineConfigurationDeserializerTest {
 			EngineConfigurationDeserializer.ENGINE_FACTORY + ": \"" + JpcEngineDriver.class.getCanonicalName() + "\"}";
 	
 	public static final String jsonConfigEmptyPackages = "{" + EngineConfigurationDeserializer.ID_PROPERTY_NAME + ": \"alias\", " + 
-			EngineConfigurationDeserializer.PACKAGE_NAMES_PROPERTY_NAME + ": [], " + 
+			EngineConfigurationDeserializer.CATEGORY_NAMES_PROPERTY_NAME + ": [], " + 
 			EngineConfigurationDeserializer.ENGINE_FACTORY + ": \"" + JpcEngineDriver.class.getCanonicalName() + "\"}";
 	
-	public static final String jsonConfigEmptyPackagesNoAlias = "{" + EngineConfigurationDeserializer.PACKAGE_NAMES_PROPERTY_NAME + ": [], " + //this is not a valid representation
+	public static final String jsonConfigEmptyPackagesNoAlias = "{" + EngineConfigurationDeserializer.CATEGORY_NAMES_PROPERTY_NAME + ": [], " + //this is not a valid representation
 			EngineConfigurationDeserializer.ENGINE_FACTORY + ": \"" + JpcEngineDriver.class.getCanonicalName() + "\"}";
 	
-	public static final String jsonConfigNoAlias = "{" + EngineConfigurationDeserializer.PACKAGE_NAMES_PROPERTY_NAME + ": [\"p1\", \"p2\"], " + 
+	public static final String jsonConfigNoAlias = "{" + EngineConfigurationDeserializer.CATEGORY_NAMES_PROPERTY_NAME + ": [\"p1\", \"p2\"], " + 
 			EngineConfigurationDeserializer.ENGINE_FACTORY + ": \"" + JpcEngineDriver.class.getCanonicalName() + "\"}";
 	
 	public static final String jsonConfigNoProfile = "{" + EngineConfigurationDeserializer.ID_PROPERTY_NAME + ": \"alias\", " + 
-			EngineConfigurationDeserializer.PACKAGE_NAMES_PROPERTY_NAME + ": [\"p1\", \"p2\"], " + 
+			EngineConfigurationDeserializer.CATEGORY_NAMES_PROPERTY_NAME + ": [\"p1\", \"p2\"], " + 
 			EngineConfigurationDeserializer.ENGINE_FACTORY + ": \"" + JpcEngineDriver.class.getCanonicalName() + "\"}";
 	
 	public static final String jsonConfigWithProfile = "{" + EngineConfigurationDeserializer.ID_PROPERTY_NAME + ": \"alias\", " + 
-			EngineConfigurationDeserializer.PACKAGE_NAMES_PROPERTY_NAME + ": [\"p1\", \"p2\"], " + 
+			EngineConfigurationDeserializer.CATEGORY_NAMES_PROPERTY_NAME + ": [\"p1\", \"p2\"], " + 
 			EngineConfigurationDeserializer.ENGINE_FACTORY + ": \"" + JpcEngineDriver.class.getCanonicalName() + "\", " +
 			EngineConfigurationDeserializer.ENGINE_PROFILE + ": \"" + LogtalkEngineProfile.class.getCanonicalName()+ "\"}";
 	
@@ -39,7 +39,7 @@ public class EngineConfigurationDeserializerTest {
 	public void testJsonConfigNoPackages() {
 		EngineConfiguration engineConfiguration = JpcConfigurationDeserializer.getContext().fromJson(jsonConfigNoPackages, EngineConfiguration.class);
 		assertEquals("alias", engineConfiguration.getId());
-		assertEquals(Collections.emptySet(), engineConfiguration.getNamedCategories());
+		assertEquals(Collections.emptySet(), engineConfiguration.getCategoryNames());
 		assertTrue(engineConfiguration.getEngineFactory() instanceof JpcEngineDriver);
 	}
 
@@ -47,7 +47,7 @@ public class EngineConfigurationDeserializerTest {
 	public void testJsonConfigEmptyPackages() {
 		EngineConfiguration engineConfiguration = JpcConfigurationDeserializer.getContext().fromJson(jsonConfigEmptyPackages, EngineConfiguration.class);
 		assertEquals("alias", engineConfiguration.getId());
-		assertEquals(Collections.emptySet(), engineConfiguration.getNamedCategories());
+		assertEquals(Collections.emptySet(), engineConfiguration.getCategoryNames());
 		assertTrue(engineConfiguration.getEngineFactory() instanceof JpcEngineDriver);
 	}
 	
@@ -63,8 +63,8 @@ public class EngineConfigurationDeserializerTest {
 	public void testJsonConfigNoAlias() {
 		EngineConfiguration engineConfiguration = JpcConfigurationDeserializer.getContext().fromJson(jsonConfigNoAlias, EngineConfiguration.class);
 		assertNull(engineConfiguration.getId());
-		assertTrue(engineConfiguration.getNamedCategories().contains("p1"));
-		assertTrue(engineConfiguration.getNamedCategories().contains("p2"));
+		assertTrue(engineConfiguration.getCategoryNames().contains("p1"));
+		assertTrue(engineConfiguration.getCategoryNames().contains("p2"));
 		assertTrue(engineConfiguration.getEngineFactory() instanceof JpcEngineDriver);
 	}
 	
@@ -72,8 +72,8 @@ public class EngineConfigurationDeserializerTest {
 	public void testJsonConfigNoProfile() {
 		EngineConfiguration engineConfiguration = JpcConfigurationDeserializer.getContext().fromJson(jsonConfigNoProfile, EngineConfiguration.class);
 		assertEquals("alias", engineConfiguration.getId());
-		assertTrue(engineConfiguration.getNamedCategories().contains("p1"));
-		assertTrue(engineConfiguration.getNamedCategories().contains("p2"));
+		assertTrue(engineConfiguration.getCategoryNames().contains("p1"));
+		assertTrue(engineConfiguration.getCategoryNames().contains("p2"));
 		assertTrue(engineConfiguration.getEngineFactory() instanceof JpcEngineDriver);
 	}
 	
@@ -81,8 +81,8 @@ public class EngineConfigurationDeserializerTest {
 	public void testJsonConfigWithProfile() {
 		EngineConfiguration engineConfiguration = JpcConfigurationDeserializer.getContext().fromJson(jsonConfigWithProfile, EngineConfiguration.class);
 		assertEquals("alias", engineConfiguration.getId());
-		assertTrue(engineConfiguration.getNamedCategories().contains("p1"));
-		assertTrue(engineConfiguration.getNamedCategories().contains("p2"));
+		assertTrue(engineConfiguration.getCategoryNames().contains("p1"));
+		assertTrue(engineConfiguration.getCategoryNames().contains("p2"));
 		assertTrue(engineConfiguration.getEngineFactory() instanceof LogtalkEngineProfile);
 	}
 	

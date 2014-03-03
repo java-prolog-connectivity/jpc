@@ -16,9 +16,9 @@ public class EngineConfiguration<T extends PrologEngine> {
 	private final Object id;
 	
 	/**
-	 * A set of named categories to which this configuration applies.
+	 * A set of category names to which this configuration applies.
 	 */
-	private final Set<String> namedCategories;
+	private final Set<String> categoryNames;
 	
 	/**
 	 * An engine factory creating Prolog engines specified by this configuration.
@@ -29,15 +29,15 @@ public class EngineConfiguration<T extends PrologEngine> {
 		this(id, Collections.<String>emptySet(), engineFactory);
 	}
 	
-	public EngineConfiguration(Set<String> namedCategories, PrologEngineFactory<T> engineFactory) {
-		this(null, namedCategories, engineFactory);
+	public EngineConfiguration(Set<String> categoryNames, PrologEngineFactory<T> engineFactory) {
+		this(null, categoryNames, engineFactory);
 	}
 	
-	public EngineConfiguration(Object id, Set<String> namedCategories, PrologEngineFactory<T> engineFactory) {
-		Preconditions.checkArgument( id != null || !namedCategories.isEmpty());
+	public EngineConfiguration(Object id, Set<String> categoryNames, PrologEngineFactory<T> engineFactory) {
+		Preconditions.checkArgument( id != null || !categoryNames.isEmpty());
 		Preconditions.checkNotNull(engineFactory);
 		this.id = id;
-		this.namedCategories = namedCategories;
+		this.categoryNames = categoryNames;
 		this.engineFactory = engineFactory;
 	}
 
@@ -51,10 +51,10 @@ public class EngineConfiguration<T extends PrologEngine> {
 
 	/**
 	 * 
-	 * @return the set of named categories to which this configuration applies.
+	 * @return the set of category names to which this configuration applies.
 	 */
-	public Set<String> getNamedCategories() {
-		return namedCategories;
+	public Set<String> getCategoryNames() {
+		return categoryNames;
 	}
 
 	/**
