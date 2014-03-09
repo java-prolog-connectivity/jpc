@@ -5,7 +5,6 @@ import static java.util.Arrays.asList;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.jgum.JGum;
 import org.jgum.category.CategorizationListener;
 import org.jgum.category.Category;
@@ -14,13 +13,15 @@ import org.jpc.converter.typesolver.TypeSolverChainEvaluator.NonRedundantTypeSol
 import org.minitoolbox.reflection.TypeUtil;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 import org.minitoolbox.reflection.typewrapper.VariableTypeWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
 
 //Implementation note: consider moving this class and its super class to the JConverter library (it looks like it can be generalized).
 public class JGumTypeSolverManager extends TypeSolverManager {
 
-	private final static Logger logger = Logger.getLogger(JGumTypeSolverManager.class);
+	private final static Logger logger = LoggerFactory.getLogger(JGumTypeSolverManager.class);
 
 	private final JGum jgum;
 	

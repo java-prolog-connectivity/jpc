@@ -4,7 +4,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.jconverter.JConverter;
 import org.jconverter.converter.ConversionException;
 import org.jconverter.converter.Converter;
@@ -13,10 +12,12 @@ import org.jgum.strategy.ChainOfResponsibility;
 import org.jpc.Jpc;
 import org.jpc.term.Term;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FromTermConverterAdapter<T extends Term, V> extends TypedConverter<T, V> {
 
-	private final static Logger logger = Logger.getLogger(FromTermConverterAdapter.class);
+	private final static Logger logger = LoggerFactory.getLogger(FromTermConverterAdapter.class);
 	
 	public static <T extends Term,V> ChainOfResponsibility<Converter<T,V>, V> chainConverters(List<FromTermConverter<T,V>> converters) {
 		List<Converter<T,V>> typedConverters = new ArrayList<>();
