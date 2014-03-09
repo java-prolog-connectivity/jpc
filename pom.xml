@@ -6,6 +6,7 @@
 		<groupId>com.github.java-prolog-connectivity</groupId>
 		<artifactId>jpc-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>parent-project</relativePath>
 	</parent>
 	
 	<artifactId>jpc</artifactId>
@@ -39,9 +40,9 @@
 	<dependencies>
 	    
  		<dependency>
-    		<groupId>com.google.guava</groupId>
-    		<artifactId>guava</artifactId>
-    		<version>16.0.1</version>
+ 			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>16.0.1</version>
 		</dependency>
 
 		<dependency>
