@@ -13,6 +13,7 @@ import java.util.NoSuchElementException;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
+
 /**
  * Note: The class hierarchy of class Cursor will be redesigned after the coming release of Java8 supporting virtual extension methods
  * @author sergioc
@@ -39,8 +40,8 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	/**
 	 * @precondition state = READY
 	 * @postcondition state = READY
-	 * will throw an exception if the cursor state is not READY
-	 * @return
+	 * @return the number of solutions.
+	 * @throws IllegalStateException if the cursor state is not READY.
 	 */
 	public synchronized long numberOfSolutions() {
 		return allSolutions().size(); 
@@ -49,8 +50,8 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	/**
 	 * @precondition state = READY
 	 * @postcondition state = READY
-	 * will throw an exception if the cursor state is not READY
-	 * @return
+	 * @return true if there is at least one solution, false otherwise.
+	 * @throws IllegalStateException if the cursor state is not READY.
 	 */
 	public synchronized boolean hasSolution() {
 		try {
@@ -61,9 +62,10 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 		}
 	}
 	
+	//Implementation note: This method will change to return a java.util.Optional when Java8 is ready
 	/**
-	 * This method will change to return a java.util.Optional when Java8 is ready
 	 * @return an Optional value with the first solution. Empty means that there are no solutions.
+	 * @throws IllegalStateException if the cursor state is not READY.
 	 */
 	public Optional<T> oneSolution() {
 		try {
@@ -76,8 +78,9 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	/**
 	 * @precondition state = READY
 	 * @postcondition state = READY
-	 * will throw an exception if the cursor state is not READY
-	 * @return
+	 * @return the first solution to the query.
+	 * @throws IllegalStateException if the cursor state is not READY.
+	 * @throws NoSuchElementException if there are no solutions to the query.
 	 */
 	public synchronized T oneSolutionOrThrow() {
 		open();
@@ -98,9 +101,9 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	/**
 	 * @precondition state = READY
 	 * @postcondition state = READY
-	 * will throw an exception if the cursor state is not READY
 	 * @param n the number of solutions the method should return or until exhaustion of the solutions (whatever happens first).
-	 * @return is the first n solutions
+	 * @return the first n solutions
+	 * @throws IllegalStateException if the cursor state is not READY.
 	 */
 	public synchronized List<T> nSolutions(long n) {
 		return solutionsRange(0, n);
@@ -113,8 +116,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 * @param from the (0-based) index (inclusive) of the first solution
 	 * @param to the (0-based) index (exclusive) of the last solution
 	 * @return a list with the solutions starting from 'from' (inclusive) to 'to' (exclusive) or until exhaustion of the solutions (whatever happens first). If there are less than (from+1) solutions will return an empty List
-	 * 
-	 * according to the indexes sent as parameters
+	 * @throws IllegalStateException if the cursor state is not READY.
 	 */
 	public synchronized List<T> solutionsRange(long from, long to) {
 		if(!isReady())
@@ -143,8 +145,8 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	/**
 	 * @precondition state = READY
 	 * @postcondition state = READY
-	 * answers the cursor's all results
-	 * The cursor should not be open when this method is called
+	 * @return a list with all solutions.
+	 * @throws IllegalStateException if the cursor state is not READY.
 	 */
 	public synchronized List<T> allSolutions() {
 		open();
@@ -156,7 +158,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	/**
 	 * The default implementation for obtaining all the solutions consists on just making use of the existing next() method
 	 * However, children could override this in case many calls to next() are more expensive that obtaining all the results of the query at once (e.g., a findall/3 query in Prolog)
-	 * @return
+	 * @return a list with all solutions.
 	 */
 	protected List<T> basicAllSolutions() {
 		return iterativeAllSolutions();
@@ -285,7 +287,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	/**
 	 * Returns the next available element in the cursor.
 	 * If the cursor is exhausted it should throw a NoSuchElementException the first time it is invoked. 
-	 * Its behavior is not specified if invoked more than once after the cursor has been exhausted.
+	 * Its behavior is undetermined if invoked more than once after the cursor has been exhausted.
 	 * @return
 	 */
 	protected abstract T basicNext();
