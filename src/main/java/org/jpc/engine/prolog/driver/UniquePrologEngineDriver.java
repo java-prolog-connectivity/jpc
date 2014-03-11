@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.jpc.engine.listener.DriverStateListener;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.util.JpcPreferences;
+import org.jpc.util.engine.supported.EngineDescription;
 
 /**
  * This class describes logic engines that are unique per process
@@ -14,12 +15,12 @@ import org.jpc.util.JpcPreferences;
  */
 public abstract class UniquePrologEngineDriver<T extends PrologEngine> extends AbstractPrologEngineDriver<T> {
 	
-	public UniquePrologEngineDriver() {
-		super();
+	public UniquePrologEngineDriver(EngineDescription engineDescription) {
+		super(engineDescription);
 	}
 	
-	public UniquePrologEngineDriver(JpcPreferences preferences) {
-		super(preferences);
+	public UniquePrologEngineDriver(EngineDescription engineDescription, JpcPreferences preferences) {
+		super(engineDescription, preferences);
 	}
 	
 	@Override

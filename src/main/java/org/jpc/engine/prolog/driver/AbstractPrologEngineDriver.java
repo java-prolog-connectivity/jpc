@@ -16,14 +16,14 @@ import org.slf4j.LoggerFactory;
 
 public abstract class AbstractPrologEngineDriver<T extends PrologEngine> implements PrologEngineDriver<T> {
 
-	private static Logger logger = LoggerFactory.getLogger(AbstractPrologEngineDriver.class);
+	private static final Logger logger = LoggerFactory.getLogger(AbstractPrologEngineDriver.class);
 	
-	private JpcPreferences preferences;
-
-	private Collection<DriverStateListener> listeners;
+	private final EngineDescription engineDescription;
+	private final JpcPreferences preferences;
+	private final Collection<DriverStateListener> listeners;
 	
-	public AbstractPrologEngineDriver() {
-		this(new JpcPreferences());
+	public AbstractPrologEngineDriver(EngineDescription engineDescription) {
+		this(engineDescription, new JpcPreferences());
 	}
 	
 	/**
@@ -31,7 +31,8 @@ public abstract class AbstractPrologEngineDriver<T extends PrologEngine> impleme
 	 * This is with the intention to allow this data to be added later (e.g., with a GUI)
 	 * @param preferences
 	 */
-	public AbstractPrologEngineDriver(JpcPreferences preferences) {
+	public AbstractPrologEngineDriver(EngineDescription engineDescription, JpcPreferences preferences) {
+		this.engineDescription = engineDescription;
 		this.preferences = preferences;
 		/*
 		 * Using a weak set for keeping the list of state listeners, so references to these listeners can be collected by the GC if required.
@@ -165,7 +166,9 @@ public abstract class AbstractPrologEngineDriver<T extends PrologEngine> impleme
 	
 	public abstract String getLibraryName();
 	
-	public abstract EngineDescription getEngineDescription();
+	public EngineDescription getEngineDescription() {
+		return engineDescription;
+	}
 
 	public String getLicenseUrl() {
 		return "";

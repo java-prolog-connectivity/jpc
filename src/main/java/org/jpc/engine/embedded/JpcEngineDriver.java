@@ -2,11 +2,14 @@ package org.jpc.engine.embedded;
 
 import org.jpc.engine.prolog.driver.AbstractPrologEngineDriver;
 import org.jpc.util.JpcPreferences;
-import org.jpc.util.engine.supported.EngineDescription;
 import org.jpc.util.engine.supported.JpcEmbedded;
 
 public class JpcEngineDriver extends AbstractPrologEngineDriver<JpcEngine> {
 
+	public JpcEngineDriver() {
+		super(new JpcEmbedded());
+	}
+	
 	@Override
 	protected JpcEngine basicCreatePrologEngine() {
 		return new JpcEngine();
@@ -15,11 +18,6 @@ public class JpcEngineDriver extends AbstractPrologEngineDriver<JpcEngine> {
 	@Override
 	public String getLibraryName() {
 		return JpcPreferences.JPC_SHORT_NAME + " embedded";
-	}
-
-	@Override
-	public EngineDescription getEngineDescription() {
-		return new JpcEmbedded();
 	}
 
 	@Override
