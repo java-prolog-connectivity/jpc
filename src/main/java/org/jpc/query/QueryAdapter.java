@@ -8,6 +8,7 @@ import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Term;
 
 import com.google.common.base.Function;
+import com.google.common.base.Functions;
 
 public class QueryAdapter extends Query {
 
@@ -15,7 +16,7 @@ public class QueryAdapter extends Query {
 	protected Query query;
 	
 	public QueryAdapter(Query query) {
-		this(query, (Function<Solution, Solution>) CursorAdapter.defaultAdapterFunction);
+		this(query, Functions.<Solution>identity());
 	}
 	
 	public QueryAdapter(Query query, Function<Solution, Solution> adapterFunction) {
@@ -56,17 +57,17 @@ public class QueryAdapter extends Query {
 	protected Term getDefaultSelectedTerm() {
 		return query.getDefaultSelectedTerm();
 	}
-
+	
 	@Override
 	protected Solution basicOneSolutionOrThrow() {
-		Solution adaptee = query.oneSolutionOrThrow();
+		Solution adaptee = super.basicOneSolutionOrThrow();
 		return adaptee != null?adapterFunction.apply(adaptee):null;
 	}
 	
 	@Override
 	protected List<Solution> basicAllSolutions() {
 		List<Solution> allSolutions = new ArrayList<>();
-		for(Solution adaptee : query.allSolutions()) {
+		for(Solution adaptee : super.basicAllSolutions()) {
 			allSolutions.add(adapterFunction.apply(adaptee));
 		}
 		return allSolutions;

@@ -4,24 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.base.Function;
+import com.google.common.base.Functions;
 
-public class CursorAdapter<AdapterType, AdapteeType> extends Cursor<AdapterType> {
+public class CursorAdapter<AdaptedType, AdapteeType> extends Cursor<AdaptedType> {
 
 	private Cursor<AdapteeType> cursor;
-	private Function<AdapteeType, AdapterType> adapterFunction;
-
-	protected static final Function<?, ?> defaultAdapterFunction = new Function<Object, Object>() {
-		@Override
-		public Object apply(Object object) {
-			return object;
-		}
-	};
+	private Function<AdapteeType, AdaptedType> adapterFunction;
 	
 	public CursorAdapter(Cursor<AdapteeType> cursor) {
-		this(cursor, (Function<AdapteeType, AdapterType>) defaultAdapterFunction);
+		this(cursor, (Function<AdapteeType, AdaptedType>) Functions.identity());
 	}
 	
-	public CursorAdapter(Cursor<AdapteeType> cursor, Function<AdapteeType, AdapterType> adapterFunction) {
+	public CursorAdapter(Cursor<AdapteeType> cursor, Function<AdapteeType, AdaptedType> adapterFunction) {
 		this.cursor = cursor;
 		this.adapterFunction = adapterFunction;
 	}
@@ -38,7 +32,7 @@ public class CursorAdapter<AdapterType, AdapteeType> extends Cursor<AdapterType>
 	 * whatever mechanism is implemented by the adaptee cursor for bringing one solution.
 	 */
 	@Override
-	protected AdapterType basicOneSolutionOrThrow() {
+	protected AdaptedType basicOneSolutionOrThrow() {
 		AdapteeType adaptee = cursor.oneSolutionOrThrow();
 		return adaptee != null?adapterFunction.apply(adaptee):null;
 	}
@@ -50,8 +44,8 @@ public class CursorAdapter<AdapterType, AdapteeType> extends Cursor<AdapterType>
 	 * 
 	 */
 	@Override
-	protected List<AdapterType> basicAllSolutions() {
-		List<AdapterType> allSolutions = new ArrayList<>();
+	protected List<AdaptedType> basicAllSolutions() {
+		List<AdaptedType> allSolutions = new ArrayList<>();
 		for(AdapteeType adaptee : cursor.allSolutions()) {
 			allSolutions.add(adapterFunction.apply(adaptee));
 		}
@@ -69,7 +63,7 @@ public class CursorAdapter<AdapterType, AdapteeType> extends Cursor<AdapterType>
 	}
 
 	@Override
-	protected AdapterType basicNext() {
+	protected AdaptedType basicNext() {
 		AdapteeType adaptee = cursor.next();
 		return adaptee != null?adapterFunction.apply(adaptee):null;
 	}
