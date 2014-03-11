@@ -5,7 +5,6 @@ import org.minitoolbox.commons.OsUtil;
 public class Swi extends EngineDescription {
 
 	public static final String SWI = "SWI";
-	
 	public static final String SWI_BIN_DIRECTORY_PROPERTY_NAME = "SWI_BIN_DIRECTORY";
 	private static final String EXECUTABLE_FILE_NAME_WINDOWS_OSX = "swipl"; //executable for windows or osx
 	private static final String EXECUTABLE_FILE_NAME_LINUX = "pl"; //executable for linux

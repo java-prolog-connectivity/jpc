@@ -1,14 +1,21 @@
 package org.jpc.util.engine.supported;
 
+
 public class Yap extends EngineDescription {
 
 	public static final String YAP = "YAP";
+	public static final String YAP_BIN_DIRECTORY_PROPERTY_NAME = "YAP_BIN_DIRECTORY";
+	private static final String EXECUTABLE_FILE_NAME = "yap";
 	
 	@Override
 	public String getName() {
 		return YAP;
 	}
 
+	public String getExecutableFileName() {
+		return EXECUTABLE_FILE_NAME;
+	}
+	
 	@Override
 	public String getDescription() {
 		return "YAP is a high-performance Prolog compiler developed at LIACC/Universidade do Porto and at COPPE Sistemas/UFRJ." + 
