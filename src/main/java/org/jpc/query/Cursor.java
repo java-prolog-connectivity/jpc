@@ -200,8 +200,8 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	
 	/**
 	 * Aborts execution.
-	 * This method is not synchronized since it is supposed to be called from a thread different to the one currently executing a query
-	 * @throws InvalidCursorStateException if the cursor is not open
+	 * This method is not synchronized since it is supposed to be called from a thread different to the one currently executing a query.
+	 * @throws IllegalStateException if the cursor is not open.
 	 */
 	public void abort() {
 		if(!isOpen())
@@ -231,7 +231,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 * Answers if there are still rows in the cursor.
 	 * This method may have effects on the state of the cursor. If the cursor is in READY state, it will change it to OPEN.
 	 * If there are no more elements, it will change the state of the cursor to EXHAUSTED.
-	 * @return true if there are more solutions to the query, false otherwise.
+	 * @return true if there are more solutions, false otherwise.
 	 * 
 	 */
 	public synchronized boolean hasNext() {
