@@ -6,10 +6,4 @@ public interface PrologEngineFactory<T extends PrologEngine> {
 
 	public T createPrologEngine();
 
-	/**
-	 * Answers if the factory cannot create new Prolog engines
-	 * @return
-	 */
-	public boolean isDisabled();
-
 }

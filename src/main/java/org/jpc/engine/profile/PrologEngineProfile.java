@@ -37,10 +37,6 @@ public class PrologEngineProfile<T extends PrologEngine> implements PrologEngine
 	public PrologEngineFactory<T> getPrologEngineFactory() {
 		return prologEngineFactory;
 	}
-
-	public boolean isDisabled() {
-		return prologEngineFactory.isDisabled();
-	}
 	
 	public String getName() {
 		return name;

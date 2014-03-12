@@ -22,4 +22,10 @@ public interface PrologEngineDriver<T extends PrologEngine> extends PrologEngine
 	
 	public String getSiteUrl();
 
+	/**
+	 * 
+	 * @return true if the driver cannot create Prolog engines. false otherwise.
+	 */
+	public boolean isDisabled();
+	
 }
