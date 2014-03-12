@@ -31,13 +31,13 @@ public abstract class UniquePrologEngineDriver<T extends PrologEngine> extends A
 	protected abstract boolean isInstanceRunning();
 	
 	@Override
-	public synchronized T createPrologEngine() {
+	protected synchronized T createPrologEngine(PrologEngineFactory<T> basicFactory) {
 		if(isInstanceRunning()) {
 			throw new UnsupportedOperationException("No more than one Prolog Engine can be created by this configuration");
 		}
 		else {
 			notifyDisabledState(); //notify that the driver cannot create more Prolog engines than the one to be created
-			T prologEngine = super.createPrologEngine();
+			T prologEngine = super.createPrologEngine(basicFactory);
 			return prologEngine;
 		}
 	}

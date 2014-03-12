@@ -62,16 +62,26 @@ public abstract class AbstractPrologEngineDriver<T extends PrologEngine> impleme
 	}
 	
 	
-
+	protected abstract PrologEngineFactory<T> defaultBasicFactory();
+	
+	/**
+	 * 
+	 * @return a Prolog engine.
+	 */
 	@Override
-	public T createPrologEngine() {
+	public final T createPrologEngine() {
+		return createPrologEngine(defaultBasicFactory());
+	}
+	
+	
+	protected T createPrologEngine(PrologEngineFactory<T> basicFactory) {
 		if(isDisabled())
 			throw new PrologEngineInitializationException("The driver cannot instantiate new Prolog engines.");
 		readyOrThrow();
 		
 		logger.info("Initializing logic engine ...");
 		long startTime = System.nanoTime();
-		T newPrologEngine = basicCreatePrologEngine();
+		T newPrologEngine = basicFactory.createPrologEngine();
 		onCreate(newPrologEngine);
 		
 		PrologResourceLoader resourceLoader = new PrologResourceLoader(newPrologEngine);
@@ -157,12 +167,6 @@ public abstract class AbstractPrologEngineDriver<T extends PrologEngine> impleme
 	public String getDescription() {
 		return "This driver connects a " + getEngineDescription().getName() + " Prolog engine by means of the " + getLibraryName() +" library.";
 	}
-	
-	/**
-	 * 
-	 * @return a instance of a Prolog engine. This instance has not been configured yet
-	 */
-	protected abstract T basicCreatePrologEngine();
 	
 	public abstract String getLibraryName();
 	
