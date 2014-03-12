@@ -35,9 +35,9 @@ public interface PrologEngine extends PrologDatabase {
 	public boolean isCloseable();
 	
 	/**
-	 * @return true if the Prolog engine can manage concurrent requests (e.g., multiple queries open at the same time). false otherwise.
+	 * @return the thread model of the Prolog engine. This specifies if the engine can manage or not concurrent requests.
 	 */
-	public boolean isMultiThreaded();
+	public ThreadModel threadModel();
 	
 	public boolean command(String command);
 	

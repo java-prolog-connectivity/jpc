@@ -1,15 +1,18 @@
 package org.jpc.engine.embedded;
 
+import static org.jpc.engine.prolog.ThreadModel.MULTI_THREADED;
+
 import org.jpc.Jpc;
 import org.jpc.engine.embedded.database.ClauseDatabase;
 import org.jpc.engine.embedded.database.MutableIndexManager;
 import org.jpc.engine.prolog.AbstractPrologEngine;
+import org.jpc.engine.prolog.ThreadModel;
 import org.jpc.query.Query;
 import org.jpc.term.Term;
 
 /**
- * The embedded Jpc Prolog engine.
- * (Note: just a small subset of a Prolog engine has been implemented for testing and prototyping purposes).
+ * The embedded Jpc Prolog database.
+ * (Note: only a small subset of a Prolog engine has been currently implemented).
  * @author sergioc
  *
  */
@@ -43,8 +46,8 @@ public class JpcEngine extends AbstractPrologEngine {
 	}
 
 	@Override
-	public boolean isMultiThreaded() {
-		return true;
+	public ThreadModel threadModel() {
+		return MULTI_THREADED;
 	}
 
 	@Override

@@ -32,8 +32,8 @@ public class PrologEngineProxy extends AbstractPrologEngine {
 	}
 
 	@Override
-	public boolean isMultiThreaded() {
-		return proxiedEngine.isMultiThreaded();
+	public ThreadModel threadModel() {
+		return proxiedEngine.threadModel();
 	}
 
 	@Override
