@@ -13,27 +13,27 @@ import org.junit.Test;
 
 public class EngineConfigurationDeserializerTest {
 
-	public static final String jsonConfigNoPackages = "{" + EngineConfigurationDeserializer.ID_PROPERTY_NAME + ": \"alias\", " + 
-			EngineConfigurationDeserializer.ENGINE_FACTORY + ": \"" + JpcEngineDriver.class.getCanonicalName() + "\"}";
+	public static final String jsonConfigNoPackages = "{" + EngineConfigurationDeserializer.ENGINE_ID_PROPERTY + ": \"alias\", " + 
+			EngineConfigurationDeserializer.FACTORY_CLASS_PROPERTY + ": \"" + JpcEngineDriver.class.getCanonicalName() + "\"}";
 	
-	public static final String jsonConfigEmptyPackages = "{" + EngineConfigurationDeserializer.ID_PROPERTY_NAME + ": \"alias\", " + 
-			EngineConfigurationDeserializer.CATEGORY_NAMES_PROPERTY_NAME + ": [], " + 
-			EngineConfigurationDeserializer.ENGINE_FACTORY + ": \"" + JpcEngineDriver.class.getCanonicalName() + "\"}";
+	public static final String jsonConfigEmptyPackages = "{" + EngineConfigurationDeserializer.ENGINE_ID_PROPERTY + ": \"alias\", " + 
+			EngineConfigurationDeserializer.CATEGORY_NAMES_PROPERTY + ": [], " + 
+			EngineConfigurationDeserializer.FACTORY_CLASS_PROPERTY + ": \"" + JpcEngineDriver.class.getCanonicalName() + "\"}";
 	
-	public static final String jsonConfigEmptyPackagesNoAlias = "{" + EngineConfigurationDeserializer.CATEGORY_NAMES_PROPERTY_NAME + ": [], " + //this is not a valid representation
-			EngineConfigurationDeserializer.ENGINE_FACTORY + ": \"" + JpcEngineDriver.class.getCanonicalName() + "\"}";
+	public static final String jsonConfigEmptyPackagesNoAlias = "{" + EngineConfigurationDeserializer.CATEGORY_NAMES_PROPERTY + ": [], " + //this is not a valid representation
+			EngineConfigurationDeserializer.FACTORY_CLASS_PROPERTY + ": \"" + JpcEngineDriver.class.getCanonicalName() + "\"}";
 	
-	public static final String jsonConfigNoAlias = "{" + EngineConfigurationDeserializer.CATEGORY_NAMES_PROPERTY_NAME + ": [\"p1\", \"p2\"], " + 
-			EngineConfigurationDeserializer.ENGINE_FACTORY + ": \"" + JpcEngineDriver.class.getCanonicalName() + "\"}";
+	public static final String jsonConfigNoAlias = "{" + EngineConfigurationDeserializer.CATEGORY_NAMES_PROPERTY + ": [\"p1\", \"p2\"], " + 
+			EngineConfigurationDeserializer.FACTORY_CLASS_PROPERTY + ": \"" + JpcEngineDriver.class.getCanonicalName() + "\"}";
 	
-	public static final String jsonConfigNoProfile = "{" + EngineConfigurationDeserializer.ID_PROPERTY_NAME + ": \"alias\", " + 
-			EngineConfigurationDeserializer.CATEGORY_NAMES_PROPERTY_NAME + ": [\"p1\", \"p2\"], " + 
-			EngineConfigurationDeserializer.ENGINE_FACTORY + ": \"" + JpcEngineDriver.class.getCanonicalName() + "\"}";
+	public static final String jsonConfigNoProfile = "{" + EngineConfigurationDeserializer.ENGINE_ID_PROPERTY + ": \"alias\", " + 
+			EngineConfigurationDeserializer.CATEGORY_NAMES_PROPERTY + ": [\"p1\", \"p2\"], " + 
+			EngineConfigurationDeserializer.FACTORY_CLASS_PROPERTY + ": \"" + JpcEngineDriver.class.getCanonicalName() + "\"}";
 	
-	public static final String jsonConfigWithProfile = "{" + EngineConfigurationDeserializer.ID_PROPERTY_NAME + ": \"alias\", " + 
-			EngineConfigurationDeserializer.CATEGORY_NAMES_PROPERTY_NAME + ": [\"p1\", \"p2\"], " + 
-			EngineConfigurationDeserializer.ENGINE_FACTORY + ": \"" + JpcEngineDriver.class.getCanonicalName() + "\", " +
-			EngineConfigurationDeserializer.ENGINE_PROFILE + ": \"" + LogtalkEngineProfile.class.getCanonicalName()+ "\"}";
+	public static final String jsonConfigWithProfile = "{" + EngineConfigurationDeserializer.ENGINE_ID_PROPERTY + ": \"alias\", " + 
+			EngineConfigurationDeserializer.CATEGORY_NAMES_PROPERTY + ": [\"p1\", \"p2\"], " + 
+			EngineConfigurationDeserializer.FACTORY_CLASS_PROPERTY + ": \"" + JpcEngineDriver.class.getCanonicalName() + "\", " +
+			EngineConfigurationDeserializer.PROFILE_CLASS_PROPERTY + ": \"" + LogtalkEngineProfile.class.getCanonicalName()+ "\"}";
 	
 	@Test
 	public void testJsonConfigNoPackages() {
