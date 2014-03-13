@@ -1,7 +1,7 @@
 package org.jpc.engine.prolog;
 
 import static java.util.Arrays.asList;
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static org.jpc.engine.provider.PrologEngineProviderManager.getPrologEngine;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;

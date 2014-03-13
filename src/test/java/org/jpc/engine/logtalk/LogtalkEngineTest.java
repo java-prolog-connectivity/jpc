@@ -1,6 +1,6 @@
 package org.jpc.engine.logtalk;
 
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
 import static org.jpc.engine.logtalk.LogtalkConstants.LOGTALK_LOGTALK_OBJECT;
 import static org.jpc.engine.logtalk.LogtalkConstants.LOGTALK_OPERATOR;
 import static org.jpc.engine.logtalk.LogtalkConstants.USER_LOGTALK_OBJECT;
