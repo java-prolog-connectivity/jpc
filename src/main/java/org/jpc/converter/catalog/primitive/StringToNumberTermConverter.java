@@ -2,6 +2,7 @@ package org.jpc.converter.catalog.primitive;
 
 import java.lang.reflect.Type;
 
+import org.jconverter.converter.ConversionException;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
@@ -19,10 +20,15 @@ public class StringToNumberTermConverter<T extends NumberTerm> implements ToTerm
 	@Override
 	public T toTerm(String source, Class<T> termClass, Jpc context) {
 		T term;
-		if(termClass.equals(IntegerTerm.class))
-			term = (T) new IntegerTerm(Long.parseLong(source));
-		else
-			term = (T) new FloatTerm(Float.parseFloat(source));
+		try {
+			if(termClass.equals(IntegerTerm.class))
+				term = (T) new IntegerTerm(Long.parseLong(source));
+			else
+				term = (T) new FloatTerm(Float.parseFloat(source));
+		} catch(NumberFormatException e) {
+			throw new ConversionException(source.getClass(), termClass, e);
+		}
+		
 		return term;
 	}
 
