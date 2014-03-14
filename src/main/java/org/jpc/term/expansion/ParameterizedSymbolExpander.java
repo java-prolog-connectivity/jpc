@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 public abstract class ParameterizedSymbolExpander extends CachedTermExpander {
 
-	private static Logger logger = LoggerFactory.getLogger(ParameterizedSymbolExpander.class);
+	private static final Logger logger = LoggerFactory.getLogger(ParameterizedSymbolExpander.class);
 
 	private Jpc context;
 	

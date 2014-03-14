@@ -73,7 +73,7 @@ import com.google.common.collect.Lists;
 
 public class JpcConverterManager extends JGumConverterManager {
 
-	private static Logger logger = LoggerFactory.getLogger(JpcConverterManager.class);
+	private static final Logger logger = LoggerFactory.getLogger(JpcConverterManager.class);
 	
 	private static final String CONVERTER_FUNCTOR_NAME = "converter";
 	

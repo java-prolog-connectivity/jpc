@@ -26,7 +26,7 @@ import com.google.common.base.Joiner;
  *
  */
 public class PrologResourceLoader {
-	private static Logger logger = LoggerFactory.getLogger(PrologResourceLoader.class);
+	private static final Logger logger = LoggerFactory.getLogger(PrologResourceLoader.class);
 	
 	private PrologEngine prologEngine;
 	private ResourceManager resourceManager;

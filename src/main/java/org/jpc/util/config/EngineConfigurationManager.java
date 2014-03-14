@@ -23,7 +23,7 @@ import com.google.common.io.CharStreams;
 
 public class EngineConfigurationManager {
 	
-	private static Logger logger = LoggerFactory.getLogger(EngineConfigurationManager.class);
+	private static final Logger logger = LoggerFactory.getLogger(EngineConfigurationManager.class);
 	
 	private static final Object PROVIDER_KEY = LazyEngineProvider.class;
 	

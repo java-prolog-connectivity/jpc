@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 public class LogtalkEngineProfile<T extends PrologEngine> extends PrologEngineProfile<T> {
 
-	private static Logger logger = LoggerFactory.getLogger(LogtalkEngineProfile.class);
+	private static final Logger logger = LoggerFactory.getLogger(LogtalkEngineProfile.class);
 	private JpcPreferences preferences;
 	
 	public LogtalkEngineProfile(PrologEngineFactory<T> engineFactory) {

@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  */
 public class PrologEngineProfile<T extends PrologEngine> implements PrologEngineFactory<T> {
 
-	private static Logger logger = LoggerFactory.getLogger(PrologEngineProfile.class);
+	private static final Logger logger = LoggerFactory.getLogger(PrologEngineProfile.class);
 	
 	private PrologEngineFactory<T> prologEngineFactory;
 	private String name; //This optional attribute is intended to be used for GUI development in a multi-engine environment.

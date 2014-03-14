@@ -26,8 +26,8 @@ import com.google.common.io.Resources;
  */
 public class ResourceManager {
 
-	private static Logger logger = LoggerFactory.getLogger(ResourceManager.class);
-	private JpcPreferences preferences;
+	private static final Logger logger = LoggerFactory.getLogger(ResourceManager.class);
+	private final JpcPreferences preferences;
 	private static ResourceManager defaultResourceManager;
 
 	public static ResourceManager getDefaultResourceManager() {

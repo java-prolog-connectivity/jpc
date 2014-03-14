@@ -1,7 +1,6 @@
 package org.jpc.salt;
 
 import org.jpc.JpcException;
-import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Term;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +11,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class PrologWriter extends JpcTermWriter implements PrologContentHandler {
 
-	private static Logger logger = LoggerFactory.getLogger(PrologWriter.class);
+	private static final Logger logger = LoggerFactory.getLogger(PrologWriter.class);
 
 	private boolean writeDirective;
 	private boolean writeClause;

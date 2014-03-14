@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
  */
 public class PrologEngineWriter extends PrologWriter {
 
-	private static Logger logger = LoggerFactory.getLogger(PrologEngineWriter.class);
+	private static final Logger logger = LoggerFactory.getLogger(PrologEngineWriter.class);
 
 	private PrologEngine prologEngine;
 	
