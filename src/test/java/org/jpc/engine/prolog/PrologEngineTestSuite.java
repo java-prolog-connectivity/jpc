@@ -1,6 +1,6 @@
 package org.jpc.engine.prolog;
 
-import org.jpc.util.engine.LogicResourceLoaderTest;
+import org.jpc.util.engine.PrologResourceLoaderTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -21,6 +21,6 @@ import org.junit.runners.Suite.SuiteClasses;
 	PrologErrorsTest.class, 
 	QueryLifeCycleTest.class, 
 	ObservableQueryTest.class, 
-	LogicResourceLoaderTest.class
+	PrologResourceLoaderTest.class
 })
 public class PrologEngineTestSuite {}

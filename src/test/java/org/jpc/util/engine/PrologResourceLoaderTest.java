@@ -13,7 +13,7 @@ import static org.jpc.engine.provider.PrologEngineProviderManager.getPrologEngin
 
 import org.junit.Test;
 
-public class LogicResourceLoaderTest {
+public class PrologResourceLoaderTest {
 
 	private ResourceManager resourceManager = new ResourceManager(new JpcPreferences()) {
 		public boolean process(URL url) {
