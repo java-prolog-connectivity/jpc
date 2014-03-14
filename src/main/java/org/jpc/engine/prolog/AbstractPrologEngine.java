@@ -23,6 +23,7 @@ import static org.jpc.term.Var.ANONYMOUS_VAR;
 import static org.jpc.util.JpcPreferences.JPC_VAR_PREFIX;
 import static org.jpc.util.PrologUtil.termSequence;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -42,9 +43,15 @@ import org.jpc.term.Term;
 import org.jpc.term.Var;
 import org.jpc.term.expansion.PositionalSymbolExpander;
 import org.jpc.util.PrologUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.reflect.TypeToken;
 
 public abstract class AbstractPrologEngine implements PrologEngine {
 
+	private static final Logger logger = LoggerFactory.getLogger(AbstractPrologEngine.class);
+	
 	public static final String ALL_RESULTS_VAR = JPC_VAR_PREFIX + "ALL_RESULTS";
 	
 	public AbstractPrologEngine() {
@@ -321,7 +328,8 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 
 	@Override
 	public boolean ensureLoaded(String... resources) {
-		return query(new Compound(ENSURE_LOADED, asList(new DefaultJpc().toTerm(resources)))).hasSolution();
+		Type targetType = new TypeToken<List<Atom>>(){}.getType();
+		return ensureLoaded(new DefaultJpc().<List<? extends Term>>convert(resources, targetType));
 	}
 	
 

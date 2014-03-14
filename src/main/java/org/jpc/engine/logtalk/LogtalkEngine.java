@@ -31,6 +31,7 @@ import static org.jpc.engine.logtalk.LogtalkConstants.SPECIALIZES_CLASS;
 import static org.jpc.term.ListTerm.listTerm;
 
 import java.io.File;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -46,9 +47,15 @@ import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.reflect.TypeToken;
 
 public class LogtalkEngine extends PrologEngineProxy {
 
+	private static final Logger logger = LoggerFactory.getLogger(LogtalkEngine.class);
+	
 	public LogtalkEngine(PrologEngine prologEngine) {
 		super(prologEngine);
 	}
@@ -62,7 +69,8 @@ public class LogtalkEngine extends PrologEngineProxy {
 	}
 	
 	public boolean logtalkLoad(String... resources) {
-		return query(new Compound(LOGTALK_LOAD, asList(new DefaultJpc().toTerm(resources)))).hasSolution(); 
+		Type targetType = new TypeToken<List<Atom>>(){}.getType();
+		return logtalkLoad(new DefaultJpc().<List<? extends Term>>convert(resources, targetType));
 	}
 	
 	public String currentLogtalkFlag(LogtalkFlag flag) {
