@@ -1,6 +1,6 @@
 package org.jpc.engine.prolog;
 
-import static org.jpc.engine.provider.PrologEngineProviderManager.getPrologEngine;
+import static org.jpc.engine.prolog.PrologEngines.defaultPrologEngine;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -21,7 +21,7 @@ public class QueryLifeCycleTest {
 
 	@Test
 	public void testNextAlone() {
-		Query q = getPrologEngine().query("true");
+		Query q = defaultPrologEngine().query("true");
 		assertNotNull(q.next());
 		try {
 			q.next();
@@ -35,7 +35,7 @@ public class QueryLifeCycleTest {
 	
 	@Test
 	public void testNextAfterOneSolution() {
-		Query q = getPrologEngine().query("true");
+		Query q = defaultPrologEngine().query("true");
 		assertNotNull(q.oneSolutionOrThrow());
 		q.next();
 		try {
@@ -43,7 +43,7 @@ public class QueryLifeCycleTest {
 			fail();
 		} catch(NoSuchElementException e) {}
 		
-		q = getPrologEngine().query("false");
+		q = defaultPrologEngine().query("false");
 		try {
 			q.oneSolutionOrThrow();
 			fail();
@@ -56,7 +56,7 @@ public class QueryLifeCycleTest {
 	
 	@Test
 	public void testNextAfterAllSolutions() {
-		Query q = getPrologEngine().query("true");
+		Query q = defaultPrologEngine().query("true");
 		assertNotNull(q.allSolutions());
 		q.next();
 		try {
@@ -64,7 +64,7 @@ public class QueryLifeCycleTest {
 			fail();
 		} catch(NoSuchElementException e) {}
 		
-		q = getPrologEngine().query("false");
+		q = defaultPrologEngine().query("false");
 		assertTrue(q.allSolutions().isEmpty());
 		try {
 			q.next();
@@ -74,7 +74,7 @@ public class QueryLifeCycleTest {
 	
 	@Test
 	public void testHasNext() {
-		Query q = getPrologEngine().query("true");
+		Query q = defaultPrologEngine().query("true");
 		assertTrue(q.hasNext());
 		assertTrue(q.hasNext());
 		assertNotNull(q.next());
@@ -89,14 +89,14 @@ public class QueryLifeCycleTest {
 	
 	@Test
 	public void testOneAndAllSolutions() {
-		Query q = getPrologEngine().query("true");
+		Query q = defaultPrologEngine().query("true");
 		assertTrue(q.hasSolution());
 		assertTrue(q.hasSolution());
 		assertEquals(1, q.allSolutions().size());
 		assertEquals(1, q.allSolutions().size());
 		assertTrue(q.hasSolution());
 		
-		q = getPrologEngine().query("false");
+		q = defaultPrologEngine().query("false");
 		assertFalse(q.hasSolution());
 		assertFalse(q.hasSolution());
 		assertEquals(0, q.allSolutions().size());
@@ -106,7 +106,7 @@ public class QueryLifeCycleTest {
 	
 	@Test
 	public void testInvalidState() {
-		Query q = getPrologEngine().query("true");
+		Query q = defaultPrologEngine().query("true");
 		assertTrue(q.hasNext()); //opens the cursor
 		try {
 			q.hasSolution();
@@ -129,7 +129,7 @@ public class QueryLifeCycleTest {
 	
 	@Test
 	public void testClose() {
-		Query q = getPrologEngine().query("true");
+		Query q = defaultPrologEngine().query("true");
 		q.close();
 		assertTrue(q.hasNext());
 		q.close();

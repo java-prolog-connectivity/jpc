@@ -1,16 +1,13 @@
 package org.jpc.util.engine;
 
-import static org.junit.Assert.*;
+import static org.jpc.engine.prolog.PrologEngines.defaultPrologEngine;
+import static org.junit.Assert.fail;
 
 import java.net.URL;
 
 import org.jpc.JpcException;
 import org.jpc.util.JpcPreferences;
 import org.jpc.util.ResourceManager;
-import org.jpc.util.engine.PrologResourceLoader;
-
-import static org.jpc.engine.provider.PrologEngineProviderManager.getPrologEngine;
-
 import org.junit.Test;
 
 public class PrologResourceLoaderTest {
@@ -20,7 +17,7 @@ public class PrologResourceLoaderTest {
 			return true;
 		}
 	};
-	private PrologResourceLoader resourceLoader = new PrologResourceLoader(getPrologEngine(), resourceManager);
+	private PrologResourceLoader resourceLoader = new PrologResourceLoader(defaultPrologEngine(), resourceManager);
 	
 	@Test
 	public void testResolveResource() {

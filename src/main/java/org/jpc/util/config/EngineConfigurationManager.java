@@ -39,6 +39,9 @@ public class EngineConfigurationManager {
 		EngineConfigurationManager.engineConfigurationManager = engineConfigurationManager;
 	}
 	
+	/**
+	 * Shutdown all the engines registered in the default configuration manager on JVM shutdown.
+	 */
 	static {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
@@ -174,6 +177,10 @@ public class EngineConfigurationManager {
 			return providerProperty.get().getPrologEngine();
 		else
 			throw new JpcException("No engine associated with category name: " + categoryName + ".");
+	}
+	
+	public <T extends PrologEngine> T defaultPrologEngine() {
+		return getPrologEngine("");
 	}
 	
 	public PrologEngine getPrologEngine(Package pakkage) {

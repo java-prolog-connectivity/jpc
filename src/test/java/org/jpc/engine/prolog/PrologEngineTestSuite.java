@@ -6,9 +6,8 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 /**
- * A collection of logic-engine depending unit tests
- * Any library serving as a bridge from JPC to itself should include these tests
- * To use these tests, in the current version a proper call to ThreadLocalPrologEngine.setPrologEngine(PrologEngine) should be done before any test can be run
+ * A collection of unit tests requirying a concrete Prolog engine.
+ * Any library serving as a bridge from JPC to itself should include these tests.
  * The tests in this suite are limited to evaluating the minimum required Prolog functionality (does not test Logtalk support).
  * @author sergioc
  *

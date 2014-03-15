@@ -2,7 +2,7 @@ package org.jpc.engine.prolog;
 
 import static java.util.Arrays.asList;
 import static org.jpc.engine.fixture.Student.STUDENT_FUNCTOR_NAME;
-import static org.jpc.engine.provider.PrologEngineProviderManager.getPrologEngine;
+import static org.jpc.engine.prolog.PrologEngines.defaultPrologEngine;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -34,12 +34,12 @@ public class SymbolicReferenceTypesTest {
 
 	@Before
 	public void retractStudents() {
-		getPrologEngine().retractAll(new Compound(STUDENT_FUNCTOR_NAME, asList(Var.ANONYMOUS_VAR)));
+		defaultPrologEngine().retractAll(new Compound(STUDENT_FUNCTOR_NAME, asList(Var.ANONYMOUS_VAR)));
 	}
 	
 	@Test
 	public void testWhiteBoxAndEqualityLowLevel() {
-		PrologEngine prologEngine = getPrologEngine();
+		PrologEngine prologEngine = defaultPrologEngine();
 		Person person = new Person("Mary");
 		prologEngine.assertz(new Compound(STUDENT_FUNCTOR_NAME, asList(person.toTerm())));
 		Query query = prologEngine.query(new Compound(STUDENT_FUNCTOR_NAME, asList(new Var("Person"))));
@@ -52,7 +52,7 @@ public class SymbolicReferenceTypesTest {
 	
 	@Test
 	public void testWhiteBoxAndEquality() {
-		PrologEngine prologEngine = getPrologEngine();
+		PrologEngine prologEngine = defaultPrologEngine();
 		Person person = new Person("Mary");
 		Jpc ctx = JpcBuilder.create().register(new PersonConverter()).build();
 		prologEngine.assertz(new Compound(STUDENT_FUNCTOR_NAME, asList(ctx.toTerm(person))));
@@ -64,7 +64,7 @@ public class SymbolicReferenceTypesTest {
 	
 	@Test
 	public void testWhiteBoxAndIdentity() {
-		PrologEngine prologEngine = getPrologEngine();
+		PrologEngine prologEngine = defaultPrologEngine();
 		Person person = new Person("Mary");
 		Jpc ctx = JpcBuilder.create().register(new PersonConverter()).build();
 		Term personTerm = ctx.newJTerm(person, ctx.<Compound>toTerm(person));
@@ -77,7 +77,7 @@ public class SymbolicReferenceTypesTest {
 	
 	@Test
 	public void testBlackBoxAndEqualityBySerialization() {
-		PrologEngine prologEngine = getPrologEngine();
+		PrologEngine prologEngine = defaultPrologEngine();
 		Person person = new Person("Mary");
 		prologEngine.assertz(new Compound(STUDENT_FUNCTOR_NAME, asList(SerializedTerm.serialize(person))));
 		Query query = prologEngine.query(new Compound(STUDENT_FUNCTOR_NAME, asList(new Var("Person"))));
@@ -88,7 +88,7 @@ public class SymbolicReferenceTypesTest {
 	
 	@Test
 	public void testBlackBoxAndIdentityAdHoc() {
-		PrologEngine prologEngine = getPrologEngine();
+		PrologEngine prologEngine = defaultPrologEngine();
 		Person person = new Person("Mary");
 		Jpc ctx = JpcBuilder.create().build();
 		Term personTerm = ctx.newJTerm(person, new Compound("cool_student", asList(new IntegerTerm(42))));
@@ -101,7 +101,7 @@ public class SymbolicReferenceTypesTest {
 	
 	@Test
 	public void testBlackBoxAndIdentityGenerated() {
-		PrologEngine prologEngine = getPrologEngine();
+		PrologEngine prologEngine = defaultPrologEngine();
 		Person person = new Person("Mary");
 		Jpc ctx = JpcBuilder.create().build();
 		Term personTerm = ctx.newJTerm(person);
@@ -114,7 +114,7 @@ public class SymbolicReferenceTypesTest {
 	
 	@Test
 	public void testExplicitManagementLifeSpan() {
-		PrologEngine prologEngine = getPrologEngine();
+		PrologEngine prologEngine = defaultPrologEngine();
 		Person person = new Person("Mary");
 		Jpc ctx = JpcBuilder.create().register(new PersonConverter()).build();
 		Term personTerm = ctx.newJTerm(person, ctx.<Compound>toTerm(person));
@@ -128,7 +128,7 @@ public class SymbolicReferenceTypesTest {
 	
 	@Test
 	public void testGarbageCollectionLifeSpan() {
-		PrologEngine prologEngine = getPrologEngine();
+		PrologEngine prologEngine = defaultPrologEngine();
 		Person person = new Person("Mary");
 		Jpc ctx = JpcBuilder.create().register(new PersonConverter()).build();
 		Term personTerm = ctx.newWeakJTerm(person, ctx.<Compound>toTerm(person));

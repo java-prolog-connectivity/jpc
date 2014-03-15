@@ -1,7 +1,7 @@
 package org.jpc.engine.prolog;
 
+import static org.jpc.engine.prolog.PrologEngines.defaultPrologEngine;
 import static org.junit.Assert.assertEquals;
-import static org.jpc.engine.provider.PrologEngineProviderManager.getPrologEngine;
 import static org.junit.Assert.fail;
 
 import org.jpc.error.PrologParsingException;
@@ -13,7 +13,7 @@ public class PrologErrorsTest {
 	@Test
 	public void testPrologError() {
 		try {
-			getPrologEngine().query("throw(dummy_error)").hasSolution(); //Arguments are not sufficiently instantiated
+			defaultPrologEngine().query("throw(dummy_error)").hasSolution(); //Arguments are not sufficiently instantiated
 			fail();
 		} catch(org.jpc.error.PrologError e){
 			assertEquals(new Atom("dummy_error"), e.asTerm());
@@ -23,7 +23,7 @@ public class PrologErrorsTest {
 	@Test
 	public void testInstantiationError() {
 		try {
-			getPrologEngine().query("A is A").hasSolution(); //Arguments are not sufficiently instantiated
+			defaultPrologEngine().query("A is A").hasSolution(); //Arguments are not sufficiently instantiated
 			fail();
 		} catch(org.jpc.error.InstantiationError e){
 		}
@@ -32,7 +32,7 @@ public class PrologErrorsTest {
 	@Test
 	public void testSyntaxError() {
 		try {
-			getPrologEngine().query("x++y").hasSolution(); //Operator expected
+			defaultPrologEngine().query("x++y").hasSolution(); //Operator expected
 			fail();
 		} catch(PrologParsingException e){
 		}

@@ -1,6 +1,6 @@
 package org.jpc.engine.prolog;
 
-import static org.jpc.engine.provider.PrologEngineProviderManager.getPrologEngine;
+import static org.jpc.engine.prolog.PrologEngines.defaultPrologEngine;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -30,7 +30,7 @@ public class ObservableQueryTest {
 		QueryListenerRegister listener;
 		
 		listener = new QueryListenerRegister();
-		oq = new ObservableQuery(getPrologEngine().query("true"), Arrays.<QueryListener>asList(listener));
+		oq = new ObservableQuery(defaultPrologEngine().query("true"), Arrays.<QueryListener>asList(listener));
 		oq.allSolutions();
 		assertTrue(listener.queryReady);
 		assertTrue(listener.queryOpened);
@@ -43,7 +43,7 @@ public class ObservableQueryTest {
 		assertFalse(listener.queryDisposed);
 		
 		listener = new QueryListenerRegister();
-		oq = new ObservableQuery(getPrologEngine().query("false"), Arrays.<QueryListener>asList(listener));
+		oq = new ObservableQuery(defaultPrologEngine().query("false"), Arrays.<QueryListener>asList(listener));
 		oq.allSolutions();
 		assertTrue(listener.queryReady);
 		assertTrue(listener.queryOpened);
@@ -62,7 +62,7 @@ public class ObservableQueryTest {
 		QueryListenerRegister listener;
 		
 		listener = new QueryListenerRegister();
-		oq = new ObservableQuery(getPrologEngine().query("true"), Arrays.<QueryListener>asList(listener));
+		oq = new ObservableQuery(defaultPrologEngine().query("true"), Arrays.<QueryListener>asList(listener));
 		oq.oneSolutionOrThrow();
 		assertTrue(listener.queryReady);
 		assertTrue(listener.queryOpened);
@@ -75,7 +75,7 @@ public class ObservableQueryTest {
 		assertFalse(listener.queryDisposed);
 		
 		listener = new QueryListenerRegister();
-		oq = new ObservableQuery(getPrologEngine().query("false"), Arrays.<QueryListener>asList(listener));
+		oq = new ObservableQuery(defaultPrologEngine().query("false"), Arrays.<QueryListener>asList(listener));
 		try {
 			oq.oneSolutionOrThrow();
 			fail();
@@ -98,7 +98,7 @@ public class ObservableQueryTest {
 		QueryListenerRegister listener;
 		
 		listener = new QueryListenerRegister();
-		oq = new ObservableQuery(getPrologEngine().query("true"), Arrays.<QueryListener>asList(listener));
+		oq = new ObservableQuery(defaultPrologEngine().query("true"), Arrays.<QueryListener>asList(listener));
 		oq.next();
 		assertFalse(listener.queryReady);
 		assertTrue(listener.queryOpened);
@@ -124,7 +124,7 @@ public class ObservableQueryTest {
 		
 		
 		listener = new QueryListenerRegister();
-		oq = new ObservableQuery(getPrologEngine().query("false"), Arrays.<QueryListener>asList(listener));
+		oq = new ObservableQuery(defaultPrologEngine().query("false"), Arrays.<QueryListener>asList(listener));
 		oq.hasNext();
 		assertFalse(listener.queryReady);
 		assertTrue(listener.queryOpened);

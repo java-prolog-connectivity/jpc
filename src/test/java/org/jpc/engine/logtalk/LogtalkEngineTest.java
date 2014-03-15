@@ -1,11 +1,11 @@
 package org.jpc.engine.logtalk;
 
-import static org.junit.Assert.assertTrue;
 import static org.jpc.engine.logtalk.LogtalkConstants.LOGTALK_LOGTALK_OBJECT;
 import static org.jpc.engine.logtalk.LogtalkConstants.LOGTALK_OPERATOR;
 import static org.jpc.engine.logtalk.LogtalkConstants.USER_LOGTALK_OBJECT;
-import static org.jpc.engine.provider.PrologEngineProviderManager.getPrologEngine;
+import static org.jpc.engine.prolog.PrologEngines.defaultPrologEngine;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Map;
 
@@ -25,8 +25,8 @@ public class LogtalkEngineTest {
 	 */
 	@Test
 	public void testLogtalkOperators() {
-		assertTrue(getPrologEngine().isBinaryOperator(LOGTALK_OPERATOR));
-		assertTrue(getPrologEngine().isUnaryOperator(LOGTALK_OPERATOR));
+		assertTrue(defaultPrologEngine().isBinaryOperator(LOGTALK_OPERATOR));
+		assertTrue(defaultPrologEngine().isUnaryOperator(LOGTALK_OPERATOR));
 	}
 
 	/**
@@ -34,8 +34,8 @@ public class LogtalkEngineTest {
 	 */
 	@Test
 	public void testCurrentObjects() {
-		assertTrue(new LogtalkEngine(getPrologEngine()).currentObject(new Atom(LOGTALK_LOGTALK_OBJECT)).hasSolution());
-		assertTrue(new LogtalkEngine(getPrologEngine()).currentObject(new Atom(USER_LOGTALK_OBJECT)).hasSolution());
+		assertTrue(new LogtalkEngine(defaultPrologEngine()).currentObject(new Atom(LOGTALK_LOGTALK_OBJECT)).hasSolution());
+		assertTrue(new LogtalkEngine(defaultPrologEngine()).currentObject(new Atom(USER_LOGTALK_OBJECT)).hasSolution());
 //		List<Term> currentObjectsTerms = new Jpc().toTerm(new LogtalkEngine(getPrologEngine()).currentObjects()).asList();
 //		assertTrue(currentObjectsTerms.contains(new Atom(LOGTALK_LOGTALK_OBJECT)));
 //		assertTrue(currentObjectsTerms.contains(new Atom(USER_LOGTALK_OBJECT)));
@@ -43,7 +43,7 @@ public class LogtalkEngineTest {
 
 	@Test
 	public void testLogtalkLibraries() {
-		Map<String, LogtalkLibrary> libraries = new LogtalkEngine(getPrologEngine()).getLibraries();
+		Map<String, LogtalkLibrary> libraries = new LogtalkEngine(defaultPrologEngine()).getLibraries();
 		assertTrue(libraries.size() > 0);
 		assertNotNull(libraries.get("library"));
 	}
