@@ -18,6 +18,10 @@ import org.jpc.term.jterm.JTermManager;
  */
 public abstract class Jpc extends JConverter {
 
+	public static Jpc defaultJpc() {
+		return new DefaultJpc();
+	}
+	
 	public Jpc(JpcConverterManager converterManager, FactoryManager factoryManager) {
 		super(converterManager, factoryManager);
 	}

@@ -44,11 +44,11 @@ public class DefaultJpc extends Jpc {
 	private final ErrorHandler errorHandler;
 	//private final JpcPreferences preferences;
 	
-	public DefaultJpc() {
+	DefaultJpc() {
 		this(new JGum(), new JpcEngine());
 	}
 	
-	private DefaultJpc(JGum jgum, JpcEngine embeddedEngine) {
+	DefaultJpc(JGum jgum, JpcEngine embeddedEngine) {
 		this(JpcConverterManager.registerDefaults(new JpcConverterManager(jgum, embeddedEngine)),
 				JGumFactoryManager.registerDefaults(new JGumFactoryManager(jgum)),
 				JpcTypeSolverManager.registerDefaults(new JpcTypeSolverManager(jgum, embeddedEngine)),
@@ -64,7 +64,7 @@ public class DefaultJpc extends Jpc {
 	 * @param jTermManager an object keeping mappings between terms and Java object references.
 	 * @param errorHandler a error handler.
 	 */
-	public DefaultJpc(JpcConverterManager converterManager, FactoryManager factoryManager, TypeSolverManager typeSolverManager, JTermManager jTermManager, ErrorHandler errorHandler) {
+	DefaultJpc(JpcConverterManager converterManager, FactoryManager factoryManager, TypeSolverManager typeSolverManager, JTermManager jTermManager, ErrorHandler errorHandler) {
 		super(converterManager, factoryManager);
 		this.typeSolverManager = typeSolverManager;
 		this.jTermManager = jTermManager;

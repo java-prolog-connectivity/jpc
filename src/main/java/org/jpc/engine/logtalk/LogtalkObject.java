@@ -1,5 +1,6 @@
 package org.jpc.engine.logtalk;
 
+import static org.jpc.Jpc.defaultJpc;
 import static org.jpc.engine.logtalk.LogtalkConstants.CURRENT_PREDICATE;
 import static org.jpc.engine.logtalk.LogtalkConstants.PREDICATE_PROPERTY;
 import static org.jpc.engine.logtalk.LogtalkConstants.THREADED;
@@ -20,7 +21,6 @@ import static org.jpc.engine.prolog.PrologConstants.RETRACT_ALL;
 import java.util.Arrays;
 import java.util.List;
 
-import org.jpc.DefaultJpc;
 import org.jpc.Jpc;
 import org.jpc.converter.TermConvertable;
 import org.jpc.engine.prolog.PrologDatabase;
@@ -56,7 +56,7 @@ public class LogtalkObject<T extends Term> implements TermConvertable<T>, Prolog
 	private Jpc context;
 	
 	public LogtalkObject(Object object, PrologEngine prologEngine) {
-		this(object, prologEngine, new DefaultJpc());
+		this(object, prologEngine, defaultJpc());
 	}
 	
 	public LogtalkObject(Object object, PrologEngine prologEngine, Jpc context) {
