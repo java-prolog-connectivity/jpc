@@ -1,7 +1,6 @@
 package org.jpc.converter;
 
 import static java.util.Arrays.asList;
-import static org.jpc.Jpc.defaultJpc;
 import static org.jpc.engine.prolog.PrologConstants.FAIL;
 import static org.jpc.engine.prolog.PrologConstants.FALSE;
 import static org.jpc.engine.prolog.PrologConstants.TRUE;
@@ -27,6 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.jpc.Jpc;
+import org.jpc.JpcBuilder;
 import org.jpc.converter.typesolver.catalog.MapTypeSolver;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
@@ -41,7 +41,7 @@ import com.google.common.reflect.TypeToken;
 
 public class DefaultConverterTest {
 
-	private Jpc jpc = defaultJpc();
+	private Jpc jpc = JpcBuilder.create().build();
 	
 	
 	// *** OBJECT TO TERM TESTS ***

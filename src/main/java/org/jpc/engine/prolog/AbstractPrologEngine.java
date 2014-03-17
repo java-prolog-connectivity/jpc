@@ -1,7 +1,6 @@
 package org.jpc.engine.prolog;
 
 import static java.util.Arrays.asList;
-import static org.jpc.Jpc.defaultJpc;
 import static org.jpc.engine.prolog.PrologConstants.ABOLISH;
 import static org.jpc.engine.prolog.PrologConstants.ASSERTA;
 import static org.jpc.engine.prolog.PrologConstants.ASSERTZ;
@@ -32,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jpc.Jpc;
+import org.jpc.JpcBuilder;
 import org.jpc.engine.logtalk.LogtalkEngine;
 import org.jpc.query.Query;
 import org.jpc.query.Solution;
@@ -97,7 +97,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	
 	@Override
 	public final Query query(String goalString, List<?> arguments) {
-		return query(goalString, arguments, defaultJpc());
+		return query(goalString, arguments, JpcBuilder.create().build());
 	}
 	
 	@Override
@@ -117,7 +117,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
  
 	@Override
 	public final Query query(Term goal) {
-		return query(goal, defaultJpc());
+		return query(goal, JpcBuilder.create().build());
 	}
 
 	@Override
@@ -134,12 +134,12 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	
 	@Override
 	public Term asTerm(String termString) {
-		return asTerm(termString, defaultJpc());
+		return asTerm(termString, JpcBuilder.create().build());
 	}
 	
 	@Override
 	public List<Term> asTerms(List<String> termsString) {
-		return asTerms(termsString, defaultJpc());
+		return asTerms(termsString, JpcBuilder.create().build());
 	}
 	
 	@Override
@@ -329,7 +329,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	@Override
 	public boolean ensureLoaded(String... resources) {
 		Type targetType = new TypeToken<List<Atom>>(){}.getType();
-		return ensureLoaded(defaultJpc().<List<? extends Term>>convert(resources, targetType));
+		return ensureLoaded(JpcBuilder.create().build().<List<? extends Term>>convert(resources, targetType));
 	}
 	
 

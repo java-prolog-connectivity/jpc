@@ -1,15 +1,15 @@
 package org.jpc.term;
 
-import static org.jpc.Jpc.defaultJpc;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import org.jpc.Jpc;
+import org.jpc.JpcBuilder;
 import org.junit.Test;
 
 public class SerializedTermTest {
 
-	private Jpc jpc = defaultJpc();
+	private Jpc jpc = JpcBuilder.create().build();
 	
 	@Test
 	public void testSerializedTerm() {

@@ -1,7 +1,6 @@
 package org.jpc.term;
 
 import static java.util.Arrays.asList;
-import static org.jpc.Jpc.defaultJpc;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -9,13 +8,14 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.jpc.Jpc;
+import org.jpc.JpcBuilder;
 import org.junit.Test;
 
 public class JTermTest {
 
 	@Test
 	public void testDifferentReferences() {
-		Jpc jpc = defaultJpc();
+		Jpc jpc = JpcBuilder.create().build();
 		//s1 and s2 are equals but have different references.
 		String s1 = "hello";
 		String s2 = new String(s1);
@@ -30,7 +30,7 @@ public class JTermTest {
 
 	@Test
 	public void testWeakJTerm() {
-		Jpc jpc = defaultJpc();
+		Jpc jpc = JpcBuilder.create().build();
 		Object o = new Object();
 		Compound term = new Compound("x", asList(new Atom(""))); //arbitrary compound that will be associated to an object reference.
 		jpc.newWeakJTerm(o, term); //associating the compound to a reference.
@@ -46,7 +46,7 @@ public class JTermTest {
 	
 	@Test
 	public void testForgetWeakJTerm() {
-		Jpc jpc = defaultJpc();
+		Jpc jpc = JpcBuilder.create().build();
 		Object o = new Object();
 		Compound term = new Compound("x", asList(new Atom(""))); //arbitrary compound that will be associated to an object reference.
 		jpc.newWeakJTerm(o, term); //associating the compound to a reference.
@@ -67,7 +67,7 @@ public class JTermTest {
 
 	@Test
 	public void testGeneratedWeakJTerm() {
-		Jpc jpc = defaultJpc();
+		Jpc jpc = JpcBuilder.create().build();
 		Object o = new Object();
 		Compound term = jpc.newWeakJTerm(o); //associating the compound to a reference.
 		assertEquals(term, jpc.toTerm(o));
@@ -82,7 +82,7 @@ public class JTermTest {
 	
 	@Test
 	public void testForgetGeneratedWeakJTerm() {
-		Jpc jpc = defaultJpc();
+		Jpc jpc = JpcBuilder.create().build();
 		Object o = new Object();
 		Compound term = jpc.newWeakJTerm(o); //associating the compound to a reference.
 		jpc.forgetJTerm(term);
@@ -111,7 +111,7 @@ public class JTermTest {
 	
 	@Test
 	public void testJTerm() {
-		Jpc jpc = defaultJpc();
+		Jpc jpc = JpcBuilder.create().build();
 		Object o = new Object();
 		Compound term = new Compound("x", asList(new Atom(""))); //arbitrary compound that will be associated to an object reference.
 		jpc.newJTerm(o, term); //associating the compound to a reference.
@@ -124,7 +124,7 @@ public class JTermTest {
 	
 	@Test
 	public void testForgetJTerm() {
-		Jpc jpc = defaultJpc();
+		Jpc jpc = JpcBuilder.create().build();
 		Object o = new Object();
 		Compound term = new Compound("x", asList(new Atom(""))); //arbitrary compound that will be associated to an object reference.
 		jpc.newJTerm(o, term); //associating the compound to a reference.
@@ -140,7 +140,7 @@ public class JTermTest {
 	
 	@Test
 	public void testGeneratedJTerm() {
-		Jpc jpc = defaultJpc();
+		Jpc jpc = JpcBuilder.create().build();
 		Object o = new Object();
 		Compound term = jpc.newJTerm(o); //associating the compound to a reference.
 		assertEquals(term, jpc.toTerm(o));
@@ -152,7 +152,7 @@ public class JTermTest {
 	
 	@Test
 	public void testForgetGeneratedJTerm() {
-		Jpc jpc = defaultJpc();
+		Jpc jpc = JpcBuilder.create().build();
 		Object o = new Object();
 		Compound term = jpc.newJTerm(o); //associating the compound to a reference.
 		jpc.fromTerm(term);

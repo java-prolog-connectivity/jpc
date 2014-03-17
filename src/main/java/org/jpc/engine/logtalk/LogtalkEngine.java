@@ -1,7 +1,6 @@
 package org.jpc.engine.logtalk;
 
 import static java.util.Arrays.asList;
-import static org.jpc.Jpc.defaultJpc;
 import static org.jpc.engine.logtalk.LogtalkConstants.ABOLISH_CATEGORY;
 import static org.jpc.engine.logtalk.LogtalkConstants.ABOLISH_EVENTS;
 import static org.jpc.engine.logtalk.LogtalkConstants.ABOLISH_OBJECT;
@@ -39,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jpc.JpcBuilder;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.engine.prolog.PrologEngineProxy;
 import org.jpc.query.Query;
@@ -70,7 +70,7 @@ public class LogtalkEngine extends PrologEngineProxy {
 	
 	public boolean logtalkLoad(String... resources) {
 		Type targetType = new TypeToken<List<Atom>>(){}.getType();
-		return logtalkLoad(defaultJpc().<List<? extends Term>>convert(resources, targetType));
+		return logtalkLoad(JpcBuilder.create().build().<List<? extends Term>>convert(resources, targetType));
 	}
 	
 	public String currentLogtalkFlag(LogtalkFlag flag) {

@@ -1,10 +1,9 @@
 package org.jpc.query;
 
-import static org.jpc.Jpc.defaultJpc;
-
 import java.lang.reflect.Type;
 
 import org.jpc.Jpc;
+import org.jpc.JpcBuilder;
 import org.jpc.term.Term;
 
 import com.google.common.base.Function;
@@ -15,7 +14,7 @@ public class TermToObjectFunction<T> implements Function<Term,T> {
 	private Type targetType;
 	
 	public TermToObjectFunction() {
-		this(defaultJpc(), Object.class);
+		this(JpcBuilder.create().build(), Object.class);
 	}
 	
 	public TermToObjectFunction(Jpc context) {
@@ -23,7 +22,7 @@ public class TermToObjectFunction<T> implements Function<Term,T> {
 	}
 	
 	public TermToObjectFunction(Type targetType) {
-		this(defaultJpc(), targetType);
+		this(JpcBuilder.create().build(), targetType);
 	}
 	
 	public TermToObjectFunction(Jpc context, Type targetType) {
