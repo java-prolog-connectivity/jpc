@@ -83,11 +83,9 @@ public abstract class AbstractPrologEngineDriver<T extends PrologEngine> impleme
 		long startTime = System.nanoTime();
 		T newPrologEngine = basicFactory.createPrologEngine();
 		onCreate(newPrologEngine);
-		
-		PrologResourceLoader resourceLoader = new PrologResourceLoader(newPrologEngine);
-		resourceLoader.ensureLoaded(JPC_LOADER_FILE);
-		
+		loadJpcPrologFiles(newPrologEngine);
 		newPrologEngine.flushOutput();
+		
 		long endTime = System.nanoTime();
 		long total = (endTime - startTime)/1000000;
 		
@@ -105,7 +103,12 @@ public abstract class AbstractPrologEngineDriver<T extends PrologEngine> impleme
 		return newPrologEngine;
 	}
 
+	protected void loadJpcPrologFiles(T prologEngine) {
+		PrologResourceLoader resourceLoader = new PrologResourceLoader(prologEngine);
+		resourceLoader.ensureLoaded(JPC_LOADER_FILE);
+	}
 
+	
 	/**
 	 * @throw an exception if the driver is not ready. A driver can be created with incomplete information, missing information (e.g., engine paths)  could be added later with, for example, a GUI.
 	 */
@@ -124,6 +127,8 @@ public abstract class AbstractPrologEngineDriver<T extends PrologEngine> impleme
 	protected void onCreate(PrologEngine prologEngine) {
 		//nothing by default, to be overridden if needed
 	}
+	
+
 	
 	/**
 	 * Notify the listeners that the state of this driver is now disabled

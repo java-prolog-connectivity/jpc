@@ -14,8 +14,6 @@ import org.jpc.term.Term;
  *
  */
 public interface PrologEngine extends PrologDatabase {
-
-	public LogtalkEngine asLogtalkEngine();
 	
 	/* ********************************************************************************************************************************
 	 * CORE QUERY METHODS (and overloaded variations of those methods)
@@ -210,13 +208,21 @@ public interface PrologEngine extends PrologDatabase {
 	public Term unify(List<? extends Term> terms);
 
 
-	
 	/* ********************************************************************************************************************************
 	 * UTILITY METHODS
      **********************************************************************************************************************************
      */
 	
-	
 	public boolean allSucceed(List<? extends Term> terms);
+	
+	
+	/* ********************************************************************************************************************************
+	 * Logtalk
+     **********************************************************************************************************************************
+     */
+	
+	public LogtalkEngine withLogtalk();
+	
+	public LogtalkEngine asLogtalkEngine();
 
 }

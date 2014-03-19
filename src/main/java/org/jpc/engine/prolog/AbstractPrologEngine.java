@@ -20,6 +20,7 @@ import static org.jpc.engine.prolog.PrologConstants.SETOF;
 import static org.jpc.engine.prolog.PrologConstants.SET_PROLOG_FLAG;
 import static org.jpc.term.ListTerm.listTerm;
 import static org.jpc.term.Var.ANONYMOUS_VAR;
+import static org.jpc.util.JpcPreferences.JPC_LOGTALK_LOADER_FILE;
 import static org.jpc.util.JpcPreferences.JPC_VAR_PREFIX;
 import static org.jpc.util.PrologUtil.termSequence;
 
@@ -42,7 +43,9 @@ import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
 import org.jpc.term.expansion.PositionalSymbolExpander;
+import org.jpc.util.LogtalkUtil;
 import org.jpc.util.PrologUtil;
+import org.jpc.util.engine.PrologResourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,11 +59,6 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	
 	public AbstractPrologEngine() {
 	}
-	
-	public LogtalkEngine asLogtalkEngine() {
-		return new LogtalkEngine(this);
-	}
-	
 	
 	/* ********************************************************************************************************************************
 	 * CORE METHODS (and overloaded variations of those methods)
@@ -422,6 +420,50 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 				success = false;
 		}
 		return success;
+	}
+	
+	
+	/* ********************************************************************************************************************************
+	 * Logtalk
+     **********************************************************************************************************************************
+     */
+	
+	@Override
+	public LogtalkEngine asLogtalkEngine() {
+		return new LogtalkEngine(this);
+	}
+	
+	@Override
+	public LogtalkEngine withLogtalk() {
+		boolean logtalkLoaded = false;
+		String prologDialect = prologDialect();
+		logger.info("Attempting to load logtalk in a " + prologDialect + " Prolog engine...");
+		
+		long startTime = System.nanoTime();
+		try {
+			String logtalkIntegrationScript = LogtalkUtil.logtalkIntegrationScriptOrThrow(prologDialect); //will throw an exception if a Logtalk integration script cannot be found for a given engine
+			logtalkLoaded = ensureLoaded(logtalkIntegrationScript);
+		} catch(Exception ex) {
+			logger.error(ex.getMessage());
+		}
+		flushOutput();
+		if(logtalkLoaded) {
+			logger.trace("Logtalk loaded successfully.");
+			loadJpcLogtalkFiles();
+			logger.trace("Additional Logtalk configuration files were also loaded successfully.");
+			long endTime = System.nanoTime();
+			long total = (endTime - startTime)/1000000;
+			logger.info("Logtalk was configured in " + prologDialect + " in " + total + " milliseconds.");
+		}
+		else {
+			logger.warn("Impossible to load Logtalk in the " + prologDialect + " Logic Engine. Some features may not be available.");
+		}
+		return asLogtalkEngine();
+	}
+	
+	protected void loadJpcLogtalkFiles() {
+		PrologResourceLoader resourceLoader = new PrologResourceLoader(this);
+		resourceLoader.logtalkLoad(JPC_LOGTALK_LOADER_FILE);
 	}
 	
 }

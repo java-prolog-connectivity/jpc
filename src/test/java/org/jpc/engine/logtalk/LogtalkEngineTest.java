@@ -20,6 +20,11 @@ import org.junit.Test;
  */
 public class LogtalkEngineTest {
 	
+	@Test
+	public void testIsLogtalkLoaded() {
+		assertTrue(defaultPrologEngine().asLogtalkEngine().isLogtalkLoaded());
+	}
+	
 	/**
 	 * verify that the Logtalk operators have been defined in the logic engine
 	 */

@@ -60,6 +60,10 @@ public class LogtalkEngine extends PrologEngineProxy {
 		super(prologEngine);
 	}
 	
+	public boolean isLogtalkLoaded() {
+		return query("current_predicate(logtalk_load/1)").hasSolution();
+	}
+	
 	public boolean logtalkLoad(List<? extends Term> terms) {
 		return query(new Compound(LOGTALK_LOAD, asList(listTerm(terms)))).hasSolution(); 
 	}
