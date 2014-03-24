@@ -44,7 +44,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 * @throws IllegalStateException if the cursor state is not READY.
 	 */
 	public synchronized long numberOfSolutions() {
-		return allSolutions().size(); 
+		return nonSynchronizedAllSolutions().size();
 	}
 
 	/**
@@ -55,7 +55,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 */
 	public synchronized boolean hasSolution() {
 		try {
-			oneSolutionOrThrow();
+			nonSynchronizedOneSolutionOrThrow();
 			return true;
 		} catch(NoSuchElementException e) {
 			return false;
@@ -69,7 +69,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 */
 	public Optional<T> oneSolution() {
 		try {
-			return Optional.of(oneSolutionOrThrow());
+			return Optional.of(nonSynchronizedOneSolutionOrThrow());
 		} catch(NoSuchElementException e) {
 			return Optional.absent();
 		}
@@ -83,6 +83,10 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 * @throws NoSuchElementException if there are no solutions to the query.
 	 */
 	public synchronized T oneSolutionOrThrow() {
+		return nonSynchronizedOneSolutionOrThrow();
+	}
+
+	protected T nonSynchronizedOneSolutionOrThrow() {
 		open();
 		try {
 			return basicOneSolutionOrThrow();
@@ -90,10 +94,10 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 			setState(EXHAUSTED);
 			throw e;
 		} finally {
-			close();
-		} 
+			nonSynchronizedClose();
+		}
 	}
-
+	
 	protected T basicOneSolutionOrThrow() {
 		return basicNext(); //will throw a NoSuchElementException if there are no solutions
 	}
@@ -106,7 +110,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 * @throws IllegalStateException if the cursor state is not READY.
 	 */
 	public synchronized List<T> nSolutions(long n) {
-		return solutionsRange(0, n);
+		return nonSynchronizedSolutionsRange(0, n);
 	}
 
 
@@ -119,12 +123,16 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 * @throws IllegalStateException if the cursor state is not READY.
 	 */
 	public synchronized List<T> solutionsRange(long from, long to) {
+		return nonSynchronizedSolutionsRange(from, to);
+	}
+	
+	protected List<T> nonSynchronizedSolutionsRange(long from, long to) {
 		if(!isReady())
 			throw new IllegalStateException();
 		checkArgument(from >= 0);
 		checkArgument(to > from);
 		List<T> solutions = new ArrayList<>();
-		try (Cursor<T> autoCloseable = this) {
+		try {
 			long count = 0;
 			while(count<to) {
 				T solution = null;
@@ -138,6 +146,8 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 					//throw new IndexOutOfBoundsException("The cursor " + this + "has only " + count + " solutions");
 				}
 			}
+		} finally {
+			nonSynchronizedClose();
 		}
 		return solutions;
 	}
@@ -149,12 +159,18 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 * @throws IllegalStateException if the cursor state is not READY.
 	 */
 	public synchronized List<T> allSolutions() {
-		open();
-		try (Cursor<T> autoCloseable = this) {
-			return basicAllSolutions();
-		}
+		return nonSynchronizedAllSolutions();
 	}
 
+	protected List<T> nonSynchronizedAllSolutions() {
+		open();
+		try {
+			return basicAllSolutions();
+		} finally {
+			nonSynchronizedClose();
+		}
+	}
+	
 	/**
 	 * The default implementation for obtaining all the solutions consists on just making use of the existing next() method
 	 * However, children could override this in case many calls to next() are more expensive that obtaining all the results of the query at once (e.g., a findall/3 query in Prolog)
@@ -203,11 +219,11 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 * This method is not synchronized since it is supposed to be called from a thread different to the one currently executing a query.
 	 * @throws IllegalStateException if the cursor is not open.
 	 */
-	public void abort() {
+	public synchronized void abort() {
 		if(!isOpen())
 			throw new IllegalStateException();
 		basicAbort();
-		close();
+		nonSynchronizedClose();
 	}
 	
 	public abstract boolean isAbortable();
@@ -220,6 +236,10 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	}
 	
 	public synchronized void close() {
+		nonSynchronizedClose();
+	}
+	
+	protected void nonSynchronizedClose() {
 		if(!isReady()) { //there is no need to close if the state is READY
 			basicClose();
 			cachedNext = null;
