@@ -76,7 +76,7 @@ public class EngineConfigurationDeserializer implements JsonDeserializer<EngineC
 			if(customFactory == null)
 				throw new JpcException("Impossible to instantiate factory " + factoryClassNameJson.getAsString() + ".");
 			if(!(customFactory instanceof PrologEngineFactory))
-				throw new JpcException("Engine factory should be an instance of " + PrologEngineFactory.class.getCanonicalName() + ".");
+				throw new JpcException("Engine factory should be an instance of " + PrologEngineFactory.class.getName() + ".");
 			else
 				engineFactory = (PrologEngineFactory<?>) customFactory;
 		}
