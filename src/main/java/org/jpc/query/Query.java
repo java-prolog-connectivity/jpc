@@ -65,15 +65,9 @@ public abstract class Query extends Cursor<Solution> {
 			getJpcContext().handleError(solution.getErrorTerm(), getGoal());
 	}
 	
-	public synchronized Solution next() {
-		Solution solution = super.next();
-		if(shouldVerifySolution())
-			verify(solution);
-		return solution;
-	}
-	
-	public synchronized Solution oneSolutionOrThrow() {
-		Solution solution = super.oneSolutionOrThrow();
+	@Override
+	public Solution cachedNext() {
+		Solution solution = super.cachedNext();
 		if(shouldVerifySolution())
 			verify(solution);
 		return solution;

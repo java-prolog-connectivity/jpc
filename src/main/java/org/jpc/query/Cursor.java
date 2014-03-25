@@ -67,7 +67,15 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 * @return an Optional value with the first solution. Empty means that there are no solutions.
 	 * @throws IllegalStateException if the cursor state is not READY.
 	 */
-	public Optional<T> oneSolution() {
+	public synchronized Optional<T> oneSolution() {
+		try {
+			return Optional.of(nonSynchronizedOneSolutionOrThrow());
+		} catch(NoSuchElementException e) {
+			return Optional.absent();
+		}
+	}
+	
+	protected Optional<T> nonSynchronizedOneSolution() {
 		try {
 			return Optional.of(nonSynchronizedOneSolutionOrThrow());
 		} catch(NoSuchElementException e) {
@@ -99,7 +107,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	}
 	
 	protected T basicOneSolutionOrThrow() {
-		return basicNext(); //will throw a NoSuchElementException if there are no solutions
+		return cachedNext(); //will throw a NoSuchElementException if there are no solutions
 	}
 	
 	/**
@@ -235,6 +243,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 		setState(OPEN);
 	}
 	
+	@Override
 	public synchronized void close() {
 		nonSynchronizedClose();
 	}
@@ -278,7 +287,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 		}
 	}
 	
-	private T cachedNext() {
+	protected T cachedNext() {
 		if(isExhausted())
 			throw new NoSuchElementException();
 		if(isReady())
