@@ -10,7 +10,7 @@ import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
-import org.minitoolbox.reflection.javatype.ParameterizedTypeImpl;
+import org.minitoolbox.reflection.reification.ParameterizedTypeImpl;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
 public class IteratorConverter<T extends Term> implements ToTermConverter<Iterator<?>, T>, FromTermConverter<T, Iterator<?>> {

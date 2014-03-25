@@ -11,7 +11,7 @@ import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Term;
-import org.minitoolbox.reflection.javatype.ParameterizedTypeImpl;
+import org.minitoolbox.reflection.reification.ParameterizedTypeImpl;
 import org.minitoolbox.reflection.typewrapper.ArrayTypeWrapper;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 

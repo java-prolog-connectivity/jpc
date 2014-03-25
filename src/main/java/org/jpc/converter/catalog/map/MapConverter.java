@@ -16,7 +16,7 @@ import org.jpc.converter.typesolver.catalog.MapTypeSolver;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
-import org.minitoolbox.reflection.javatype.ParameterizedTypeImpl;
+import org.minitoolbox.reflection.reification.ParameterizedTypeImpl;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
 public abstract class MapConverter {
