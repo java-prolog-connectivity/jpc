@@ -13,7 +13,7 @@ public class PrologErrorsTest {
 	@Test
 	public void testPrologError() {
 		try {
-			defaultPrologEngine().query("throw(dummy_error)").hasSolution(); //Arguments are not sufficiently instantiated
+			defaultPrologEngine().query("throw(dummy_error)").hasSolution(); //Throwing an error.
 			fail();
 		} catch(org.jpc.error.PrologError e){
 			assertEquals(new Atom("dummy_error"), e.asTerm());
