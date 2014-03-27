@@ -5,10 +5,10 @@ import org.jpc.Jpc;
 import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Compound;
 
-public class ToJTermConverter implements ToTermConverter<Object, Compound> {
+public class ToJTermConverter<T> implements ToTermConverter<T, Compound> {
 
 	@Override
-	public Compound toTerm(Object object, Class<Compound> termClass, Jpc context) {
+	public Compound toTerm(T object, Class<Compound> termClass, Jpc context) {
 		Compound compound = context.jTerm(object);
 		if(compound == null)
 			throw new ConversionException();
