@@ -15,7 +15,7 @@ import org.jpc.term.Compound;
 import org.jpc.term.Var;
 import org.junit.Test;
 
-public class CustomTermConverterTest {
+public class CustomTermConversionsTest {
 
 	class HelloConverter implements FromTermConverter<Compound, String> {
 		@Override
