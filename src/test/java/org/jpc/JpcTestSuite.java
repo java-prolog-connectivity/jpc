@@ -1,8 +1,9 @@
 package org.jpc;
 
-import org.jpc.converter.CustomTermConverterTest;
-import org.jpc.converter.DefaultConverterTest;
-import org.jpc.converter.TypeSolverTest;
+import org.jpc.converter.CustomTermConversionsTest;
+import org.jpc.converter.DefaultConversionsTest;
+import org.jpc.converter.ReificationConversionsTest;
+import org.jpc.converter.typesolver.TypeSolverTest;
 import org.jpc.engine.embedded.JpcEmbeddedEngineTestSuite;
 import org.jpc.salt.JpcTermWriterTest;
 import org.jpc.term.AbstractTermTest;
@@ -42,8 +43,9 @@ import org.junit.runners.Suite;
 	JTermTest.class,
 	SerializedTermTest.class,
 	TypeSolverTest.class,
-	DefaultConverterTest.class,
-	CustomTermConverterTest.class,
+	DefaultConversionsTest.class,
+	CustomTermConversionsTest.class,
+	ReificationConversionsTest.class,
 	PrologUtilTest.class,
 	EngineConfigurationDeserializerTest.class,
 	JpcConfigurationDeserializerTest.class
