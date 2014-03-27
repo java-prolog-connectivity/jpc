@@ -39,6 +39,7 @@ import org.jpc.converter.catalog.list.CollectionConverter;
 import org.jpc.converter.catalog.list.EnumerationConverter;
 import org.jpc.converter.catalog.list.IterableConverter;
 import org.jpc.converter.catalog.list.IteratorConverter;
+import org.jpc.converter.catalog.logtalk.LogtalkMethodCallConverter;
 import org.jpc.converter.catalog.map.MapConverter.MapToTermConverter;
 import org.jpc.converter.catalog.map.MapConverter.TermToMapConverter;
 import org.jpc.converter.catalog.map.MapEntryConverter.MapEntryToTermConverter;
@@ -48,11 +49,13 @@ import org.jpc.converter.catalog.primitive.CharacterToNumberTermConverter;
 import org.jpc.converter.catalog.primitive.NumberToNumberTermConverter;
 import org.jpc.converter.catalog.primitive.ObjectToAtomConverter;
 import org.jpc.converter.catalog.primitive.StringToNumberTermConverter;
+import org.jpc.converter.catalog.reification.StaticClassConverter;
 import org.jpc.converter.catalog.serialized.FromSerializedConverter;
 import org.jpc.converter.typesolver.catalog.MapTypeSolver;
 import org.jpc.engine.embedded.JpcEngine;
 import org.jpc.engine.embedded.database.IndexDescriptor;
 import org.jpc.engine.embedded.database.MutableIndexManager;
+import org.jpc.engine.logtalk.LogtalkConstants;
 import org.jpc.query.Query;
 import org.jpc.query.Solution;
 import org.jpc.term.Atom;
@@ -86,6 +89,9 @@ public class JpcConverterManager extends JGumConverterManager {
 		ConverterManager.registerDefaults(converterManager); //registering jconverter defaults.
 		
 		converterManager.register(new FromSerializedConverter(), new Functor(SerializedTerm.SERIALIZED_TERM_FUNCTOR, 1).asTerm());
+		converterManager.register(new LogtalkMethodCallConverter(), new Functor(LogtalkConstants.LOGTALK_OPERATOR, 2).asTerm());
+		
+		converterManager.register(new StaticClassConverter(), new Functor(StaticClassConverter.STATIC_CLASS_FUNCTOR_NAME, 2).asTerm());
 		
 		converterManager.register(new TermConvertableConverter());
 		converterManager.register(new VarConverter());
