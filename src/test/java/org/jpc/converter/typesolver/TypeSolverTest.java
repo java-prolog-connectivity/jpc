@@ -1,4 +1,4 @@
-package org.jpc.converter;
+package org.jpc.converter.typesolver;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
