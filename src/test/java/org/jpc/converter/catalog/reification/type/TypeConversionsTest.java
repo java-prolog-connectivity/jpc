@@ -1,16 +1,16 @@
-package org.jpc.converter;
+package org.jpc.converter.catalog.reification.type;
 
 
 import static org.junit.Assert.assertEquals;
 
 import org.jpc.Jpc;
 import org.jpc.JpcBuilder;
-import org.jpc.converter.ReificationConversionsTest.A.B.C;
+import org.jpc.converter.catalog.reification.type.TypeConversionsTest.A.B.C;
 import org.jpc.term.Compound;
 import org.junit.Test;
 import org.minitoolbox.reflection.reification.StaticClass;
 
-public class ReificationConversionsTest {
+public class TypeConversionsTest {
 
 	public static class A {
 		public static class B {

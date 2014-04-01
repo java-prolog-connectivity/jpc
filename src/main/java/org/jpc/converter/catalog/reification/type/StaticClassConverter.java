@@ -1,4 +1,4 @@
-package org.jpc.converter.catalog.reification;
+package org.jpc.converter.catalog.reification.type;
 
 import static java.util.Arrays.asList;
 
@@ -41,7 +41,6 @@ public class StaticClassConverter implements ToTermConverter<StaticClass, Compou
 	@Override
 	public Compound toTerm(StaticClass staticClass, Class<Compound> termClass, Jpc jpc) {
 		String[] dotSplitted = staticClass.getWrappedClass().getName().split("[.]");
-		System.out.println(asList(dotSplitted));
 		List<String> packageFragmentNames = new ArrayList<>(asList(dotSplitted));
 		String classPart = packageFragmentNames.remove(packageFragmentNames.size() - 1);
 		List<String> classFragmentNames = asList(classPart.split("[$]"));

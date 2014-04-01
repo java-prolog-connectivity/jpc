@@ -1,4 +1,4 @@
-package org.jpc.converter.catalog.logtalk;
+package org.jpc.converter.catalog.reification;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -16,7 +16,7 @@ import org.jpc.term.Term;
 import org.minitoolbox.reflection.ReflectionUtil;
 import org.minitoolbox.reflection.reification.StaticClass;
 
-public class LogtalkMethodCallConverter<T> implements FromTermConverter<Compound, T> {
+public class MethodCallConverter<T> implements FromTermConverter<Compound, T> {
 
 	@Override
 	public T fromTerm(Compound term, Type targetType, Jpc jpc) {
