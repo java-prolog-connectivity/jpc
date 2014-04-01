@@ -1,4 +1,4 @@
-package org.jpc.term.jterm;
+package org.jpc.term.jrefterm;
 
 import static java.util.Arrays.asList;
 
@@ -14,33 +14,33 @@ import com.google.common.collect.MapMaker;
  * @author sergioc
  *
  */
-public class JTermIdManager {
+public class JRefTermIdManager {
 	
-	private static JTermIdManager defaultJTermIdManager = new JTermIdManager();
+	private static JRefTermIdManager defaultJRefTermIdManager = new JRefTermIdManager();
 	
-	public static JTermIdManager getDefault() {
-		return defaultJTermIdManager;
+	public static JRefTermIdManager getDefault() {
+		return defaultJRefTermIdManager;
 	}
 	
 	private int counter;
 	
 	private final Map<Object, Compound> currentRefs = new MapMaker().weakKeys().makeMap();
 	
-	private JTermIdManager(){}
+	private JRefTermIdManager(){}
 	
 	/**
 	 * 
 	 * @param ref the object to which has been assigned a reference id
 	 * @return the reference id
 	 */
-	public synchronized Compound jTermId(Object ref) {
+	public synchronized Compound jRefTermId(Object ref) {
 		return currentRefs.get(ref);
 	}
 
-	public synchronized Compound newJTermId(Object ref) {
-		Compound id = jTermId(ref);
+	public synchronized Compound newJRefTermId(Object ref) {
+		Compound id = jRefTermId(ref);
 		if(id == null) {
-			id = new Compound(JTermManager.JTERM_FUNCTOR_NAME, asList(new IntegerTerm(counter++)));
+			id = new Compound(JRefTermManager.JREF_TERM_FUNCTOR_NAME, asList(new IntegerTerm(counter++)));
 			currentRefs.put(ref, id);
 		}
 		return id;	

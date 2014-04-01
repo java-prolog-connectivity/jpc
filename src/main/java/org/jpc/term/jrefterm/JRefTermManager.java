@@ -1,4 +1,4 @@
-package org.jpc.term.jterm;
+package org.jpc.term.jrefterm;
 
 import static java.util.Arrays.asList;
 
@@ -24,82 +24,82 @@ import com.google.common.base.Optional;
 import com.google.common.collect.MapMaker;
 
 /**
- * Allows to create term a representation (referred as a 'jterm') for arbitrary Java object references.
+ * Allows to create term a representation (referred as a 'jRefTerm') for arbitrary Java object references.
  * These term representations may be explicitly provided by a programmer (they must be compound terms),
  * or they may be generated under the curtains when no provided.
- * When generated, term references have the form 'jterm(id)', where id uniquely identifies the reference (in the current class loader).
+ * When generated, term references have the form 'jref_term(id)', where id uniquely identifies the reference (in the current class loader).
  * @author sergioc
  *
  */
-public class JTermManager {
+public class JRefTermManager {
 	
 	/**
 	 * This dedicated cleaner executes cleaning tasks (in a separate thread) of weak and soft references that have been reclaimed.
 	 * Such references defined a cleanUp() method invoked by the cleaner when the references have been garbage collected.
 	 */
-	private static ReferencesCleaner defaultJTermCleaner;
+	private static ReferencesCleaner defaultJRefTermCleaner;
 
 	/**
 	 * References cleaner.
 	 * @return the default references cleaner.
 	 */
-	private static synchronized ReferencesCleaner getJTermCleaner() {
-		if(defaultJTermCleaner == null) {
-			defaultJTermCleaner = new ReferencesCleaner(new ReferenceQueue<Object>());
-			defaultJTermCleaner.start(); //the cleaner is started lazily (i.e., when it is requested for first time) in a new thread. The idea is to avoid creating a new thread if this feature is not used.
+	private static synchronized ReferencesCleaner getJRefTermCleaner() {
+		if(defaultJRefTermCleaner == null) {
+			defaultJRefTermCleaner = new ReferencesCleaner(new ReferenceQueue<Object>());
+			defaultJRefTermCleaner.start(); //the cleaner is started lazily (i.e., when it is requested for first time) in a new thread. The idea is to avoid creating a new thread if this feature is not used.
 		}
-		return defaultJTermCleaner;
+		return defaultJRefTermCleaner;
 	}
 	
-	public static final String JTERM_FUNCTOR_NAME = "jterm"; //references are stored in the embedded database as: jterm(Compound, JRef)
+	public static final String JREF_TERM_FUNCTOR_NAME = "jref_term"; //references are stored in the embedded database as: jrefterm(Compound, JRef)
 
 	/**
 	 * This singleton is responsible to maintain weak references for which an id has been automatically generated.
-	 * This ensures the contract that automatically-generated references are always the same for a given object, independently of the JTermManager employed.
+	 * This ensures the contract that automatically-generated references are always the same for a given object, independently of the JRefTermManager employed.
 	 * The association between a term and a weak reference persists until the reference is garbage collected.
-	 * If a term cannot be resolved by a jTermManager, this singleton manager is queried.
+	 * If a term cannot be resolved by a jRefTermManager, this singleton manager is queried.
 	 * 
 	 */
-	private static final JTermManager weakJTermManager = new JTermManager(); 
+	private static final JRefTermManager weakJRefTermManager = new JRefTermManager(); 
 	
 	/**
-	 * @return the weak JTermManager.
+	 * @return the weak JRefTermManager.
 	 */
-	private static JTermManager getWeakJTermManager() {
-		return weakJTermManager;
+	private static JRefTermManager getWeakJRefTermManager() {
+		return weakJRefTermManager;
 	}
 	
 	/**
 	 * @param ref an object to map to a term. 
 	 * @return a term representation of the object. A weak reference to the object is internally maintained.
 	 */
-	public static Compound weakJTerm(Object ref) {
-		return getWeakJTermManager().newWeakJTerm(ref);
+	public static Compound weakJRefTerm(Object ref) {
+		return getWeakJRefTermManager().newWeakJRefTerm(ref);
 	}
 
 	/**
 	 * @param ref an object to map to a term. 
 	 * @return a term representation of the object. A soft reference to the object is internally maintained.
 	 */
-	public static Compound softJTerm(Object ref) {
-		return getWeakJTermManager().newSoftJTerm(ref);
+	public static Compound softJRefTerm(Object ref) {
+		return getWeakJRefTermManager().newSoftJRefTerm(ref);
 	}
 	
 
 	private final JpcEngine embeddedEngine; //embedded Jpc Prolog engine.
-	private final ReferenceQueue<?> referenceQueue; //weak references created by the JTermManager will be instantiated using this reference queue.
+	private final ReferenceQueue<?> referenceQueue; //weak references created by the JRefTermManager will be instantiated using this reference queue.
 	/**
-	 * This map associates objects with their jterm representation.
-	 * Instantiated as a weak map, it discards an entry when the key (the object associated with the jterm) is marked for garbage collection.
+	 * This map associates objects with their jRefTerm representation.
+	 * Instantiated as a weak map, it discards an entry when the key (the object associated with the jRefTerm) is marked for garbage collection.
 	 */
 	private final Map<Object, Compound> currentRefsMap; //weak keys map.
 	
 	
-	public JTermManager() {
-		this(getJTermCleaner().getReferenceQueue());
+	public JRefTermManager() {
+		this(getJRefTermCleaner().getReferenceQueue());
 	}
 	
-	public JTermManager(ReferenceQueue<?> referenceQueue) {
+	public JRefTermManager(ReferenceQueue<?> referenceQueue) {
 		this.referenceQueue = referenceQueue;
 		/**
 		 * Quoting from the Guava documentation (http://docs.guava-libraries.googlecode.com/git-history/release/javadoc/com/google/common/collect/MapMaker.html) :
@@ -109,12 +109,12 @@ public class JTermManager {
 		 * Likewise, if weakValues() or softValues() was specified, the map uses identity comparisons for values. "
 		 * 
 		 * Therefore, our map uses identity (reference) comparisons. 
-		 * This is a desirable property, since we need different term ids (jterms) for objects with different references, and this is independent of the objects being equals according to their equals() methods.
+		 * This is a desirable property, since we need different term ids (jRefTerms) for objects with different references, and this is independent of the objects being equals according to their equals() methods.
 		 */
 		currentRefsMap = new MapMaker().weakKeys().makeMap();
 		embeddedEngine = new JpcEngine();
 		MutableIndexManager indexManager = embeddedEngine.getIndexManager();
-		Functor jtermFunctor = new Functor(JTERM_FUNCTOR_NAME, 2);
+		Functor jRefTermFunctor = new Functor(JREF_TERM_FUNCTOR_NAME, 2);
 		//IndexDescriptor indexDescriptor = IndexDescriptor.forArgument(1); //inefficient.
 		IndexDescriptor firstArgumentIdx = IndexDescriptor.forIndexedArgument(1, indexManager); //makes use of any index defined for the first argument.
 //		IndexDescriptor secondArgumentIdx = new IndexDescriptor(new Function<Term, Object>() {
@@ -125,12 +125,12 @@ public class JTermManager {
 //				Object referent = jRef.getReferent();
 //				Object key = null;
 //				if(referent != null)
-//					key = JTermIdManager.getDefault().jTermId(referent);
+//					key = JRefTermIdManager.getDefault().jRefTermId(referent);
 //				return key;
 //			}
 //		}); //index also by the referent in the second argument.
-		//indexManager.setIndexDescriptors(jtermFunctor, asList(firstArgumentIdx, secondArgumentIdx)); //clause heads having jterm/2 as a functor will be indexed according to their first and second argument.
-		indexManager.setIndexDescriptors(jtermFunctor, asList(firstArgumentIdx));
+		//indexManager.setIndexDescriptors(jRefTermFunctor, asList(firstArgumentIdx, secondArgumentIdx)); //clause heads having jref_term/2 as a functor will be indexed according to their first and second argument.
+		indexManager.setIndexDescriptors(jRefTermFunctor, asList(firstArgumentIdx));
 	}
 
 	public MutableIndexManager getIndexManager() {
@@ -138,20 +138,20 @@ public class JTermManager {
 	}
 
 	private void remove(Compound compound) {
-		embeddedEngine.retractOne(new Compound(JTERM_FUNCTOR_NAME, asList(compound, Var.ANONYMOUS_VAR)));
+		embeddedEngine.retractOne(new Compound(JREF_TERM_FUNCTOR_NAME, asList(compound, Var.ANONYMOUS_VAR)));
 	}
 	
 	private void remove(JRef<?> jref) {
-		embeddedEngine.retractOne(new Compound(JTERM_FUNCTOR_NAME, asList(Var.ANONYMOUS_VAR, jref)));
+		embeddedEngine.retractOne(new Compound(JREF_TERM_FUNCTOR_NAME, asList(Var.ANONYMOUS_VAR, jref)));
 	}
 	
 	private void put(Compound compound, JRef<?> jref) {
-		embeddedEngine.assertz(new Compound(JTERM_FUNCTOR_NAME, asList(compound, jref)));
+		embeddedEngine.assertz(new Compound(JREF_TERM_FUNCTOR_NAME, asList(compound, jref)));
 	}
 	
 	private <T> Optional<JRef<T>> getJRef(Compound compound) {
 		String jRefVarName = "X";
-		Query query = embeddedEngine.query(new Compound(JTERM_FUNCTOR_NAME, asList(compound, new Var(jRefVarName))));
+		Query query = embeddedEngine.query(new Compound(JREF_TERM_FUNCTOR_NAME, asList(compound, new Var(jRefVarName))));
 		Optional<Solution> optSolution = query.oneSolution();
 		JRef<T> jRef = null;
 		if(optSolution.isPresent()) {
@@ -160,9 +160,9 @@ public class JTermManager {
 		return Optional.fromNullable(jRef);
 	}
 	
-//	private Optional<Compound> getJTerm(JRef<?> jref) {
+//	private Optional<Compound> getJRefTerm(JRef<?> jref) {
 //		String compoundVarName = "X";
-//		Query query = embeddedEngine.query(new Compound(JTERM_FUNCTOR_NAME, asList(new Var(compoundVarName), jref)));
+//		Query query = embeddedEngine.query(new Compound(JREF_TERM_FUNCTOR_NAME, asList(new Var(compoundVarName), jref)));
 //		Optional<Solution> optSolution = query.oneSolution();
 //		Compound compound = null;
 //		if(optSolution.isPresent()) {
@@ -171,8 +171,8 @@ public class JTermManager {
 //		return Optional.fromNullable(compound);
 //	}
 //	
-//	private Optional<Compound> getJTermFromReferent(Object referent) {
-//		return getJTerm((JRef<?>)JRef.jRef(referent));
+//	private Optional<Compound> getJRefTermFromReferent(Object referent) {
+//		return getJRefTerm((JRef<?>)JRef.jRef(referent));
 //	}
 	
 	private <T> JRef<T> basicNewJRef(T ref, final Compound compound, ReferenceType type) {
@@ -197,22 +197,22 @@ public class JTermManager {
 	
 	/**
 	 * Maps an object to a given term representation.
-	 * @param ref the object to identify as a jterm.
-	 * @param compound the term representation (jterm) of the object sent as first argument.
+	 * @param ref the object to identify as a jrefterm.
+	 * @param compound the term representation (jrefterm) of the object reference sent as first argument.
 	 * @return a JRef for the object sent as second argument, uniquely identified by the term sent as first argument.
 	 */
 	private <T> JRef<T> newJRef(T ref, Compound compound, ReferenceType type) {
 		JRef<T> jref = null;
 		Optional<JRef<T>> existingJRefOpt = getJRef(compound); //see if the compound has already been associated with a reference.
 		if(!existingJRefOpt.isPresent()) {
-			Compound existingJTerm = currentRefsMap.get(ref); //see if the reference has already been associated with a term.
-			if(existingJTerm == null) {
+			Compound existingJRefTerm = currentRefsMap.get(ref); //see if the reference has already been associated with a term.
+			if(existingJRefTerm == null) {
 				jref = basicNewJRef(ref, compound, type);
 				put(compound, (JRef<T>)jref);
 				currentRefsMap.put(ref, compound);
 			} else {
-				if(!existingJTerm.equals(compound))
-					throw new JpcException("Reference " + ref + " is already registered with the term reference id: " + existingJTerm + ".");
+				if(!existingJRefTerm.equals(compound))
+					throw new JpcException("Reference " + ref + " is already registered with the term reference id: " + existingJRefTerm + ".");
 			}
 		} else {
 			JRef<T> existingJRef = existingJRefOpt.get();
@@ -241,7 +241,7 @@ public class JTermManager {
 	 * @param compound the term representation of the object sent as first argument.
 	 * @return the term representation of the object (the second parameter).
 	 */
-	public synchronized Compound newSoftJTerm(Object ref, Compound compound) {
+	public synchronized Compound newSoftJRefTerm(Object ref, Compound compound) {
 		newJRef(ref, compound, ReferenceType.SOFT);
 		return compound;
 	}
@@ -253,11 +253,11 @@ public class JTermManager {
 	 * @param ref the object to identify as a term reference.
 	 * @return the (generated) term representation of a reference.
 	 */
-	public synchronized Compound newSoftJTerm(Object ref) {
-		Compound refId = JTermIdManager.getDefault().newJTermId(ref);
-		newSoftJTerm(ref, refId);
-		if(this != getWeakJTermManager())
-			getWeakJTermManager().newWeakJTerm(ref, refId); //registered in the global reference manager (the global register is always weak).
+	public synchronized Compound newSoftJRefTerm(Object ref) {
+		Compound refId = JRefTermIdManager.getDefault().newJRefTermId(ref);
+		newSoftJRefTerm(ref, refId);
+		if(this != getWeakJRefTermManager())
+			getWeakJRefTermManager().newWeakJRefTerm(ref, refId); //registered in the global reference manager (the global register is always weak).
 		return refId;
 	}
 	
@@ -273,7 +273,7 @@ public class JTermManager {
 	 * @param compound the term representation of the object sent as first argument.
 	 * @return the term representation of the object (the second parameter).
 	 */
-	public synchronized Compound newWeakJTerm(Object ref, Compound compound) {
+	public synchronized Compound newWeakJRefTerm(Object ref, Compound compound) {
 		newJRef(ref, compound, ReferenceType.WEAK); //registered in this reference manager.
 		return compound;
 	}
@@ -285,11 +285,11 @@ public class JTermManager {
 	 * @param ref the object to identify as a term reference.
 	 * @return the (generated) term representation of a reference.
 	 */
-	public synchronized Compound newWeakJTerm(Object ref) {
-		Compound refId = JTermIdManager.getDefault().newJTermId(ref);
-		newWeakJTerm(ref, refId);
-		if(this != getWeakJTermManager())
-			getWeakJTermManager().newWeakJTerm(ref, refId); //registered in the global reference manager.
+	public synchronized Compound newWeakJRefTerm(Object ref) {
+		Compound refId = JRefTermIdManager.getDefault().newJRefTermId(ref);
+		newWeakJRefTerm(ref, refId);
+		if(this != getWeakJRefTermManager())
+			getWeakJRefTermManager().newWeakJRefTerm(ref, refId); //registered in the global reference manager.
 		return refId;
 	}
 	
@@ -303,7 +303,7 @@ public class JTermManager {
 	 * @param compound the term representation of the object sent as first argument.
 	 * @return the term representation of the object (the second parameter).
 	 */
-	public synchronized Compound newJTerm(Object ref, Compound compound) {
+	public synchronized Compound newJRefTerm(Object ref, Compound compound) {
 		newJRef(ref, compound, ReferenceType.STRONG); //registered in this reference manager.
 		return compound;
 	}
@@ -315,11 +315,11 @@ public class JTermManager {
 	 * @param ref the object to identify as a term reference.
 	 * @return the (generated) term representation of a reference.
 	 */
-	public synchronized Compound newJTerm(Object ref) {
-		Compound refId = JTermIdManager.getDefault().newJTermId(ref);
-		newJTerm(ref, refId);
-		if(this != getWeakJTermManager())
-			getWeakJTermManager().newWeakJTerm(ref, refId); //registered in the global reference manager (the global register is always weak).
+	public synchronized Compound newJRefTerm(Object ref) {
+		Compound refId = JRefTermIdManager.getDefault().newJRefTermId(ref);
+		newJRefTerm(ref, refId);
+		if(this != getWeakJRefTermManager())
+			getWeakJRefTermManager().newWeakJRefTerm(ref, refId); //registered in the global reference manager (the global register is always weak).
 		return refId;
 	}
 
@@ -327,7 +327,7 @@ public class JTermManager {
 	 * The given term will not be associated anymore to a reference.
 	 * @param term the term representation of a reference to forget.
 	 */
-	public synchronized void forgetJTerm(Compound term) {
+	public synchronized void forgetJRefTerm(Compound term) {
 		Optional<JRef<Object>> jRefOpt = getJRef(term);
 		if(jRefOpt.isPresent()) {
 			JRef<Object> jRef = jRefOpt.get();
@@ -349,17 +349,17 @@ public class JTermManager {
 	 * The given reference will not be associated anymore to a term.
 	 * @param ref the reference to forget.
 	 */
-	public synchronized void forgetJTermRef(Object ref) {
+	public synchronized void forgetRef(Object ref) {
 		Compound compound = currentRefsMap.get(ref);
 		if(compound != null)
-			forgetJTerm(compound);
+			forgetJRefTerm(compound);
 	}
 
 	/**
 	 * @param ref an object reference.
 	 * @return the term representation of a given object reference. Null if the reference is not associated with a term representation.
 	 */
-	public synchronized Compound jTerm(Object ref) {
+	public synchronized Compound jRefTerm(Object ref) {
 		return currentRefsMap.get(ref);
 	}
 
@@ -369,8 +369,8 @@ public class JTermManager {
 	 * @return the term representation of a given object reference.
 	 * @throws JpcException if the reference is not associated with a term representation.
 	 */
-	public synchronized Compound jTermOrThrow(Object ref) {
-		Compound term = jTerm(ref);
+	public synchronized Compound jRefTermOrThrow(Object ref) {
+		Compound term = jRefTerm(ref);
 		if(term == null)
 			throw new JpcException("No term representation associated with: " + ref + ".");
 		return term;
@@ -378,16 +378,16 @@ public class JTermManager {
 	
 	private <T> Optional<JRef<T>> jRefFromCompound(Compound compound) {
 		Optional<JRef<T>> jRefOpt = getJRef(compound);
-		if(!jRefOpt.isPresent() && this != getWeakJTermManager())
-			jRefOpt = getWeakJTermManager().jRefFromCompound(compound);
+		if(!jRefOpt.isPresent() && this != getWeakJRefTermManager())
+			jRefOpt = getWeakJRefTermManager().jRefFromCompound(compound);
 		return jRefOpt;
 	}
 	
-//	private Optional<Compound> jTermFromJTermRef(Object ref) {
-//		Optional<Compound> jTermOpt = getJTermFromReferent(ref);
-//		if(!jTermOpt.isPresent() && this != getWeakJTermManager())
-//			jTermOpt = getWeakJTermManager().jTermFromRef(ref);
-//		return jTermOpt;
+//	private Optional<Compound> jRefTermFromRef(Object ref) {
+//		Optional<Compound> jRefTermOpt = getJRefTermFromReferent(ref);
+//		if(!jRefTermOpt.isPresent() && this != getWeakJRefTermManager())
+//			jRefTermOpt = getWeakJRefTermManager().jRefTermFromRef(ref);
+//		return jRefTermOpt;
 //	}
 	
 	/**

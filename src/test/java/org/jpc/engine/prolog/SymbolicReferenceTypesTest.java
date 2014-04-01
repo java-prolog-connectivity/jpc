@@ -67,7 +67,7 @@ public class SymbolicReferenceTypesTest {
 		PrologEngine prologEngine = defaultPrologEngine();
 		Person person = new Person("Mary");
 		Jpc ctx = JpcBuilder.create().register(new PersonConverter()).build();
-		Term personTerm = ctx.newJTerm(person, ctx.<Compound>toTerm(person));
+		Term personTerm = ctx.newJRefTerm(person, ctx.<Compound>toTerm(person));
 		prologEngine.assertz(new Compound(STUDENT_FUNCTOR_NAME, asList(personTerm)));
 		Query query = prologEngine.query(new Compound(STUDENT_FUNCTOR_NAME, asList(new Var("Person"))), ctx);
 		Person queriedPerson = query.<Person>selectObject("Person").oneSolutionOrThrow();
@@ -91,7 +91,7 @@ public class SymbolicReferenceTypesTest {
 		PrologEngine prologEngine = defaultPrologEngine();
 		Person person = new Person("Mary");
 		Jpc ctx = JpcBuilder.create().build();
-		Term personTerm = ctx.newJTerm(person, new Compound("cool_student", asList(new IntegerTerm(42))));
+		Term personTerm = ctx.newJRefTerm(person, new Compound("cool_student", asList(new IntegerTerm(42))));
 		prologEngine.assertz(new Compound(STUDENT_FUNCTOR_NAME, asList(personTerm)));
 		Query query = prologEngine.query(new Compound(STUDENT_FUNCTOR_NAME, asList(new Var("Person"))), ctx);
 		Person queriedPerson = query.<Person>selectObject("Person").oneSolutionOrThrow();
@@ -104,7 +104,7 @@ public class SymbolicReferenceTypesTest {
 		PrologEngine prologEngine = defaultPrologEngine();
 		Person person = new Person("Mary");
 		Jpc ctx = JpcBuilder.create().build();
-		Term personTerm = ctx.newJTerm(person);
+		Term personTerm = ctx.newJRefTerm(person);
 		prologEngine.assertz(new Compound(STUDENT_FUNCTOR_NAME, asList(personTerm)));
 		Query query = prologEngine.query(new Compound(STUDENT_FUNCTOR_NAME, asList(new Var("Person"))), ctx);
 		Person queriedPerson = query.<Person>selectObject("Person").oneSolutionOrThrow();
@@ -117,10 +117,10 @@ public class SymbolicReferenceTypesTest {
 		PrologEngine prologEngine = defaultPrologEngine();
 		Person person = new Person("Mary");
 		Jpc ctx = JpcBuilder.create().register(new PersonConverter()).build();
-		Term personTerm = ctx.newJTerm(person, ctx.<Compound>toTerm(person));
+		Term personTerm = ctx.newJRefTerm(person, ctx.<Compound>toTerm(person));
 		prologEngine.assertz(new Compound(STUDENT_FUNCTOR_NAME, asList(personTerm)));
 		assertTrue(person == prologEngine.query(new Compound(STUDENT_FUNCTOR_NAME, asList(new Var("Person"))), ctx).selectObject("Person").oneSolutionOrThrow());
-		ctx.forgetJTerm((Compound)personTerm);
+		ctx.forgetJRefTerm((Compound)personTerm);
 		Person queriedPerson = prologEngine.query(new Compound(STUDENT_FUNCTOR_NAME, asList(new Var("Person"))), ctx).<Person>selectObject("Person").oneSolutionOrThrow();
 		assertEquals(person, queriedPerson);
 		assertFalse(person == queriedPerson);
@@ -131,7 +131,7 @@ public class SymbolicReferenceTypesTest {
 		PrologEngine prologEngine = defaultPrologEngine();
 		Person person = new Person("Mary");
 		Jpc ctx = JpcBuilder.create().register(new PersonConverter()).build();
-		Term personTerm = ctx.newWeakJTerm(person, ctx.<Compound>toTerm(person));
+		Term personTerm = ctx.newWeakJRefTerm(person, ctx.<Compound>toTerm(person));
 		prologEngine.assertz(new Compound(STUDENT_FUNCTOR_NAME, asList(personTerm)));
 		person = null;
 		System.gc();

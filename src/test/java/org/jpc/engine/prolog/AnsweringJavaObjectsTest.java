@@ -14,7 +14,7 @@ import org.jpc.term.Compound;
 import org.jpc.term.SerializedTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
-import org.jpc.term.jterm.JTermManager;
+import org.jpc.term.jrefterm.JRefTermManager;
 import org.junit.Test;
 
 public class AnsweringJavaObjectsTest {
@@ -22,7 +22,7 @@ public class AnsweringJavaObjectsTest {
 	@Test
 	public void testObjectReference() {
 		String s1 = new String("x"); //it should not use the interned string "x" in order to avoid mixing the cleaning of dead references across different tests using by chance the same string object.
-		Query query = defaultPrologEngine().query(new Compound("=", Arrays.<Term>asList(new Var("A"), JTermManager.weakJTerm(s1))));
+		Query query = defaultPrologEngine().query(new Compound("=", Arrays.<Term>asList(new Var("A"), JRefTermManager.weakJRefTerm(s1))));
 		String s2 = query.<String>selectObject("A").oneSolutionOrThrow();
 		assertTrue(s1 == s2);
 	}

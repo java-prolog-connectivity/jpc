@@ -1,4 +1,4 @@
-package org.jpc.converter.catalog.jterm;
+package org.jpc.converter.catalog.jrefterm;
 
 import java.lang.reflect.Type;
 
@@ -7,11 +7,11 @@ import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.term.Compound;
 
-public class FromJTermConverter<T> implements FromTermConverter<Compound, T> {
+public class FromJRefTermConverter<T> implements FromTermConverter<Compound, T> {
 
 	@Override
 	public T fromTerm(Compound term, Type type, Jpc context) {
-		T resolved = (T) context.resolveJTerm(term);
+		T resolved = (T) context.resolveJRefTerm(term);
 		if(resolved == null)
 			throw new ConversionException();
 		return resolved;
