@@ -1,4 +1,9 @@
+:- op(650, xfx, (@)).
+
 :- initialization((
 	%set_logtalk_flag(report, off),
-	logtalk_load([jpc_logtalk])
+	set_logtalk_flag(optimize, on),
+	logtalk_load_context(directory, Directory),
+	assertz(logtalk_library_path(jpc_core, Directory)),
+	logtalk_load([atom_term_util,jpc_logtalk])
 )).
