@@ -1,5 +1,11 @@
 package org.jpc.converter.catalog.jrefterm;
 
+import static org.jpc.engine.prolog.ReturnSpecifierConstants.JREF_FLAG_IDENTIFIER;
+import static org.jpc.engine.prolog.ReturnSpecifierConstants.JREF_TERM_FLAG_IDENTIFIER;
+import static org.jpc.engine.prolog.ReturnSpecifierConstants.SOFT_JREF_FLAG_IDENTIFIER;
+import static org.jpc.engine.prolog.ReturnSpecifierConstants.STRONG_JREF_FLAG_IDENTIFIER;
+import static org.jpc.engine.prolog.ReturnSpecifierConstants.WEAK_JREF_FLAG_IDENTIFIER;
+
 import java.lang.reflect.Type;
 
 import org.jpc.Jpc;
@@ -12,12 +18,6 @@ import org.minitoolbox.gc.ReferenceType;
 
 public class TermToJRefTermTypeConverter implements FromTermConverter<Compound, JRefTermType> {
 
-	public static final String JREF_FLAG_IDENTIFIER = "jref";
-	public static final String JREF_TERM_FLAG_IDENTIFIER = "jref_term";
-	public static final String STRONG_JREF_FLAG_IDENTIFIER = "strong";
-	public static final String SOFT_JREF_FLAG_IDENTIFIER = "soft";
-	public static final String WEAK_JREF_FLAG_IDENTIFIER = "weak";
-	
 	@Override
 	public JRefTermType fromTerm(Compound term, Type targetType, Jpc context) {
 		ReferenceType javaReferenceType;
