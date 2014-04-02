@@ -1,6 +1,9 @@
 package org.jpc.converter;
 
 import static java.util.Arrays.asList;
+import static org.jpc.converter.catalog.reification.type.ReificationConstants.ARRAY_FUNCTOR_NAME;
+import static org.jpc.converter.catalog.reification.type.ReificationConstants.STATIC_CLASS_FUNCTOR_NAME;
+import static org.jpc.converter.catalog.reification.type.ReificationConstants.TYPE_FUNCTOR_NAME;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -51,7 +54,14 @@ import org.jpc.converter.catalog.primitive.ObjectToAtomConverter;
 import org.jpc.converter.catalog.primitive.StringToNumberTermConverter;
 import org.jpc.converter.catalog.reification.FieldResolutionConverter;
 import org.jpc.converter.catalog.reification.MethodCallConverter;
+import org.jpc.converter.catalog.reification.type.ClassConverter;
+import org.jpc.converter.catalog.reification.type.GenericArrayTypeToTermConverter;
+import org.jpc.converter.catalog.reification.type.ParameterizedTypeConverter;
 import org.jpc.converter.catalog.reification.type.StaticClassConverter;
+import org.jpc.converter.catalog.reification.type.TermToArrayTypeConverter;
+import org.jpc.converter.catalog.reification.type.TermToVariableTypeConverter;
+import org.jpc.converter.catalog.reification.type.TypeVariableToTermConverter;
+import org.jpc.converter.catalog.reification.type.WildcardTypeToTermConverter;
 import org.jpc.converter.catalog.serialized.FromSerializedConverter;
 import org.jpc.converter.typesolver.catalog.MapTypeSolver;
 import org.jpc.engine.embedded.JpcEngine;
@@ -91,7 +101,18 @@ public class JpcConverterManager extends JGumConverterManager {
 		ConverterManager.registerDefaults(converterManager); //registering jconverter defaults.
 		
 		converterManager.register(new JpcContextConverter(), new Functor(JpcContextConverter.JPC_FUNCTOR, 1).asTerm());
-		converterManager.register(new StaticClassConverter(), new Functor(StaticClassConverter.STATIC_CLASS_FUNCTOR_NAME, 2).asTerm());
+		
+		converterManager.register(new StaticClassConverter(), new Functor(STATIC_CLASS_FUNCTOR_NAME, 2).asTerm());
+		converterManager.register(new ClassConverter(), new Functor(TYPE_FUNCTOR_NAME, 1).asTerm());
+		converterManager.register(new ParameterizedTypeConverter(), new Functor(TYPE_FUNCTOR_NAME, 3).asTerm());
+		converterManager.register(new TermToArrayTypeConverter(), new Functor(ARRAY_FUNCTOR_NAME, 1).asTerm());
+		converterManager.register(new GenericArrayTypeToTermConverter());
+		converterManager.register(new TermToVariableTypeConverter(), new Functor(TYPE_FUNCTOR_NAME, 4).asTerm());
+		converterManager.register(new TypeVariableToTermConverter());
+		converterManager.register(new WildcardTypeToTermConverter());
+		
+		
+		
 		converterManager.register(new FieldResolutionConverter(), new Functor(FieldResolutionConverter.FIELD_RESOLUTION_OPERATOR, 2).asTerm());
 		converterManager.register(new MethodCallConverter(), new Functor(LogtalkConstants.LOGTALK_OPERATOR, 2).asTerm());
 

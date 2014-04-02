@@ -7,6 +7,7 @@ import static org.jpc.converter.catalog.reification.type.ReificationConstants.TY
 import java.lang.reflect.Type;
 
 import org.jpc.Jpc;
+import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
@@ -15,7 +16,7 @@ import org.minitoolbox.reflection.typewrapper.ArrayTypeWrapper;
 import org.minitoolbox.reflection.typewrapper.SingleTypeWrapper;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
-public class ClassToTermConverter implements ToTermConverter<Class<?>, Compound> {
+public class ClassConverter implements ToTermConverter<Class<?>, Compound>, FromTermConverter<Compound, Class<?>>{
 
 	@Override
 	public Compound toTerm(Class<?> clazz, Class<Compound> termClass, Jpc jpc) {
@@ -27,18 +28,31 @@ public class ClassToTermConverter implements ToTermConverter<Class<?>, Compound>
 		}
 	}
 
-	public static Compound toTerm(ArrayTypeWrapper arrayTypeWrapper, Jpc jpc) {
+	static Compound toTerm(ArrayTypeWrapper arrayTypeWrapper, Jpc jpc) {
 		Compound componentTypeTerm = jpc.toTerm(arrayTypeWrapper.getComponentType(), Compound.class);
 		return new Compound(ARRAY_FUNCTOR_NAME, asList(componentTypeTerm));
 	}
 	
-	public static Compound toTerm(SingleTypeWrapper singleTypeWrapper, Jpc jpc) {
+	static Compound toTerm(SingleTypeWrapper singleTypeWrapper, Jpc jpc) {
 		StaticClass staticClass = new StaticClass((Class<?>)singleTypeWrapper.getRawType());
 		Term rawClassTerm = jpc.toTerm(staticClass, Compound.class);
 		
 		Type[] actualTypeArguments = singleTypeWrapper.getActualTypeArguments();
-		Term actualTypeArgumentsTerm = jpc.toTerm(actualTypeArguments);
-		return new Compound(TYPE_FUNCTOR_NAME, asList(rawClassTerm, actualTypeArgumentsTerm));
+		if(actualTypeArguments.length == 0) {
+			return new Compound(TYPE_FUNCTOR_NAME, asList(rawClassTerm));
+		} else {
+			Term actualTypeArgumentsTerm = jpc.toTerm(actualTypeArguments);
+			Term ownerTypeTerm = jpc.toTerm(singleTypeWrapper.getOwnerType());
+			return new Compound(TYPE_FUNCTOR_NAME, asList(rawClassTerm, actualTypeArgumentsTerm, ownerTypeTerm));
+		}
+		
+	}
+	
+	@Override
+	public Class<?> fromTerm(Compound term, Type targetType, Jpc jpc) {
+		Term staticClassTerm = term.arg(1);
+		StaticClass staticClass = jpc.fromTerm(staticClassTerm);
+		return staticClass.getWrappedClass();
 	}
 	
 }

@@ -12,7 +12,7 @@ public class GenericArrayTypeToTermConverter implements ToTermConverter<GenericA
 	
 	@Override
 	public Compound toTerm(GenericArrayType type, Class<Compound> termClass, Jpc jpc) {
-		return ClassToTermConverter.toTerm((ArrayTypeWrapper) TypeWrapper.wrap(type), jpc);
+		return ClassConverter.toTerm((ArrayTypeWrapper) TypeWrapper.wrap(type), jpc);
 	}
 
 }
