@@ -1,10 +1,7 @@
 package org.jpc.converter.catalog.reification.type;
 
 
-import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -12,11 +9,7 @@ import java.util.List;
 import org.jpc.Jpc;
 import org.jpc.JpcBuilder;
 import org.jpc.converter.catalog.reification.type.TypeConversionsTest.A.B.C;
-import org.jpc.term.Atom;
 import org.jpc.term.Compound;
-import org.jpc.term.FloatTerm;
-import org.jpc.term.IntegerTerm;
-import org.jpc.term.Term;
 import org.junit.Test;
 import org.minitoolbox.reflection.reification.GenericArrayTypeImpl;
 import org.minitoolbox.reflection.reification.StaticClass;
@@ -80,21 +73,6 @@ public class TypeConversionsTest {
 		Class<?> class2 = jpc.fromTerm(classTerm);
 		assertEquals(class1, class2);
 	}
-	
-	@Test
-	public void testPrimitiveClassShortNotation() {
-		Term intTerm = new Compound("int", asList(new IntegerTerm(1)));
-		assertEquals(1, jpc.fromTerm(intTerm));
-		intTerm = new Compound("int", asList(new FloatTerm(1.0)));
-		assertEquals(1, jpc.fromTerm(intTerm));
-		Term booleanTerm = new Compound("boolean", asList(new Atom("true")));
-		assertTrue((Boolean)jpc.fromTerm(booleanTerm));
-		booleanTerm = new Compound("boolean", asList(new Atom("false")));
-		assertFalse((Boolean)jpc.fromTerm(booleanTerm));
-		booleanTerm = new Compound("boolean", asList(new Atom("fail")));
-		assertFalse((Boolean)jpc.fromTerm(booleanTerm));
-	}
-	
 
 	@Test
 	public void testRawClassConverter() {
