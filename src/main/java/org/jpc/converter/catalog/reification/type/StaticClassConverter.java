@@ -15,10 +15,9 @@ import org.minitoolbox.reflection.reification.StaticClass;
 
 import com.google.common.base.Joiner;
 import com.google.common.reflect.TypeToken;
+import static org.jpc.converter.catalog.reification.type.ReificationConstants.*;
 
 public class StaticClassConverter implements ToTermConverter<StaticClass, Compound>, FromTermConverter<Compound, StaticClass> {
-
-	public static final String STATIC_CLASS_FUNCTOR_NAME = "class";
 	
 	private static String className(Iterable<String> packageFragmentNames, Iterable<String> classFragmentNames) {
 		StringBuilder sb = new StringBuilder(Joiner.on('.').join(packageFragmentNames));
