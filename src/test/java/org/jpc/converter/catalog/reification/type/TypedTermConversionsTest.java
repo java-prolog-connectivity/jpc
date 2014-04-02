@@ -21,7 +21,7 @@ public class TypedTermConversionsTest {
 	@Test
 	public void testTypedTermConversionTest() {
 		Term typeTerm = jpc.toTerm(boolean.class);
-		Term sourceTerm = new Compound(TypedTermConverter.TYPED_TERM_FUNCTOR_NAME, asList(new Atom("true"), typeTerm));
+		Term sourceTerm = new Compound(TypedTermToObjectConverter.TYPED_TERM_FUNCTOR_NAME, asList(new Atom("true"), typeTerm));
 		assertTrue((Boolean)jpc.fromTerm(sourceTerm));
 	}
 	

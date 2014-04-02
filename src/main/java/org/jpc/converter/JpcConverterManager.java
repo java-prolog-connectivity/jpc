@@ -62,7 +62,7 @@ import org.jpc.converter.catalog.reification.type.TermToArrayTypeConverter;
 import org.jpc.converter.catalog.reification.type.TermToVariableTypeConverter;
 import org.jpc.converter.catalog.reification.type.TypeNameFunctorConverter;
 import org.jpc.converter.catalog.reification.type.TypeVariableToTermConverter;
-import org.jpc.converter.catalog.reification.type.TypedTermConverter;
+import org.jpc.converter.catalog.reification.type.TypedTermToObjectConverter;
 import org.jpc.converter.catalog.reification.type.WildcardTypeToTermConverter;
 import org.jpc.converter.catalog.serialized.FromSerializedConverter;
 import org.jpc.converter.typesolver.catalog.MapTypeSolver;

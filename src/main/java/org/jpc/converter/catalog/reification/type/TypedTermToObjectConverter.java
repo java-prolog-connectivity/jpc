@@ -7,9 +7,9 @@ import org.jpc.converter.FromTermConverter;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
 
-public class TypedTermConverter<T> implements FromTermConverter<Compound, T> {
+public class TypedTermToObjectConverter<T> implements FromTermConverter<Compound, T> {
 
-	public static final String TYPED_TERM_FUNCTOR_NAME = "jterm";
+	public static final String TYPED_TERM_FUNCTOR_NAME = "typed_term";
 	
 	@Override
 	public T fromTerm(Compound term, Type targetType, Jpc jpc) {
