@@ -60,6 +60,7 @@ import org.jpc.converter.catalog.reification.type.ParameterizedTypeConverter;
 import org.jpc.converter.catalog.reification.type.StaticClassConverter;
 import org.jpc.converter.catalog.reification.type.TermToArrayTypeConverter;
 import org.jpc.converter.catalog.reification.type.TermToVariableTypeConverter;
+import org.jpc.converter.catalog.reification.type.TypeNameFunctorConverter;
 import org.jpc.converter.catalog.reification.type.TypeVariableToTermConverter;
 import org.jpc.converter.catalog.reification.type.WildcardTypeToTermConverter;
 import org.jpc.converter.catalog.serialized.FromSerializedConverter;
@@ -111,7 +112,14 @@ public class JpcConverterManager extends JGumConverterManager {
 		converterManager.register(new TypeVariableToTermConverter());
 		converterManager.register(new WildcardTypeToTermConverter());
 		
-		
+		converterManager.register(new TypeNameFunctorConverter<Byte>(), new Functor(byte.class.getName(), 1).asTerm());
+		converterManager.register(new TypeNameFunctorConverter<Short>(), new Functor(short.class.getName(), 1).asTerm());
+		converterManager.register(new TypeNameFunctorConverter<Integer>(), new Functor(int.class.getName(), 1).asTerm());
+		converterManager.register(new TypeNameFunctorConverter<Long>(), new Functor(long.class.getName(), 1).asTerm());
+		converterManager.register(new TypeNameFunctorConverter<Float>(), new Functor(float.class.getName(), 1).asTerm());
+		converterManager.register(new TypeNameFunctorConverter<Double>(), new Functor(double.class.getName(), 1).asTerm());
+		converterManager.register(new TypeNameFunctorConverter<Character>(), new Functor(char.class.getName(), 1).asTerm());
+		converterManager.register(new TypeNameFunctorConverter<Boolean>(), new Functor(boolean.class.getName(), 1).asTerm());
 		
 		converterManager.register(new FieldResolutionConverter(), new Functor(FieldResolutionConverter.FIELD_RESOLUTION_OPERATOR, 2).asTerm());
 		converterManager.register(new MethodCallConverter(), new Functor(LogtalkConstants.LOGTALK_OPERATOR, 2).asTerm());
