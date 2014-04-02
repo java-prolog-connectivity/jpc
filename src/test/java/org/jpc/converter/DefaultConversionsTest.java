@@ -191,6 +191,11 @@ public class DefaultConversionsTest {
 	// *** TERM TO OBJECTS TESTS ***
 
 	@Test
+	public void testTermSpecifier() {
+		assertEquals(new Atom("a"), jpc.fromTerm(new Compound("term", asList(new Atom("a")))));
+	}
+	
+	@Test
 	public void testTermFromTerm() {
 		assertEquals(new Atom("apple"), jpc.fromTerm(new Atom("apple"), Term.class));
 	}

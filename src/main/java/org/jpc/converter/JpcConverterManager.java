@@ -23,6 +23,7 @@ import org.jpc.Jpc;
 import org.jpc.JpcException;
 import org.jpc.converter.catalog.JpcContextConverter;
 import org.jpc.converter.catalog.TermConvertableConverter;
+import org.jpc.converter.catalog.TermSpecifierConverter;
 import org.jpc.converter.catalog.VarConverter;
 import org.jpc.converter.catalog.datetime.CalendarToAtomConverter;
 import org.jpc.converter.catalog.datetime.CalendarToNumberTermConverter;
@@ -103,6 +104,8 @@ public class JpcConverterManager extends JGumConverterManager {
 		ConverterManager.registerDefaults(converterManager); //registering jconverter defaults.
 		
 		converterManager.register(new JpcContextConverter(), new Functor(JpcContextConverter.JPC_FUNCTOR, 1).asTerm());
+		
+		converterManager.register(new TermSpecifierConverter(), new Functor(TermSpecifierConverter.TERM_SPECIFIER_FUNCTOR_NAME, 1).asTerm());
 		
 		converterManager.register(new StaticClassConverter(), new Functor(STATIC_CLASS_FUNCTOR_NAME, 2).asTerm());
 		converterManager.register(new ClassConverter(), new Functor(TYPE_FUNCTOR_NAME, 1).asTerm());
