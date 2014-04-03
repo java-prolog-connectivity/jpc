@@ -12,5 +12,5 @@ import org.junit.runners.Suite.SuiteClasses;
  *
  */
 @RunWith(Suite.class)
-@SuiteClasses({LogtalkEngineTest.class})
+@SuiteClasses({LogtalkEngineTest.class, LogtalkSideApiTest.class})
 public class LogtalkEngineTestSuite {}
