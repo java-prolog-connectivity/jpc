@@ -1,5 +1,3 @@
-:- op(650, xfx, (@)).
-
 :- initialization((
 	%set_logtalk_flag(report, off),
 	set_logtalk_flag(optimize, on),
