@@ -287,6 +287,7 @@ public class JpcConverterManager extends JGumConverterManager {
 	 */
 	private <T> T evalQuantifiedTermConverter(Term term, Type targetType, Jpc jpc) {
 		T converted = null;
+		boolean conversionFound = false;
 		if(isValidConvertableTerm(term)) {
 			String converterVarName = JpcPreferences.JPC_VAR_PREFIX + "Converter";
 			Query query = embeddedEngine.query(new Compound(CONVERTER_FUNCTOR_NAME, asList(term, new Var(converterVarName))));
@@ -296,11 +297,13 @@ public class JpcConverterManager extends JGumConverterManager {
 				FromTermConverter fromTermConverter = (FromTermConverter)((JRef)solution.get(converterVarName)).getReferent();
 				try {
 					converted = (T)new CheckedConverterEvaluator(unifiedTerm, targetType, jpc).apply(FromTermConverterAdapter.forConverter(fromTermConverter));
+					conversionFound = true;
+					break;
 				} catch(ConversionException e) {} //just try with the next converter.
 			}
 			query.close();
 		}
-		if(converted == null)
+		if(!conversionFound)
 			throw new ConversionException();
 		else
 			return converted;
