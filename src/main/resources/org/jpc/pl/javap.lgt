@@ -29,13 +29,4 @@
 		argnames is ['Message']
 	]).
 
-/*
-	:- public(forget/1).
-	:- mode(forget(-reference), one).
-	:- info(forget/1, [
-		comment is 'Forgets a reference.',
-		argnames is ['Reference']
-	]).	
-*/
-
 :- end_protocol.

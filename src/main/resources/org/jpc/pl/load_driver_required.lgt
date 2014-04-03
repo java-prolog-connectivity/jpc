@@ -1,3 +1,3 @@
 :- initialization((
-	logtalk_load([java,java_bridge,jpc_objects])
+	logtalk_load([java1,java_bridge,jpc1,java,symbiotic_objects])
 )).

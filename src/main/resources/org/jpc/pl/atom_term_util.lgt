@@ -1,4 +1,3 @@
-
 :- object(atom_term_util).
 
 	:- info([
@@ -33,6 +32,4 @@
 
 	:- endif.
 
-
 :- end_object.
-
