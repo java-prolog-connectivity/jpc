@@ -1,14 +1,11 @@
 package org.jpc.engine.prolog.driver;
 
-import static org.jpc.util.JpcPreferences.JPC_LOADER_FILE;
-
 import java.util.Collection;
 
 import org.jpc.engine.listener.DriverStateListener;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.engine.prolog.PrologEngineInitializationException;
 import org.jpc.util.JpcPreferences;
-import org.jpc.util.engine.PrologResourceLoader;
 import org.jpc.util.engine.supported.EngineDescription;
 import org.minitoolbox.collections.CollectionsUtil;
 import org.slf4j.Logger;
@@ -83,7 +80,7 @@ public abstract class AbstractPrologEngineDriver<T extends PrologEngine> impleme
 		long startTime = System.nanoTime();
 		T newPrologEngine = basicFactory.createPrologEngine();
 		onCreate(newPrologEngine);
-		loadJpcPrologFiles(newPrologEngine);
+		newPrologEngine.loadJpc();
 		newPrologEngine.flushOutput();
 		
 		long endTime = System.nanoTime();
@@ -103,10 +100,7 @@ public abstract class AbstractPrologEngineDriver<T extends PrologEngine> impleme
 		return newPrologEngine;
 	}
 
-	protected void loadJpcPrologFiles(T prologEngine) {
-		PrologResourceLoader resourceLoader = new PrologResourceLoader(prologEngine);
-		resourceLoader.ensureLoaded(JPC_LOADER_FILE);
-	}
+
 
 	
 	/**

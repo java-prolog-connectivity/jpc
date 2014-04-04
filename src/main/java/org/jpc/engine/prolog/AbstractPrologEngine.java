@@ -20,6 +20,7 @@ import static org.jpc.engine.prolog.PrologConstants.SETOF;
 import static org.jpc.engine.prolog.PrologConstants.SET_PROLOG_FLAG;
 import static org.jpc.term.ListTerm.listTerm;
 import static org.jpc.term.Var.ANONYMOUS_VAR;
+import static org.jpc.util.JpcPreferences.JPC_LOADER_FILE;
 import static org.jpc.util.JpcPreferences.JPC_LOGTALK_LOADER_FILE;
 import static org.jpc.util.JpcPreferences.JPC_VAR_PREFIX;
 import static org.jpc.util.PrologUtil.termSequence;
@@ -424,6 +425,32 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	
 	
 	/* ********************************************************************************************************************************
+	 * CONFIGURATION
+     **********************************************************************************************************************************
+     */
+	
+	@Override
+	public final void loadJpc() {
+		loadPrologFiles();
+	}
+	
+	@Override
+	public final void loadJpcForLogtalk() {
+		loadPrologFiles();
+		loadLogtalkFiles();
+	}
+	
+	protected void loadPrologFiles() {
+		PrologResourceLoader resourceLoader = new PrologResourceLoader(this);
+		resourceLoader.ensureLoaded(JPC_LOADER_FILE);
+	}
+	
+	protected void loadLogtalkFiles() {
+		PrologResourceLoader resourceLoader = new PrologResourceLoader(this);
+		resourceLoader.logtalkLoad(JPC_LOGTALK_LOADER_FILE);
+	}
+	
+	/* ********************************************************************************************************************************
 	 * Logtalk
      **********************************************************************************************************************************
      */
@@ -449,7 +476,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 		flushOutput();
 		if(logtalkLoaded) {
 			logger.trace("Logtalk loaded successfully.");
-			loadJpcLogtalkFiles();
+			loadJpcForLogtalk();
 			logger.trace("Additional Logtalk configuration files were also loaded successfully.");
 			long endTime = System.nanoTime();
 			long total = (endTime - startTime)/1000000;
@@ -459,11 +486,6 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 			logger.warn("Impossible to load Logtalk in the " + prologDialect + " Logic Engine. Some features may not be available.");
 		}
 		return asLogtalkEngine();
-	}
-	
-	protected void loadJpcLogtalkFiles() {
-		PrologResourceLoader resourceLoader = new PrologResourceLoader(this);
-		resourceLoader.logtalkLoad(JPC_LOGTALK_LOADER_FILE);
 	}
 	
 }

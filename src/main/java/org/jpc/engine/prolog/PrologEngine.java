@@ -198,6 +198,7 @@ public interface PrologEngine extends PrologDatabase {
 	
 	public boolean flushOutput();
 	
+	
 	/* ********************************************************************************************************************************
 	 * UNIFICATION
      **********************************************************************************************************************************
@@ -225,4 +226,14 @@ public interface PrologEngine extends PrologDatabase {
 	
 	public LogtalkEngine asLogtalkEngine();
 
+	
+	//The methods below are intended to be invoked from the Prolog side only with the purpose of configuring JPC.
+	/* ********************************************************************************************************************************
+	 * CONFIGURATION FROM THE PROLOG SIDE
+     **********************************************************************************************************************************
+     */
+	
+	public void loadJpc();
+	
+	public void loadJpcForLogtalk();
 }
