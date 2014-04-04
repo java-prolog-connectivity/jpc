@@ -1,9 +1,9 @@
 package org.jpc.util.engine.supported;
 
-
 public class Yap extends EngineDescription {
 
 	public static final String YAP = "YAP";
+	public static final String YAP_DIALECT = YAP.toLowerCase();
 	public static final String YAP_BIN_DIRECTORY_PROPERTY_NAME = "YAP_BIN_DIRECTORY";
 	private static final String EXECUTABLE_FILE_NAME = "yap";
 	
@@ -12,6 +12,11 @@ public class Yap extends EngineDescription {
 		return YAP;
 	}
 
+	@Override
+	public String getDialect() {
+		return YAP_DIALECT;
+	}
+	
 	public String getExecutableFileName() {
 		return EXECUTABLE_FILE_NAME;
 	}

@@ -3,6 +3,7 @@ package org.jpc.util.engine.supported;
 public class Xsb extends EngineDescription {
 
 	public static final String XSB = "XSB";
+	public static final String XSB_DIALECT = XSB.toLowerCase();
 	public static final String XSB_BIN_DIRECTORY_PROPERTY_NAME = "XSB_BIN_DIRECTORY"; //environment variable with the path to the XSB executable.
 	private static final String EXECUTABLE_FILE_NAME = "xsb";
 	
@@ -11,6 +12,11 @@ public class Xsb extends EngineDescription {
 		return XSB;
 	}
 
+	@Override
+	public String getDialect() {
+		return XSB_DIALECT;
+	}
+	
 	public String getExecutableFileName() {
 		return EXECUTABLE_FILE_NAME;
 	}
