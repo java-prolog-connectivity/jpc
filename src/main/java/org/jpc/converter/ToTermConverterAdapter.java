@@ -50,7 +50,7 @@ public class ToTermConverterAdapter<T,V extends Term> extends TypedConverter<T, 
 	
 	@Override
 	public V apply(T source, Type targetType, JConverter context) {
-		return converter.toTerm(source, (Class)targetType, (Jpc)context);
+		return (V)converter.toTerm(source, (Class)targetType, (Jpc)context);
 	}
 
 }
