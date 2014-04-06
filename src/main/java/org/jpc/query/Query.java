@@ -60,16 +60,17 @@ public abstract class Query extends Cursor<Solution> {
 		return isErrorHandledQuery();
 	}
 	
-	protected void verify(Solution solution) {
-		if(solution.isError())
-			getJpcContext().handleError(solution.getErrorTerm(), getGoal());
+	protected void errorCheck(Solution solution) {
+		if(shouldVerifySolution()) {
+			if(solution.isError())
+				getJpcContext().handleError(solution.getErrorTerm(), getGoal());
+		}
 	}
 	
 	@Override
 	public Solution cachedNext() {
 		Solution solution = super.cachedNext();
-		if(shouldVerifySolution())
-			verify(solution);
+		errorCheck(solution);
 		return solution;
 	}
 	
