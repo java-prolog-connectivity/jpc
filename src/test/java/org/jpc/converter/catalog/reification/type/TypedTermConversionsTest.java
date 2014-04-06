@@ -28,9 +28,9 @@ public class TypedTermConversionsTest {
 	@Test
 	public void testPrimitiveClassShortNotation() {
 		Term intTerm = new Compound("int", asList(new IntegerTerm(1)));
-		assertEquals(1, jpc.fromTerm(intTerm));
+		assertEquals(new Integer(1), jpc.fromTerm(intTerm));
 		intTerm = new Compound("int", asList(new FloatTerm(1.0)));
-		assertEquals(1, jpc.fromTerm(intTerm));
+		assertEquals(new Integer(1), jpc.fromTerm(intTerm));
 		Term booleanTerm = new Compound("boolean", asList(new Atom("true")));
 		assertTrue((Boolean)jpc.fromTerm(booleanTerm));
 		booleanTerm = new Compound("boolean", asList(new Atom("false")));

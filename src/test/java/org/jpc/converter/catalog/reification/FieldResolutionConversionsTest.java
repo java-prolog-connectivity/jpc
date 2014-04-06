@@ -22,7 +22,7 @@ public class FieldResolutionConversionsTest {
 		Term classTerm = jpc.toTerm(new StaticClass(B.class));
 		Term fieldTerm = new Atom("m");
 		Term fieldResolutionTerm = new Compound(FieldResolutionConverter.FIELD_RESOLUTION_OPERATOR, asList(classTerm, fieldTerm));
-		assertEquals(10L, jpc.fromTerm(fieldResolutionTerm));
+		assertEquals(new Long(10L), jpc.fromTerm(fieldResolutionTerm));
 	}
 
 }

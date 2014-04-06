@@ -33,7 +33,7 @@ public class MethodCallConversionsTest {
 		Term classTerm = jpc.toTerm(new StaticClass(B.class));
 		Term messageTerm = new Compound("m", asList(new IntegerTerm(10)));
 		Term methodCallTerm = new Compound(LogtalkConstants.LOGTALK_OPERATOR, asList(classTerm, messageTerm));
-		assertEquals(10L, jpc.fromTerm(methodCallTerm));
+		assertEquals(new Long(10L), jpc.fromTerm(methodCallTerm));
 	}
 	
 }

@@ -167,7 +167,7 @@ public class DefaultJpc extends Jpc {
 	
 	@Override
 	public final Compound toCompound(Object name, List<?> args) {
-		return new Compound(toTerm(name), listTerm(args));
+		return new Compound((Term)toTerm(name), listTerm(args));
 	}
 	
 	@Override

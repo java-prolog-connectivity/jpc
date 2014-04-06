@@ -216,10 +216,10 @@ public class DefaultConversionsTest {
 	
 	@Test
 	public void testTermToChar() {
-		assertEquals('a', jpc.fromTerm(new Atom("a"), Character.class));
-		assertEquals('a', jpc.fromTerm(new Atom("a"), char.class));
-		assertEquals('1', jpc.fromTerm(new Atom("1"), Character.class));
-		assertEquals('1', jpc.fromTerm(new Atom("1"), char.class));
+		assertEquals(new Character('a'), jpc.fromTerm(new Atom("a"), Character.class));
+		assertEquals(new Character('a'), jpc.fromTerm(new Atom("a"), char.class));
+		assertEquals(new Character('1'), jpc.fromTerm(new Atom("1"), Character.class));
+		assertEquals(new Character('1'), jpc.fromTerm(new Atom("1"), char.class));
 		try {
 			jpc.fromTerm(new Atom("ab"), Character.class);
 			fail();
@@ -247,11 +247,11 @@ public class DefaultConversionsTest {
 	public void testTermToInt() {
 		assertTrue(jpc.fromTerm(new IntegerTerm(10L)).equals(10L));
 		assertFalse(jpc.fromTerm(new IntegerTerm(10)).equals(10)); //values in Prolog Integer terms are stored as a Java Long
-		assertEquals(10L, jpc.fromTerm(new IntegerTerm(10)));
-		assertEquals(10, jpc.fromTerm(new IntegerTerm(10), Integer.class));
-		assertEquals(10, jpc.fromTerm(new IntegerTerm(10), int.class));
-		assertEquals(10, jpc.fromTerm(new Atom("10"), Integer.class));
-		assertEquals(10, jpc.fromTerm(new Atom("10"), int.class));
+		assertEquals(new Long(10L), jpc.fromTerm(new IntegerTerm(10)));
+		assertEquals(new Integer(10), jpc.fromTerm(new IntegerTerm(10), Integer.class));
+		assertEquals(new Integer(10), jpc.fromTerm(new IntegerTerm(10), int.class));
+		assertEquals(new Integer(10), jpc.fromTerm(new Atom("10"), Integer.class));
+		assertEquals(new Integer(10), jpc.fromTerm(new Atom("10"), int.class));
 		try{
 			jpc.fromTerm(new Atom(TRUE), Integer.class);
 			fail();
@@ -263,7 +263,7 @@ public class DefaultConversionsTest {
 		assertTrue(jpc.fromTerm(new FloatTerm(1D)).equals(1D));
 		assertFalse(jpc.fromTerm(new FloatTerm(1F)).equals(1F)); //values in Prolog Float terms are stored as a Java Double
 		assertTrue(jpc.fromTerm(new FloatTerm(1F)).equals(1D));
-		assertEquals(10.5, jpc.fromTerm(new FloatTerm(10.5)));
+		assertEquals(new Double(10.5), jpc.fromTerm(new FloatTerm(10.5)));
 	}
 
 	@Test
