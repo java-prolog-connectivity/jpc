@@ -22,6 +22,13 @@ public abstract class DeterministicPrologQuery extends PrologQuery {
 	}
 
 	@Override
+	protected Solution nonSynchronizedOneSolutionOrThrow() {
+		Solution solution = super.nonSynchronizedOneSolutionOrThrow();
+		errorCheck(solution);
+		return solution;
+	}
+	
+	@Override
 	protected void basicAbort() {
 		reset();
 	}
