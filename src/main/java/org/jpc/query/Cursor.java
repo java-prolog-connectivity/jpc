@@ -44,7 +44,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 * @throws IllegalStateException if the cursor state is not READY.
 	 */
 	public synchronized long numberOfSolutions() {
-		return nonSynchronizedAllSolutions().size();
+		return allSolutions().size();
 	}
 
 	/**
@@ -55,7 +55,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 */
 	public synchronized boolean hasSolution() {
 		try {
-			nonSynchronizedOneSolutionOrThrow();
+			oneSolutionOrThrow();
 			return true;
 		} catch(NoSuchElementException e) {
 			return false;
@@ -69,19 +69,12 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 */
 	public synchronized Optional<T> oneSolution() {
 		try {
-			return Optional.of(nonSynchronizedOneSolutionOrThrow());
+			return Optional.of(oneSolutionOrThrow());
 		} catch(NoSuchElementException e) {
 			return Optional.absent();
 		}
 	}
 	
-	protected Optional<T> nonSynchronizedOneSolution() {
-		try {
-			return Optional.of(nonSynchronizedOneSolutionOrThrow());
-		} catch(NoSuchElementException e) {
-			return Optional.absent();
-		}
-	}
 	
 	/**
 	 * @precondition state = READY
@@ -91,10 +84,6 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 * @throws NoSuchElementException if there are no solutions to the query.
 	 */
 	public synchronized T oneSolutionOrThrow() {
-		return nonSynchronizedOneSolutionOrThrow();
-	}
-
-	protected T nonSynchronizedOneSolutionOrThrow() {
 		open();
 		try {
 			return basicOneSolutionOrThrow();
@@ -118,7 +107,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 * @throws IllegalStateException if the cursor state is not READY.
 	 */
 	public synchronized List<T> nSolutions(long n) {
-		return nonSynchronizedSolutionsRange(0, n);
+		return basicSolutionsRange(0, n);
 	}
 
 
@@ -131,10 +120,10 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 * @throws IllegalStateException if the cursor state is not READY.
 	 */
 	public synchronized List<T> solutionsRange(long from, long to) {
-		return nonSynchronizedSolutionsRange(from, to);
+		return basicSolutionsRange(from, to);
 	}
 	
-	protected List<T> nonSynchronizedSolutionsRange(long from, long to) {
+	protected List<T> basicSolutionsRange(long from, long to) {
 		if(!isReady())
 			throw new IllegalStateException();
 		checkArgument(from >= 0);
@@ -167,10 +156,6 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	 * @throws IllegalStateException if the cursor state is not READY.
 	 */
 	public synchronized List<T> allSolutions() {
-		return nonSynchronizedAllSolutions();
-	}
-
-	protected List<T> nonSynchronizedAllSolutions() {
 		open();
 		try {
 			return basicAllSolutions();
@@ -190,9 +175,11 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 	
 	protected List<T> iterativeAllSolutions() {
 		List<T> allSolutions = new ArrayList<>();
-		while (cachedHasNext()) { 
-			allSolutions.add(cachedNext());
-		}
+		try {
+			while(true) {
+				allSolutions.add(basicNext());
+			}
+		} catch(NoSuchElementException e) {}
 		return allSolutions;
 	}
 	

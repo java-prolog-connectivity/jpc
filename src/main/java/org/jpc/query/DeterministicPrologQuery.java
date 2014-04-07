@@ -22,8 +22,8 @@ public abstract class DeterministicPrologQuery extends PrologQuery {
 	}
 
 	@Override
-	protected Solution nonSynchronizedOneSolutionOrThrow() {
-		Solution solution = super.nonSynchronizedOneSolutionOrThrow();
+	public synchronized Solution oneSolutionOrThrow() {
+		Solution solution = super.oneSolutionOrThrow();
 		errorCheck(solution);
 		return solution;
 	}
