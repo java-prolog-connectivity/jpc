@@ -24,6 +24,14 @@ import com.google.common.collect.TreeMultimap;
 
 public class DriverUtil {
 	
+	public static void reportFoundDrivers() {
+		Set<PrologEngineDriver> drivers = findDrivers();
+		System.out.println("Drivers found: " + drivers.size());
+		for(PrologEngineDriver driver : drivers) {
+			System.out.println("Driver name: " + driver.getLibraryName() + ". Description: " + driver.getDescription());
+		}
+	}
+	
 	//TODO delete this method when lambdas are available in java 8
 	public static void registerListener(DriverStateListener listener, Iterable<? extends PrologEngineDriver> drivers) {
 		for(PrologEngineDriver driver : drivers) {
