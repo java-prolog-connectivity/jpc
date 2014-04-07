@@ -130,6 +130,8 @@ public class ObservableQuery extends QueryAdapter {
 		return allSolutions;
 	}
 
+	
+	
 	public synchronized void addQueryListeners(Iterable<QueryListener> listeners) {
 		this.listeners.addAll(Lists.newArrayList(listeners));
 	}
