@@ -60,14 +60,14 @@ public class QueryAdapter extends Query {
 	
 	@Override
 	protected Solution basicOneSolutionOrThrow() {
-		Solution adaptee = super.basicOneSolutionOrThrow();
+		Solution adaptee = query.oneSolutionOrThrow();
 		return adaptee != null?adapterFunction.apply(adaptee):null;
 	}
 	
 	@Override
 	protected List<Solution> basicAllSolutions() {
 		List<Solution> allSolutions = new ArrayList<>();
-		for(Solution adaptee : super.basicAllSolutions()) {
+		for(Solution adaptee : query.allSolutions()) {
 			allSolutions.add(adapterFunction.apply(adaptee));
 		}
 		return allSolutions;
