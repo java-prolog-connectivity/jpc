@@ -2,6 +2,7 @@ package org.jpc;
 
 import org.jpc.converter.CustomTermConversionsTest;
 import org.jpc.converter.DefaultConversionsTest;
+import org.jpc.converter.catalog.CustomTermToObjectConverterTest;
 import org.jpc.converter.catalog.TypedTermConversionsTest;
 import org.jpc.converter.catalog.reification.FieldResolutionConversionsTest;
 import org.jpc.converter.catalog.reification.MethodCallConversionsTest;
@@ -50,6 +51,7 @@ import org.junit.runners.Suite;
 	CustomTermConversionsTest.class,
 	TypeConversionsTest.class,
 	TypedTermConversionsTest.class,
+	CustomTermToObjectConverterTest.class,
 	MethodCallConversionsTest.class,
 	FieldResolutionConversionsTest.class,
 	PrologUtilTest.class,
