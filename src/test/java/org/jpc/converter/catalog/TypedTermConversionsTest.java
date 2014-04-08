@@ -1,4 +1,4 @@
-package org.jpc.converter.catalog.reification.type;
+package org.jpc.converter.catalog;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.jpc.Jpc;
 import org.jpc.JpcBuilder;
+import org.jpc.converter.catalog.TypedTermToObjectConverter;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.FloatTerm;

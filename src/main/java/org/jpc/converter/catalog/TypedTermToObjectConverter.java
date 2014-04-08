@@ -1,4 +1,4 @@
-package org.jpc.converter.catalog.reification.type;
+package org.jpc.converter.catalog;
 
 import java.lang.reflect.Type;
 
@@ -9,7 +9,7 @@ import org.jpc.term.Term;
 
 public class TypedTermToObjectConverter<T> implements FromTermConverter<Compound, T> {
 
-	public static final String TYPED_TERM_FUNCTOR_NAME = "typed_term";
+	public static final String TYPED_TERM_FUNCTOR_NAME = "typed_jterm";
 	
 	@Override
 	public T fromTerm(Compound term, Type targetType, Jpc jpc) {

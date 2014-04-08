@@ -2,10 +2,10 @@ package org.jpc;
 
 import org.jpc.converter.CustomTermConversionsTest;
 import org.jpc.converter.DefaultConversionsTest;
+import org.jpc.converter.catalog.TypedTermConversionsTest;
 import org.jpc.converter.catalog.reification.FieldResolutionConversionsTest;
 import org.jpc.converter.catalog.reification.MethodCallConversionsTest;
 import org.jpc.converter.catalog.reification.type.TypeConversionsTest;
-import org.jpc.converter.catalog.reification.type.TypedTermConversionsTest;
 import org.jpc.converter.typesolver.TypeSolverTest;
 import org.jpc.engine.embedded.JpcEmbeddedEngineTestSuite;
 import org.jpc.salt.JpcTermWriterTest;
