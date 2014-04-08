@@ -19,10 +19,21 @@
 		argnames is ['Object::Message', 'ReturnValue']]).
 
 	returns(Message, ReturnValue) :-
-		self(Object),
+		jobject(Object),
 		java(Object, ReturnValue)::invoke(Message).
+
 
 	forward(Message) :-
 		returns(Message, _ReturnValue).
 
+
+	protected(jobject/1).
+	:- mode(jobject(?term), one).
+	:- info(jobject/1, [
+		comment is 'The term representation of the receiver in the Java side.',
+		argnames is ['JObject']]).
+
+	jobject(JObject) :-
+		self(JObject).
+		
 :- end_category.
