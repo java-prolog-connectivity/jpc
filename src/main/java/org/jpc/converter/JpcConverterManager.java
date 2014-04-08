@@ -136,6 +136,7 @@ public class JpcConverterManager extends JGumConverterManager {
 		converterManager.register(new TermConvertableConverter());
 		converterManager.register(new VarConverter());
 		
+		converterManager.register(new JRefToObjectConverter());
 		converterManager.register(new CharacterToNumberTermConverter());
 		converterManager.register(new ObjectToAtomConverter<Character>(){});
 		converterManager.register(new StringToNumberTermConverter());

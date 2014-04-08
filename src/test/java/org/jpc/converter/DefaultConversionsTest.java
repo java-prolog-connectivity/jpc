@@ -4,6 +4,7 @@ import static java.util.Arrays.asList;
 import static org.jpc.engine.prolog.PrologConstants.FAIL;
 import static org.jpc.engine.prolog.PrologConstants.FALSE;
 import static org.jpc.engine.prolog.PrologConstants.TRUE;
+import static org.jpc.term.JRef.jRef;
 import static org.jpc.term.ListTerm.listTerm;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -32,6 +33,7 @@ import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
+import org.jpc.term.JRef;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
 import org.junit.Assert;
@@ -190,6 +192,13 @@ public class DefaultConversionsTest {
 	
 	// *** TERM TO OBJECTS TESTS ***
 
+	@Test
+	public void testJRefToObject() {
+		Object o = new Object();
+		JRef jref = jRef(o);
+		assertEquals(o, jpc.fromTerm(jref));
+	}
+	
 	@Test
 	public void testTermSpecifier() {
 		assertEquals(new Atom("a"), jpc.fromTerm(new Compound("term", asList(new Atom("a")))));
