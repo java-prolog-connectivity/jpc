@@ -18,7 +18,7 @@ public class JpcPreferences extends Preferences {
 	public static final String JPC_BASE_PACKAGE = "org.jpc";
 	public static final String JPC_PROLOG_PACKAGE = JPC_BASE_PACKAGE + ".pl"; //base package for Prolog files required by JPC
 	public static final String JPC_PROLOG_RESOURCES = JPC_PROLOG_PACKAGE.replaceAll("\\.", "/") + "/";
-	public static final String JPC_LOADER_FILE = JPC_PROLOG_RESOURCES + "jpc.pl";
+	public static final String JPC_LOADER_FILE = JPC_PROLOG_RESOURCES + "jpc_prolog.pl";
 	public static final String JPC_LOGTALK_LOADER_FILE = JPC_PROLOG_RESOURCES + "load_all.lgt";
 	
 	//Macros symbols
