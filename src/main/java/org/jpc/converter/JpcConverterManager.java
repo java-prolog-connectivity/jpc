@@ -21,9 +21,12 @@ import org.jgum.category.CategoryProperty.PropertyIterable;
 import org.jgum.category.type.TypeCategory;
 import org.jpc.Jpc;
 import org.jpc.JpcException;
+import org.jpc.converter.catalog.CustomTermToObjectConverter;
+import org.jpc.converter.catalog.JRefToObjectConverter;
 import org.jpc.converter.catalog.JpcContextConverter;
 import org.jpc.converter.catalog.TermConvertableConverter;
 import org.jpc.converter.catalog.TermSpecifierConverter;
+import org.jpc.converter.catalog.TypedTermToObjectConverter;
 import org.jpc.converter.catalog.VarConverter;
 import org.jpc.converter.catalog.datetime.CalendarToAtomConverter;
 import org.jpc.converter.catalog.datetime.CalendarToNumberTermConverter;
@@ -63,7 +66,6 @@ import org.jpc.converter.catalog.reification.type.TermToArrayTypeConverter;
 import org.jpc.converter.catalog.reification.type.TermToVariableTypeConverter;
 import org.jpc.converter.catalog.reification.type.TypeNameFunctorConverter;
 import org.jpc.converter.catalog.reification.type.TypeVariableToTermConverter;
-import org.jpc.converter.catalog.reification.type.TypedTermToObjectConverter;
 import org.jpc.converter.catalog.reification.type.WildcardTypeToTermConverter;
 import org.jpc.converter.catalog.serialized.FromSerializedConverter;
 import org.jpc.converter.typesolver.catalog.MapTypeSolver;
@@ -107,6 +109,7 @@ public class JpcConverterManager extends JGumConverterManager {
 		
 		converterManager.register(new TermSpecifierConverter(), new Functor(TermSpecifierConverter.TERM_SPECIFIER_FUNCTOR_NAME, 1).asTerm());
 		
+		
 		converterManager.register(new StaticClassConverter(), new Functor(STATIC_CLASS_FUNCTOR_NAME, 2).asTerm());
 		converterManager.register(new ClassConverter(), new Functor(TYPE_FUNCTOR_NAME, 1).asTerm());
 		converterManager.register(new ParameterizedTypeConverter(), new Functor(TYPE_FUNCTOR_NAME, 3).asTerm());
@@ -125,17 +128,15 @@ public class JpcConverterManager extends JGumConverterManager {
 		converterManager.register(new TypeNameFunctorConverter<Character>(), new Functor(char.class.getName(), 1).asTerm());
 		converterManager.register(new TypeNameFunctorConverter<Boolean>(), new Functor(boolean.class.getName(), 1).asTerm());
 		
-		converterManager.register(new TypedTermToObjectConverter(), new Functor(TypedTermToObjectConverter.TYPED_TERM_FUNCTOR_NAME, 2).asTerm());
-		
-		
 		converterManager.register(new FieldResolutionConverter(), new Functor(FieldResolutionConverter.FIELD_RESOLUTION_OPERATOR, 2).asTerm());
 		converterManager.register(new MethodCallConverter(), new Functor(LogtalkConstants.LOGTALK_OPERATOR, 2).asTerm());
 
+		converterManager.register(new TypedTermToObjectConverter(), new Functor(TypedTermToObjectConverter.TYPED_TERM_FUNCTOR_NAME, 2).asTerm());
 		converterManager.register(new FromSerializedConverter(), new Functor(SerializedTerm.SERIALIZED_TERM_FUNCTOR, 1).asTerm());
+		converterManager.register(new CustomTermToObjectConverter(), new Functor(CustomTermToObjectConverter.CUSTOM_TERM_FUNCTOR_NAME, 2).asTerm());
 		
 		converterManager.register(new TermConvertableConverter());
 		converterManager.register(new VarConverter());
-		
 		converterManager.register(new JRefToObjectConverter());
 		converterManager.register(new CharacterToNumberTermConverter());
 		converterManager.register(new ObjectToAtomConverter<Character>(){});
@@ -213,6 +214,7 @@ public class JpcConverterManager extends JGumConverterManager {
 			return this.<T>evalQuantifiedTermConverter(term, targetType, jpc); //the current implementation does not take into consideration the key for finding converters in the embedded Prolog database.
 		} catch(ConversionException e) {}
 		
+		//filtering converters to those only defined in term classes.
 		JGumConverter<Term, T> jgumConverter = new JGumConverter<Term, T>(jgum, key) {
 			@Override
 			protected List<ConverterRegister> getConverters(Class<?> clazz) {
