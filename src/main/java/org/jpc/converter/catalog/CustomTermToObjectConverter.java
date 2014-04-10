@@ -19,7 +19,7 @@ public static final String CUSTOM_TERM_FUNCTOR_NAME = "custom_jterm";
 		Term converterTerm = term.arg(2);
 		FromTermConverter<Term, T> converter = jpc.fromTerm(converterTerm, FromTermConverter.class);
 		ConverterEvaluator<Term, T> converterEvaluator = new ConverterEvaluator<>(sourceTerm, targetType, jpc);
-		return converterEvaluator.apply(FromTermConverterAdapter.forConverter(converter));
+		return (T)converterEvaluator.apply(FromTermConverterAdapter.forConverter(converter));
 	}
 	
 }
