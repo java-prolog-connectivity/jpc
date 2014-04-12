@@ -7,41 +7,66 @@ import javafx.stage.Stage;
 
 /**
  * A utility class for facilitating launching JavaFX applications from the Prolog side.
+ * This class is not intended to be used directly from the Java side.
  * @author sergioc
  *
  */
 public class JavaFXLauncher extends Application {
 
 	private static boolean launched;
-	private static Object lock = new Object();
+	private static final Object appInitLock = new Object();
 	
-    public static void show(Class<? extends Stage> stageClass) {
+	private static class WrappedStage {
+		Stage stage;
+		Exception ex;
+	}
+	
+    public static Stage show(Class<? extends Stage> stageClass) {
     	launchIfNeeded();
-    	javafx.application.Platform.runLater(new Runnable() {	
+    	final Object stageInitLock = new Object();
+    	WrappedStage wStage = new WrappedStage();
+
+    	javafx.application.Platform.runLater(new Runnable() {
+    		Stage stage;
 			@Override
 			public void run() {
-				Stage stage;
-				try {
-					stage = stageClass.newInstance();
-				} catch (InstantiationException | IllegalAccessException e) {
-					throw new RuntimeException(e);
+				synchronized(stageInitLock) {
+					try {
+						stage = stageClass.newInstance(); //this must be executed in the user interface thread.
+					} catch (InstantiationException | IllegalAccessException e) {
+						wStage.ex = e;
+						throw new RuntimeException(e);
+					} finally {
+						stageInitLock.notify();
+					}
 				}
+				wStage.stage = stage;
 				stage.show();
 			}
 		});
+    	synchronized(stageInitLock) {
+    		while(wStage.stage == null && wStage.ex != null) {
+        		try {
+    				stageInitLock.wait();
+    			} catch (InterruptedException e) {
+    				throw new RuntimeException(e);
+    			}
+        	}
+    	}
+    	return wStage.stage;
     }
     
 	@Override
 	public void init() {
-		synchronized(lock) {
+		synchronized(appInitLock) {
 			Platform.setImplicitExit(false);
 			launched = true;
-			lock.notifyAll();
+			appInitLock.notifyAll();
 		}
 	}
 	
 	public static void launchIfNeeded() {
-		synchronized(lock) {
+		synchronized(appInitLock) {
 			if(!launched) {
 				new Thread() {
 					@Override
@@ -58,7 +83,7 @@ public class JavaFXLauncher extends Application {
 				
 				while(!launched) {
 					try {
-						lock.wait();
+						appInitLock.wait();
 					} catch (InterruptedException e) {
 						throw new RuntimeException(e);
 					}
