@@ -4,6 +4,7 @@ import org.jpc.converter.CustomTermConversionsTest;
 import org.jpc.converter.DefaultConversionsTest;
 import org.jpc.converter.catalog.CustomTermToObjectConverterTest;
 import org.jpc.converter.catalog.TypedTermConversionsTest;
+import org.jpc.converter.catalog.io.FileConversionTest;
 import org.jpc.converter.catalog.reification.FieldResolutionConversionsTest;
 import org.jpc.converter.catalog.reification.MethodCallConversionsTest;
 import org.jpc.converter.catalog.reification.type.TypeConversionsTest;
@@ -54,6 +55,7 @@ import org.junit.runners.Suite;
 	CustomTermToObjectConverterTest.class,
 	MethodCallConversionsTest.class,
 	FieldResolutionConversionsTest.class,
+	FileConversionTest.class,
 	PrologUtilTest.class,
 	EngineConfigurationDeserializerTest.class,
 	JpcConfigurationDeserializerTest.class

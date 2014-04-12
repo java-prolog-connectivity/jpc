@@ -42,6 +42,7 @@ import org.jpc.converter.catalog.error.SyntaxErrorConverter;
 import org.jpc.converter.catalog.error.SystemErrorConverter;
 import org.jpc.converter.catalog.error.TypeErrorConverter;
 import org.jpc.converter.catalog.error.UnknownIsoPrologErrorConverter;
+import org.jpc.converter.catalog.io.FileConverter;
 import org.jpc.converter.catalog.list.ArrayConverter;
 import org.jpc.converter.catalog.list.CollectionConverter;
 import org.jpc.converter.catalog.list.EnumerationConverter;
@@ -51,6 +52,7 @@ import org.jpc.converter.catalog.map.MapConverter.MapToTermConverter;
 import org.jpc.converter.catalog.map.MapConverter.TermToMapConverter;
 import org.jpc.converter.catalog.map.MapEntryConverter.MapEntryToTermConverter;
 import org.jpc.converter.catalog.map.MapEntryConverter.TermToMapEntryConverter;
+import org.jpc.converter.catalog.net.URIConverter;
 import org.jpc.converter.catalog.primitive.BooleanConverter;
 import org.jpc.converter.catalog.primitive.CharacterToNumberTermConverter;
 import org.jpc.converter.catalog.primitive.NumberToNumberTermConverter;
@@ -168,6 +170,9 @@ public class JpcConverterManager extends JGumConverterManager {
 		for(String mapEntrySeparator : MapTypeSolver.ALL_MAP_ENTRY_SEPARATORS) {
 			converterManager.register(new TermToMapEntryConverter(mapEntrySeparator));
 		}
+		
+		converterManager.register(new URIConverter(), new Functor(URIConverter.URI_FUNCTOR_NAME,1).asTerm());
+		converterManager.register(new FileConverter(), new Functor(FileConverter.FILE_FUNCTOR_NAME,1).asTerm());
 		
 		converterManager.register(new UnknownIsoPrologErrorConverter()); //this should be the first registered error.
 		converterManager.register(new DomainErrorConverter());
