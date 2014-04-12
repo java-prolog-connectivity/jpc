@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 /**
  * A utility class for facilitating launching JavaFX applications from the Prolog side.
  * This class is not intended to be used directly from the Java side.
+ * If employed from the Java side, users of this class should explicitly call "Platform.exit()" before quitting the application.
  * @author sergioc
  *
  */
