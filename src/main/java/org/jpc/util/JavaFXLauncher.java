@@ -46,7 +46,7 @@ public class JavaFXLauncher extends Application {
 			}
 		});
     	synchronized(stageInitLock) {
-    		while(wStage.stage == null && wStage.ex != null) {
+    		while(wStage.stage == null && wStage.ex == null) {
         		try {
     				stageInitLock.wait();
     			} catch (InterruptedException e) {
