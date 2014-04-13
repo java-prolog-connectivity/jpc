@@ -1,4 +1,4 @@
-package org.jpc.converter.catalog.reification.type;
+package org.jpc.converter.catalog.reflection;
 
 import static java.util.Arrays.asList;
 
@@ -11,11 +11,12 @@ import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
-import org.minitoolbox.reflection.reification.StaticClass;
+import org.minitoolbox.reflection.StaticClass;
 
 import com.google.common.base.Joiner;
 import com.google.common.reflect.TypeToken;
-import static org.jpc.converter.catalog.reification.type.ReificationConstants.*;
+
+import static org.jpc.converter.catalog.reflection.reification.ReificationConstants.*;
 
 public class StaticClassConverter implements ToTermConverter<StaticClass, Compound>, FromTermConverter<Compound, StaticClass> {
 	

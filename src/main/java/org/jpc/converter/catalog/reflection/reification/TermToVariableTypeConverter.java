@@ -1,4 +1,4 @@
-package org.jpc.converter.catalog.reification.type;
+package org.jpc.converter.catalog.reflection.reification;
 
 import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.Type;

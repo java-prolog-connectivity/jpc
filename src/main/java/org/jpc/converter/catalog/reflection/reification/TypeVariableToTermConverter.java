@@ -1,7 +1,7 @@
-package org.jpc.converter.catalog.reification.type;
+package org.jpc.converter.catalog.reflection.reification;
 
 import static java.util.Arrays.asList;
-import static org.jpc.converter.catalog.reification.type.ReificationConstants.TYPE_FUNCTOR_NAME;
+import static org.jpc.converter.catalog.reflection.reification.ReificationConstants.TYPE_FUNCTOR_NAME;
 
 import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.Type;

@@ -1,4 +1,4 @@
-package org.jpc.converter.catalog.reification;
+package org.jpc.converter.catalog.reflection;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -6,14 +6,14 @@ import static org.junit.Assert.assertTrue;
 
 import org.jpc.Jpc;
 import org.jpc.JpcBuilder;
-import org.jpc.converter.catalog.reification.ReificationFixture.B;
+import org.jpc.converter.catalog.reflection.ReificationFixture.B;
 import org.jpc.engine.logtalk.LogtalkConstants;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.IntegerTerm;
 import org.jpc.term.Term;
 import org.junit.Test;
-import org.minitoolbox.reflection.reification.StaticClass;
+import org.minitoolbox.reflection.StaticClass;
 
 
 public class MethodCallConversionsTest {

@@ -1,4 +1,4 @@
-package org.jpc.converter.catalog.reification;
+package org.jpc.converter.catalog.reflection;
 
 import java.lang.reflect.Type;
 
@@ -10,7 +10,7 @@ import org.jpc.term.Compound;
 import org.jpc.term.Term;
 import org.jpc.util.PrologSpeakingClass;
 import org.jpc.util.PrologSpeakingObject;
-import org.minitoolbox.reflection.reification.StaticClass;
+import org.minitoolbox.reflection.StaticClass;
 
 public class MethodCallConverter<T> implements FromTermConverter<Compound, T> {
 

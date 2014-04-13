@@ -1,9 +1,9 @@
 package org.jpc.converter;
 
 import static java.util.Arrays.asList;
-import static org.jpc.converter.catalog.reification.type.ReificationConstants.ARRAY_FUNCTOR_NAME;
-import static org.jpc.converter.catalog.reification.type.ReificationConstants.STATIC_CLASS_FUNCTOR_NAME;
-import static org.jpc.converter.catalog.reification.type.ReificationConstants.TYPE_FUNCTOR_NAME;
+import static org.jpc.converter.catalog.reflection.reification.ReificationConstants.ARRAY_FUNCTOR_NAME;
+import static org.jpc.converter.catalog.reflection.reification.ReificationConstants.STATIC_CLASS_FUNCTOR_NAME;
+import static org.jpc.converter.catalog.reflection.reification.ReificationConstants.TYPE_FUNCTOR_NAME;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -58,17 +58,18 @@ import org.jpc.converter.catalog.primitive.CharacterToNumberTermConverter;
 import org.jpc.converter.catalog.primitive.NumberToNumberTermConverter;
 import org.jpc.converter.catalog.primitive.ObjectToAtomConverter;
 import org.jpc.converter.catalog.primitive.StringToNumberTermConverter;
-import org.jpc.converter.catalog.reification.FieldResolutionConverter;
-import org.jpc.converter.catalog.reification.MethodCallConverter;
-import org.jpc.converter.catalog.reification.type.ClassConverter;
-import org.jpc.converter.catalog.reification.type.GenericArrayTypeToTermConverter;
-import org.jpc.converter.catalog.reification.type.ParameterizedTypeConverter;
-import org.jpc.converter.catalog.reification.type.StaticClassConverter;
-import org.jpc.converter.catalog.reification.type.TermToArrayTypeConverter;
-import org.jpc.converter.catalog.reification.type.TermToVariableTypeConverter;
-import org.jpc.converter.catalog.reification.type.TypeNameFunctorConverter;
-import org.jpc.converter.catalog.reification.type.TypeVariableToTermConverter;
-import org.jpc.converter.catalog.reification.type.WildcardTypeToTermConverter;
+import org.jpc.converter.catalog.reflection.FieldResolutionConverter;
+import org.jpc.converter.catalog.reflection.MethodCallConverter;
+import org.jpc.converter.catalog.reflection.ReflectiveObjectConverter;
+import org.jpc.converter.catalog.reflection.StaticClassConverter;
+import org.jpc.converter.catalog.reflection.reification.ClassConverter;
+import org.jpc.converter.catalog.reflection.reification.GenericArrayTypeToTermConverter;
+import org.jpc.converter.catalog.reflection.reification.ParameterizedTypeConverter;
+import org.jpc.converter.catalog.reflection.reification.TermToArrayTypeConverter;
+import org.jpc.converter.catalog.reflection.reification.TermToVariableTypeConverter;
+import org.jpc.converter.catalog.reflection.reification.TypeNameFunctorConverter;
+import org.jpc.converter.catalog.reflection.reification.TypeVariableToTermConverter;
+import org.jpc.converter.catalog.reflection.reification.WildcardTypeToTermConverter;
 import org.jpc.converter.catalog.serialized.FromSerializedConverter;
 import org.jpc.converter.typesolver.catalog.MapTypeSolver;
 import org.jpc.engine.embedded.JpcEngine;
@@ -111,7 +112,7 @@ public class JpcConverterManager extends JGumConverterManager {
 		
 		converterManager.register(new TermSpecifierConverter(), new Functor(TermSpecifierConverter.TERM_SPECIFIER_FUNCTOR_NAME, 1).asTerm());
 		
-		
+		converterManager.register(new ReflectiveObjectConverter(), new Functor(ReflectiveObjectConverter.REFLECTIVE_OBJECT_FUNCTOR_NAME, 1).asTerm());
 		converterManager.register(new StaticClassConverter(), new Functor(STATIC_CLASS_FUNCTOR_NAME, 2).asTerm());
 		converterManager.register(new ClassConverter(), new Functor(TYPE_FUNCTOR_NAME, 1).asTerm());
 		converterManager.register(new ParameterizedTypeConverter(), new Functor(TYPE_FUNCTOR_NAME, 3).asTerm());

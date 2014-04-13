@@ -1,4 +1,4 @@
-package org.jpc.converter.catalog.reification.type;
+package org.jpc.converter.catalog.reflection.reification;
 
 import java.lang.reflect.Type;
 
@@ -6,7 +6,7 @@ import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
-import org.minitoolbox.reflection.reification.StaticClass;
+import org.minitoolbox.reflection.StaticClass;
 
 public class TypeNameFunctorConverter<T> implements FromTermConverter<Compound, T> {
 

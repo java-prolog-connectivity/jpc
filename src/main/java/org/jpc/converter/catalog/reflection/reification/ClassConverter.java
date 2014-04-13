@@ -1,8 +1,8 @@
-package org.jpc.converter.catalog.reification.type;
+package org.jpc.converter.catalog.reflection.reification;
 
 import static java.util.Arrays.asList;
-import static org.jpc.converter.catalog.reification.type.ReificationConstants.ARRAY_FUNCTOR_NAME;
-import static org.jpc.converter.catalog.reification.type.ReificationConstants.TYPE_FUNCTOR_NAME;
+import static org.jpc.converter.catalog.reflection.reification.ReificationConstants.ARRAY_FUNCTOR_NAME;
+import static org.jpc.converter.catalog.reflection.reification.ReificationConstants.TYPE_FUNCTOR_NAME;
 
 import java.lang.reflect.Type;
 
@@ -11,7 +11,7 @@ import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
-import org.minitoolbox.reflection.reification.StaticClass;
+import org.minitoolbox.reflection.StaticClass;
 import org.minitoolbox.reflection.typewrapper.ArrayTypeWrapper;
 import org.minitoolbox.reflection.typewrapper.SingleTypeWrapper;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;

@@ -1,4 +1,4 @@
-package org.jpc.converter.catalog.reification.type;
+package org.jpc.converter.catalog.reflection.reification;
 
 
 import static org.junit.Assert.assertEquals;
@@ -8,11 +8,10 @@ import java.util.List;
 
 import org.jpc.Jpc;
 import org.jpc.JpcBuilder;
-import org.jpc.converter.catalog.reification.type.TypeConversionsTest.A.B.C;
+import org.jpc.converter.catalog.reflection.reification.TypeConversionsTest.A.B.C;
 import org.jpc.term.Compound;
 import org.junit.Test;
 import org.minitoolbox.reflection.reification.GenericArrayTypeImpl;
-import org.minitoolbox.reflection.reification.StaticClass;
 
 import com.google.common.reflect.TypeToken;
 
@@ -26,29 +25,7 @@ public class TypeConversionsTest {
 		}
 	}
 	
-	@Test
-	public void testStaticClassConverter() {
-		StaticClass staticClass = new StaticClass(String.class);
-		Compound staticClassTerm = jpc.toTerm(staticClass);
-		StaticClass staticClass2 = jpc.fromTerm(staticClassTerm);
-		assertEquals(staticClass, staticClass2);
-	}
-	
-	@Test
-	public void testNestedStaticClassConverter() {
-		StaticClass staticClass = new StaticClass(C.class);
-		Compound staticClassTerm = jpc.toTerm(staticClass);
-		StaticClass staticClass2 = jpc.fromTerm(staticClassTerm);
-		assertEquals(staticClass, staticClass2);
-	}
 
-	@Test
-	public void testPrimitiveStaticClassConverter() {
-		StaticClass staticClass = new StaticClass(int.class);
-		Compound staticClassTerm = jpc.toTerm(staticClass);
-		StaticClass staticClass2 = jpc.fromTerm(staticClassTerm);
-		assertEquals(staticClass, staticClass2);
-	}
 	
 	@Test
 	public void testClassConverter() {

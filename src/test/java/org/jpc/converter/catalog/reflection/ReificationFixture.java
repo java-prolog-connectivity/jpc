@@ -1,4 +1,4 @@
-package org.jpc.converter.catalog.reification;
+package org.jpc.converter.catalog.reflection;
 
 import java.lang.reflect.Type;
 import java.util.List;

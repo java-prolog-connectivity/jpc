@@ -1,4 +1,4 @@
-package org.jpc.converter.catalog.reification.type;
+package org.jpc.converter.catalog.reflection.reification;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -8,8 +8,8 @@ import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
+import org.minitoolbox.reflection.StaticClass;
 import org.minitoolbox.reflection.reification.ParameterizedTypeImpl;
-import org.minitoolbox.reflection.reification.StaticClass;
 import org.minitoolbox.reflection.typewrapper.SingleTypeWrapper;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 

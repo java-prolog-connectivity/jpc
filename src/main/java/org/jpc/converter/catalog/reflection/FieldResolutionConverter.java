@@ -1,4 +1,4 @@
-package org.jpc.converter.catalog.reification;
+package org.jpc.converter.catalog.reflection;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
@@ -8,7 +8,7 @@ import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
-import org.minitoolbox.reflection.reification.StaticClass;
+import org.minitoolbox.reflection.StaticClass;
 
 public class FieldResolutionConverter<T> implements FromTermConverter<Compound, T> {
 
