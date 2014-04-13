@@ -29,6 +29,18 @@ public class LogtalkSideApiTest {
 		assertEquals(new IntegerTerm(1), term);
 	}
 
+	public static class Fixture {
+		public static String x;
+		public static String y;
+	}
+	
+	@Test
+	public void setStaticField() {
+		defaultPrologEngine().query("java::eval(class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture'])@([x:hello,y:bye]))").oneSolutionOrThrow();
+		assertEquals("hello", Fixture.x);
+		assertEquals("bye", Fixture.y);
+	}
+	
 	@Test
 	public void testCurrentEngine() {
 		PrologEngine prologEngine = defaultPrologEngine().query("prolog_engines::this_engine(E)").<PrologEngine>selectObject("E").oneSolutionOrThrow();

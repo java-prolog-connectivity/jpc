@@ -1,13 +1,17 @@
 package org.jpc.converter.catalog.reflection;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.jconverter.converter.ConversionException;
 import org.jpc.Jpc;
+import org.jpc.JpcException;
 import org.jpc.converter.FromTermConverter;
+import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
+import org.minitoolbox.reflection.ReflectiveObject;
 import org.minitoolbox.reflection.StaticClass;
 
 public class FieldResolutionConverter<T> implements FromTermConverter<Compound, T> {
@@ -20,24 +24,29 @@ public class FieldResolutionConverter<T> implements FromTermConverter<Compound, 
 			throw new ConversionException();
 		
 		Term receiverTerm = term.arg(1);
-		Term fieldNameTerm = term.arg(2);
+		Term fieldSpecifierTerm = term.arg(2);
 		
 		Object receiver = jpc.fromTerm(receiverTerm);
-		String fieldName = jpc.fromTerm(fieldNameTerm, String.class);
-		
-		Class<?> receiverClass;
+		ReflectiveObject reflectiveObject;
 		if(receiver instanceof StaticClass) {
-			receiverClass = ((StaticClass)receiver).getWrappedClass();
+			reflectiveObject =(StaticClass<?>) receiver;
 		} else {
-			receiverClass = receiver.getClass();
+			reflectiveObject = new ReflectiveObject(receiver);
 		}
 		
-		Field field;
-		try {
-			field = receiverClass.getField(fieldName);
-			return (T) field.get(receiver);
-		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
-			throw new RuntimeException(e);
+		if(fieldSpecifierTerm instanceof Atom) {
+			String fieldName = jpc.fromTerm(fieldSpecifierTerm, String.class);
+			return reflectiveObject.getField(fieldName);
+		} else {
+			Object mutations = jpc.fromTerm(fieldSpecifierTerm);
+			if(mutations instanceof Entry) {
+				reflectiveObject.setField((Entry<String, Object>) mutations);
+			} else if(mutations instanceof Map) {
+				reflectiveObject.setFields((Map<String, Object>) mutations);
+			} else
+				throw new JpcException("Invalid field specifier.");
+			
+			return (T) receiver;
 		}
 		
 	}

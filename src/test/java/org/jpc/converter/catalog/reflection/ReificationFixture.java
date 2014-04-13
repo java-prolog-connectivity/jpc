@@ -17,7 +17,7 @@ public class ReificationFixture {
 	
 	public static class A{
 		public static long m = 10;
-		public long n;
+		public long n = 10;
 		
 		public static long m(long n) {return n;}
 		
