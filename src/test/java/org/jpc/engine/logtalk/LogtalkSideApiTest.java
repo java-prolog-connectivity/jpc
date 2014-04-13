@@ -35,10 +35,18 @@ public class LogtalkSideApiTest {
 	}
 	
 	@Test
-	public void setStaticField() {
+	public void testSetStaticField() {
 		defaultPrologEngine().query("java::eval(class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture'])@([x:hello,y:bye]))").oneSolutionOrThrow();
 		assertEquals("hello", Fixture.x);
 		assertEquals("bye", Fixture.y);
+	}
+	
+	@Test
+	public void testNew() {
+		Term term = defaultPrologEngine().query("java::eval(class([java,lang],['String'])::new,term(V))").oneSolutionOrThrow().get("V");
+		assertEquals(new Atom(""), term);
+		term = defaultPrologEngine().query("java::eval(class([java,lang],['String'])::new('hello'),term(V))").oneSolutionOrThrow().get("V");
+		assertEquals(new Atom("hello"), term);
 	}
 	
 	@Test
