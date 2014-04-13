@@ -2,7 +2,9 @@ package org.jpc.engine.logtalk;
 
 import static org.jpc.engine.prolog.PrologEngines.defaultPrologEngine;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
+import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.IntegerTerm;
 import org.jpc.term.Term;
 import org.junit.Test;
@@ -20,4 +22,10 @@ public class LogtalkSideApiTest {
 		assertEquals(new IntegerTerm(1), term);
 	}
 
+	@Test
+	public void testCurrentEngine() {
+		PrologEngine prologEngine = defaultPrologEngine().query("prolog_engines::this_engine(E)").<PrologEngine>selectObject("E").oneSolutionOrThrow();
+		assertNotNull(prologEngine);
+	}
+	
 }
