@@ -2,12 +2,13 @@ package org.jpc;
 
 import org.jpc.converter.CustomTermConversionsTest;
 import org.jpc.converter.DefaultConversionsTest;
-import org.jpc.converter.catalog.CustomTermToObjectConverterTest;
+import org.jpc.converter.catalog.CustomTermToObjectConversionsTest;
 import org.jpc.converter.catalog.TypedTermConversionsTest;
-import org.jpc.converter.catalog.io.FileConversionTest;
-import org.jpc.converter.catalog.reification.FieldResolutionConversionsTest;
-import org.jpc.converter.catalog.reification.MethodCallConversionsTest;
-import org.jpc.converter.catalog.reification.type.TypeConversionsTest;
+import org.jpc.converter.catalog.io.FileConversionsTest;
+import org.jpc.converter.catalog.reflection.FieldResolutionConversionsTest;
+import org.jpc.converter.catalog.reflection.MethodCallConversionsTest;
+import org.jpc.converter.catalog.reflection.StaticClassConversionsTest;
+import org.jpc.converter.catalog.reflection.reification.TypeConversionsTest;
 import org.jpc.converter.typesolver.TypeSolverTest;
 import org.jpc.engine.embedded.JpcEmbeddedEngineTestSuite;
 import org.jpc.salt.JpcTermWriterTest;
@@ -51,11 +52,12 @@ import org.junit.runners.Suite;
 	DefaultConversionsTest.class,
 	CustomTermConversionsTest.class,
 	TypeConversionsTest.class,
+	StaticClassConversionsTest.class,
 	TypedTermConversionsTest.class,
-	CustomTermToObjectConverterTest.class,
+	CustomTermToObjectConversionsTest.class,
 	MethodCallConversionsTest.class,
 	FieldResolutionConversionsTest.class,
-	FileConversionTest.class,
+	FileConversionsTest.class,
 	PrologUtilTest.class,
 	EngineConfigurationDeserializerTest.class,
 	JpcConfigurationDeserializerTest.class
