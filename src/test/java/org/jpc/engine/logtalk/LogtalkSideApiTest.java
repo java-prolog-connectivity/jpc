@@ -5,12 +5,19 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.jpc.engine.prolog.PrologEngine;
+import org.jpc.term.Atom;
 import org.jpc.term.IntegerTerm;
 import org.jpc.term.Term;
 import org.junit.Test;
 
 public class LogtalkSideApiTest {
 
+	@Test
+	public void testEval() {
+		Term term = defaultPrologEngine().query("java::eval(abc::toUpperCase,term(V))").oneSolutionOrThrow().get("V");
+		assertEquals(new Atom("ABC"), term);
+	}
+	
 	@Test
 	public void testReturningTerm() {
 		Term term;
