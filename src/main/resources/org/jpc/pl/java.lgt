@@ -15,10 +15,12 @@
 	]).	
 	forget(Reference) :- jpc(default)::forgetJRefTerm(term(Reference)).
 
-/*
-	eval(Expression) :- eval(Expression, _).
+	:- public(eval/1).
+	eval(Expression) :- 
+		eval(Expression, _).
 
-	eval(Expression, Ret) :- true.
-	*/	 
+	:- public(eval/2).
+	eval(Expression, Ret) :- 
+		jpc_driver::eval(Expression, Ret).
 
 :- end_object.
