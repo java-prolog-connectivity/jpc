@@ -9,13 +9,12 @@
 		parnames is ['Reference', 'ReturnValue']
 	]).
 
-	check_output_mode(Output) :- var(Output), Output = term(_).
-	check_output_mode(Output) :- \+ var(Output).
+
 		
 	invoke(Message) :-
 		parameter(1, Reference),
 		parameter(2, Output),
-		check_output_mode(Output),
+		jpc_util::check_output_mode(Output),
 		LogtalkCall = Reference::Message,
 		jpc_driver::eval(LogtalkCall, Output).
 
