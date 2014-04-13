@@ -13,7 +13,7 @@ import org.jpc.term.Compound;
 import org.jpc.term.Term;
 import org.junit.Test;
 
-public class CustomTermToObjectConverterTest {
+public class CustomTermToObjectConversionsTest {
 
 	Jpc jpc = JpcBuilder.create().build();
 	

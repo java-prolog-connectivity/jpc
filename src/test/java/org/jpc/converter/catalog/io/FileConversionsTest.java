@@ -14,7 +14,7 @@ import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.junit.Test;
 
-public class FileConversionTest {
+public class FileConversionsTest {
 
 	Jpc jpc = JpcBuilder.create().build();
 	
