@@ -18,6 +18,12 @@ public class ReflectiveObjectConverter implements ToTermConverter<ReflectiveObje
 	@Override
 	public ReflectiveObject fromTerm(Compound term, Type targetType, Jpc jpc) {
 		Object object = jpc.fromTerm(term.arg(1));
+		/*
+		if(object instanceof StaticClass)
+			return (StaticClass<?>) object;
+		else
+			return new ReflectiveObject(object);
+		*/
 		return new ReflectiveObject(object);
 	}
 
