@@ -28,12 +28,11 @@ public class JavaFXLauncher extends Application {
     	WrappedStage wStage = new WrappedStage();
 
     	javafx.application.Platform.runLater(new Runnable() {
-    		Stage stage;
 			@Override
 			public void run() {
 				synchronized(stageInitLock) {
 					try {
-						stage = stageClass.newInstance(); //this must be executed in the user interface thread.
+						wStage.stage = stageClass.newInstance(); //this must be executed in the user interface thread.
 					} catch (InstantiationException | IllegalAccessException e) {
 						wStage.ex = e;
 						throw new RuntimeException(e);
@@ -41,8 +40,7 @@ public class JavaFXLauncher extends Application {
 						stageInitLock.notify();
 					}
 				}
-				wStage.stage = stage;
-				stage.show();
+				wStage.stage.show();
 			}
 		});
     	synchronized(stageInitLock) {
