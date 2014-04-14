@@ -1,3 +1,15 @@
+:- object(jref_term(_Id),
+	imports(java_bridge)).
+
+:- end_object.
+
+
+:- object(jserialized(_Id),
+	imports(java_bridge)).
+
+:- end_object.
+
+
 :- object(class(_PackageNames,_ClassNameComponents),
 	imports(java_bridge)).
 

@@ -14,7 +14,7 @@
 	invoke(Message) :-
 		parameter(1, Reference),
 		parameter(2, Output),
-		jpc_util::check_output_mode(Output),
+		%jpc_util::check_output_mode(Output),
 		LogtalkCall = Reference::Message,
 		jpc_driver::eval(LogtalkCall, Output).
 
