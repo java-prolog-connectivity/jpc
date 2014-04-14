@@ -13,10 +13,10 @@ import org.jpc.term.Term;
 
 public class SyntaxErrorConverter implements FromTermConverter<Compound, SyntaxError> {
 
-	public static final String SYNTAX_ERROR_FUNCTOR = "syntax_error";
+	public static final String SYNTAX_ERROR_FUNCTOR_NAME = "syntax_error";
 	
 	public static boolean isSyntaxError(Term term) {
-		return isIsoPrologError(term) && term.arg(1).hasFunctor(SYNTAX_ERROR_FUNCTOR, 1);
+		return isIsoPrologError(term) && term.arg(1).hasFunctor(SYNTAX_ERROR_FUNCTOR_NAME, 1);
 	}
 	
 	@Override

@@ -13,10 +13,10 @@ import org.jpc.term.Term;
 
 public class PermissionErrorConverter implements FromTermConverter<Compound, PermissionError> {
 
-	public static final String PERMISION_ERROR_FUNCTOR = "permision_error";
+	public static final String PERMISION_ERROR_FUNCTOR_NAME = "permision_error";
 	
 	public static boolean isPermissionError(Term term) {
-		return isIsoPrologError(term) && term.arg(1).hasFunctor(PERMISION_ERROR_FUNCTOR, 3);
+		return isIsoPrologError(term) && term.arg(1).hasFunctor(PERMISION_ERROR_FUNCTOR_NAME, 3);
 	}
 	
 	@Override

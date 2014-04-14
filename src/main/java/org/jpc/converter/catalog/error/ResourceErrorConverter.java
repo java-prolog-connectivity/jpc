@@ -13,10 +13,10 @@ import org.jpc.term.Term;
 
 public class ResourceErrorConverter implements FromTermConverter<Compound, ResourceError> {
 
-	public static final String RESOURCE_ERROR_FUNCTOR = "resource_error";
+	public static final String RESOURCE_ERROR_FUNCTOR_NAME = "resource_error";
 	
 	public static boolean isResourceError(Term term) {
-		return isIsoPrologError(term) && term.arg(1).hasFunctor(RESOURCE_ERROR_FUNCTOR, 1);
+		return isIsoPrologError(term) && term.arg(1).hasFunctor(RESOURCE_ERROR_FUNCTOR_NAME, 1);
 	}
 	
 	@Override

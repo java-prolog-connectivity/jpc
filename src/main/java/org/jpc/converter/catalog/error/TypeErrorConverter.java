@@ -13,10 +13,10 @@ import org.jpc.term.Term;
 
 public class TypeErrorConverter implements FromTermConverter<Compound, TypeError> {
 
-	public static final String TYPE_ERROR_FUNCTOR = "type_error";
+	public static final String TYPE_ERROR_FUNCTOR_NAME = "type_error";
 	
 	public static boolean isTypeError(Term term) {
-		return isIsoPrologError(term) && term.arg(1).hasFunctor(TYPE_ERROR_FUNCTOR, 2);
+		return isIsoPrologError(term) && term.arg(1).hasFunctor(TYPE_ERROR_FUNCTOR_NAME, 2);
 	}
 	
 	@Override

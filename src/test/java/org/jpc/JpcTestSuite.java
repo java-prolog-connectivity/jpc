@@ -4,6 +4,7 @@ import org.jpc.converter.CustomTermConversionsTest;
 import org.jpc.converter.DefaultConversionsTest;
 import org.jpc.converter.catalog.CustomTermToObjectConversionsTest;
 import org.jpc.converter.catalog.TypedTermConversionsTest;
+import org.jpc.converter.catalog.error.ErrorConversionsTest;
 import org.jpc.converter.catalog.io.FileConversionsTest;
 import org.jpc.converter.catalog.reflection.FieldResolutionConversionsTest;
 import org.jpc.converter.catalog.reflection.MethodCallConversionsTest;
@@ -60,6 +61,7 @@ import org.junit.runners.Suite;
 	FileConversionsTest.class,
 	PrologUtilTest.class,
 	EngineConfigurationDeserializerTest.class,
-	JpcConfigurationDeserializerTest.class
+	JpcConfigurationDeserializerTest.class,
+	ErrorConversionsTest.class
 })
 public class JpcTestSuite {}

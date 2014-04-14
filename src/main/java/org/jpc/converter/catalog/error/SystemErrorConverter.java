@@ -13,10 +13,10 @@ import org.jpc.term.Term;
 
 public class SystemErrorConverter implements FromTermConverter<Compound, SystemError> {
 
-	public static final String SYSTEM_ERROR_FUNCTOR = "system_error";
+	public static final String SYSTEM_ERROR_FUNCTOR_NAME = "system_error";
 	
 	public static boolean isSystemError(Term term) {
-		return isIsoPrologError(term) && term.arg(1).hasFunctor(SYSTEM_ERROR_FUNCTOR, 0);
+		return isIsoPrologError(term) && term.arg(1).hasFunctor(SYSTEM_ERROR_FUNCTOR_NAME, 0);
 	}
 	
 	@Override

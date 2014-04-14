@@ -13,10 +13,10 @@ import org.jpc.term.Term;
 
 public class RepresentationErrorConverter implements FromTermConverter<Compound, RepresentationError> {
 
-	public static final String REPRESENTATION_ERROR_FUNCTOR = "representation_error";
+	public static final String REPRESENTATION_ERROR_FUNCTOR_NAME = "representation_error";
 	
 	public static boolean isRepresentationError(Term term) {
-		return isIsoPrologError(term) && term.arg(1).hasFunctor(REPRESENTATION_ERROR_FUNCTOR, 1);
+		return isIsoPrologError(term) && term.arg(1).hasFunctor(REPRESENTATION_ERROR_FUNCTOR_NAME, 1);
 	}
 	
 	@Override
