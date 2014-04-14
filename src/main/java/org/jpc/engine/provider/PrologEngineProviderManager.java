@@ -16,6 +16,10 @@ public class PrologEngineProviderManager {
 		return prologEngineProvider.getPrologEngine();
 	}
 	
+	public static void setPrologEngine(PrologEngine prologEngine) {
+		setPrologEngineProvider(new SimpleEngineProvider(prologEngine));
+	}
+	
 	public static synchronized void setPrologEngineProvider(PrologEngineProvider<? extends PrologEngine> prologEngineProvider) {
 		PrologEngineProviderManager.prologEngineProvider = prologEngineProvider;
 	}
