@@ -3,6 +3,8 @@ package org.jpc.util;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.jpc.Jpc;
 import org.jpc.JpcException;
@@ -61,6 +63,13 @@ public class PrologSpeakingObject {
 	public void setField(String fieldName, Term fieldValueTerm) {
 		Object fieldValue = jpc.fromTerm(fieldValueTerm);
 		reflectiveObject.setField(fieldName, fieldValue);
+	}
+	
+	public void setFields(Term mapTerm) {
+		Map<String, Object> map = jpc.fromTerm(mapTerm, Map.class);
+		for(Entry<String, Object> entry : map.entrySet()) {
+			reflectiveObject.setField(entry.getKey(), entry.getValue());
+		}
 	}
 	
 }

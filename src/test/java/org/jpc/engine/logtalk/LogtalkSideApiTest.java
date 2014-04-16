@@ -36,7 +36,19 @@ public class LogtalkSideApiTest {
 	
 	@Test
 	public void testSetStaticField() {
-		defaultPrologEngine().query("java::eval(class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture'])@([x:hello,y:bye]))").oneSolutionOrThrow();
+		Fixture.x = null;
+		Fixture.y = null;
+		//defaultPrologEngine().query("java::eval(class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture'])@([x:hello,y:bye]))").oneSolutionOrThrow();
+		defaultPrologEngine().query("java::eval(class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture'])::([x:hello,y:bye]))").oneSolutionOrThrow();
+		assertEquals("hello", Fixture.x);
+		assertEquals("bye", Fixture.y);
+	}
+	
+	@Test
+	public void testShortSetStaticField() {
+		Fixture.x = null;
+		Fixture.y = null;
+		defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture'])::[x:hello,y:bye]").oneSolutionOrThrow();
 		assertEquals("hello", Fixture.x);
 		assertEquals("bye", Fixture.y);
 	}

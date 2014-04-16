@@ -38,15 +38,16 @@ public class FieldResolutionConverter<T> implements FromTermConverter<Compound, 
 			String fieldName = jpc.fromTerm(fieldSpecifierTerm, String.class);
 			return reflectiveObject.getField(fieldName);
 		} else {
+			/*
 			Object mutations = jpc.fromTerm(fieldSpecifierTerm);
 			if(mutations instanceof Entry) {
 				reflectiveObject.setField((Entry<String, Object>) mutations);
 			} else if(mutations instanceof Map) {
 				reflectiveObject.setFields((Map<String, Object>) mutations);
-			} else
+			} else*/
 				throw new JpcException("Invalid field specifier.");
 			
-			return (T) receiver;
+			//return (T) receiver;
 		}
 		
 	}

@@ -27,7 +27,13 @@ public class MethodCallConverter<T> implements FromTermConverter<Compound, T> {
 		} else {
 			prologSpeakingObject = new PrologSpeakingObject(receiver, jpc);
 		}
-		return prologSpeakingObject.invoke(messageTerm);
+		if(!messageTerm.isList()) {
+			return prologSpeakingObject.invoke(messageTerm);
+		} else {
+			prologSpeakingObject.setFields(messageTerm);
+			return (T) receiver;
+		}
+			
 	}
 
 }
