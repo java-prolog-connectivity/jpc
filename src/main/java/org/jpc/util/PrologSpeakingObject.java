@@ -72,4 +72,8 @@ public class PrologSpeakingObject {
 		}
 	}
 	
+	public <T> T getField(String fieldName) {
+		return reflectiveObject.getField(fieldName);
+	}
+	
 }
