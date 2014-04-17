@@ -133,7 +133,7 @@ public class JpcConverterManager extends JGumConverterManager {
 		converterManager.register(new TypeNameFunctorConverter<Character>(), new Functor(char.class.getName(), 1).asTerm());
 		converterManager.register(new TypeNameFunctorConverter<Boolean>(), new Functor(boolean.class.getName(), 1).asTerm());
 		
-		converterManager.register(new FieldResolutionConverter(), new Functor(FieldResolutionConverter.FIELD_RESOLUTION_OPERATOR, 2).asTerm());
+		//converterManager.register(new FieldResolutionConverter(), new Functor(FieldResolutionConverter.FIELD_RESOLUTION_OPERATOR, 2).asTerm());
 		converterManager.register(new MethodCallConverter(), new Functor(LogtalkConstants.LOGTALK_OPERATOR, 2).asTerm());
 
 		converterManager.register(new TypedTermToObjectConverter(), new Functor(TypedTermToObjectConverter.TYPED_TERM_FUNCTOR_NAME, 2).asTerm());
