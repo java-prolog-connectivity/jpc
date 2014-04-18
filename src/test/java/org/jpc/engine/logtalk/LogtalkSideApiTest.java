@@ -63,6 +63,16 @@ public class LogtalkSideApiTest {
 	}
 	
 	@Test
+	public void testSetStaticFieldFromField() {
+		Fixture1.x = null;
+		Fixture1.y = null;
+		defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[x,hello]").oneSolutionOrThrow();
+		defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[y,class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[x]]").oneSolutionOrThrow();
+		assertEquals("hello", Fixture1.x);
+		assertEquals("hello", Fixture1.y);
+	}
+	
+	@Test
 	public void testIndexedValues() {
 		Term term;
 		//[a,b,c] is interpreted as a list.
