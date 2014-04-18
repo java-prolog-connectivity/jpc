@@ -71,6 +71,15 @@ public class LogtalkSideApiTest {
 	}
 	
 	@Test
+	public void testSequence() {
+		Fixture.x = null;
+		Fixture.y = null;
+		defaultPrologEngine().query("java::eval((class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture'])::[x,hello], class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture'])::[y,bye]))").oneSolutionOrThrow();
+		assertEquals("hello", Fixture.x);
+		assertEquals("bye", Fixture.y);
+	}
+	
+	@Test
 	public void testListIndex() {
 		//IntegerTerm result = (IntegerTerm) defaultPrologEngine().query("java::eval([1,2,3]::[1], term(X))").oneSolutionOrThrow().get("X");
 		IntegerTerm result = (IntegerTerm) defaultPrologEngine().query("[1,2,3]::[1] returns term(X)").oneSolutionOrThrow().get("X");

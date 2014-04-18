@@ -24,6 +24,7 @@ import org.jpc.JpcException;
 import org.jpc.converter.catalog.CustomTermToObjectConverter;
 import org.jpc.converter.catalog.JRefToObjectConverter;
 import org.jpc.converter.catalog.JpcContextConverter;
+import org.jpc.converter.catalog.SequenceConverter;
 import org.jpc.converter.catalog.TermConvertableConverter;
 import org.jpc.converter.catalog.TermSpecifierConverter;
 import org.jpc.converter.catalog.TypedTermToObjectConverter;
@@ -133,7 +134,9 @@ public class JpcConverterManager extends JGumConverterManager {
 		converterManager.register(new TypeNameFunctorConverter<Boolean>(), new Functor(boolean.class.getName(), 1).asTerm());
 		
 		converterManager.register(new MethodCallConverter(), new Functor(LogtalkConstants.LOGTALK_OPERATOR, 2).asTerm());
-
+		converterManager.register(new SequenceConverter(), new Functor(",", 2).asTerm());
+		
+		
 		converterManager.register(new TypedTermToObjectConverter(), new Functor(TypedTermToObjectConverter.TYPED_TERM_FUNCTOR_NAME, 2).asTerm());
 		converterManager.register(new FromSerializedConverter(), new Functor(SerializedTerm.SERIALIZED_TERM_FUNCTOR, 1).asTerm());
 		converterManager.register(new CustomTermToObjectConverter(), new Functor(CustomTermToObjectConverter.CUSTOM_TERM_FUNCTOR_NAME, 2).asTerm());
