@@ -18,7 +18,12 @@ public class LogtalkSideApiTest {
 	 * @author sergioc
 	 *
 	 */
-	public static class Fixture {
+	public static class Fixture1 {
+		public static String x;
+		public static String y;
+	}
+	
+	public static class Fixture2 {
 		public static String x;
 		public static String y;
 	}
@@ -38,16 +43,6 @@ public class LogtalkSideApiTest {
 	}
 	
 	@Test
-	public void testIndexedValues() {
-		Term term;
-		//[a,b,c] is interpreted as a list.
-		term = defaultPrologEngine().query("[a,b,c]::[1] returns term(X)").oneSolutionOrThrow().get("X");
-		assertEquals(new Atom("b"), term);
-		term = defaultPrologEngine().query("[1,2,3]::[0] returns term(X)").oneSolutionOrThrow().get("X");
-		assertEquals(new IntegerTerm(1), term);
-	}
-	
-	@Test
 	public void testNew() {
 		Term term;
 		//class([java,lang],['String']) is interpreted as the class java.lang.String
@@ -57,14 +52,24 @@ public class LogtalkSideApiTest {
 	
 	@Test
 	public void testSetStaticField() {
-		Fixture.x = null;
-		Fixture.y = null;
-		defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture'])::[x,hello]").oneSolutionOrThrow();
-		defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture'])::[y,bye]").oneSolutionOrThrow();
-		Atom result = (Atom) defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture'])::[x] returns term(X)").oneSolutionOrThrow().get("X");
+		Fixture1.x = null;
+		Fixture1.y = null;
+		defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[x,hello]").oneSolutionOrThrow();
+		defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[y,bye]").oneSolutionOrThrow();
+		Atom result = (Atom) defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[x] returns term(X)").oneSolutionOrThrow().get("X");
 		assertEquals("hello", result.getName());
-		result = (Atom) defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture'])::[y] returns term(X)").oneSolutionOrThrow().get("X");
+		result = (Atom) defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[y] returns term(X)").oneSolutionOrThrow().get("X");
 		assertEquals("bye", result.getName());
+	}
+	
+	@Test
+	public void testIndexedValues() {
+		Term term;
+		//[a,b,c] is interpreted as a list.
+		term = defaultPrologEngine().query("[a,b,c]::[1] returns term(X)").oneSolutionOrThrow().get("X");
+		assertEquals(new Atom("b"), term);
+		term = defaultPrologEngine().query("[1,2,3]::[0] returns term(X)").oneSolutionOrThrow().get("X");
+		assertEquals(new IntegerTerm(1), term);
 	}
 	
 	
@@ -110,6 +115,20 @@ public class LogtalkSideApiTest {
 		assertEquals(new Atom(""), term);
 	}
 	
+	/**
+	 * Tests the same message sent to multiple objects in one single step.
+	 */
+	@Test
+	public void testBroadcasting() {
+		Fixture1.x = null;
+		Fixture2.x = null;
+		defaultPrologEngine().query("java((class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1']), "
+				+ "class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture2'])))"
+				+ "::[x,hello]").oneSolutionOrThrow();
+		assertEquals("hello", Fixture1.x);
+		assertEquals("hello", Fixture2.x);
+	}
+	
 	
 	/* ********************************************************************************************************************************
 	 * Testing eval/1 and eval/2.
@@ -129,16 +148,16 @@ public class LogtalkSideApiTest {
 	
 	@Test
 	public void testEvalWithSideEffects() {
-		Fixture.x = null;
-		Fixture.y = null;
+		Fixture1.x = null;
+		Fixture1.y = null;
 		//setting the static fields of a class.
-		defaultPrologEngine().query("java::eval(class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture'])::([x,hello]))").oneSolutionOrThrow();
-		defaultPrologEngine().query("java::eval(class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture'])::([y,bye]))").oneSolutionOrThrow();
-		assertEquals("hello", Fixture.x);
-		assertEquals("bye", Fixture.y);
-		Atom result = (Atom) defaultPrologEngine().query("java::eval(class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture'])::[x], term(X))").oneSolutionOrThrow().get("X");
+		defaultPrologEngine().query("java::eval(class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::([x,hello]))").oneSolutionOrThrow();
+		defaultPrologEngine().query("java::eval(class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::([y,bye]))").oneSolutionOrThrow();
+		assertEquals("hello", Fixture1.x);
+		assertEquals("bye", Fixture1.y);
+		Atom result = (Atom) defaultPrologEngine().query("java::eval(class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[x], term(X))").oneSolutionOrThrow().get("X");
 		assertEquals("hello", result.getName());
-		result = (Atom) defaultPrologEngine().query("java::eval(class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture'])::[y], term(Y))").oneSolutionOrThrow().get("Y");
+		result = (Atom) defaultPrologEngine().query("java::eval(class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[y], term(Y))").oneSolutionOrThrow().get("Y");
 		assertEquals("bye", result.getName());
 	}
 	
@@ -147,15 +166,15 @@ public class LogtalkSideApiTest {
 	 */
 	@Test
 	public void testEvalSequence() {
-		Fixture.x = null;
-		Fixture.y = null;
+		Fixture1.x = null;
+		Fixture1.y = null;
 		//setting two static fields in a class as a sequence of messages.
 		defaultPrologEngine().query("java::eval(("
-				+ "class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture'])::[x,hello], "
-				+ "class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture'])::[y,bye]"
+				+ "class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[x,hello], "
+				+ "class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[y,bye]"
 				+ "))").oneSolutionOrThrow();
-		assertEquals("hello", Fixture.x);
-		assertEquals("bye", Fixture.y);
+		assertEquals("hello", Fixture1.x);
+		assertEquals("bye", Fixture1.y);
 	}
 	
 	/**
@@ -164,16 +183,51 @@ public class LogtalkSideApiTest {
 	 */
 	@Test
 	public void testEvalSequenceWithReturnExpression() {
-		Fixture.x = null;
-		Fixture.y = null;
+		Fixture1.x = null;
+		Fixture1.y = null;
 		Atom result = (Atom) defaultPrologEngine().query("java::eval(("
-				+ "class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture'])::[x,hello], "
-				+ "class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture'])::[y,bye], "
-				+ "class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture'])::[y]"
+				+ "class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[x,hello], "
+				+ "class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[y,bye], "
+				+ "class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[y]"
 				+ "), term(X))").oneSolutionOrThrow().get("X");
 		assertEquals("bye", result.getName());
-		assertEquals("hello", Fixture.x);
-		assertEquals("bye", Fixture.y);
+		assertEquals("hello", Fixture1.x);
+		assertEquals("bye", Fixture1.y);
+	}
+	
+	/**
+	 * Tests various messages sent to the same object.
+	 */
+	@Test
+	public void testCascading() {
+		Fixture1.x = null;
+		Fixture1.y = null;
+		defaultPrologEngine().query("java::eval("
+				+ "class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::"
+				+ "([x,hello],[y,bye]))"
+				).oneSolutionOrThrow();
+		assertEquals("hello", Fixture1.x);
+		assertEquals("bye", Fixture1.y);
+	}
+	
+	/**
+	 * Tests various messages sent to various objects.
+	 */
+	@Test
+	public void testCascadingAndBroadcasting() {
+		Fixture1.x = null;
+		Fixture1.y = null;
+		Fixture2.x = null;
+		Fixture2.y = null;
+		defaultPrologEngine().query("java::eval("
+				+ "(class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1']), "
+				+ "class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture2']))::"
+				+ "([x,hello],[y,bye]))"
+				).oneSolutionOrThrow();
+		assertEquals("hello", Fixture1.x);
+		assertEquals("bye", Fixture1.y);
+		assertEquals("hello", Fixture2.x);
+		assertEquals("bye", Fixture2.y);
 	}
 	
 	
