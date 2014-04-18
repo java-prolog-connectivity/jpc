@@ -19,6 +19,8 @@ public class PrologConstants {
 	
 	public static final String CONS_FUNCTOR = ".";
 	
+	public static final String SEQUENCE_SEPARATOR = ",";
+	
 	public static final String PROLOG_ERROR_FUNCTOR_NAME = "error";
 	
 	public static final String CATCH = "catch";
