@@ -35,7 +35,7 @@ public class ListTerm extends ArrayList<Term> implements TermConvertable {
 	public static ListTerm fromTermSequence(Term termSequence, String sequenceSeparator) {
 		ListTerm listTerm = new ListTerm();
 		Term currentTerm = termSequence;
-		while(currentTerm.hasFunctor(new Functor(sequenceSeparator, 2))) {
+		while(currentTerm.hasFunctor(sequenceSeparator, 2)) {
 			listTerm.add(currentTerm.arg(1));
 			currentTerm = currentTerm.arg(2);
 		}
