@@ -37,23 +37,39 @@ public class MethodCallConverter<T> implements FromTermConverter<Compound, T> {
 			return prologSpeakingObject.invoke(messageTerm);
 		} else {
 			ListTerm listTerm = messageTerm.asList();
-			if(listTerm.size() == 1 && (listTerm.get(0) instanceof Atom || listTerm.get(0) instanceof IntegerTerm)) {
+			if(listTerm.size() == 1) {
 				if(listTerm.get(0) instanceof Atom) {
-					String fieldName = ((Atom)listTerm.get(0)).getName();
-					return prologSpeakingObject.getField(fieldName);
-				} else {
+					return prologSpeakingObject.getField((Atom)listTerm.get(0));
+				} else if(listTerm.get(0) instanceof IntegerTerm) {
 					int index = ((IntegerTerm)listTerm.get(0)).intValue();
 					if(receiver instanceof List) {
 						return (T) ((List)receiver).get(index);
 					} else if(receiver.getClass().isArray()) {
 						return (T) Array.get(receiver, index);
 					} else
-						throw new JpcException("Index: " + index + " cannot be resolved for receiver: " + receiver);
+						throw new JpcException("Index: " + index + " cannot be resolved for receiver: " + receiver + ".");
+				} else {
+					throw new JpcException("Wrong field specifier: " + listTerm.get(0));
 				}
-			} else {
-				prologSpeakingObject.setFields(messageTerm);
+			} else if(listTerm.size() == 2) {
+				if(listTerm.get(0) instanceof Atom) {
+					Term fieldTerm = listTerm.get(1);
+					prologSpeakingObject.setField((Atom)listTerm.get(0), fieldTerm);
+				} else if(listTerm.get(0) instanceof IntegerTerm) {
+					int index = ((IntegerTerm)listTerm.get(0)).intValue();
+					Object value = jpc.fromTerm(listTerm.get(1));
+					if(receiver instanceof List) {
+						((List)receiver).set(index, value);
+					} else if(receiver.getClass().isArray()) {
+						Array.set(receiver, index, value);
+					} else
+						throw new JpcException("Index: " + index + " cannot be resolved for receiver: " + receiver + ".");
+				} else {
+					throw new JpcException("Wrong field specifier: " + listTerm.get(0) + ".");
+				}
 				return (T) receiver;
-			}
+			} else
+				throw new JpcException("Invalid message: " + listTerm + ".");
 				
 		}
 			

@@ -1,3 +1,5 @@
+:- op(50, xfx, returns).
+
 :- protocol(javap).
 
 	:- info([

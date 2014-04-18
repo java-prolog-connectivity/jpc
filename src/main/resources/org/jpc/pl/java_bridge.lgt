@@ -1,6 +1,3 @@
-:- op(50, xfx, returns).
-
-
 /*load this after the driver logtalk file*/
 
 :- category(java_bridge,

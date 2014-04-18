@@ -36,11 +36,11 @@ public class PrologSpeakingObject {
 	}
 	
 	private <T> T invoke(Atom atom) {
-		return invoke(atom.getName(), Collections.emptyList());
+		return invoke(atom, Collections.emptyList());
 	}
 	
 	private <T> T invoke(Compound compound) {
-		return invoke(compound.getNameString(), compound.getArgs());
+		return invoke((Atom)compound.getName(), compound.getArgs());
 	}
 	
 	public <T> T invoke(Term messageTerm) {
@@ -52,6 +52,10 @@ public class PrologSpeakingObject {
 			throw new JpcException("Unsupported message term type: " + messageTerm);
 	}
 	
+	public <T> T invoke(Atom methodName, List<? extends Term> argTerms) {
+		return invoke(methodName.getName(), argTerms);
+	}
+	
 	public <T> T invoke(String methodName, List<? extends Term> argTerms) {
 		List<Object> args = new ArrayList<>();		
 		for(int i = 0; i<argTerms.size(); i++) {
@@ -60,9 +64,9 @@ public class PrologSpeakingObject {
 		return reflectiveObject.invoke(methodName, args);
 	}
 
-	public void setField(String fieldName, Term fieldValueTerm) {
+	public void setField(Atom fieldName, Term fieldValueTerm) {
 		Object fieldValue = jpc.fromTerm(fieldValueTerm);
-		reflectiveObject.setField(fieldName, fieldValue);
+		reflectiveObject.setField(fieldName.getName(), fieldValue);
 	}
 	
 	public void setFields(Term mapTerm) {
@@ -72,8 +76,8 @@ public class PrologSpeakingObject {
 		}
 	}
 	
-	public <T> T getField(String fieldName) {
-		return reflectiveObject.getField(fieldName);
+	public <T> T getField(Atom fieldName) {
+		return reflectiveObject.getField(fieldName.getName());
 	}
 	
 }

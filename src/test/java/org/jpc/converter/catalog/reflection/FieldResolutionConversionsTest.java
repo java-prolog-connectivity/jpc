@@ -4,8 +4,6 @@ import static java.util.Arrays.asList;
 import static org.jpc.term.JRef.jRef;
 import static org.junit.Assert.assertEquals;
 
-import java.util.HashMap;
-
 import org.jpc.Jpc;
 import org.jpc.JpcBuilder;
 import org.jpc.converter.catalog.reflection.ReificationFixture.B;
@@ -27,10 +25,9 @@ public class FieldResolutionConversionsTest {
 		Term fieldTerm = new Atom("m");
 		Term fieldResolutionTermMessage = ListTerm.create(fieldTerm).asTerm();
 		Term fieldResolutionTerm = new Compound(LogtalkConstants.LOGTALK_OPERATOR, asList(term, fieldResolutionTermMessage));
-		//Term fieldResolutionTerm = new Compound(FieldResolutionConverter.FIELD_RESOLUTION_OPERATOR, asList(term, fieldTerm));
 		assertEquals(new Long(10L), jpc.fromTerm(fieldResolutionTerm));
 		Term mutatorTerm;
-		mutatorTerm = jpc.toTerm(new HashMap<String, Long>(){{put("m", 12L);}});
+		mutatorTerm = jpc.listTerm("m", 12L).asTerm();
 		jpc.fromTerm(new Compound(LogtalkConstants.LOGTALK_OPERATOR, asList(term, mutatorTerm)));
 		assertEquals(12L, B.m);
 	}
@@ -44,7 +41,7 @@ public class FieldResolutionConversionsTest {
 		Term fieldResolutionTerm = new Compound(LogtalkConstants.LOGTALK_OPERATOR, asList(term, fieldResolutionTermMessage));
 		assertEquals(new Long(10L), jpc.fromTerm(fieldResolutionTerm));
 		Term mutatorTerm;
-		mutatorTerm = jpc.toTerm(new HashMap<String, Long>(){{put("m", 12L);}});
+		mutatorTerm = jpc.listTerm("m", 12L).asTerm();
 		jpc.fromTerm(new Compound(LogtalkConstants.LOGTALK_OPERATOR, asList(term, mutatorTerm)));
 		assertEquals(12L, B.m);
 	}
