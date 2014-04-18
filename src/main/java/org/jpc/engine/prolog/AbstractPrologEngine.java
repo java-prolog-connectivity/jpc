@@ -23,7 +23,6 @@ import static org.jpc.term.Var.ANONYMOUS_VAR;
 import static org.jpc.util.JpcPreferences.JPC_LOADER_FILE;
 import static org.jpc.util.JpcPreferences.JPC_LOGTALK_LOADER_FILE;
 import static org.jpc.util.JpcPreferences.JPC_VAR_PREFIX;
-import static org.jpc.util.PrologUtil.termSequence;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -44,6 +43,7 @@ import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
 import org.jpc.term.expansion.PositionalSymbolExpander;
+import org.jpc.util.TermJoiner;
 import org.jpc.util.LogtalkUtil;
 import org.jpc.util.PrologUtil;
 import org.jpc.util.engine.PrologResourceLoader;
@@ -212,7 +212,8 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 
 	@Override
 	public boolean isBinaryOperator(String op) {
-		return query(termSequence(
+		TermJoiner joiner = TermJoiner.getDefault();
+		return query(joiner.join(
 				new Compound(CURRENT_OP, asList(ANONYMOUS_VAR, new Var("Type"), new Atom(op))), 
 				new Compound(ATOM_CHARS, Arrays.<Term>asList(new Var("Type"), listTerm(ANONYMOUS_VAR, new Atom("f"), ANONYMOUS_VAR)))
 			)).hasSolution();
@@ -221,7 +222,8 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	
 	@Override
 	public boolean isUnaryOperator(String op) {
-		return query(termSequence(
+		TermJoiner joiner = TermJoiner.getDefault();
+		return query(joiner.join(
 				new Compound(CURRENT_OP, asList(ANONYMOUS_VAR, new Var("Type"), 
 				new Atom(op))), new Compound(ATOM_CHARS, asList(new Var("Type"), listTerm(new Atom("f"), ANONYMOUS_VAR)))
 			)).hasSolution();
@@ -400,7 +402,8 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 		for(int i=0; i<terms.size()-1; i++) {
 			unifications.add(new Compound("=", asList(terms.get(i), terms.get(i+1))));
 		}
-		List<Solution> solutions = query(termSequence(unifications)).allSolutions();
+		TermJoiner joiner = TermJoiner.getDefault();
+		List<Solution> solutions = query(joiner.join(unifications)).allSolutions();
 		if(solutions.isEmpty())
 			return null;
 		Solution solution = solutions.get(0);

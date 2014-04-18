@@ -26,7 +26,7 @@ import org.jpc.term.SerializedTermTest;
 import org.jpc.term.VariableTest;
 import org.jpc.term.expansion.ParameterizedSymbolExpanderTest;
 import org.jpc.term.unification.UnificationTest;
-import org.jpc.util.PrologUtilTest;
+import org.jpc.util.TermJoinerTest;
 import org.jpc.util.config.EngineConfigurationDeserializerTest;
 import org.jpc.util.config.JpcConfigurationDeserializerTest;
 import org.junit.runner.RunWith;
@@ -59,7 +59,7 @@ import org.junit.runners.Suite;
 	MethodCallConversionsTest.class,
 	FieldResolutionConversionsTest.class,
 	FileConversionsTest.class,
-	PrologUtilTest.class,
+	TermJoinerTest.class,
 	EngineConfigurationDeserializerTest.class,
 	JpcConfigurationDeserializerTest.class,
 	ErrorConversionsTest.class

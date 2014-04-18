@@ -4,7 +4,6 @@ import static java.util.Arrays.asList;
 import static org.jpc.engine.prolog.PrologConstants.ANONYMOUS_VAR_NAME;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 
@@ -37,18 +36,6 @@ public class PrologUtil {
 	
 	public static boolean isPair(Term term) {
 		return term.hasFunctor("-", 2);
-	}
-	
-	public static boolean isSequence(Term term) {
-		return term.hasFunctor(",", 2);
-	}
-	
-	public static Term termSequence(Term... terms) {
-		return termSequence(asList(terms));
-	}
-	
-	public static Term termSequence(Collection<Term> terms) {
-		return new ListTerm(terms).asSequence();
 	}
 	
 	public static Term varDictionaryTerm(Term term) {
