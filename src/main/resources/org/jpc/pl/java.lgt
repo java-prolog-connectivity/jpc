@@ -21,8 +21,9 @@
 		eval(Expression, _).
 
 	:- public(eval/2).
-	eval(Expression, Ret) :- 
-		%jpc_util::check_output_mode(Ret),
-		jpc_driver::eval(Expression, Ret).
+	eval(Expression, Output) :- 
+		%jpc_util::check_output_mode(Output),
+		jpc_driver::eval(Expression, Output).
+		
 
 :- end_object.
