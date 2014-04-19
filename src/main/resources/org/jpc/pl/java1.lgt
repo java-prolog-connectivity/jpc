@@ -9,13 +9,13 @@
 		parnames is ['Reference']
 	]).
 
-	:- public(returns/2).
-	:- mode(returns(?term, -term), zero_or_one).
-	:- info(returns/2, [
+	:- public(return/2).
+	:- mode(return(?term, -term), zero_or_one).
+	:- info(return/2, [
 		comment is 'Delegate a message to a Java object and return the Java method return value.',
 		argnames is ['Object::Message', 'ReturnValue']]).
 
-	returns(Message, ReturnValue) :-
+	return(Message, ReturnValue) :-
 		parameter(1, Object),
 		java::invoke(Object, Message, ReturnValue).
 		

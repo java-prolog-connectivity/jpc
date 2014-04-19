@@ -38,7 +38,7 @@ public class LogtalkSideApiTest {
 	public void testReturns() {
 		Term term;
 		//[a:1,b:2] is interpreted as a map. It could also been written as [a-1,b-2] or [a=1,b=2].
-		term = defaultPrologEngine().query("[a:1,b:2]::get('a') returns term(X)").oneSolutionOrThrow().get("X");
+		term = defaultPrologEngine().query("[a:1,b:2]::get('a') return term(X)").oneSolutionOrThrow().get("X");
 		assertEquals(new IntegerTerm(1), term);
 	}
 	
@@ -46,7 +46,7 @@ public class LogtalkSideApiTest {
 	public void testNew() {
 		Term term;
 		//class([java,lang],['String']) is interpreted as the class java.lang.String
-		term = defaultPrologEngine().query("class([java,lang],['String'])::new('hello') returns term(V)").oneSolutionOrThrow().get("V");
+		term = defaultPrologEngine().query("class([java,lang],['String'])::new('hello') return term(V)").oneSolutionOrThrow().get("V");
 		assertEquals(new Atom("hello"), term);
 	}
 	
@@ -56,9 +56,9 @@ public class LogtalkSideApiTest {
 		Fixture1.y = null;
 		defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[x,hello]").oneSolutionOrThrow();
 		defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[y,bye]").oneSolutionOrThrow();
-		Atom result = (Atom) defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[x] returns term(X)").oneSolutionOrThrow().get("X");
+		Atom result = (Atom) defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[x] return term(X)").oneSolutionOrThrow().get("X");
 		assertEquals("hello", result.getName());
-		result = (Atom) defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[y] returns term(X)").oneSolutionOrThrow().get("X");
+		result = (Atom) defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[y] return term(X)").oneSolutionOrThrow().get("X");
 		assertEquals("bye", result.getName());
 	}
 	
@@ -76,9 +76,9 @@ public class LogtalkSideApiTest {
 	public void testIndexedValues() {
 		Term term;
 		//[a,b,c] is interpreted as a list.
-		term = defaultPrologEngine().query("[a,b,c]::[1] returns term(X)").oneSolutionOrThrow().get("X");
+		term = defaultPrologEngine().query("[a,b,c]::[1] return term(X)").oneSolutionOrThrow().get("X");
 		assertEquals(new Atom("b"), term);
-		term = defaultPrologEngine().query("[1,2,3]::[0] returns term(X)").oneSolutionOrThrow().get("X");
+		term = defaultPrologEngine().query("[1,2,3]::[0] return term(X)").oneSolutionOrThrow().get("X");
 		assertEquals(new IntegerTerm(1), term);
 	}
 	
@@ -91,11 +91,11 @@ public class LogtalkSideApiTest {
 	/**
 	 * The purpose of java/1 and java/2 is to convert to a Java representation a term that has not been declared as a symbiotic object (i.e., there is not a Logtalk object declaration importing the "java_bridge" category).
 	 * The second (optional) argument is the return value after the evaluation of a Logtalk message interpreted in the Java side.
-	 * If no second argument is provided, the return value, if needed, can also be obtained by means of: "java(object)::message returns ReturnSpecifier".
+	 * If no second argument is provided, the return value, if needed, can also be obtained by means of: "java(object)::message return ReturnSpecifier".
 	 */
 	@Test
 	public void testJava1() {
-		Term term = defaultPrologEngine().query("java(abc)::toUpperCase returns term(V)").oneSolutionOrThrow().get("V");
+		Term term = defaultPrologEngine().query("java(abc)::toUpperCase return term(V)").oneSolutionOrThrow().get("V");
 		assertEquals(new Atom("ABC"), term);
 	}
 	
@@ -111,7 +111,7 @@ public class LogtalkSideApiTest {
 	@Test
 	public void testNewWithJava1() {
 		Term term;
-		term = defaultPrologEngine().query("java(class([java,lang],['String']))::new('hello') returns term(V)").oneSolutionOrThrow().get("V");
+		term = defaultPrologEngine().query("java(class([java,lang],['String']))::new('hello') return term(V)").oneSolutionOrThrow().get("V");
 		assertEquals(new Atom("hello"), term);
 	}
 	
@@ -147,7 +147,7 @@ public class LogtalkSideApiTest {
 		Term term = defaultPrologEngine().query("java::invoke([a:1,b:2], get('a'), term(X))").oneSolutionOrThrow().get("X");
 		assertEquals(new IntegerTerm(1), term);
 	}
-	
+
 	@Test
 	public void testSetAndGetField() {
 		Fixture1.x = null;

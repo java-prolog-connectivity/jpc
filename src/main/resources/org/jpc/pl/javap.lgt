@@ -1,4 +1,4 @@
-:- op(50, xfx, returns).
+:- op(50, xfx, return).
 
 
 
