@@ -71,7 +71,7 @@ public class LogtalkSideApiTest {
 		assertEquals("hello", Fixture1.x);
 		assertEquals("hello", Fixture1.y);
 	}
-	
+
 	@Test
 	public void testIndexedValues() {
 		Term term;
@@ -105,9 +105,6 @@ public class LogtalkSideApiTest {
 		assertEquals(new Atom("ABC"), term);
 		term = defaultPrologEngine().query("java([a:1,b:2], term(X))::get('a')").oneSolutionOrThrow().get("X");
 		assertEquals(new IntegerTerm(1), term);
-		//the invoke method is experimental and may be deprecated.
-		term = defaultPrologEngine().query("java([a:1,b:2], term(X))::invoke(get('a'))").oneSolutionOrThrow().get("X");
-		assertEquals(new IntegerTerm(1), term);
 	}
 
 	
@@ -137,6 +134,26 @@ public class LogtalkSideApiTest {
 				+ "::[x,hello]").oneSolutionOrThrow();
 		assertEquals("hello", Fixture1.x);
 		assertEquals("hello", Fixture2.x);
+	}
+	
+	
+	/* ********************************************************************************************************************************
+	 * Testing java/0
+     **********************************************************************************************************************************
+     */
+	
+	@Test
+	public void testInvoke() {
+		Term term = defaultPrologEngine().query("java::invoke([a:1,b:2], get('a'), term(X))").oneSolutionOrThrow().get("X");
+		assertEquals(new IntegerTerm(1), term);
+	}
+	
+	@Test
+	public void testSetAndGetField() {
+		Fixture1.x = null;
+		defaultPrologEngine().query("java::set_field(class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1']),x,'hello')").oneSolutionOrThrow();
+		Atom result = (Atom) defaultPrologEngine().query("java::get_field(class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1']),x,term(X))").oneSolutionOrThrow().get("X");
+		assertEquals("hello", result.getName());
 	}
 	
 	
