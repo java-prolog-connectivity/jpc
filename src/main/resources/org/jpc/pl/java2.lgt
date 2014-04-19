@@ -9,17 +9,9 @@
 		parnames is ['Reference', 'ReturnValue']
 	]).
 
-
-		
-	invoke(Message) :-
+	forward(Message) :-
 		parameter(1, Reference),
 		parameter(2, Output),
-		%jpc_util::check_output_mode(Output),
-		LogtalkCall = Reference::Message,
-		jpc_driver::eval(LogtalkCall, Output).
-
-
-	forward(Message) :-
-		invoke(Message).
+		java::invoke(Reference, Message, Output).
 
 :- end_object.

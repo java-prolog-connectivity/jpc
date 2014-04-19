@@ -17,7 +17,7 @@
 
 	returns(Message, ReturnValue) :-
 		jobject(Object),
-		java(Object, ReturnValue)::invoke(Message).
+		java::invoke(Object, Message, ReturnValue).
 
 
 	forward(Message) :-

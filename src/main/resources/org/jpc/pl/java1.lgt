@@ -17,7 +17,7 @@
 
 	returns(Message, ReturnValue) :-
 		parameter(1, Object),
-		java(Object, ReturnValue)::invoke(Message).
+		java::invoke(Object, Message, ReturnValue).
 		
 :- end_object.
 
