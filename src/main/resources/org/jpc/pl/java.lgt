@@ -25,5 +25,18 @@
 		%jpc_util::check_output_mode(Output),
 		jpc_driver::eval(Expression, Output).
 		
+	:- public(invoke/3).
+	invoke(Receiver, Message, Output) :-
+		LogtalkCall = Receiver::Message,
+		eval(LogtalkCall, Output).
+
+	:- public(get_field/3).
+	get_field(Receiver, FieldName, FieldValue) :-
+		eval(Receiver::[FieldName], FieldValue).
+		
+
+	:- public(set_field/3).
+	set_field(Receiver, FieldName, FieldValue) :-
+		eval(Receiver::[FieldName, FieldValue]).
 
 :- end_object.
