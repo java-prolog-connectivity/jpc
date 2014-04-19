@@ -13,7 +13,7 @@
 		comment is 'Forgets a reference term.',
 		argnames is ['Reference']
 	]).	
-	forget(Reference) :- jpc(default)::forgetJRefTerm(term(Reference)).
+	forget(Reference) :- eval(jpc(default)::forgetJRefTerm(term(Reference))).
 
 	:- public(eval/1).
 	eval(Expression) :- 
