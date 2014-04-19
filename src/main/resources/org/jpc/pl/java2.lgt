@@ -1,5 +1,5 @@
 :- object(java(_Reference, _ReturnValue),
-	implements(forwarding, javap)).
+	implements(forwarding)).
 
 	:- info([
 		version is 1.0,

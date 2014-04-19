@@ -1,4 +1,5 @@
-:- object(java).
+:- object(java,
+	implements(javap)).	
 
 	:- info([
 		version is 1.0,
