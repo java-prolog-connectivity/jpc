@@ -22,11 +22,10 @@ public class ParameterizedTypeConverter implements ToTermConverter<Parameterized
 
 	@Override
 	public ParameterizedType fromTerm(Compound term, Type targetType, Jpc jpc) {
-		Term staticClassTerm = term.arg(1);
-		StaticClass staticClass = jpc.fromTerm(staticClassTerm);
-		Type[] actualTypeArguments = jpc.fromTerm(term.arg(2), Type[].class);
-		Type ownerType = jpc.fromTerm(term.arg(3), Type.class);
-		return new ParameterizedTypeImpl(actualTypeArguments, ownerType, staticClass.getWrappedClass());
+		Class<?> rawClass = ClassConverter.getRawClass(term, jpc);
+		Type[] actualTypeArguments = jpc.fromTerm(term.arg(3), Type[].class);
+		Type ownerType = jpc.fromTerm(term.arg(4), Type.class);
+		return new ParameterizedTypeImpl(actualTypeArguments, ownerType, rawClass);
 	}
 	
 }

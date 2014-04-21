@@ -4,6 +4,7 @@ import static java.util.Arrays.asList;
 import static org.jpc.converter.catalog.reflection.reification.ReificationConstants.ARRAY_FUNCTOR_NAME;
 import static org.jpc.converter.catalog.reflection.reification.ReificationConstants.STATIC_CLASS_FUNCTOR_NAME;
 import static org.jpc.converter.catalog.reflection.reification.ReificationConstants.TYPE_FUNCTOR_NAME;
+import static org.jpc.converter.catalog.reflection.reification.ReificationConstants.TYPE_VARIABLE_FUNCTOR_NAME;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -117,11 +118,11 @@ public class JpcConverterManager extends JGumConverterManager {
 		
 		converterManager.register(new ReflectiveObjectConverter(), new Functor(ReflectiveObjectConverter.REFLECTIVE_OBJECT_FUNCTOR_NAME, 1).asTerm());
 		converterManager.register(new StaticClassConverter(), new Functor(STATIC_CLASS_FUNCTOR_NAME, 2).asTerm());
-		converterManager.register(new ClassConverter(), new Functor(TYPE_FUNCTOR_NAME, 1).asTerm());
-		converterManager.register(new ParameterizedTypeConverter(), new Functor(TYPE_FUNCTOR_NAME, 3).asTerm());
+		converterManager.register(new ClassConverter(), new Functor(TYPE_FUNCTOR_NAME, 2).asTerm());
+		converterManager.register(new ParameterizedTypeConverter(), new Functor(TYPE_FUNCTOR_NAME, 4).asTerm());
 		converterManager.register(new TermToArrayTypeConverter(), new Functor(ARRAY_FUNCTOR_NAME, 1).asTerm());
 		converterManager.register(new GenericArrayTypeToTermConverter());
-		converterManager.register(new TermToVariableTypeConverter(), new Functor(TYPE_FUNCTOR_NAME, 4).asTerm());
+		converterManager.register(new TermToVariableTypeConverter(), new Functor(TYPE_VARIABLE_FUNCTOR_NAME, 4).asTerm());
 		converterManager.register(new TypeVariableToTermConverter());
 		converterManager.register(new WildcardTypeToTermConverter());
 		

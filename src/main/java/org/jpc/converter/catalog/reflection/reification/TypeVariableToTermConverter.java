@@ -1,7 +1,7 @@
 package org.jpc.converter.catalog.reflection.reification;
 
 import static java.util.Arrays.asList;
-import static org.jpc.converter.catalog.reflection.reification.ReificationConstants.TYPE_FUNCTOR_NAME;
+import static org.jpc.converter.catalog.reflection.reification.ReificationConstants.TYPE_VARIABLE_FUNCTOR_NAME;
 
 import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.Type;
@@ -34,7 +34,7 @@ public class TypeVariableToTermConverter implements ToTermConverter<TypeVariable
 		Type[] upperBounds = variableTypeWrapper.getUpperBounds();
 		Type[] lowerBounds = variableTypeWrapper.getLowerBounds();
 		
-		return new Compound(TYPE_FUNCTOR_NAME, asList(new Atom(variableTypeWrapper.getName()), genericDeclarationTerm, jpc.toTerm(upperBounds), jpc.toTerm(lowerBounds)));
+		return new Compound(TYPE_VARIABLE_FUNCTOR_NAME, asList(new Atom(variableTypeWrapper.getName()), genericDeclarationTerm, jpc.toTerm(upperBounds), jpc.toTerm(lowerBounds)));
 	}
 	
 }
