@@ -4,6 +4,10 @@ import static org.jpc.engine.prolog.PrologEngines.defaultPrologEngine;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Atom;
 import org.jpc.term.IntegerTerm;
@@ -22,6 +26,8 @@ public class LogtalkSideApiTest {
 	public static class Fixture1 {
 		public static String x;
 		public static String y;
+		public static Map<String,String> map;
+		public static List<Entry<String,Integer>> entryList;
 	}
 	
 	public static class Fixture2 {
@@ -31,6 +37,8 @@ public class LogtalkSideApiTest {
 
 	@Before
 	public void resetFixture() {
+		Fixture1.entryList = null;
+		Fixture1.map = null;
 		Fixture1.x = null;
 		Fixture1.y = null;
 		Fixture2.x = null;
@@ -45,7 +53,7 @@ public class LogtalkSideApiTest {
      */
 	
 	@Test
-	public void testNewShortNotation() {
+	public void testNewWithShortNotation() {
 		Term term;
 		//class('java.lang.String') is interpreted as the class java.lang.String
 		term = defaultPrologEngine().query("class('java.lang.String')::new('hello') return term(V)").oneSolutionOrThrow().get("V");
@@ -97,13 +105,19 @@ public class LogtalkSideApiTest {
 	}
 
 	@Test
-	public void testIndexedValues() {
-		Term term;
-		//[a,b,c] is interpreted as a list.
-		term = defaultPrologEngine().query("[a,b,c]::[1] return term(X)").oneSolutionOrThrow().get("X");
-		assertEquals(new Atom("b"), term);
-		term = defaultPrologEngine().query("[1,2,3]::[0] return term(X)").oneSolutionOrThrow().get("X");
-		assertEquals(new IntegerTerm(1), term);
+	public void testSetFieldInferringType() {
+		//the type of the field is Map<String,String>. This determines how the term is converted.
+		defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[map,[x=1,y=2]]").oneSolutionOrThrow();
+		assertEquals("1", Fixture1.map.get("x"));
+		assertEquals("2", Fixture1.map.get("y"));
+		//the type of the field is Map<String,Integer>. This determines how the term is converted.
+		defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[entryList,[x=1,y=2]]").oneSolutionOrThrow();
+		Entry<String,Integer> entry = Fixture1.entryList.get(0);
+		assertEquals("x", entry.getKey());
+		assertEquals(new Integer(1), entry.getValue());
+		entry = Fixture1.entryList.get(1);
+		assertEquals("y", entry.getKey());
+		assertEquals(new Integer(2), entry.getValue());
 	}
 	
 	

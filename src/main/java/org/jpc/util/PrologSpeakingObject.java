@@ -1,5 +1,6 @@
 package org.jpc.util;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,6 +13,8 @@ import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
 import org.minitoolbox.reflection.ReflectiveObject;
+
+import com.google.common.reflect.TypeToken;
 
 public class PrologSpeakingObject {
 	
@@ -65,14 +68,16 @@ public class PrologSpeakingObject {
 	}
 
 	public void setField(Atom fieldName, Term fieldValueTerm) {
-		Object fieldValue = jpc.fromTerm(fieldValueTerm);
+		Type fieldType = reflectiveObject.getFieldType(fieldName.getName());
+		Object fieldValue = jpc.fromTerm(fieldValueTerm, fieldType);
 		reflectiveObject.setField(fieldName.getName(), fieldValue);
 	}
 	
 	public void setFields(Term mapTerm) {
-		Map<String, Object> map = jpc.fromTerm(mapTerm, Map.class);
-		for(Entry<String, Object> entry : map.entrySet()) {
-			reflectiveObject.setField(entry.getKey(), entry.getValue());
+		Type mapType = new TypeToken<Map<Atom,Term>>(){}.getType();
+		Map<Atom,Term> map = jpc.fromTerm(mapTerm, mapType);
+		for(Entry<Atom, Term> entry : map.entrySet()) {
+			setField(entry.getKey(), entry.getValue());
 		}
 	}
 	
