@@ -84,26 +84,26 @@ public class LogtalkSideApiTest {
 	
 	
 	/* ********************************************************************************************************************************
-	 * Testing java/1 and java/2.
+	 * Testing jobject/1 and jobject/2.
      **********************************************************************************************************************************
      */
 	
 	/**
-	 * The purpose of java/1 and java/2 is to convert to a Java representation a term that has not been declared as a symbiotic object (i.e., there is not a Logtalk object declaration importing the "java_bridge" category).
+	 * The purpose of jobject/1 and jobject/2 is to convert to a Java representation a term that has not been declared as a symbiotic object (i.e., there is not a Logtalk object declaration importing the "jobject" category).
 	 * The second (optional) argument is the return value after the evaluation of a Logtalk message interpreted in the Java side.
 	 * If no second argument is provided, the return value, if needed, can also be obtained by means of: "java(object)::message return ReturnSpecifier".
 	 */
 	@Test
 	public void testJava1() {
-		Term term = defaultPrologEngine().query("java(abc)::toUpperCase return term(V)").oneSolutionOrThrow().get("V");
+		Term term = defaultPrologEngine().query("jobject(abc)::toUpperCase return term(V)").oneSolutionOrThrow().get("V");
 		assertEquals(new Atom("ABC"), term);
 	}
 	
 	@Test
 	public void testJava2() {
-		Term term = defaultPrologEngine().query("java(abc, term(V))::toUpperCase").oneSolutionOrThrow().get("V");
+		Term term = defaultPrologEngine().query("jobject(abc, term(V))::toUpperCase").oneSolutionOrThrow().get("V");
 		assertEquals(new Atom("ABC"), term);
-		term = defaultPrologEngine().query("java([a:1,b:2], term(X))::get('a')").oneSolutionOrThrow().get("X");
+		term = defaultPrologEngine().query("jobject([a:1,b:2], term(X))::get('a')").oneSolutionOrThrow().get("X");
 		assertEquals(new IntegerTerm(1), term);
 	}
 
@@ -111,14 +111,14 @@ public class LogtalkSideApiTest {
 	@Test
 	public void testNewWithJava1() {
 		Term term;
-		term = defaultPrologEngine().query("java(class([java,lang],['String']))::new('hello') return term(V)").oneSolutionOrThrow().get("V");
+		term = defaultPrologEngine().query("jobject(class([java,lang],['String']))::new('hello') return term(V)").oneSolutionOrThrow().get("V");
 		assertEquals(new Atom("hello"), term);
 	}
 	
 	@Test
 	public void testNewWithJava2() {
 		Term term;
-		term = defaultPrologEngine().query("java(class([java,lang],['String']), term(V))::new").oneSolutionOrThrow().get("V");
+		term = defaultPrologEngine().query("jobject(class([java,lang],['String']), term(V))::new").oneSolutionOrThrow().get("V");
 		assertEquals(new Atom(""), term);
 	}
 	
@@ -129,7 +129,7 @@ public class LogtalkSideApiTest {
 	public void testBroadcasting() {
 		Fixture1.x = null;
 		Fixture2.x = null;
-		defaultPrologEngine().query("java((class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1']), "
+		defaultPrologEngine().query("jobject((class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1']), "
 				+ "class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture2'])))"
 				+ "::[x,hello]").oneSolutionOrThrow();
 		assertEquals("hello", Fixture1.x);

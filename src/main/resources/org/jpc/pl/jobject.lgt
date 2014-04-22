@@ -1,6 +1,6 @@
 /*load this after the driver logtalk file*/
 
-:- category(java_bridge,
+:- category(jobject,
 	implements(forwarding)).
 
 	:- info([
@@ -16,7 +16,7 @@
 		argnames is ['Object::Message', 'ReturnValue']]).
 
 	return(Message, ReturnValue) :-
-		jobject(Object),
+		jself(Object),
 		java::invoke(Object, Message, ReturnValue).
 
 
@@ -24,13 +24,13 @@
 		return(Message, _ReturnValue).
 
 
-	protected(jobject/1).
-	:- mode(jobject(?term), one).
-	:- info(jobject/1, [
+	protected(jself/1).
+	:- mode(jself(?term), one).
+	:- info(jself/1, [
 		comment is 'The term representation of the receiver in the Java side.',
 		argnames is ['JObject']]).
 
-	jobject(JObject) :-
+	jself(JObject) :-
 		self(JObject).
 		
 :- end_category.

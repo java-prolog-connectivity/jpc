@@ -1,4 +1,4 @@
 :- object(jpc(_Id),
-	imports(java_bridge)).
+	imports(jobject)).
 
 :- end_object.
