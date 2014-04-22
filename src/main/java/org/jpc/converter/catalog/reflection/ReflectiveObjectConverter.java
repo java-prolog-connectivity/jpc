@@ -13,7 +13,7 @@ import org.minitoolbox.reflection.ReflectiveObject;
 
 public class ReflectiveObjectConverter implements ToTermConverter<ReflectiveObject, Compound>, FromTermConverter<Compound, ReflectiveObject> {
 
-	public static final String REFLECTIVE_OBJECT_FUNCTOR_NAME = "jreflective";
+	public static final String REFLECTIVE_OBJECT_FUNCTOR_NAME = "robject";
 	
 	@Override
 	public ReflectiveObject fromTerm(Compound term, Type targetType, Jpc jpc) {

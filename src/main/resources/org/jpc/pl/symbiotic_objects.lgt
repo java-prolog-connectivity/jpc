@@ -10,7 +10,7 @@
 :- end_object.
 
 
-:- object(jreflective(_Object),
+:- object(robject(_Object),
 	imports(jobject)).
 
 :- end_object.
