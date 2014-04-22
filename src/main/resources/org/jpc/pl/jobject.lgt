@@ -24,7 +24,7 @@
 		return(Message, _ReturnValue).
 
 
-	protected(jself/1).
+	:- protected(jself/1).
 	:- mode(jself(?term), one).
 	:- info(jself/1, [
 		comment is 'The term representation of the receiver in the Java side.',
