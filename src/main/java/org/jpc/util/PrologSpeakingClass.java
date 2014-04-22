@@ -4,12 +4,12 @@ import java.util.List;
 
 import org.jpc.Jpc;
 import org.jpc.term.Term;
-import org.minitoolbox.reflection.StaticClass;
+import org.minitoolbox.reflection.ReflectiveClass;
 
 public class PrologSpeakingClass<T> extends PrologSpeakingObject {
 
 	public PrologSpeakingClass(Class<T> wrappedClass, Jpc jpc) {
-		super(new StaticClass(wrappedClass), jpc);
+		super(new ReflectiveClass(wrappedClass), jpc);
 	}
 
 	public Class<T> getWrappedClass() {

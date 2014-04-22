@@ -11,23 +11,24 @@ import java.util.List;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
+import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
-import org.minitoolbox.reflection.StaticClass;
+import org.minitoolbox.reflection.ReflectiveClass;
 import org.minitoolbox.reflection.typewrapper.ArrayTypeWrapper;
 import org.minitoolbox.reflection.typewrapper.SingleTypeWrapper;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
 import com.google.common.base.Joiner;
 
-public class ClassConverter implements ToTermConverter<Class<?>, Compound>, FromTermConverter<Compound, Class<?>>{
+public class ClassConverter implements ToTermConverter<Class<?>, Compound>, FromTermConverter<Compound, Class<?>> {
 
 	static Class<?> classForName(Iterable<String> packageFragmentNames, Iterable<String> classFragmentNames) {
 		StringBuilder sb = new StringBuilder(Joiner.on('.').join(packageFragmentNames));
 		if(sb.length() > 0)
 			sb.append('.');
 		sb.append(Joiner.on('$').join(classFragmentNames));
-		return StaticClass.classForName(sb.toString());
+		return ReflectiveClass.classForName(sb.toString());
 	}
 	
 	public static Class<?> getRawClass(Compound term, Jpc jpc) {
@@ -50,7 +51,7 @@ public class ClassConverter implements ToTermConverter<Class<?>, Compound>, From
 	}
 
 	static Compound toTerm(SingleTypeWrapper singleTypeWrapper, Jpc jpc) {
-		StaticClass<?> staticClass = new StaticClass<>((Class<?>)singleTypeWrapper.getRawType());
+		ReflectiveClass<?> staticClass = new ReflectiveClass<>((Class<?>)singleTypeWrapper.getRawType());
 		
 		String[] dotSplitted = staticClass.getWrappedClass().getName().split("[.]");
 		List<String> packageFragmentNames = new ArrayList<>(asList(dotSplitted));

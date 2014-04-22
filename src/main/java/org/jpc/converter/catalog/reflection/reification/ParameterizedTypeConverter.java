@@ -8,7 +8,7 @@ import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
-import org.minitoolbox.reflection.StaticClass;
+import org.minitoolbox.reflection.ReflectiveClass;
 import org.minitoolbox.reflection.reification.ParameterizedTypeImpl;
 import org.minitoolbox.reflection.typewrapper.SingleTypeWrapper;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;

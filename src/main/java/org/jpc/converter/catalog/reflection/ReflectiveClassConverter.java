@@ -11,18 +11,19 @@ import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
 import org.jpc.converter.catalog.reflection.reification.ClassConverter;
+import org.jpc.term.Atom;
 import org.jpc.term.Compound;
-import org.minitoolbox.reflection.StaticClass;
+import org.minitoolbox.reflection.ReflectiveClass;
 
-public class StaticClassConverter implements ToTermConverter<StaticClass, Compound>, FromTermConverter<Compound, StaticClass> {
+public class ReflectiveClassConverter implements ToTermConverter<ReflectiveClass<?>, Compound>, FromTermConverter<Compound, ReflectiveClass<?>> {
 	
 	@Override
-	public StaticClass fromTerm(Compound term, Type targetType, Jpc jpc) {
-		return new StaticClass(ClassConverter.getRawClass(term, jpc));
+	public ReflectiveClass<?> fromTerm(Compound term, Type targetType, Jpc jpc) {
+		return new ReflectiveClass<>(ClassConverter.getRawClass(term, jpc));
 	}
 
 	@Override
-	public Compound toTerm(StaticClass staticClass, Class<Compound> termClass, Jpc jpc) {
+	public Compound toTerm(ReflectiveClass<?> staticClass, Class<Compound> termClass, Jpc jpc) {
 		String[] dotSplitted = staticClass.getWrappedClass().getName().split("[.]");
 		List<String> packageFragmentNames = new ArrayList<>(asList(dotSplitted));
 		String classPart = packageFragmentNames.remove(packageFragmentNames.size() - 1);
@@ -30,4 +31,14 @@ public class StaticClassConverter implements ToTermConverter<StaticClass, Compou
 		return jpc.toCompound(STATIC_CLASS_FUNCTOR_NAME, asList(packageFragmentNames, classFragmentNames));
 	}
 	
+	public static class ShortNotationReflectiveClassConverter implements FromTermConverter<Compound, ReflectiveClass<?>> {
+
+		@Override
+		public ReflectiveClass<?> fromTerm(Compound term, Type targetType, Jpc jpc) {
+			Atom classNameTerm = (Atom) term.arg(1);
+			return new ReflectiveClass<>(classNameTerm.getName());
+		}
+		
+	}
+
 }

@@ -13,7 +13,7 @@ import org.jpc.term.Compound;
 import org.jpc.term.IntegerTerm;
 import org.jpc.term.Term;
 import org.junit.Test;
-import org.minitoolbox.reflection.StaticClass;
+import org.minitoolbox.reflection.ReflectiveClass;
 
 
 public class MethodCallConversionsTest {
@@ -22,7 +22,7 @@ public class MethodCallConversionsTest {
 	
 	@Test
 	public void testNew() {
-		Term classTerm = jpc.toTerm(new StaticClass(B.class));
+		Term classTerm = jpc.toTerm(new ReflectiveClass(B.class));
 		Term messageTerm = new Atom("new");
 		Term methodCallTerm = new Compound(LogtalkConstants.LOGTALK_OPERATOR, asList(classTerm, messageTerm));
 		assertTrue(jpc.fromTerm(methodCallTerm) instanceof B);
@@ -30,7 +30,7 @@ public class MethodCallConversionsTest {
 	
 	@Test
 	public void testStaticMethodCall() {
-		Term classTerm = jpc.toTerm(new StaticClass(B.class));
+		Term classTerm = jpc.toTerm(new ReflectiveClass(B.class));
 		Term messageTerm = new Compound("m", asList(new IntegerTerm(10)));
 		Term methodCallTerm = new Compound(LogtalkConstants.LOGTALK_OPERATOR, asList(classTerm, messageTerm));
 		assertEquals(new Long(10L), jpc.fromTerm(methodCallTerm));

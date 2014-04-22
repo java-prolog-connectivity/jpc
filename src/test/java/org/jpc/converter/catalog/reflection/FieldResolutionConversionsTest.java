@@ -13,7 +13,7 @@ import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 import org.junit.Test;
-import org.minitoolbox.reflection.StaticClass;
+import org.minitoolbox.reflection.ReflectiveClass;
 
 public class FieldResolutionConversionsTest {
 	
@@ -21,7 +21,7 @@ public class FieldResolutionConversionsTest {
 	
 	@Test
 	public void testStaticField() {
-		Term term = jpc.toTerm(new StaticClass(B.class));
+		Term term = jpc.toTerm(new ReflectiveClass(B.class));
 		Term fieldTerm = new Atom("m");
 		Term fieldResolutionTermMessage = ListTerm.create(fieldTerm).asTerm();
 		Term fieldResolutionTerm = new Compound(LogtalkConstants.LOGTALK_OPERATOR, asList(term, fieldResolutionTermMessage));

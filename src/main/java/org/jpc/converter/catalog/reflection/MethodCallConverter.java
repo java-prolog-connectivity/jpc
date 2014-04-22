@@ -17,7 +17,7 @@ import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 import org.jpc.util.PrologSpeakingClass;
 import org.jpc.util.PrologSpeakingObject;
-import org.minitoolbox.reflection.StaticClass;
+import org.minitoolbox.reflection.ReflectiveClass;
 
 public class MethodCallConverter<T> implements FromTermConverter<Compound, T> {
 
@@ -42,8 +42,8 @@ public class MethodCallConverter<T> implements FromTermConverter<Compound, T> {
 		} else {
 			Object receiver = jpc.fromTerm(receiverTerm);
 			PrologSpeakingObject prologSpeakingObject;
-			if(receiver instanceof StaticClass) {
-				prologSpeakingObject = new PrologSpeakingClass(((StaticClass)receiver).getWrappedClass(), jpc);
+			if(receiver instanceof ReflectiveClass) {
+				prologSpeakingObject = new PrologSpeakingClass(((ReflectiveClass)receiver).getWrappedClass(), jpc);
 			} else {
 				prologSpeakingObject = new PrologSpeakingObject(receiver, jpc);
 			}

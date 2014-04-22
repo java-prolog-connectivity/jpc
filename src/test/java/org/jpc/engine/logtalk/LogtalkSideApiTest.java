@@ -35,11 +35,11 @@ public class LogtalkSideApiTest {
      */
 	
 	@Test
-	public void testReturns() {
+	public void testNewShortNotation() {
 		Term term;
-		//[a:1,b:2] is interpreted as a map. It could also been written as [a-1,b-2] or [a=1,b=2].
-		term = defaultPrologEngine().query("[a:1,b:2]::get('a') return term(X)").oneSolutionOrThrow().get("X");
-		assertEquals(new IntegerTerm(1), term);
+		//class('java.lang.String') is interpreted as the class java.lang.String
+		term = defaultPrologEngine().query("class('java.lang.String')::new('hello') return term(V)").oneSolutionOrThrow().get("V");
+		assertEquals(new Atom("hello"), term);
 	}
 	
 	@Test
@@ -48,6 +48,14 @@ public class LogtalkSideApiTest {
 		//class([java,lang],['String']) is interpreted as the class java.lang.String
 		term = defaultPrologEngine().query("class([java,lang],['String'])::new('hello') return term(V)").oneSolutionOrThrow().get("V");
 		assertEquals(new Atom("hello"), term);
+	}
+	
+	@Test
+	public void testMap() {
+		Term term;
+		//[a:1,b:2] is interpreted as a map. It could also been written as [a-1,b-2] or [a=1,b=2].
+		term = defaultPrologEngine().query("[a:1,b:2]::get('a') return term(X)").oneSolutionOrThrow().get("X");
+		assertEquals(new IntegerTerm(1), term);
 	}
 	
 	@Test
