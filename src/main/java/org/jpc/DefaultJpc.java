@@ -15,9 +15,9 @@ import org.jgum.JGum;
 import org.jpc.converter.FromTermConverterAdapter;
 import org.jpc.converter.JpcConverterManager;
 import org.jpc.converter.ToTermConverterAdapter;
-import org.jpc.converter.catalog.jrefterm.FromJRefTermConverter;
-import org.jpc.converter.catalog.jrefterm.ToJRefTermConverter;
 import org.jpc.converter.catalog.primitive.NumberToNumberTermConverter;
+import org.jpc.converter.catalog.refterm.FromRefTermConverter;
+import org.jpc.converter.catalog.refterm.ToRefTermConverter;
 import org.jpc.converter.typesolver.JpcTypeSolverManager;
 import org.jpc.converter.typesolver.TypeSolverManager;
 import org.jpc.converter.typesolver.UnrecognizedObjectException;
@@ -30,7 +30,7 @@ import org.jpc.term.ListTerm;
 import org.jpc.term.NumberTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
-import org.jpc.term.jrefterm.JRefTermManager;
+import org.jpc.term.refterm.RefTermManager;
 import org.minitoolbox.reflection.IncompatibleTypesException;
 import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
@@ -40,7 +40,7 @@ public class DefaultJpc extends Jpc {
 	private final Converter<Compound, ?> fromJRefTermConverter;
 	private final Converter<?, Compound> toJRefTermConverter;
 	private final TypeSolverManager typeSolverManager; //responsible of recommending types for the result of a conversion.
-	private final JRefTermManager jRefTermManager;
+	private final RefTermManager refTermManager;
 	private final ErrorHandler errorHandler;
 	//private final JpcPreferences preferences;
 	
@@ -52,7 +52,7 @@ public class DefaultJpc extends Jpc {
 		this(JpcConverterManager.registerDefaults(new JpcConverterManager(jgum, embeddedEngine)),
 				JGumFactoryManager.registerDefaults(new JGumFactoryManager(jgum)),
 				JpcTypeSolverManager.registerDefaults(new JpcTypeSolverManager(jgum, embeddedEngine)),
-				new JRefTermManager(),
+				new RefTermManager(),
 				new DefaultJpcErrorHandler());
 	}
 	
@@ -61,16 +61,16 @@ public class DefaultJpc extends Jpc {
 	 * @param converterManager a converter manager responsible of converting objects.
 	 * @param factoryManager a factory manager responsible of instantiating objects.
 	 * @param typeSolverManager a type solver manager responsible of recommending types for the result of a conversion.
-	 * @param jRefTermManager an object keeping mappings between terms and Java object references.
+	 * @param refTermManager an object keeping mappings between terms and Java object references.
 	 * @param errorHandler a error handler.
 	 */
-	DefaultJpc(JpcConverterManager converterManager, FactoryManager factoryManager, TypeSolverManager typeSolverManager, JRefTermManager jRefTermManager, ErrorHandler errorHandler) {
+	DefaultJpc(JpcConverterManager converterManager, FactoryManager factoryManager, TypeSolverManager typeSolverManager, RefTermManager refTermManager, ErrorHandler errorHandler) {
 		super(converterManager, factoryManager);
 		this.typeSolverManager = typeSolverManager;
-		this.jRefTermManager = jRefTermManager;
+		this.refTermManager = refTermManager;
 		this.errorHandler = errorHandler;
-		fromJRefTermConverter = FromTermConverterAdapter.forConverter(new FromJRefTermConverter());
-		toJRefTermConverter = ToTermConverterAdapter.forConverter(new ToJRefTermConverter());
+		fromJRefTermConverter = FromTermConverterAdapter.forConverter(new FromRefTermConverter());
+		toJRefTermConverter = ToTermConverterAdapter.forConverter(new ToRefTermConverter());
 	}
 
 	private JpcConverterManager getJpcConverterManager() {
@@ -207,58 +207,58 @@ public class DefaultJpc extends Jpc {
 	}
 	
 	@Override
-	public JRefTermManager getJRefTermManager() {
-		return jRefTermManager;
+	public RefTermManager getRefTermManager() {
+		return refTermManager;
 	}
 	
 	@Override
-	public Compound newSoftJRefTerm(Object ref, Compound compound) {
-		return jRefTermManager.newSoftJRefTerm(ref, compound);
+	public Compound newSoftRefTerm(Object ref, Compound compound) {
+		return refTermManager.newSoftRefTerm(ref, compound);
 	}
 	
 	@Override
-	public Compound newSoftJRefTerm(Object ref) {
-		return jRefTermManager.newSoftJRefTerm(ref);
+	public Compound newSoftRefTerm(Object ref) {
+		return refTermManager.newSoftRefTerm(ref);
 	}
 	
 	@Override
-	public Compound newWeakJRefTerm(Object ref, Compound compound) {
-		return jRefTermManager.newWeakJRefTerm(ref, compound);
+	public Compound newWeakRefTerm(Object ref, Compound compound) {
+		return refTermManager.newWeakRefTerm(ref, compound);
 	}
 	
 	@Override
-	public Compound newWeakJRefTerm(Object ref) {
-		return jRefTermManager.newWeakJRefTerm(ref);
+	public Compound newWeakRefTerm(Object ref) {
+		return refTermManager.newWeakRefTerm(ref);
 	}
 	
 	@Override
-	public Compound newJRefTerm(Object ref) {
-		return jRefTermManager.newJRefTerm(ref);
+	public Compound newRefTerm(Object ref) {
+		return refTermManager.newRefTerm(ref);
 	}
 	
 	@Override
-	public Compound newJRefTerm(Object ref, Compound compound) {
-		return jRefTermManager.newJRefTerm(ref, compound);
+	public Compound newRefTerm(Object ref, Compound compound) {
+		return refTermManager.newRefTerm(ref, compound);
 	}
 	
 	@Override
-	public void forgetJRefTerm(Compound term) {
-		jRefTermManager.forgetJRefTerm(term);
+	public void forgetRefTerm(Compound term) {
+		refTermManager.forgetRefTerm(term);
 	}
 	
 	@Override
-	public void forgetJRefTermRef(Object ref) {
-		jRefTermManager.forgetRef(ref);
+	public void forgetRef(Object ref) {
+		refTermManager.forgetRef(ref);
 	}
 	
 	@Override
-	public Compound jRefTerm(Object o) {
-		return jRefTermManager.jRefTerm(o);
+	public Compound refTerm(Object o) {
+		return refTermManager.refTerm(o);
 	}
 	
 	@Override
-	public <T> T resolveJRefTerm(Compound compound) {
-		return jRefTermManager.resolve(compound);
+	public <T> T resolveRefTerm(Compound compound) {
+		return refTermManager.resolve(compound);
 	}
 	
 }

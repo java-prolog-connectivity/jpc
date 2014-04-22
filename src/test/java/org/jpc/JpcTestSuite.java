@@ -19,7 +19,7 @@ import org.jpc.term.CompoundTest;
 import org.jpc.term.FloatTermTest;
 import org.jpc.term.HilogTermTest;
 import org.jpc.term.IntegerTermTest;
-import org.jpc.term.JRefTermTest;
+import org.jpc.term.RefTermTest;
 import org.jpc.term.JRefTest;
 import org.jpc.term.ListTermTest;
 import org.jpc.term.SerializedTermTest;
@@ -47,7 +47,7 @@ import org.junit.runners.Suite;
 	UnificationTest.class,
 	JpcEmbeddedEngineTestSuite.class,
 	JRefTest.class,
-	JRefTermTest.class,
+	RefTermTest.class,
 	SerializedTermTest.class,
 	TypeSolverTest.class,
 	DefaultConversionsTest.class,

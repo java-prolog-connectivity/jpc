@@ -61,12 +61,12 @@ public abstract class ParameterizedSymbolExpander extends CachedTermExpander {
 					case TERM_CONVERSION_BY_MAPPING_AND_REFERENCE_SYMBOL:
 						expanded = context.toTerm(resolved);
 						if(expanded instanceof Compound)
-							context.newWeakJRefTerm(resolved, (Compound)expanded);
+							context.newWeakRefTerm(resolved, (Compound)expanded);
 						else
 							throw new RuntimeException("Wrong conversion specifier: " + TERM_CONVERSION_BY_MAPPING_AND_REFERENCE_SYMBOL + " for non compound term: " + expanded);
 						break;
 					case TERM_CONVERSION_BY_REFERENCE_SYMBOL:
-						expanded = context.newWeakJRefTerm(resolved);
+						expanded = context.newWeakRefTerm(resolved);
 						break;
 					case TERM_CONVERSION_BY_SERIALIZATION_SYMBOL:
 						expanded = SerializedTerm.serialize((Serializable)resolved);

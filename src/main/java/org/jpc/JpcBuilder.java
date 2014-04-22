@@ -13,12 +13,12 @@ import org.jpc.error.handling.DefaultJpcErrorHandler;
 import org.jpc.error.handling.ErrorHandler;
 import org.jpc.error.handling.ErrorHandlerManager;
 import org.jpc.term.Term;
-import org.jpc.term.jrefterm.JRefTermManager;
+import org.jpc.term.refterm.RefTermManager;
 
 public class JpcBuilder extends JConverterBuilder {
 	
 	private final JpcTypeSolverManager typeSolverManager;
-	private JRefTermManager jRefTermManager;
+	private RefTermManager refTermManager;
 	private final ErrorHandlerManager errorHandlerManager;
 	
 	/**
@@ -48,14 +48,14 @@ public class JpcBuilder extends JConverterBuilder {
 		this(JpcConverterManager.registerDefaults(new JpcConverterManager(jgum, embeddedEngine)),
 				JGumFactoryManager.registerDefaults(new JGumFactoryManager(jgum)),
 				JpcTypeSolverManager.registerDefaults(new JpcTypeSolverManager(jgum, embeddedEngine)),
-				new JRefTermManager(), 
+				new RefTermManager(), 
 				new DefaultJpcErrorHandler());
 	}
 	
-	private JpcBuilder(JpcConverterManager converterManager, FactoryManager factoryManager, JpcTypeSolverManager typeSolverManager, JRefTermManager jRefTermManager, ErrorHandlerManager errorHandlerManager) {
+	private JpcBuilder(JpcConverterManager converterManager, FactoryManager factoryManager, JpcTypeSolverManager typeSolverManager, RefTermManager refTermManager, ErrorHandlerManager errorHandlerManager) {
 		super(converterManager, factoryManager);
 		this.typeSolverManager = typeSolverManager;
-		this.jRefTermManager = jRefTermManager;
+		this.refTermManager = refTermManager;
 		this.errorHandlerManager = errorHandlerManager;
 	}
 	
@@ -64,7 +64,7 @@ public class JpcBuilder extends JConverterBuilder {
 	}
 	
 	public Jpc build() {
-		return new DefaultJpc(getConverterManager(), factoryManager, typeSolverManager, jRefTermManager, errorHandlerManager);
+		return new DefaultJpc(getConverterManager(), factoryManager, typeSolverManager, refTermManager, errorHandlerManager);
 	}
 
 	public JpcBuilder register(JpcConverter converter) {
@@ -94,8 +94,8 @@ public class JpcBuilder extends JConverterBuilder {
 		return this;
 	}
 	
-	public JpcBuilder setJRefTermManager(JRefTermManager jRefTermManager) {
-		this.jRefTermManager = jRefTermManager;
+	public JpcBuilder setRefTermManager(RefTermManager refTermManager) {
+		this.refTermManager = refTermManager;
 		return this;
 	}
 	

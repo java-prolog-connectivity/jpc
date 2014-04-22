@@ -9,7 +9,7 @@ import org.jpc.converter.JpcConverterManager;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
-import org.jpc.term.jrefterm.JRefTermManager;
+import org.jpc.term.refterm.RefTermManager;
 
 /**
  * A class providing an interface for the main JPC functionality (such as converting between terms and Java objects)
@@ -57,26 +57,26 @@ public abstract class Jpc extends JConverter {
 
 	public abstract boolean handleError(Term errorTerm, Term goal);
 
-	public abstract JRefTermManager getJRefTermManager();
+	public abstract RefTermManager getRefTermManager();
 
-	public abstract Compound newSoftJRefTerm(Object ref, Compound compound);
+	public abstract Compound newSoftRefTerm(Object ref, Compound compound);
 	
-	public abstract Compound newSoftJRefTerm(Object ref);
+	public abstract Compound newSoftRefTerm(Object ref);
 	
-	public abstract Compound newWeakJRefTerm(Object ref, Compound compound);
+	public abstract Compound newWeakRefTerm(Object ref, Compound compound);
 	
-	public abstract Compound newWeakJRefTerm(Object ref);
+	public abstract Compound newWeakRefTerm(Object ref);
 	
-	public abstract Compound newJRefTerm(Object ref);
+	public abstract Compound newRefTerm(Object ref);
 	
-	public abstract Compound newJRefTerm(Object ref, Compound compound);
+	public abstract Compound newRefTerm(Object ref, Compound compound);
 	
-	public abstract void forgetJRefTerm(Compound term);
+	public abstract void forgetRefTerm(Compound term);
 	
-	public abstract void forgetJRefTermRef(Object ref);
+	public abstract void forgetRef(Object ref);
 	
-	public abstract Compound jRefTerm(Object o);
+	public abstract Compound refTerm(Object o);
 	
-	public abstract <T> T resolveJRefTerm(Compound compound);
+	public abstract <T> T resolveRefTerm(Compound compound);
 	
 }

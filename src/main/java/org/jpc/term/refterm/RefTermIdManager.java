@@ -1,4 +1,4 @@
-package org.jpc.term.jrefterm;
+package org.jpc.term.refterm;
 
 import static java.util.Arrays.asList;
 
@@ -14,11 +14,11 @@ import com.google.common.collect.MapMaker;
  * @author sergioc
  *
  */
-public class JRefTermIdManager {
+public class RefTermIdManager {
 	
-	private static JRefTermIdManager defaultJRefTermIdManager = new JRefTermIdManager();
+	private static RefTermIdManager defaultJRefTermIdManager = new RefTermIdManager();
 	
-	public static JRefTermIdManager getDefault() {
+	public static RefTermIdManager getDefault() {
 		return defaultJRefTermIdManager;
 	}
 	
@@ -26,7 +26,7 @@ public class JRefTermIdManager {
 	
 	private final Map<Object, Compound> currentRefs = new MapMaker().weakKeys().makeMap();
 	
-	private JRefTermIdManager(){}
+	private RefTermIdManager(){}
 	
 	/**
 	 * 
@@ -40,7 +40,7 @@ public class JRefTermIdManager {
 	public synchronized Compound newJRefTermId(Object ref) {
 		Compound id = jRefTermId(ref);
 		if(id == null) {
-			id = new Compound(JRefTermManager.JREF_TERM_FUNCTOR_NAME, asList(new IntegerTerm(counter++)));
+			id = new Compound(RefTermManager.JREF_TERM_FUNCTOR_NAME, asList(new IntegerTerm(counter++)));
 			currentRefs.put(ref, id);
 		}
 		return id;	
