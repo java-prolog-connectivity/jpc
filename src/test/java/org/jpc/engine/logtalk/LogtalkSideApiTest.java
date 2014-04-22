@@ -132,13 +132,13 @@ public class LogtalkSideApiTest {
 	 * If no second argument is provided, the return value, if needed, can also be obtained by means of: "java(object)::message return ReturnSpecifier".
 	 */
 	@Test
-	public void testObject1() {
+	public void testJObject1() {
 		Term term = defaultPrologEngine().query("jobject(abc)::toUpperCase return term(V)").oneSolutionOrThrow().get("V");
 		assertEquals(new Atom("ABC"), term);
 	}
 	
 	@Test
-	public void testObject2() {
+	public void testJObject2() {
 		Term term = defaultPrologEngine().query("jobject(abc, term(V))::toUpperCase").oneSolutionOrThrow().get("V");
 		assertEquals(new Atom("ABC"), term);
 		term = defaultPrologEngine().query("jobject([a:1,b:2], term(X))::get('a')").oneSolutionOrThrow().get("X");
@@ -147,14 +147,14 @@ public class LogtalkSideApiTest {
 
 	
 	@Test
-	public void testNewWithObject1() {
+	public void testNewWithJObject1() {
 		Term term;
 		term = defaultPrologEngine().query("jobject(class([java,lang],['String']))::new('hello') return term(V)").oneSolutionOrThrow().get("V");
 		assertEquals(new Atom("hello"), term);
 	}
 	
 	@Test
-	public void testNewWithObject2() {
+	public void testNewWithJObject2() {
 		Term term;
 		term = defaultPrologEngine().query("jobject(class([java,lang],['String']), term(V))::new").oneSolutionOrThrow().get("V");
 		assertEquals(new Atom(""), term);
@@ -171,6 +171,8 @@ public class LogtalkSideApiTest {
 		assertEquals("hello", Fixture1.x);
 		assertEquals("hello", Fixture2.x);
 	}
+
+	
 	
 	
 	/* ********************************************************************************************************************************
