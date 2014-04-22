@@ -69,6 +69,16 @@ public class LogtalkSideApiTest {
 	}
 	
 	@Test
+	public void testIndexedValues() {
+		Term term;
+		//[a,b,c] is interpreted as a list.
+		term = defaultPrologEngine().query("[a,b,c]::[1] return term(X)").oneSolutionOrThrow().get("X");
+		assertEquals(new Atom("b"), term);
+		term = defaultPrologEngine().query("[1,2,3]::[0] return term(X)").oneSolutionOrThrow().get("X");
+		assertEquals(new IntegerTerm(1), term);
+	}
+	
+	@Test
 	public void testSetStaticField() {
 		defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[x,hello]").oneSolutionOrThrow();
 		defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[y,bye]").oneSolutionOrThrow();
