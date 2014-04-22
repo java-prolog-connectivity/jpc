@@ -1,5 +1,3 @@
-/*load this after the driver logtalk file*/
-
 :- category(jobject,
 	implements(forwarding)).
 
@@ -16,12 +14,12 @@
 		argnames is ['Object::Message', 'ReturnValue']]).
 
 	return(Message, ReturnValue) :-
-		jself(Object),
+		::jself(Object),
 		java::invoke(Object, Message, ReturnValue).
 
 
 	forward(Message) :-
-		return(Message, _ReturnValue).
+		::return(Message, _ReturnValue).
 
 
 	:- protected(jself/1).

@@ -1,5 +1,5 @@
 :- object(jobject(_Expression, _ReturnValue),
-	implements(forwarding)).
+	imports(jobject)).
 
 	:- info([
 		version is 1.0,
@@ -9,9 +9,11 @@
 		parnames is ['Expression', 'ReturnValue']
 	]).
 
-	forward(Message) :-
-		parameter(1, Expression),
-		parameter(2, Output),
-		java::invoke(Expression, Message, Output).
-
+	return(Message, ReturnValue) :-
+		^^return(Message, ReturnValue),
+		parameter(2, ReturnValue).
+		
+	jself(JObject) :-
+		parameter(1, JObject).
+	
 :- end_object.

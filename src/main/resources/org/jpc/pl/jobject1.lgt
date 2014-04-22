@@ -9,14 +9,4 @@
 		parnames is ['Expression']
 	]).
 
-	:- public(return/2).
-	:- mode(return(?term, -term), zero_or_one).
-	:- info(return/2, [
-		comment is 'Delegate a message to a Java object and return the Java method return value.',
-		argnames is ['Message', 'ReturnValue']]).
-
-	return(Message, ReturnValue) :-
-		parameter(1, Expression),
-		java::invoke(Expression, Message, ReturnValue).
-		
 :- end_object.
