@@ -8,6 +8,7 @@ import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Atom;
 import org.jpc.term.IntegerTerm;
 import org.jpc.term.Term;
+import org.junit.Before;
 import org.junit.Test;
 
 public class LogtalkSideApiTest {
@@ -28,6 +29,15 @@ public class LogtalkSideApiTest {
 		public static String y;
 	}
 
+	@Before
+	public void resetFixture() {
+		Fixture1.x = null;
+		Fixture1.y = null;
+		Fixture2.x = null;
+		Fixture2.y = null;
+	}
+	
+	
 	
 	/* ********************************************************************************************************************************
 	 * Testing linguistic symbiosis.
@@ -60,8 +70,6 @@ public class LogtalkSideApiTest {
 	
 	@Test
 	public void testSetStaticField() {
-		Fixture1.x = null;
-		Fixture1.y = null;
 		defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[x,hello]").oneSolutionOrThrow();
 		defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[y,bye]").oneSolutionOrThrow();
 		Atom result = (Atom) defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[x] return term(X)").oneSolutionOrThrow().get("X");
@@ -72,8 +80,6 @@ public class LogtalkSideApiTest {
 	
 	@Test
 	public void testSetStaticFieldFromField() {
-		Fixture1.x = null;
-		Fixture1.y = null;
 		defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[x,hello]").oneSolutionOrThrow();
 		defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[y,class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[x]]").oneSolutionOrThrow();
 		assertEquals("hello", Fixture1.x);
@@ -135,8 +141,6 @@ public class LogtalkSideApiTest {
 	 */
 	@Test
 	public void testBroadcasting() {
-		Fixture1.x = null;
-		Fixture2.x = null;
 		defaultPrologEngine().query("jobject((class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1']), "
 				+ "class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture2'])))"
 				+ "::[x,hello]").oneSolutionOrThrow();
@@ -158,7 +162,6 @@ public class LogtalkSideApiTest {
 
 	@Test
 	public void testSetAndGetField() {
-		Fixture1.x = null;
 		defaultPrologEngine().query("java::set_field(class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1']),x,'hello')").oneSolutionOrThrow();
 		Atom result = (Atom) defaultPrologEngine().query("java::get_field(class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1']),x,term(X))").oneSolutionOrThrow().get("X");
 		assertEquals("hello", result.getName());
@@ -183,8 +186,6 @@ public class LogtalkSideApiTest {
 	
 	@Test
 	public void testEvalWithSideEffects() {
-		Fixture1.x = null;
-		Fixture1.y = null;
 		//setting the static fields of a class.
 		defaultPrologEngine().query("java::eval(class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::([x,hello]))").oneSolutionOrThrow();
 		defaultPrologEngine().query("java::eval(class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::([y,bye]))").oneSolutionOrThrow();
@@ -201,8 +202,6 @@ public class LogtalkSideApiTest {
 	 */
 	@Test
 	public void testEvalSequence() {
-		Fixture1.x = null;
-		Fixture1.y = null;
 		//setting two static fields in a class as a sequence of messages.
 		defaultPrologEngine().query("java::eval(("
 				+ "class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[x,hello], "
@@ -218,8 +217,6 @@ public class LogtalkSideApiTest {
 	 */
 	@Test
 	public void testEvalSequenceWithReturnExpression() {
-		Fixture1.x = null;
-		Fixture1.y = null;
 		Atom result = (Atom) defaultPrologEngine().query("java::eval(("
 				+ "class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[x,hello], "
 				+ "class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[y,bye], "
@@ -235,8 +232,6 @@ public class LogtalkSideApiTest {
 	 */
 	@Test
 	public void testCascading() {
-		Fixture1.x = null;
-		Fixture1.y = null;
 		defaultPrologEngine().query("java::eval("
 				+ "class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::"
 				+ "([x,hello],[y,bye]))"
@@ -250,10 +245,6 @@ public class LogtalkSideApiTest {
 	 */
 	@Test
 	public void testCascadingAndBroadcasting() {
-		Fixture1.x = null;
-		Fixture1.y = null;
-		Fixture2.x = null;
-		Fixture2.y = null;
 		defaultPrologEngine().query("java::eval("
 				+ "(class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1']), "
 				+ "class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture2']))::"
