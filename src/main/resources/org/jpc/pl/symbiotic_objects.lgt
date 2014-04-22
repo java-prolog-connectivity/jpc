@@ -4,7 +4,31 @@
 :- end_object.
 
 
-:- object(jserialized(_Id),
+:- object(jserialized(_Serialization),
+	imports(java_bridge)).
+
+:- end_object.
+
+
+:- object(jreflective(_Object),
+	imports(java_bridge)).
+
+:- end_object.
+
+
+:- object(jtyped(_Object, _Type),
+	imports(java_bridge)).
+
+:- end_object.
+
+
+:- object(jconvertable(_Object, _Converter),
+	imports(java_bridge)).
+
+:- end_object.
+
+
+:- object(term(_Term),
 	imports(java_bridge)).
 
 :- end_object.

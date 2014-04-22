@@ -11,7 +11,7 @@ import org.jpc.term.Term;
 
 public class CustomTermToObjectConverter<T> implements FromTermConverter<Compound, T> {
 
-public static final String CUSTOM_TERM_FUNCTOR_NAME = "custom_jterm";
+public static final String CUSTOM_TERM_FUNCTOR_NAME = "jconvertable";
 	
 	@Override
 	public T fromTerm(Compound term, Type targetType, Jpc jpc) {
