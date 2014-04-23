@@ -87,7 +87,7 @@ public class LogtalkSideApiTest {
 	}
 	
 	@Test
-	public void testSetStaticField() {
+	public void testSetAndGetStaticField() {
 		defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[x,hello]").oneSolutionOrThrow();
 		defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[y,bye]").oneSolutionOrThrow();
 		Atom result = (Atom) defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[x] return term(X)").oneSolutionOrThrow().get("X");
