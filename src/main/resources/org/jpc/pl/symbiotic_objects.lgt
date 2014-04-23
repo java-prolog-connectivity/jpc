@@ -46,12 +46,6 @@
 :- end_object.
 
 
-:- object(reflective(_Reference),
-	imports(jobject)).
-
-:- end_object.
-
-
 :- object([_| _],
 	imports(jobject)).
 
