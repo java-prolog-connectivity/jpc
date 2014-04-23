@@ -171,8 +171,36 @@ public class LogtalkSideApiTest {
 		assertEquals("hello", Fixture1.x);
 		assertEquals("hello", Fixture2.x);
 	}
-
 	
+	
+	/* ********************************************************************************************************************************
+	 * Testing robject/1 and robject/2.
+     **********************************************************************************************************************************
+     */
+	
+	@Test
+	public void testRObject1Invoke() {
+		Term term = defaultPrologEngine().query("robject(abc)::invoke(toUpperCase) return term(V)").oneSolutionOrThrow().get("V");
+		assertEquals(new Atom("ABC"), term);
+	}
+	
+	@Test
+	public void testRObject2Invoke() {
+		Term term = defaultPrologEngine().query("robject(abc, term(V))::invoke(toUpperCase)").oneSolutionOrThrow().get("V");
+		assertEquals(new Atom("ABC"), term);
+		term = defaultPrologEngine().query("robject([a:1,b:2], term(X))::invoke(get('a'))").oneSolutionOrThrow().get("X");
+		assertEquals(new IntegerTerm(1), term);
+	}
+	
+	@Test
+	public void testRObjectSetAndGetStaticField() {
+		defaultPrologEngine().query("robject(class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1']))::set(x,hello)").oneSolutionOrThrow();
+		defaultPrologEngine().query("robject(class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1']))::set(y,bye)").oneSolutionOrThrow();
+		Atom result = (Atom) defaultPrologEngine().query("robject(class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1']))::get(x) return term(X)").oneSolutionOrThrow().get("X");
+		assertEquals("hello", result.getName());
+		result = (Atom) defaultPrologEngine().query("robject(class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1']),term(X))::get(y)").oneSolutionOrThrow().get("X");
+		assertEquals("bye", result.getName());
+	}
 	
 	
 	/* ********************************************************************************************************************************

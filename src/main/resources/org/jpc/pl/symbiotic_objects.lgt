@@ -1,3 +1,25 @@
+:- object(robject(_Object, _ReturnValue),
+	extends(jobject(_Object, _ReturnValue))).
+
+	return(invoke(Message), ReturnValue) :-
+		^^return(Message, ReturnValue).
+
+	return(set(FieldName, Value), ReturnValue) :-
+		^^return([FieldName, Value], ReturnValue).
+
+	return(get(FieldName), ReturnValue) :-
+		^^return([FieldName], ReturnValue).
+
+:- end_object.
+
+
+:- object(robject(_Object),
+	extends(robject(_Object,_ReturnValue))).
+
+:- end_object.
+
+
+
 :- object(jref_term(_Id),
 	imports(jobject)).
 
@@ -5,12 +27,6 @@
 
 
 :- object(jserialized(_Serialization),
-	imports(jobject)).
-
-:- end_object.
-
-
-:- object(robject(_Object),
 	imports(jobject)).
 
 :- end_object.
