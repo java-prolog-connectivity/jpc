@@ -10,8 +10,8 @@
 	]).
 
 	return(Message, ReturnValue) :-
-		^^return(Message, ReturnValue),
-		parameter(2, ReturnValue).
+		parameter(2, ReturnValue),
+		^^return(Message, ReturnValue).
 		
 	jself(JObject) :-
 		parameter(1, JObject).
