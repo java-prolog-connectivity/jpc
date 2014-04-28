@@ -14,7 +14,7 @@ import java.util.Set;
 import org.jpc.engine.listener.DriverStateListener;
 import org.jpc.engine.prolog.driver.PrologEngineDriver;
 import org.minitoolbox.reflection.ReflectionUtil;
-import org.minitoolbox.reflection.googlereflections.GoogleReflectionsUtil;
+import org.minitoolbox.reflection.reflections.ReflectionsUtil;
 import org.reflections.Reflections;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
@@ -76,7 +76,7 @@ public class DriverUtil {
 			urls = ClasspathHelper.forClassLoader();
 			//urls = ClasspathHelper.forPackage(JPC_BASE_PACKAGE);
 		}
-		Set<URL> fixedUrls = GoogleReflectionsUtil.fixURLs(urls);
+		Set<URL> fixedUrls = ReflectionsUtil.fixURLs(urls);
 		if(!classLoaders.isEmpty())
 			config.addClassLoaders(classLoaders);
 		if(!urls.isEmpty())
