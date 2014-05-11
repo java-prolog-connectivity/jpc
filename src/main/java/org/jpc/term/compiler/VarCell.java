@@ -1,4 +1,4 @@
-package org.jpc.term.compiled;
+package org.jpc.term.compiler;
 
 import org.jpc.term.Term;
 

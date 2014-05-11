@@ -3,6 +3,7 @@ package org.jpc.engine.embedded;
 import java.util.List;
 
 import org.jpc.term.Term;
+import org.jpc.term.compiler.Environment;
 
 /**
  * A rule in the embedded JPC engine.
@@ -15,8 +16,8 @@ public class Rule extends Clause {
 
 	private final List<Term> body;
 	
-	public Rule(Term head, List<Term> body, int id) {
-		super(head, id);
+	public Rule(Term head, List<Term> body, Environment env) {
+		super(head, env);
 		this.body = body;
 	}
 

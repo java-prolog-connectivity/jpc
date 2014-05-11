@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.jpc.engine.embedded.Clause;
 import org.jpc.term.Term;
+import org.jpc.term.compiler.Environment;
 
 import com.google.common.collect.Lists;
 
@@ -22,11 +23,11 @@ public class ClauseDatabase extends IndexedClauses {
 	}
 	
 	public void asserta(Term term) {
-		addClause(new Clause(term, nextLowedId--));
+		addClause(new Clause(term, new Environment(nextLowedId--)));
 	}
 	
 	public void assertz(Term term) {
-		addClause(new Clause(term, nextUpperId++));
+		addClause(new Clause(term, new Environment(nextUpperId++)));
 	}
 	
 	public boolean retract(Term term) {
@@ -34,7 +35,7 @@ public class ClauseDatabase extends IndexedClauses {
 		Iterator<Clause> clausesIt = indexedClausesIterator(compiledTerm);
 		while(clausesIt.hasNext()) {
 			Clause candidateClause = clausesIt.next();
-			if(term.canUnify(candidateClause.getHead())) {
+			if(compiledTerm.canUnify(candidateClause.getHead())) {
 				retract(candidateClause);
 				return true;
 			}
@@ -47,7 +48,7 @@ public class ClauseDatabase extends IndexedClauses {
 		Iterator<Clause> clausesIt = indexedClausesIterator(compiledTerm);
 		List<Clause> clauses = Lists.newArrayList(clausesIt); //converting the iterator to a list first in order to avoid a ConcurrentModificationException.
 		for(Clause candidateClause : clauses) {
-			if(term.canUnify(candidateClause.getHead())) {
+			if(compiledTerm.canUnify(candidateClause.getHead())) {
 				retract(candidateClause);
 			}
 		}

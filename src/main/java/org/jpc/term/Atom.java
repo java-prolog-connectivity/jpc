@@ -8,7 +8,8 @@ import static org.jpc.engine.prolog.PrologConstants.TRUE;
 import org.jpc.JpcException;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.TermContentHandler;
-import org.jpc.term.compiled.CompilationContext;
+import org.jpc.term.compiler.CompilationContext;
+import org.jpc.term.compiler.Environment;
 import org.jpc.term.visitor.TermVisitor;
 import org.jpc.util.PrologUtil;
 
@@ -108,7 +109,7 @@ public final class Atom extends Term {
 	
 
 	@Override
-	public Term compile(int clauseId, CompilationContext context) {
+	public Term preCompile(Environment env, CompilationContext context) {
 		return new Atom(name.intern());
 	}
 

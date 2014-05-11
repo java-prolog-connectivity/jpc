@@ -4,6 +4,7 @@ import org.jpc.JpcException;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
+import org.jpc.term.compiler.Environment;
 
 /**
  * A Prolog clause.
@@ -19,17 +20,17 @@ public class Clause implements Comparable<Clause> {
 			throw new JpcException("Invalid clause head: " + head + ".");
 	}
 	
-	private final int id;
+	private final Environment env;
 	private final Term head;
 	
-	public Clause(Term head, int id) {
+	public Clause(Term head, Environment env) {
 		checkClauseHead(head);
-		this.id = id;
-		this.head = head.compile(id);
+		this.env = env;
+		this.head = head.preCompile(env);
 	}
 	
 	public int getId() {
-		return id;
+		return env.getId();
 	}
 	
 	public Term getHead() {
@@ -40,7 +41,7 @@ public class Clause implements Comparable<Clause> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + id;
+		result = prime * result + getId();
 		return result;
 	}
 
@@ -53,7 +54,7 @@ public class Clause implements Comparable<Clause> {
 		if (getClass() != obj.getClass())
 			return false;
 		Clause other = (Clause) obj;
-		if (id != other.id)
+		if (getId() != other.getId())
 			return false;
 		return true;
 	}

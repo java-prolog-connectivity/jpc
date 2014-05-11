@@ -4,4 +4,4 @@
  * @author sergioc
  *
  */
-package org.jpc.term.compiled;
+package org.jpc.term.compiler;

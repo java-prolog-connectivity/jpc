@@ -1,4 +1,4 @@
-package org.jpc.term.compiled;
+package org.jpc.term.compiler;
 
 import org.jpc.JpcException;
 import org.jpc.term.AbstractVar;
@@ -32,7 +32,7 @@ public class BindableVar extends AbstractVar {
 	}
 	
 	@Override
-	public Term compile(int clauseId, CompilationContext context) {
+	public Term preCompile(Environment env, CompilationContext context) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -69,7 +69,7 @@ public class BindableVar extends AbstractVar {
 	}
 	
 	@Override
-	public void doUnification(Term term) {
+	public void unify(Term term) {
 		if( !(hasAnonymousBinding(this) || hasAnonymousBinding(term)) ) {
 			VarCell thisVarCell = getVarCell();
 			if(term instanceof AbstractVar) {
@@ -94,7 +94,7 @@ public class BindableVar extends AbstractVar {
 		if(oldTerm instanceof AbstractVar) {
 			varCell.setBinding(term);
 		} else {
-			oldTerm.doUnification(term);
+			oldTerm.unify(term);
 		}
 	}
 	

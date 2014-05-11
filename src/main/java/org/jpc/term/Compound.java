@@ -12,7 +12,8 @@ import org.jpc.JpcException;
 import org.jpc.engine.prolog.Operator;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.TermContentHandler;
-import org.jpc.term.compiled.CompilationContext;
+import org.jpc.term.compiler.CompilationContext;
+import org.jpc.term.compiler.Environment;
 import org.jpc.term.unification.NonUnifiableException;
 import org.jpc.term.visitor.TermVisitor;
 
@@ -256,28 +257,28 @@ public final class Compound extends Term {
 
 	
 	@Override
-	public void doUnification(Term term) {
+	public void unify(Term term) {
 		if(this != term) {
 			if(term instanceof AbstractVar || term instanceof JRef)
-				term.doUnification(this);
+				term.unify(this);
 			else if(!(term instanceof Compound) || term.arity() != arity())
 				throw new NonUnifiableException(this, term);
 			else {
 				Compound compound = (Compound) term;
-				getName().doUnification(compound.getName());
+				getName().unify(compound.getName());
 				for(int i=0; i<arity(); i++)
-					arg(i+1).doUnification(term.arg(i+1));
+					arg(i+1).unify(term.arg(i+1));
 			}
 		}
 	}
 	
 	@Override
-	public Term compile(int clauseId, CompilationContext context) {
+	public Term preCompile(Environment env, CompilationContext context) {
 		Compound compiledCompound;
-		Term compiledName = getName().compile(clauseId, context);
+		Term compiledName = getName().preCompile(env, context);
 		List<Term> compiledArgs = new ArrayList<>();
 		for(Term arg : getArgs()) {
-			compiledArgs.add(arg.compile(clauseId, context));
+			compiledArgs.add(arg.preCompile(env, context));
 		}
 		compiledCompound = new Compound(compiledName, compiledArgs);
 		compiledCompound.ground = isGround();

@@ -12,8 +12,9 @@ import org.jpc.JpcException;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.JpcTermWriter;
 import org.jpc.salt.TermContentHandler;
-import org.jpc.term.compiled.BindableVar;
-import org.jpc.term.compiled.CompilationContext;
+import org.jpc.term.compiler.BindableVar;
+import org.jpc.term.compiler.CompilationContext;
+import org.jpc.term.compiler.Environment;
 import org.jpc.term.expansion.DefaultTermExpander;
 import org.jpc.term.unification.NonUnifiableException;
 import org.jpc.term.visitor.DefaultTermVisitor;
@@ -351,11 +352,15 @@ public abstract class Term {
      **********************************************************************************************************************************
      */
 
-	private static final int NO_CLAUSE_CODE = -1;
-
+	/**
+	 * 
+	 * @param term a compiled term
+	 * @return true if this term can unify with the parameter term.
+	 * @throws UnsupportedOperationException if this term or the receiver are not compiled and there are unbound variables.
+	 */
 	public final boolean canUnify(Term term) {
 		try {
-			unifyVars(term);
+			unify(term);
 			return true;
 		} catch(NonUnifiableException e) {
 			return false;
@@ -366,54 +371,30 @@ public abstract class Term {
 	 * @param term a term.
 	 * @return a map of variables to terms according to the accomplished unification.
 	 */
-	public final Map<String, Term> unifyVars(Term term) {
-		Term thisBindableTerm = prepareForQuery();
-		Term thatBindableTerm = term.compile(NO_CLAUSE_CODE).prepareForFrame();
-		return thisBindableTerm.unifyVarsCompiled(thatBindableTerm);
+	public final Map<String, Term> compileAndUnifyVars(Term term) {
+		Term thisBindableTerm = compile(true);
+		Term thatBindableTerm = term.compile(false);
+		thisBindableTerm.unify(thatBindableTerm);
+		return thisBindableTerm.varBindings();
 	}
 	
 	/**
 	 * @param term a term.
 	 * @return this term unified with the term sent as parameter.
 	 */
-	public final Term unify(Term term) {
-		Term thisBindableTerm = prepareForQuery();
-		Term thatBindableTerm = term.compile(NO_CLAUSE_CODE).prepareForFrame();
-		return thisBindableTerm.unifyCompiled(thatBindableTerm);
-	}
-	
-	
-	/**
-	 * THE METHODS BELOW ARE NOT INTENDED TO BE DIRECTLY USED BY THE PROGRAMMER.
-	 */
-	
-	/**
-	 * Part of the internal unification API. This method should not be used by the programmer.
-	 * @param term a bindable term.
-	 * @return a map of variables to terms according to the accomplished unification.
-	 */
-	public final Map<String, Term> unifyVarsCompiled(Term term) {
-		doUnification(term);
-		return unifiedVars();
-	}
-
-	/**
-	 * Part of the internal unification API. This method should not be used by the programmer.
-	 * @param term a bindable term.
-	 * @return this term unified with the term sent as parameter.
-	 */
-	public final Term unifyCompiled(Term term) {
-		doUnification(term);
-		return resolveBindings();
+	public final Term compileAndUnify(Term term) {
+		Term thisBindableTerm = compile(true);
+		Term thatBindableTerm = term.compile(false);
+		return thisBindableTerm.unifyAndBind(thatBindableTerm);
 	}
 	
 	/**
-	 * Part of the internal unification API. This method should not be used by the programmer.
 	 * @param term
+	 * @throws UnsupportedOperationException if this term or the receiver are not compiled and there are unbound variables.
 	 */
-	public void doUnification(Term term) {
+	public void unify(Term term) {
 		if(term instanceof AbstractVar || term instanceof JRef) { //classes overriding this method should repeat this check.
-			term.doUnification(this);
+			term.unify(this);
 		} else {
 			if(!equals(term))
 				throw new NonUnifiableException(this, term);
@@ -421,7 +402,6 @@ public abstract class Term {
 	}
 	
 	/**
-	 * Part of the internal unification API. This method should not be used by the programmer.
 	 * @return a term where the bindings of the variables of the receiver have been applied.
 	 */
 	public final Term resolveBindings() {
@@ -440,11 +420,21 @@ public abstract class Term {
 		});
 	}
 	
+
 	/**
-	 * Part of the internal unification API. This method should not be used by the programmer.
+	 * @param term a bindable term.
+	 * @return this term unified with the term sent as parameter.
+	 */
+	public final Term unifyAndBind(Term term) {
+		unify(term);
+		return resolveBindings();
+	}
+	
+
+	/**
 	 * @return a map of variable names to their unified values.
 	 */
-	public final Map<String, Term> unifiedVars() {
+	public final Map<String, Term> varBindings() {
 		final Map<String, Term> varsMap = new HashMap<>();
 		accept(new DefaultTermVisitor() {
 			@Override
@@ -464,17 +454,48 @@ public abstract class Term {
 		});
 		return varsMap;
 	}
+
 	
 	/* ********************************************************************************************************************************
-	 * COMPILATION METHODS. THE METHODS BELOW ARE NOT INTENDED TO BE DIRECTLY USED BY THE PROGRAMMER.
+	 * COMPILATION METHODS.
      **********************************************************************************************************************************
      */
 	
-	public final Term compile(int clauseId) {
-		return compile(clauseId, new CompilationContext());
+	public final Term compile() {
+		return compile(false);
 	}
 	
-	public abstract Term compile(int clauseId, CompilationContext context);
+	public final Term compile(boolean preserveVarNames) {
+		if(preserveVarNames) {
+			return prepareForQuery();
+		} else {
+			return compile(new Environment());
+		}
+	}
+	
+//	public final Term compile(boolean preserveVarNames, Environment env) {
+//		if(preserveVarNames) {
+//			return prepareForQuery(env);
+//		} else {
+//			return compile(env);
+//		}
+//	}
+	
+	public final Term compile(Environment env) {
+		Term compiledTerm = preCompile(env);
+		return compiledTerm.prepareForFrame();
+	}
+	
+	/* ********************************************************************************************************************************
+	 * INTERNAL COMPILATION METHODS. THE METHODS BELOW ARE NOT INTENDED TO BE DIRECTLY USED BY THE PROGRAMMER.
+     **********************************************************************************************************************************
+     */
+	
+	public final Term preCompile(Environment env) {
+		return preCompile(env, new CompilationContext());
+	}
+	
+	public abstract Term preCompile(Environment env, CompilationContext context);
 	
 	public final Term prepareForQuery() {
 		return prepareForQuery(new CompilationContext());

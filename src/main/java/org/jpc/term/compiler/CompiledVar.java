@@ -1,4 +1,4 @@
-package org.jpc.term.compiled;
+package org.jpc.term.compiler;
 
 import static org.jpc.engine.prolog.PrologConstants.ANONYMOUS_VAR_NAME;
 
@@ -67,12 +67,12 @@ public final class CompiledVar extends AbstractVar {
 	
 	
 	@Override
-	public void doUnification(Term term) {
+	public void unify(Term term) {
 		throw new UnsupportedOperationException();
 	}
 	
 	@Override
-	public Term compile(int clauseId, CompilationContext context) {
+	public Term preCompile(Environment env, CompilationContext context) {
 		return this;
 	}
 

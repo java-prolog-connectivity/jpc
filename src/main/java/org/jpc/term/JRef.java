@@ -9,7 +9,8 @@ import java.lang.ref.WeakReference;
 import org.jpc.JpcException;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.TermContentHandler;
-import org.jpc.term.compiled.CompilationContext;
+import org.jpc.term.compiler.CompilationContext;
+import org.jpc.term.compiler.Environment;
 import org.jpc.term.unification.NonUnifiableException;
 import org.jpc.term.visitor.TermVisitor;
 import org.jpc.util.PrologUtil;
@@ -116,9 +117,9 @@ public abstract class JRef<T> extends Term {
 	}
 	
 	@Override
-	public void doUnification(Term term) {
+	public void unify(Term term) {
 		if(term instanceof AbstractVar)
-			term.doUnification(this);
+			term.unify(this);
 		else {
 			if( !(term instanceof JRef && getReferent().equals(((JRef)term).getReferent())) )
 				throw new NonUnifiableException(this, term); //TODO implement open-unification (?)
@@ -126,7 +127,7 @@ public abstract class JRef<T> extends Term {
 	}
 	
 	@Override
-	public Term compile(int clauseId, CompilationContext context) {
+	public Term preCompile(Environment env, CompilationContext context) {
 		return this;
 	}
 

@@ -1,7 +1,8 @@
 package org.jpc.term;
 
 import org.jpc.engine.prolog.OperatorsContext;
-import org.jpc.term.compiled.CompilationContext;
+import org.jpc.term.compiler.CompilationContext;
+import org.jpc.term.compiler.Environment;
 
 
 public abstract class NumberTerm extends Term {
@@ -74,7 +75,7 @@ public abstract class NumberTerm extends Term {
 
 	
 	@Override
-	public Term compile(int clauseId, CompilationContext context) {
+	public Term preCompile(Environment env, CompilationContext context) {
 		return this;
 	}
 

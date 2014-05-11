@@ -1,4 +1,4 @@
-package org.jpc.term.compiled;
+package org.jpc.term.compiler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,18 +25,18 @@ public class CompilationContext {
 	/**
 	 * Compiles a variable for the given clause id according to this compilation context.
 	 * @param var a variable to compile.
-	 * @param clauseId a clause id.
+	 * @param env a clause environment.
 	 * @return the compiled variable.
 	 */
-	public CompiledVar compile(Var var, int clauseId) {
+	public CompiledVar compile(Var var, Environment env) {
 		String varName = var.getName();
 		CompiledVar compiledVar = (CompiledVar)varMap.get(varName);
 		if(compiledVar == null) {
 			if(!var.isAnonymous()) {
-				compiledVar = new CompiledVar(clauseId, varCount++);
+				compiledVar = new CompiledVar(env.getId(), varCount++);
 				varMap.put(varName, compiledVar);
 			} else {
-				compiledVar = CompiledVar.anonymousVar(clauseId);
+				compiledVar = CompiledVar.anonymousVar(env.getId());
 			}
 		}
 		return compiledVar;
