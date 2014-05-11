@@ -6,8 +6,8 @@ import static org.jpc.engine.prolog.PrologConstants.ANONYMOUS_VAR_NAME;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jpc.term.compiler.CompilationContext;
 import org.jpc.term.compiler.Environment;
+import org.jpc.term.compiler.UncompiledTermException;
 
 /**
  * A class reifying a logic variable
@@ -81,22 +81,22 @@ public final class Var extends AbstractVar {
 
 	@Override
 	public void unify(Term term) {
-		throw new UnsupportedOperationException();
+		throw new UncompiledTermException(this);
 	}
 	
 	@Override
-	public Term preCompile(Environment env, CompilationContext context) {
-		return context.compile(this, env);
+	public Term preCompile(Environment env) {
+		return env.compile(this);
 	}
 
 	@Override
-	public Term prepareForQuery(CompilationContext context) {
-		return context.compileForFrame(this);
+	public Term prepareForQuery(Environment env) {
+		return env.compileForFrame(this);
 	}
 	
 	@Override
-	public Term prepareForFrame(CompilationContext context) {
-		return context.compileForFrame(this);
+	public Term prepareForFrame(Environment env) {
+		return env.compileForFrame(this);
 	}
 
 }

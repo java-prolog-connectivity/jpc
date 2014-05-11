@@ -11,4 +11,8 @@ public class ReturnSpecifierConstants {
 	public static final String SOFT_REF_FLAG = "soft";
 	public static final String WEAK_REF_FLAG = "weak";
 	
+	public static boolean isReferenceModifierFlag(String flag) {
+		return flag.equals(STRONG_REF_FLAG) || flag.equals(SOFT_REF_FLAG) || flag.equals(WEAK_REF_FLAG);
+	}
+	
 }

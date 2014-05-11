@@ -25,7 +25,7 @@ public class UnificationTest {
 		unification = t1Compiled.unifyAndBind(t2Compiled);
 		assertTrue(expected.termEquals(unification));
 		
-		Term t2CompiledForQuery = t2.prepareForQuery();
+		Term t2CompiledForQuery = t2.compile(true);
 		unification = t1Compiled.unifyAndBind(t2CompiledForQuery);
 		assertTrue(expected.termEquals(unification));
 	}
@@ -45,13 +45,13 @@ public class UnificationTest {
 			fail();
 		} catch(NonUnifiableException e) {}
 		
-		Term t1CompiledForQuery = t1.prepareForQuery();
+		Term t1CompiledForQuery = t1.compile(true);
 		try {
 			t1CompiledForQuery.unifyAndBind(t2Compiled);
 			fail();
 		} catch(NonUnifiableException e) {}
 		
-		Term t2CompiledForQuery = t2.prepareForQuery();
+		Term t2CompiledForQuery = t2.compile(true);
 		try {
 			t1Compiled.unifyAndBind(t2CompiledForQuery);
 			fail();

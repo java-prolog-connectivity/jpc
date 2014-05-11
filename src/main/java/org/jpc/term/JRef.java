@@ -9,7 +9,6 @@ import java.lang.ref.WeakReference;
 import org.jpc.JpcException;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.TermContentHandler;
-import org.jpc.term.compiler.CompilationContext;
 import org.jpc.term.compiler.Environment;
 import org.jpc.term.unification.NonUnifiableException;
 import org.jpc.term.visitor.TermVisitor;
@@ -127,17 +126,17 @@ public abstract class JRef<T> extends Term {
 	}
 	
 	@Override
-	public Term preCompile(Environment env, CompilationContext context) {
+	public Term preCompile(Environment env) {
 		return this;
 	}
 
 	@Override
-	public Term prepareForQuery(CompilationContext context) {
+	public Term prepareForQuery(Environment env) {
 		return this;
 	}
 
 	@Override
-	public Term prepareForFrame(CompilationContext context) {
+	public Term prepareForFrame(Environment env) {
 		return this;
 	}
 	

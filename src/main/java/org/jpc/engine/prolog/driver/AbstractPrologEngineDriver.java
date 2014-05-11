@@ -19,7 +19,6 @@ public abstract class AbstractPrologEngineDriver<T extends PrologEngine> impleme
 	private final JpcPreferences preferences;
 	private final Collection<DriverStateListener> listeners;
 	
-	public static final String JAVA_SIDE_RESULT_SPECIFIER = "result";
 	public static final String JAVA_SIDE_EXCEPTION_SPECIFIER = "error";
 	
 	public AbstractPrologEngineDriver(EngineDescription engineDescription) {

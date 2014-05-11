@@ -91,6 +91,7 @@ import org.jpc.term.NumberTerm;
 import org.jpc.term.SerializedTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
+import org.jpc.term.compiler.UncompiledTermException;
 import org.jpc.util.JpcPreferences;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -308,12 +309,14 @@ public class JpcConverterManager extends JGumConverterManager {
 	private <T> T evalQuantifiedTermConverter(Term term, Type targetType, Jpc jpc) {
 		T converted = null;
 		boolean conversionFound = false;
+		Term unifiedTerm = null;
 		if(isValidConvertableTerm(term)) {
 			String converterVarName = JpcPreferences.JPC_VAR_PREFIX + "Converter";
 			Query query = embeddedEngine.query(new Compound(CONVERTER_FUNCTOR_NAME, asList(term, new Var(converterVarName))));
 			while(query.hasNext()) {
 				Solution solution = query.next();
-				Term unifiedTerm = term.replaceVariables(solution);
+				unifiedTerm = term.replaceVariables(solution);
+				unifiedTerm = unifiedTerm.compile(true);
 				FromTermConverter fromTermConverter = (FromTermConverter)((JRef)solution.get(converterVarName)).getReferent();
 				try {
 					converted = (T)new CheckedConverterEvaluator(unifiedTerm, targetType, jpc).apply(FromTermConverterAdapter.forConverter(fromTermConverter));
@@ -325,8 +328,15 @@ public class JpcConverterManager extends JGumConverterManager {
 		}
 		if(!conversionFound)
 			throw new ConversionException();
-		else
+		else {
+			try {
+				term.unify(unifiedTerm);
+			} catch(UncompiledTermException e) {
+				//just ignore the exception if the original term is not compiled.
+			}
+			
 			return converted;
+		}
 	}
 	
 }

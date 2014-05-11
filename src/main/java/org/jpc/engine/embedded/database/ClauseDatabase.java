@@ -31,11 +31,12 @@ public class ClauseDatabase extends IndexedClauses {
 	}
 	
 	public boolean retract(Term term) {
-		Term compiledTerm = term.prepareForQuery();
+		Term compiledTerm = term.compile(true);
 		Iterator<Clause> clausesIt = indexedClausesIterator(compiledTerm);
 		while(clausesIt.hasNext()) {
 			Clause candidateClause = clausesIt.next();
-			if(compiledTerm.canUnify(candidateClause.getHead())) {
+			Term compiledHead = candidateClause.getHead().prepareForFrame();
+			if(compiledTerm.canUnify(compiledHead)) {
 				retract(candidateClause);
 				return true;
 			}
@@ -44,11 +45,12 @@ public class ClauseDatabase extends IndexedClauses {
 	}
 	
 	public void retractAll(Term term) {
-		Term compiledTerm = term.prepareForQuery();
+		Term compiledTerm = term.compile(true);
 		Iterator<Clause> clausesIt = indexedClausesIterator(compiledTerm);
 		List<Clause> clauses = Lists.newArrayList(clausesIt); //converting the iterator to a list first in order to avoid a ConcurrentModificationException.
 		for(Clause candidateClause : clauses) {
-			if(compiledTerm.canUnify(candidateClause.getHead())) {
+			Term compiledHead = candidateClause.getHead().prepareForFrame();
+			if(compiledTerm.canUnify(compiledHead)) {
 				retract(candidateClause);
 			}
 		}

@@ -12,7 +12,6 @@ import org.jpc.JpcException;
 import org.jpc.engine.prolog.Operator;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.TermContentHandler;
-import org.jpc.term.compiler.CompilationContext;
 import org.jpc.term.compiler.Environment;
 import org.jpc.term.unification.NonUnifiableException;
 import org.jpc.term.visitor.TermVisitor;
@@ -273,12 +272,12 @@ public final class Compound extends Term {
 	}
 	
 	@Override
-	public Term preCompile(Environment env, CompilationContext context) {
+	public Term preCompile(Environment env) {
 		Compound compiledCompound;
-		Term compiledName = getName().preCompile(env, context);
+		Term compiledName = getName().preCompile(env);
 		List<Term> compiledArgs = new ArrayList<>();
 		for(Term arg : getArgs()) {
-			compiledArgs.add(arg.preCompile(env, context));
+			compiledArgs.add(arg.preCompile(env));
 		}
 		compiledCompound = new Compound(compiledName, compiledArgs);
 		compiledCompound.ground = isGround();
@@ -286,12 +285,12 @@ public final class Compound extends Term {
 	}
 
 	@Override
-	public Term prepareForQuery(CompilationContext context) {
+	public Term prepareForQuery(Environment env) {
 		Compound compiledCompound;
-		Term compiledName = getName().prepareForQuery(context);
+		Term compiledName = getName().prepareForQuery(env);
 		List<Term> compiledArgs = new ArrayList<>();
 		for(Term arg : getArgs()) {
-			compiledArgs.add(arg.prepareForQuery(context));
+			compiledArgs.add(arg.prepareForQuery(env));
 		}
 		compiledCompound = new Compound(compiledName, compiledArgs);
 		compiledCompound.ground = isGround();
@@ -299,18 +298,18 @@ public final class Compound extends Term {
 	}
 	
 	@Override
-	public Term prepareForFrame(CompilationContext context) {
+	public Term prepareForFrame(Environment env) {
 		Compound framedCompound;
 		if(isGround())
 			framedCompound = this;
 		else {
 			Term framedName = getName();
 			if(!framedName.isGround())
-				framedName = framedName.prepareForFrame(context);
+				framedName = framedName.prepareForFrame(env);
 			List<Term> framedArgs = new ArrayList<>();
 			for(Term arg : getArgs()) {
 				if(!arg.isGround())
-					arg = arg.prepareForFrame(context);
+					arg = arg.prepareForFrame(env);
 				framedArgs.add(arg);
 			}
 			framedCompound = new Compound(framedName, framedArgs);

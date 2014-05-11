@@ -13,7 +13,6 @@ import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.JpcTermWriter;
 import org.jpc.salt.TermContentHandler;
 import org.jpc.term.compiler.BindableVar;
-import org.jpc.term.compiler.CompilationContext;
 import org.jpc.term.compiler.Environment;
 import org.jpc.term.expansion.DefaultTermExpander;
 import org.jpc.term.unification.NonUnifiableException;
@@ -356,7 +355,7 @@ public abstract class Term {
 	 * 
 	 * @param term a compiled term
 	 * @return true if this term can unify with the parameter term.
-	 * @throws UnsupportedOperationException if this term or the receiver are not compiled and there are unbound variables.
+	 * @throws UncompiledTermException if this term or the receiver are not compiled and there are unbound variables.
 	 */
 	public final boolean canUnify(Term term) {
 		try {
@@ -390,7 +389,8 @@ public abstract class Term {
 	
 	/**
 	 * @param term
-	 * @throws UnsupportedOperationException if this term or the receiver are not compiled and there are unbound variables.
+	 * @throws UncompiledTermException if this term or the receiver are not compiled and there are unbound variables.
+	 * @throws NonUnifiableException if this term is not unifiable with the receiver.
 	 */
 	public void unify(Term term) {
 		if(term instanceof AbstractVar || term instanceof JRef) { //classes overriding this method should repeat this check.
@@ -461,47 +461,42 @@ public abstract class Term {
      **********************************************************************************************************************************
      */
 	
+	private static final boolean DEFAULT_COMPILATION_NAME_PRESERVATION_POLICY = false;
+	
 	public final Term compile() {
-		return compile(false);
+		return compile(DEFAULT_COMPILATION_NAME_PRESERVATION_POLICY);
 	}
 	
 	public final Term compile(boolean preserveVarNames) {
+		return compile(preserveVarNames, new Environment());
+	}
+	
+	public final Term compile(Environment env) {
+		return compile(DEFAULT_COMPILATION_NAME_PRESERVATION_POLICY, env);
+	}
+	
+	public final Term compile(boolean preserveVarNames, Environment env) {
 		if(preserveVarNames) {
-			return prepareForQuery();
+			return prepareForQuery(env);
 		} else {
-			return compile(new Environment());
+			Term compiledTerm = preCompile(env);
+			return compiledTerm.prepareForFrame(env);
 		}
 	}
 	
-//	public final Term compile(boolean preserveVarNames, Environment env) {
-//		if(preserveVarNames) {
-//			return prepareForQuery(env);
-//		} else {
-//			return compile(env);
-//		}
-//	}
-	
-	public final Term compile(Environment env) {
-		Term compiledTerm = preCompile(env);
-		return compiledTerm.prepareForFrame();
-	}
-	
+
 	/* ********************************************************************************************************************************
 	 * INTERNAL COMPILATION METHODS. THE METHODS BELOW ARE NOT INTENDED TO BE DIRECTLY USED BY THE PROGRAMMER.
      **********************************************************************************************************************************
      */
 	
-	public final Term preCompile(Environment env) {
-		return preCompile(env, new CompilationContext());
-	}
-	
-	public abstract Term preCompile(Environment env, CompilationContext context);
+	public abstract Term preCompile(Environment env);
 	
 	public final Term prepareForQuery() {
-		return prepareForQuery(new CompilationContext());
+		return prepareForQuery(new Environment());
 	}
 	
-	public abstract Term prepareForQuery(CompilationContext context);
+	public abstract Term prepareForQuery(Environment env);
 	
 	/**
 	 * Method only required for internal usage of the JPC Prolog engine.
@@ -509,9 +504,9 @@ public abstract class Term {
 	 * @return a term to be used in a new frame.
 	 */
 	public final Term prepareForFrame() {
-		return prepareForFrame(new CompilationContext());
+		return prepareForFrame(new Environment());
 	}
 	
-	public abstract Term prepareForFrame(CompilationContext context);
+	public abstract Term prepareForFrame(Environment env);
 	
 }

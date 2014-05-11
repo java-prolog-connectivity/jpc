@@ -4,12 +4,12 @@ import java.lang.reflect.Type;
 
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
-import org.jpc.term.Var;
+import org.jpc.term.AbstractVar;
 
-public class VarConverter<T> implements FromTermConverter<Var, T> {
+public class VarConverter<T> implements FromTermConverter<AbstractVar, T> {
 	
 	@Override
-	public T fromTerm(Var term, Type type, Jpc context) {
+	public T fromTerm(AbstractVar term, Type type, Jpc context) {
 		return null;
 	}
 	

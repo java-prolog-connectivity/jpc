@@ -8,7 +8,6 @@ import static org.jpc.engine.prolog.PrologConstants.TRUE;
 import org.jpc.JpcException;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.salt.TermContentHandler;
-import org.jpc.term.compiler.CompilationContext;
 import org.jpc.term.compiler.Environment;
 import org.jpc.term.visitor.TermVisitor;
 import org.jpc.util.PrologUtil;
@@ -109,17 +108,17 @@ public final class Atom extends Term {
 	
 
 	@Override
-	public Term preCompile(Environment env, CompilationContext context) {
+	public Term preCompile(Environment env) {
 		return new Atom(name.intern());
 	}
 
 	@Override
-	public Term prepareForQuery(CompilationContext context) {
+	public Term prepareForQuery(Environment env) {
 		return new Atom(name.intern());
 	}
 
 	@Override
-	public Term prepareForFrame(CompilationContext context) {
+	public Term prepareForFrame(Environment env) {
 		return this; //the Atom should be already compiled.
 	}
 	

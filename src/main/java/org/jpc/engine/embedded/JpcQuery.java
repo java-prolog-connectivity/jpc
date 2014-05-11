@@ -48,10 +48,11 @@ public class JpcQuery extends PrologQuery {
 		while(clausesIt.hasNext()) {
 			Clause clause = clausesIt.next();
 			Term head = clause.getHead().prepareForFrame();
-			Term compiledQuery = getGoal().prepareForQuery();
+			Term compiledQuery = getGoal().compile(true);
 			Map<String, Term> solutionMap = null;
 			try {
-				solutionMap = compiledQuery.unifyVarsCompiled(head);
+				compiledQuery.unify(head);
+				solutionMap = compiledQuery.varBindings();
 			} catch(NonUnifiableException e) {
 				continue;
 			}

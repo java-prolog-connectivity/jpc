@@ -32,17 +32,17 @@ public class BindableVar extends AbstractVar {
 	}
 	
 	@Override
-	public Term preCompile(Environment env, CompilationContext context) {
+	public Term preCompile(Environment env) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Term prepareForQuery(CompilationContext context) {
+	public Term prepareForQuery(Environment env) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Term prepareForFrame(CompilationContext context) {
+	public Term prepareForFrame(Environment env) {
 		throw new UnsupportedOperationException();
 	}
 

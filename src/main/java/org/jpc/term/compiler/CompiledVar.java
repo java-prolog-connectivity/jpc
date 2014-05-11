@@ -68,22 +68,22 @@ public final class CompiledVar extends AbstractVar {
 	
 	@Override
 	public void unify(Term term) {
-		throw new UnsupportedOperationException();
+		throw new UncompiledTermException(this);
 	}
 	
 	@Override
-	public Term preCompile(Environment env, CompilationContext context) {
+	public Term preCompile(Environment env) {
 		return this;
 	}
 
 	@Override
-	public Term prepareForQuery(CompilationContext context) {
-		throw new UnsupportedOperationException();
+	public Term prepareForQuery(Environment env) {
+		throw new UncompiledTermException(this);
 	}
 
 	@Override
-	public Term prepareForFrame(CompilationContext context) {
-		return context.compileForFrame(this);
+	public Term prepareForFrame(Environment env) {
+		return env.compileForFrame(this);
 	}
 	
 }

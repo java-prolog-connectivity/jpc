@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.jpc.engine.prolog.PrologEngine;
+import org.jpc.query.Solution;
 import org.jpc.term.Atom;
 import org.jpc.term.IntegerTerm;
 import org.jpc.term.Term;
@@ -45,7 +46,14 @@ public class LogtalkSideApiTest {
 		Fixture2.y = null;
 	}
 	
+	public static void unify(Term term1, Term term2) {
+		term1.unify(term2);
+	}
 	
+	public static void unify(Term term1, Term term2, Term term3) {
+		term1.unify(term2);
+		term2.unify(term3);
+	}
 	
 	/* ********************************************************************************************************************************
 	 * Testing linguistic symbiosis.
@@ -321,5 +329,42 @@ public class LogtalkSideApiTest {
 		PrologEngine prologEngine = defaultPrologEngine().query("prolog_engines::this_engine(E)").<PrologEngine>selectObject("E").oneSolutionOrThrow();
 		assertNotNull(prologEngine);
 	}
+	
+	@Test
+	public void testSimpleUnify() {
+		Term term = defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest'])::unify(term(x), term(V))").oneSolutionOrThrow().get("V");
+		assertEquals(new Atom("x"), term);
+		term = defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest'])::unify(term(V), term(x))").oneSolutionOrThrow().get("V");
+		assertEquals(new Atom("x"), term);
+	}
+	
+	@Test
+	public void testUnifyThreeVars() {
+		Term term;
+		Solution solution;
+		solution = defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest'])::unify(term(x), term(V), term(W))").oneSolutionOrThrow();
+		term = solution.get("V");
+		assertEquals(new Atom("x"), term);
+		term = solution.get("W");
+		assertEquals(new Atom("x"), term);
+		
+		solution = defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest'])::unify(term(V), term(x), term(W))").oneSolutionOrThrow();
+		term = solution.get("V");
+		assertEquals(new Atom("x"), term);
+		term = solution.get("W");
+		assertEquals(new Atom("x"), term);
+		
+		solution = defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest'])::unify(term(V), term(W), term(x))").oneSolutionOrThrow();
+		term = solution.get("V");
+		assertEquals(new Atom("x"), term);
+		term = solution.get("W");
+		assertEquals(new Atom("x"), term);
+		
+		solution = defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest'])::unify(term(x), term(W), term(x))").oneSolutionOrThrow();
+		term = solution.get("W");
+		assertEquals(new Atom("x"), term);
+	}
+	
+	
 	
 }
