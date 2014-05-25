@@ -62,6 +62,30 @@
 :- end_object.
 
 
+:- object(type(_PackageNames,_ClassNameComponents),
+	imports(jobject)).
+
+:- end_object.
+
+
+:- object(type(_PackageNames,_ClassNameComponents, _ActualTypeArguments, _OwnerType),
+	imports(jobject)).
+
+:- end_object.
+
+
+:- object(array(_ComponentType),
+	imports(jobject)).
+
+:- end_object.
+
+
+:- object(variable_type(_Name, _GenericDeclaration, _UpperBounds, _LowerBounds),
+	imports(jobject)).
+
+:- end_object.
+
+
 :- object([_| _],
 	imports(jobject)).
 
