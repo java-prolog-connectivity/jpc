@@ -51,6 +51,9 @@
 	
 	return_specifier([return(Ret)|Rest],Rest,Ret).
 		
+	:- public(invoke/2).
+	invoke(Receiver, Message) :-
+		invoke(Receiver, Message, _).
 		
 	:- public(invoke/3).
 	invoke(Receiver, Message, Output) :-
