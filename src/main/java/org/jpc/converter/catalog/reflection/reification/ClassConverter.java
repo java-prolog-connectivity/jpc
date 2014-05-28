@@ -82,4 +82,15 @@ public class ClassConverter implements ToTermConverter<Class<?>, Compound>, From
 		return getRawClass(term, jpc);
 	}
 	
+	
+	public static class ShortNotationClassConverter implements FromTermConverter<Compound, Class<?>> {
+
+		@Override
+		public Class<?> fromTerm(Compound term, Type targetType, Jpc jpc) {
+			String className = ((Atom)term.arg(1)).getName();
+			return ReflectiveClass.classForName(className);
+		}
+		
+	}
+	
 }

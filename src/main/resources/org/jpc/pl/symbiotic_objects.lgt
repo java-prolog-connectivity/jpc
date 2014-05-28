@@ -62,6 +62,12 @@
 :- end_object.
 
 
+:- object(type(_FullyQualifiedName),
+	imports(jobject)).
+
+:- end_object.
+
+
 :- object(type(_PackageNames,_ClassNameComponents),
 	imports(jobject)).
 

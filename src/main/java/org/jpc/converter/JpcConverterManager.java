@@ -2,7 +2,7 @@ package org.jpc.converter;
 
 import static java.util.Arrays.asList;
 import static org.jpc.converter.catalog.reflection.reification.ReificationConstants.ARRAY_FUNCTOR_NAME;
-import static org.jpc.converter.catalog.reflection.reification.ReificationConstants.STATIC_CLASS_FUNCTOR_NAME;
+import static org.jpc.converter.catalog.reflection.reification.ReificationConstants.CLASS_FUNCTOR_NAME;
 import static org.jpc.converter.catalog.reflection.reification.ReificationConstants.TYPE_FUNCTOR_NAME;
 import static org.jpc.converter.catalog.reflection.reification.ReificationConstants.TYPE_VARIABLE_FUNCTOR_NAME;
 
@@ -67,6 +67,7 @@ import org.jpc.converter.catalog.reflection.ReflectiveClassConverter;
 import org.jpc.converter.catalog.reflection.ReflectiveClassConverter.ShortNotationReflectiveClassConverter;
 import org.jpc.converter.catalog.reflection.ReflectiveObjectConverter;
 import org.jpc.converter.catalog.reflection.reification.ClassConverter;
+import org.jpc.converter.catalog.reflection.reification.ClassConverter.ShortNotationClassConverter;
 import org.jpc.converter.catalog.reflection.reification.GenericArrayTypeToTermConverter;
 import org.jpc.converter.catalog.reflection.reification.ParameterizedTypeConverter;
 import org.jpc.converter.catalog.reflection.reification.TermToArrayTypeConverter;
@@ -118,9 +119,10 @@ public class JpcConverterManager extends JGumConverterManager {
 		converterManager.register(new TermSpecifierConverter(), new Functor(TermSpecifierConverter.TERM_SPECIFIER_FUNCTOR_NAME, 1).asTerm());
 		
 		converterManager.register(new ReflectiveObjectConverter(), new Functor(ReflectiveObjectConverter.REFLECTIVE_OBJECT_FUNCTOR_NAME, 1).asTerm());
-		converterManager.register(new ReflectiveClassConverter(), new Functor(STATIC_CLASS_FUNCTOR_NAME, 2).asTerm());
-		converterManager.register(new ShortNotationReflectiveClassConverter(), new Functor(STATIC_CLASS_FUNCTOR_NAME, 1).asTerm());
+		converterManager.register(new ReflectiveClassConverter(), new Functor(CLASS_FUNCTOR_NAME, 2).asTerm());
+		converterManager.register(new ShortNotationReflectiveClassConverter(), new Functor(CLASS_FUNCTOR_NAME, 1).asTerm());
 		converterManager.register(new ClassConverter(), new Functor(TYPE_FUNCTOR_NAME, 2).asTerm());
+		converterManager.register(new ShortNotationClassConverter(), new Functor(TYPE_FUNCTOR_NAME, 1).asTerm());
 		converterManager.register(new ParameterizedTypeConverter(), new Functor(TYPE_FUNCTOR_NAME, 4).asTerm());
 		converterManager.register(new TermToArrayTypeConverter(), new Functor(ARRAY_FUNCTOR_NAME, 1).asTerm());
 		converterManager.register(new GenericArrayTypeToTermConverter());

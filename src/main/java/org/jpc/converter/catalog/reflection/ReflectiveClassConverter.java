@@ -1,7 +1,7 @@
 package org.jpc.converter.catalog.reflection;
 
 import static java.util.Arrays.asList;
-import static org.jpc.converter.catalog.reflection.reification.ReificationConstants.STATIC_CLASS_FUNCTOR_NAME;
+import static org.jpc.converter.catalog.reflection.reification.ReificationConstants.CLASS_FUNCTOR_NAME;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -28,8 +28,9 @@ public class ReflectiveClassConverter implements ToTermConverter<ReflectiveClass
 		List<String> packageFragmentNames = new ArrayList<>(asList(dotSplitted));
 		String classPart = packageFragmentNames.remove(packageFragmentNames.size() - 1);
 		List<String> classFragmentNames = asList(classPart.split("[$]"));
-		return jpc.toCompound(STATIC_CLASS_FUNCTOR_NAME, asList(packageFragmentNames, classFragmentNames));
+		return jpc.toCompound(CLASS_FUNCTOR_NAME, asList(packageFragmentNames, classFragmentNames));
 	}
+	
 	
 	public static class ShortNotationReflectiveClassConverter implements FromTermConverter<Compound, ReflectiveClass<?>> {
 
