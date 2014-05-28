@@ -80,7 +80,13 @@
 :- end_object.
 
 
-:- object(variable_type(_Name, _GenericDeclaration, _UpperBounds, _LowerBounds),
+:- object(variable_type(_Name, _GenericDeclaration, _UpperBounds),
+	imports(jobject)).
+
+:- end_object.
+
+
+:- object(variable_type(_UpperBounds, _LowerBounds),
 	imports(jobject)).
 
 :- end_object.

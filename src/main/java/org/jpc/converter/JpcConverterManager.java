@@ -70,7 +70,6 @@ import org.jpc.converter.catalog.reflection.reification.ClassConverter;
 import org.jpc.converter.catalog.reflection.reification.GenericArrayTypeToTermConverter;
 import org.jpc.converter.catalog.reflection.reification.ParameterizedTypeConverter;
 import org.jpc.converter.catalog.reflection.reification.TermToArrayTypeConverter;
-import org.jpc.converter.catalog.reflection.reification.TermToVariableTypeConverter;
 import org.jpc.converter.catalog.reflection.reification.TypeNameFunctorConverter;
 import org.jpc.converter.catalog.reflection.reification.TypeVariableToTermConverter;
 import org.jpc.converter.catalog.reflection.reification.WildcardTypeToTermConverter;
@@ -125,9 +124,8 @@ public class JpcConverterManager extends JGumConverterManager {
 		converterManager.register(new ParameterizedTypeConverter(), new Functor(TYPE_FUNCTOR_NAME, 4).asTerm());
 		converterManager.register(new TermToArrayTypeConverter(), new Functor(ARRAY_FUNCTOR_NAME, 1).asTerm());
 		converterManager.register(new GenericArrayTypeToTermConverter());
-		converterManager.register(new TermToVariableTypeConverter(), new Functor(TYPE_VARIABLE_FUNCTOR_NAME, 4).asTerm());
-		converterManager.register(new TypeVariableToTermConverter());
-		converterManager.register(new WildcardTypeToTermConverter());
+		converterManager.register(new TypeVariableToTermConverter(), new Functor(TYPE_VARIABLE_FUNCTOR_NAME, 3).asTerm());
+		converterManager.register(new WildcardTypeToTermConverter(), new Functor(TYPE_VARIABLE_FUNCTOR_NAME, 2).asTerm());
 		
 		converterManager.register(new TypeNameFunctorConverter<Byte>(), new Functor(byte.class.getName(), 1).asTerm());
 		converterManager.register(new TypeNameFunctorConverter<Short>(), new Functor(short.class.getName(), 1).asTerm());
