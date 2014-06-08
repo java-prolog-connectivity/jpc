@@ -3,6 +3,7 @@ package org.jpc.engine.logtalk;
 import static org.jpc.engine.prolog.PrologEngines.defaultPrologEngine;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 import java.util.Map;
@@ -27,8 +28,13 @@ public class LogtalkSideApiTest {
 	public static class Fixture1 {
 		public static String x;
 		public static String y;
+		public static Boolean z;
 		public static Map<String,String> map;
 		public static List<Entry<String,Integer>> entryList;
+		
+		public static long whatIsTheAnswer() {
+			return 42;
+		}
 	}
 	
 	public static class Fixture2 {
@@ -42,6 +48,8 @@ public class LogtalkSideApiTest {
 		Fixture1.map = null;
 		Fixture1.x = null;
 		Fixture1.y = null;
+		Fixture1.z = null;
+		
 		Fixture2.x = null;
 		Fixture2.y = null;
 	}
@@ -100,6 +108,14 @@ public class LogtalkSideApiTest {
 		assertEquals(new Atom("b"), term);
 		term = defaultPrologEngine().query("[1,2,3]::[0] return term(X)").oneSolutionOrThrow().get("X");
 		assertEquals(new IntegerTerm(1), term);
+	}
+	
+	@Test
+	public void testSetFieldAccordingToType() {
+		defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[x,true]").oneSolutionOrThrow();
+		defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[z,true]").oneSolutionOrThrow();
+		assertEquals("true", Fixture1.x);
+		assertTrue(Fixture1.z);
 	}
 	
 	@Test
@@ -224,12 +240,13 @@ public class LogtalkSideApiTest {
      **********************************************************************************************************************************
      */
 	
+	
 	@Test
 	public void testInvoke() {
 		Term term = defaultPrologEngine().query("java::invoke([a:1,b:2], get('a'), term(X))").oneSolutionOrThrow().get("X");
 		assertEquals(new IntegerTerm(1), term);
 	}
-
+	
 	@Test
 	public void testSetAndGetField() {
 		defaultPrologEngine().query("java::set_field(class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1']),x,'hello')").oneSolutionOrThrow();
