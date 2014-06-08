@@ -8,7 +8,7 @@ import org.jpc.term.Atom;
 public class StringTypeSolver implements TypeSolver<String> {
 
 	@Override
-	public Type getType(String object) {
+	public Type inferType(String object) {
 		return Atom.class;
 	}
 

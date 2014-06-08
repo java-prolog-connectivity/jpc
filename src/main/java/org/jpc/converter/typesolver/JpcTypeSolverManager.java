@@ -67,13 +67,13 @@ public class JpcTypeSolverManager extends JGumTypeSolverManager {
 	}
 
 	@Override
-	public Type getType(Object key, Object object) {
+	public Type inferType(Object key, Object object) {
 		if(object instanceof Term) {
 			try {
 				return evalQuantifiedTermTypeSolver((Term)object); //the current implementation does not take into consideration the key for finding type solvers in the embedded Prolog database.
 			} catch(UnrecognizedObjectException e) {}
 		}
-		return super.getType(key, object);
+		return super.inferType(key, object);
 	}
 	
 	public void register(TypeSolver<?>  typeSolver, Term term) {
@@ -100,7 +100,7 @@ public class JpcTypeSolverManager extends JGumTypeSolverManager {
 				Term unifiedTerm = term.replaceVariables(solution);
 				TypeSolver typeSolver = (TypeSolver)((JRef)solution.get(typeSolverVarName)).getReferent();
 				try {
-					type = typeSolver.getType(term);
+					type = typeSolver.inferType(term);
 				} catch(UnrecognizedObjectException e) {} //just try with the next converter.
 			}
 			query.close();

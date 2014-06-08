@@ -53,7 +53,7 @@ public abstract class Jpc extends JConverter {
 	 * @param object the object which conversion target type to infer.
 	 * @return the inferred type.
 	 */
-	public abstract Type getType(Object object);
+	public abstract Type inferType(Object object);
 
 	public abstract boolean handleError(Term errorTerm, Term goal);
 

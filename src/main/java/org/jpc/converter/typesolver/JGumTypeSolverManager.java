@@ -76,7 +76,7 @@ public class JGumTypeSolverManager extends TypeSolverManager {
 	}
 	
 	@Override
-	public Type getType(Object key, Object object) {
+	public Type inferType(Object key, Object object) {
 		Category sourceTypeCategory = jgum.forClass(object.getClass());
 		List<TypeSolverChain<?>> typeSolverChains = sourceTypeCategory.<TypeSolverChain<?>>bottomUpProperties(key);
 		TypeSolverChain<?> chain = new TypeSolverChain(typeSolverChains);

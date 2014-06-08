@@ -10,7 +10,7 @@ import org.jpc.term.Compound;
 public class ListTypeSolver implements TypeSolver<Compound> {
 
 	@Override
-	public Type getType(Compound term) {
+	public Type inferType(Compound term) {
 		if(term.isList())
 			return List.class;
 		throw new UnrecognizedObjectException();

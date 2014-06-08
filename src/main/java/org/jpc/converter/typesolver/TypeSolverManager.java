@@ -13,10 +13,10 @@ public abstract class TypeSolverManager {
 	
 	public abstract void register(Object typeSolverKey, TypeSolver<?>  typeSolver);
 	
-	public Type getType(Object object) {
-		return getType(DEFAULT_KEY, object);
+	public Type inferType(Object object) {
+		return inferType(DEFAULT_KEY, object);
 	}
 	
-	public abstract Type getType(Object typeSolverKey, Object object);
+	public abstract Type inferType(Object typeSolverKey, Object object);
 
 }

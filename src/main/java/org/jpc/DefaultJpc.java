@@ -109,7 +109,7 @@ public class DefaultJpc extends Jpc {
 		}
 		
 		try {
-			Type typeSolverType = getType(term);
+			Type typeSolverType = inferType(term);
 			if(typeSolverType != null) {
 				try {
 					targetType = TypeWrapper.wrap(typeSolverType).mostSpecificType(targetType); //will throw an exception if the types are not compatible.
@@ -154,7 +154,7 @@ public class DefaultJpc extends Jpc {
 		}
 		
 		try {
-			Type typeSolverType = getType(object);
+			Type typeSolverType = inferType(object);
 			if(typeSolverType != null) {
 				try {
 					targetType = (Class) TypeWrapper.wrap(typeSolverType).mostSpecificType(targetType); //will throw an exception if the types are not compatible.
@@ -192,8 +192,8 @@ public class DefaultJpc extends Jpc {
 	}
 
 	@Override
-	public Type getType(Object object) {
-		return getType(TypeSolverManager.DEFAULT_KEY, object);
+	public Type inferType(Object object) {
+		return inferType(TypeSolverManager.DEFAULT_KEY, object);
 	}
 	
 	/**
@@ -202,8 +202,8 @@ public class DefaultJpc extends Jpc {
 	 * @param object the object which conversion target type to recommend.
 	 * @return the recommended type.
 	 */
-	private Type getType(Object key, Object object) {
-		return typeSolverManager.getType(TypeSolverManager.DEFAULT_KEY, object);
+	private Type inferType(Object key, Object object) {
+		return typeSolverManager.inferType(TypeSolverManager.DEFAULT_KEY, object);
 	}
 	
 	@Override

@@ -16,7 +16,7 @@ public class TypeSolverChain<T> extends ChainOfResponsibility<TypeSolver<T>, Typ
 	}
 	
 //	@Override
-//	public Type getType(T object) {
+//	public Type inferType(T object) {
 //		return apply(new TypeSolverChainEvaluator<T>(object));
 //	}
 

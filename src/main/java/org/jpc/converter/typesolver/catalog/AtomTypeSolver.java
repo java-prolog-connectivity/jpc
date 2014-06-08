@@ -9,7 +9,7 @@ import org.jpc.term.Atom;
 public class AtomTypeSolver implements TypeSolver<Atom> {
 
 	@Override
-	public Type getType(Atom atom) {
+	public Type inferType(Atom atom) {
 		if(atom.isList())
 			return List.class;
 		else if(atom.isBoolean())

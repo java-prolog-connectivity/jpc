@@ -14,6 +14,6 @@ public interface TypeSolver<T> {
 	 * @param object the object which conversion target type to recommend.
 	 * @return the recommended type.
 	 */
-	public abstract Type getType(T object);
+	public abstract Type inferType(T object);
 	
 }

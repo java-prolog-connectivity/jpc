@@ -12,7 +12,7 @@ import org.jpc.term.IntegerTerm;
 public class NumberTypeSolver implements TypeSolver<Number> {
 
 	@Override
-	public Type getType(Number number) {
+	public Type inferType(Number number) {
 		Class numberClass = number.getClass();
 		if(numberClass.equals(Long.class) || numberClass.equals(Integer.class) || numberClass.equals(Short.class) || numberClass.equals(Byte.class) || 
 				numberClass.equals(BigInteger.class) || numberClass.equals(AtomicInteger.class) || numberClass.equals(AtomicLong.class)) {

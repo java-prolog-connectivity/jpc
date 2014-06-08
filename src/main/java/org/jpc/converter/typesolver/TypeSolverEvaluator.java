@@ -14,7 +14,7 @@ public class TypeSolverEvaluator<T> implements Function<TypeSolver<T>, Type> {
 
 	@Override
 	public Type apply(TypeSolver<T> typeSolver) {
-		return typeSolver.getType(object);
+		return typeSolver.inferType(object);
 	}
 	
 }

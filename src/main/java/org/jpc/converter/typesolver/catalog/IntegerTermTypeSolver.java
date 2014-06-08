@@ -8,7 +8,7 @@ import org.jpc.term.IntegerTerm;
 public class IntegerTermTypeSolver implements TypeSolver<IntegerTerm> {
 
 	@Override
-	public Type getType(IntegerTerm integerTerm) {
+	public Type inferType(IntegerTerm integerTerm) {
 		return Long.class;
 	}
 

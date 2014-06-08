@@ -22,42 +22,42 @@ public class TypeSolverTest {
 	
 	class UnrecognizedObjectExceptionTypeSolver implements TypeSolver<List> {
 		@Override
-		public Type getType(List object) {
+		public Type inferType(List object) {
 			throw new UnrecognizedObjectException();
 		}
 	}
 	
 	class NonGenericTypeSolver implements TypeSolver {
 		@Override
-		public Type getType(Object object) {
+		public Type inferType(Object object) {
 			return ListClass.class;
 		}
 	}
 	
 	class GenericListTypeSolver implements TypeSolver<List> {
 		@Override
-		public Type getType(List object) {
+		public Type inferType(List object) {
 			return ListClass.class;
 		}
 	}
 	
 	class FullGenericListTypeSolver implements TypeSolver<List<List<String>>> {
 		@Override
-		public Type getType(List object) {
+		public Type inferType(List object) {
 			return ListClass.class;
 		}
 	}
 	
 	class SingleBoundListTypeSolver<T extends List> implements TypeSolver<T> {
 		@Override
-		public Type getType(T object) {
+		public Type inferType(T object) {
 			return ListClass.class;
 		}
 	}
 	
 	class MultipleBoundsListTypeSolver<T extends Iterable & List> implements TypeSolver<T> {
 		@Override
-		public Type getType(T object) {
+		public Type inferType(T object) {
 			return ListClass.class;
 		}
 	}
@@ -67,8 +67,8 @@ public class TypeSolverTest {
 		TypeSolverManager manager = new JGumTypeSolverManager(new JGum());
 		Object key = new Object();
 		manager.register(key, new NonGenericTypeSolver());
-		assertEquals(ListClass.class, manager.getType(key, new Object()));
-		assertEquals(ListClass.class, manager.getType(key, new ArrayList()));
+		assertEquals(ListClass.class, manager.inferType(key, new Object()));
+		assertEquals(ListClass.class, manager.inferType(key, new ArrayList()));
 	}
 	
 	@Test
@@ -77,7 +77,7 @@ public class TypeSolverTest {
 		Object key = new Object();
 		manager.register(key, new NonGenericTypeSolver());
 		manager.register(key, new UnrecognizedObjectExceptionTypeSolver());
-		assertEquals(ListClass.class, manager.getType(key, new ArrayList()));
+		assertEquals(ListClass.class, manager.inferType(key, new ArrayList()));
 	}
 	
 	@Test
@@ -86,18 +86,18 @@ public class TypeSolverTest {
 		Object key = new Object();
 		manager.register(key, new UnrecognizedObjectExceptionTypeSolver());
 		try {
-			manager.getType(new Object(), new Object());
+			manager.inferType(new Object(), new Object());
 			fail();
 		} catch(UnrecognizedObjectException e) {}
 		manager.register(key, new NonGenericTypeSolver());
-		assertEquals(ListClass.class, manager.getType(key, new ArrayList()));
+		assertEquals(ListClass.class, manager.inferType(key, new ArrayList()));
 	}
 	
 	@Test
 	public void testNoTypeSolver() {
 		TypeSolverManager manager = new JGumTypeSolverManager(new JGum());
 		try {
-			manager.getType(new Object(), new Object());
+			manager.inferType(new Object(), new Object());
 			fail();
 		} catch(UnrecognizedObjectException e) {}
 	}
@@ -108,10 +108,10 @@ public class TypeSolverTest {
 		Object key = new Object();
 		manager.register(key, new GenericListTypeSolver());
 		try {
-			manager.getType(key, new Object());
+			manager.inferType(key, new Object());
 			fail();
 		} catch(UnrecognizedObjectException e) {}
-		assertEquals(ListClass.class, manager.getType(key, new ArrayList()));
+		assertEquals(ListClass.class, manager.inferType(key, new ArrayList()));
 	}
 	
 	@Test
@@ -120,10 +120,10 @@ public class TypeSolverTest {
 		Object key = new Object();
 		manager.register(key, new FullGenericListTypeSolver());
 		try {
-			manager.getType(key, new Object());
+			manager.inferType(key, new Object());
 			fail();
 		} catch(UnrecognizedObjectException e) {}
-		assertEquals(ListClass.class, manager.getType(key, new ArrayList()));
+		assertEquals(ListClass.class, manager.inferType(key, new ArrayList()));
 	}
 	
 	@Test
@@ -132,10 +132,10 @@ public class TypeSolverTest {
 		Object key = new Object();
 		manager.register(key, new SingleBoundListTypeSolver());
 		try {
-			manager.getType(key, new Object());
+			manager.inferType(key, new Object());
 			fail();
 		} catch(UnrecognizedObjectException e) {}
-		assertEquals(ListClass.class, manager.getType(key, new ArrayList()));
+		assertEquals(ListClass.class, manager.inferType(key, new ArrayList()));
 	}
 	
 	@Test
@@ -146,13 +146,13 @@ public class TypeSolverTest {
 		Object key = new Object();
 		manager.register(key, new MultipleBoundsListTypeSolver());
 		try {
-			manager.getType(key, new Object());
+			manager.inferType(key, new Object());
 			fail();
 		} catch(UnrecognizedObjectException e) {}
-		assertEquals(ListClass.class, manager.getType(key, new Vector())); //trying with a class registered before the bound type solver was added
-		assertEquals(ListClass.class, manager.getType(key, new ArrayList())); //trying with a class registered after the bound type solver was added
+		assertEquals(ListClass.class, manager.inferType(key, new Vector())); //trying with a class registered before the bound type solver was added
+		assertEquals(ListClass.class, manager.inferType(key, new ArrayList())); //trying with a class registered after the bound type solver was added
 		try {
-			manager.getType(key, new HashSet());
+			manager.inferType(key, new HashSet());
 			fail();
 		} catch(UnrecognizedObjectException e) {}
 	}

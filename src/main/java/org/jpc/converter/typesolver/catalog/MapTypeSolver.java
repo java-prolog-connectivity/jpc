@@ -18,7 +18,7 @@ public class MapTypeSolver implements TypeSolver<Compound> {
 	public static final String[] ALL_MAP_ENTRY_SEPARATORS = new String[]{DEFAULT_MAP_ENTRY_SEPARATOR, "-", "="};
 	
 	@Override
-	public Type getType(Compound term) {
+	public Type inferType(Compound term) {
 		if(term.isList()) {
 			ListTerm list = term.asList();
 			Predicate<Term> isMapEntry = new Predicate<Term>() {

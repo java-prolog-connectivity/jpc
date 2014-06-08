@@ -8,7 +8,7 @@ import org.jpc.term.FloatTerm;
 public class FloatTermTypeSolver implements TypeSolver<FloatTerm> {
 
 	@Override
-	public Type getType(FloatTerm floatTerm) {
+	public Type inferType(FloatTerm floatTerm) {
 		return Double.class;
 	}
 
