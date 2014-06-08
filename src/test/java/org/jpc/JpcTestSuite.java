@@ -6,6 +6,7 @@ import org.jpc.converter.catalog.CustomTermToObjectConversionsTest;
 import org.jpc.converter.catalog.TypedTermConversionsTest;
 import org.jpc.converter.catalog.error.ErrorConversionsTest;
 import org.jpc.converter.catalog.io.FileConversionsTest;
+import org.jpc.converter.catalog.reflection.ConstructorConversionTest;
 import org.jpc.converter.catalog.reflection.FieldResolutionConversionsTest;
 import org.jpc.converter.catalog.reflection.MethodCallConversionsTest;
 import org.jpc.converter.catalog.reflection.StaticClassConversionsTest;
@@ -19,9 +20,9 @@ import org.jpc.term.CompoundTest;
 import org.jpc.term.FloatTermTest;
 import org.jpc.term.HilogTermTest;
 import org.jpc.term.IntegerTermTest;
-import org.jpc.term.RefTermTest;
 import org.jpc.term.JRefTest;
 import org.jpc.term.ListTermTest;
+import org.jpc.term.RefTermTest;
 import org.jpc.term.SerializedTermTest;
 import org.jpc.term.VariableTest;
 import org.jpc.term.expansion.ParameterizedSymbolExpanderTest;
@@ -56,6 +57,7 @@ import org.junit.runners.Suite;
 	StaticClassConversionsTest.class,
 	TypedTermConversionsTest.class,
 	CustomTermToObjectConversionsTest.class,
+	ConstructorConversionTest.class,
 	MethodCallConversionsTest.class,
 	FieldResolutionConversionsTest.class,
 	FileConversionsTest.class,

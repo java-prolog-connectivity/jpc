@@ -62,6 +62,7 @@ import org.jpc.converter.catalog.primitive.CharacterToNumberTermConverter;
 import org.jpc.converter.catalog.primitive.NumberToNumberTermConverter;
 import org.jpc.converter.catalog.primitive.ObjectToAtomConverter;
 import org.jpc.converter.catalog.primitive.StringToNumberTermConverter;
+import org.jpc.converter.catalog.reflection.ConstructorCallConverter;
 import org.jpc.converter.catalog.reflection.MethodCallConverter;
 import org.jpc.converter.catalog.reflection.ReflectiveClassConverter;
 import org.jpc.converter.catalog.reflection.ReflectiveClassConverter.ShortNotationReflectiveClassConverter;
@@ -71,7 +72,6 @@ import org.jpc.converter.catalog.reflection.reification.ClassConverter.ShortNota
 import org.jpc.converter.catalog.reflection.reification.GenericArrayTypeToTermConverter;
 import org.jpc.converter.catalog.reflection.reification.ParameterizedTypeConverter;
 import org.jpc.converter.catalog.reflection.reification.TermToArrayTypeConverter;
-import org.jpc.converter.catalog.reflection.reification.TypeNameFunctorConverter;
 import org.jpc.converter.catalog.reflection.reification.TypeVariableToTermConverter;
 import org.jpc.converter.catalog.reflection.reification.WildcardTypeToTermConverter;
 import org.jpc.converter.catalog.serialized.FromSerializedConverter;
@@ -129,15 +129,8 @@ public class JpcConverterManager extends JGumConverterManager {
 		converterManager.register(new TypeVariableToTermConverter(), new Functor(TYPE_VARIABLE_FUNCTOR_NAME, 3).asTerm());
 		converterManager.register(new WildcardTypeToTermConverter(), new Functor(TYPE_VARIABLE_FUNCTOR_NAME, 2).asTerm());
 		
-		converterManager.register(new TypeNameFunctorConverter<Byte>(), new Functor(byte.class.getName(), 1).asTerm());
-		converterManager.register(new TypeNameFunctorConverter<Short>(), new Functor(short.class.getName(), 1).asTerm());
-		converterManager.register(new TypeNameFunctorConverter<Integer>(), new Functor(int.class.getName(), 1).asTerm());
-		converterManager.register(new TypeNameFunctorConverter<Long>(), new Functor(long.class.getName(), 1).asTerm());
-		converterManager.register(new TypeNameFunctorConverter<Float>(), new Functor(float.class.getName(), 1).asTerm());
-		converterManager.register(new TypeNameFunctorConverter<Double>(), new Functor(double.class.getName(), 1).asTerm());
-		converterManager.register(new TypeNameFunctorConverter<Character>(), new Functor(char.class.getName(), 1).asTerm());
-		converterManager.register(new TypeNameFunctorConverter<Boolean>(), new Functor(boolean.class.getName(), 1).asTerm());
 		
+		converterManager.register(new ConstructorCallConverter());
 		converterManager.register(new MethodCallConverter(), new Functor(LogtalkConstants.LOGTALK_OPERATOR, 2).asTerm());
 		converterManager.register(new SequenceConverter(), new Functor(PrologConstants.SEQUENCE_SEPARATOR, 2).asTerm());
 		
