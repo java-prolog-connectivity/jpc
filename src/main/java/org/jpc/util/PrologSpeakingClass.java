@@ -16,7 +16,7 @@ public class PrologSpeakingClass<T> extends PrologSpeakingObject {
 		return (Class<T>) getWrappedObject();
 	}
 	
-	public T newInstance(List<Term> argTerms) {
+	public T newInstance(List<? extends Term> argTerms) {
 		return invoke("new", argTerms);
 	}
 
