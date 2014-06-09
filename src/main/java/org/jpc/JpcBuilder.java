@@ -62,11 +62,12 @@ public class JpcBuilder extends JConverterBuilder {
 	private JpcConverterManager getConverterManager() {
 		return (JpcConverterManager) converterManager;
 	}
-	
-	public Jpc build() {
-		return new DefaultJpc(getConverterManager(), factoryManager, typeSolverManager, refTermManager, errorHandlerManager);
-	}
 
+	/**
+	 * Registers a converter.
+	 * @param converter the converter to register.
+	 * @return this JpcBuilder.
+	 */
 	public JpcBuilder register(JpcConverter converter) {
 		getConverterManager().register(converter);
 		return this;
@@ -80,15 +81,23 @@ public class JpcBuilder extends JConverterBuilder {
 	/**
 	 * Registers a type solver.
 	 * @param typeSolver the type solver to register.
+	 * @return this JpcBuilder.
 	 */
-	public void register(TypeSolver<?> typeSolver) {
+	public JpcBuilder register(TypeSolver<?> typeSolver) {
 		typeSolverManager.register(typeSolver);
+		return this;
 	}
 	
-	public void register(TypeSolver<?> typeSolver, Term term) {
+	public JpcBuilder register(TypeSolver<?> typeSolver, Term term) {
 		typeSolverManager.register(typeSolver, term);
+		return this;
 	}
 	
+	/**
+	 * Registers an error handler.
+	 * @param errorHandler the error handler to register.
+	 * @return this JpcBuilder.
+	 */
 	public JpcBuilder register(ErrorHandler errorHandler) {
 		errorHandlerManager.register(errorHandler);
 		return this;
@@ -99,9 +108,12 @@ public class JpcBuilder extends JConverterBuilder {
 		return this;
 	}
 	
-
 //	public JpcBuilder setPreferences(JpcPreferences preferences) {
 //		throw new NotYetImplementedException();
 //	}
+	
+	public Jpc build() {
+		return new DefaultJpc(getConverterManager(), factoryManager, typeSolverManager, refTermManager, errorHandlerManager);
+	}
 	
 }
