@@ -112,6 +112,11 @@ public class JpcBuilder extends JConverterBuilder {
 //		throw new NotYetImplementedException();
 //	}
 	
+	public JpcBuilder configure(JpcConfigurator jpcConfigurator) {
+		jpcConfigurator.configure(this);
+		return this;
+	}
+	
 	public Jpc build() {
 		return new DefaultJpc(getConverterManager(), factoryManager, typeSolverManager, refTermManager, errorHandlerManager);
 	}
