@@ -37,7 +37,7 @@ import org.jpc.converter.catalog.error.DomainErrorConverter;
 import org.jpc.converter.catalog.error.EvaluationErrorConverter;
 import org.jpc.converter.catalog.error.ExistenceErrorConverter;
 import org.jpc.converter.catalog.error.InstantiationErrorConverter;
-import org.jpc.converter.catalog.error.JExceptionConverter;
+import org.jpc.converter.catalog.error.ThrowableConverter;
 import org.jpc.converter.catalog.error.PermissionErrorConverter;
 import org.jpc.converter.catalog.error.RepresentationErrorConverter;
 import org.jpc.converter.catalog.error.ResourceErrorConverter;
@@ -178,7 +178,7 @@ public class JpcConverterManager extends JGumConverterManager {
 		
 		
 		converterManager.register(new StackTraceElementConverter());
-		converterManager.register(new JExceptionConverter());
+		converterManager.register(new ThrowableConverter());
 		
 		converterManager.register(new UnknownIsoPrologErrorConverter()); //this should be the first registered error.
 		converterManager.register(new DomainErrorConverter());

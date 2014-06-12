@@ -8,7 +8,7 @@ import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
 
-public class JExceptionConverter implements ToTermConverter<Throwable, Compound> {
+public class ThrowableConverter implements ToTermConverter<Throwable, Compound> {
 
 	public static final String JEXCEPTION_FUNCTOR_NAME = "jexception";
 	
