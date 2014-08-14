@@ -21,7 +21,7 @@ public class Solution implements Map<String,Term> {
 	
 	private PrologEngine prologEngine;
 	private Map<String, Term> allVariablesSolution;
-	private Map<String, Term> nonAnonymousVariablesSolution;
+	private Map<String, Term> nonUnderscoreVariablesSolution;
 	private Jpc context;
 	private Term errorTerm;
 	private OperatorsContext operatorsContext;
@@ -31,7 +31,7 @@ public class Solution implements Map<String,Term> {
 		this.prologEngine = prologEngine;
 		this.context = context;
 		configure(); //The original solution may be modified. 
-		nonAnonymousVariablesSolution = nonUnderscoreVariablesSolutions(allVariablesSolution);
+		nonUnderscoreVariablesSolution = nonUnderscoreVariablesSolutions(allVariablesSolution);
 	}
 	
 	private static Map<String, Term> nonUnderscoreVariablesSolutions(Map<String, Term> allVariablesSolution) {
@@ -109,7 +109,7 @@ public class Solution implements Map<String,Term> {
 		if(considerAllVariables)
 			return allVariablesSolution.size();
 		else
-			return nonAnonymousVariablesSolution.size();
+			return nonUnderscoreVariablesSolution.size();
 	}
 
 	@Override
@@ -121,7 +121,7 @@ public class Solution implements Map<String,Term> {
 		if(considerAllVariables)
 			return allVariablesSolution.isEmpty();
 		else
-			return nonAnonymousVariablesSolution.isEmpty();
+			return nonUnderscoreVariablesSolution.isEmpty();
 	}
 	
 	@Override
@@ -133,7 +133,7 @@ public class Solution implements Map<String,Term> {
 		if(considerAllVariables)
 			return allVariablesSolution.containsKey(key);
 		else
-			return nonAnonymousVariablesSolution.containsKey(key);
+			return nonUnderscoreVariablesSolution.containsKey(key);
 	}
 	
 	@Override
@@ -145,7 +145,7 @@ public class Solution implements Map<String,Term> {
 		if(considerAllVariables)
 			return allVariablesSolution.containsValue(value);
 		else
-			return nonAnonymousVariablesSolution.containsValue(value);
+			return nonUnderscoreVariablesSolution.containsValue(value);
 	}
 	
 	@Override
@@ -157,7 +157,7 @@ public class Solution implements Map<String,Term> {
 		if(considerAllVariables)
 			return allVariablesSolution.get(key);
 		else
-			return nonAnonymousVariablesSolution.get(key);
+			return nonUnderscoreVariablesSolution.get(key);
 	}
 
 	@Override
@@ -172,7 +172,7 @@ public class Solution implements Map<String,Term> {
 	public Term remove(Object key) {
 		Term term = allVariablesSolution.remove(key);
 		if(!Var.isUnderscoreVariableName((String)key))
-			nonAnonymousVariablesSolution.remove(key);
+			nonUnderscoreVariablesSolution.remove(key);
 		return term;
 	}
 
@@ -186,7 +186,7 @@ public class Solution implements Map<String,Term> {
 	@Override
 	public void clear() {
 		allVariablesSolution.clear();
-		nonAnonymousVariablesSolution.clear();
+		nonUnderscoreVariablesSolution.clear();
 	}
 
 	@Override
@@ -198,7 +198,7 @@ public class Solution implements Map<String,Term> {
 		if(considerAllVariables)
 			return allVariablesSolution.keySet();
 		else
-			return nonAnonymousVariablesSolution.keySet();
+			return nonUnderscoreVariablesSolution.keySet();
 	}
 	
 	@Override
@@ -210,7 +210,7 @@ public class Solution implements Map<String,Term> {
 		if(considerAllVariables)
 			return allVariablesSolution.values();
 		else
-			return nonAnonymousVariablesSolution.values();
+			return nonUnderscoreVariablesSolution.values();
 	}
 	
 	@Override
@@ -222,7 +222,7 @@ public class Solution implements Map<String,Term> {
 		if(considerAllVariables)
 			return allVariablesSolution.entrySet();
 		else
-			return nonAnonymousVariablesSolution.entrySet();
+			return nonUnderscoreVariablesSolution.entrySet();
 	}
 	
 	
