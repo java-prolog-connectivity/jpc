@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.minitoolbox.regex.RegExUtil;
+import org.jpc.internal.regex.RegExUtil;
 
 
 public class PrologResource extends LogicResource {

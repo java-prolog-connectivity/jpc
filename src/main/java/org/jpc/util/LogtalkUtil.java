@@ -2,7 +2,7 @@ package org.jpc.util;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.minitoolbox.commons.Preferences.getEnvironmentVarOrThrow;
+import static org.jpc.util.JpcPreferences.getEnvironmentVarOrThrow;
 
 import java.io.File;
 

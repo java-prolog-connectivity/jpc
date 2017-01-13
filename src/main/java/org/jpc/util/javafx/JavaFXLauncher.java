@@ -1,4 +1,4 @@
-package org.jpc.util;
+package org.jpc.util.javafx;
 
 
 import javafx.application.Application;

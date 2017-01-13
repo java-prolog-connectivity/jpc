@@ -8,13 +8,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.jconverter.converter.ConversionException;
+import org.jconverter.util.typewrapper.TypeWrapper;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
 import org.jpc.converter.typesolver.catalog.MapTypeSolver;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
-import org.minitoolbox.reflection.typewrapper.TypeWrapper;
+
 
 public abstract class MapEntryConverter<K,V> {
 

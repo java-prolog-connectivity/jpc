@@ -1,5 +1,7 @@
 package org.jpc.converter.catalog.map;
 
+import static org.jpc.internal.reflection.ReflectionUtil.parameterizedType;
+
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +9,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.jconverter.converter.ConversionException;
+import org.jconverter.util.typewrapper.TypeWrapper;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
@@ -16,8 +19,7 @@ import org.jpc.converter.typesolver.catalog.MapTypeSolver;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
-import org.minitoolbox.reflection.reification.ParameterizedTypeImpl;
-import org.minitoolbox.reflection.typewrapper.TypeWrapper;
+
 
 public abstract class MapConverter {
 
@@ -81,7 +83,7 @@ public abstract class MapConverter {
 				throw new ConversionException();
 			}
 			Type[] mapTypes = TypeWrapper.wrap(type).as(Map.class).getActualTypeArgumentsOrUpperBounds();
-			Type entryType = new ParameterizedTypeImpl(mapTypes, Map.class, Map.Entry.class);
+			Type entryType = parameterizedType(mapTypes, Map.class, Map.Entry.class);
 			
 			for(Term termMember : listMembers) {
 				Entry<?,?> entry = new TermToMapEntryConverter(entrySeparator).fromTerm((Compound)termMember, entryType, context);

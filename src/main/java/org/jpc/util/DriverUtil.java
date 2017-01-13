@@ -13,8 +13,8 @@ import java.util.Set;
 
 import org.jpc.engine.listener.DriverStateListener;
 import org.jpc.engine.prolog.driver.PrologEngineDriver;
-import org.minitoolbox.reflection.ReflectionUtil;
-import org.minitoolbox.reflection.reflections.ReflectionsUtil;
+import org.jpc.internal.reflection.ReflectionUtil;
+import org.jpc.internal.reflection.ReflectionsUtil;
 import org.reflections.Reflections;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;

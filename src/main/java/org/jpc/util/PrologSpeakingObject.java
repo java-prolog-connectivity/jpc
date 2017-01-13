@@ -12,7 +12,7 @@ import org.jpc.JpcException;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
-import org.minitoolbox.reflection.ReflectiveObject;
+import org.jpc.util.reification.ReflectiveObject;
 
 import com.google.common.reflect.TypeToken;
 

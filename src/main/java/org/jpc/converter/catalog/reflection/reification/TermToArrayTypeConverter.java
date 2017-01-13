@@ -1,5 +1,7 @@
 package org.jpc.converter.catalog.reflection.reification;
 
+import static org.jpc.internal.reflection.ReflectionUtil.genericArrayType;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 
@@ -7,7 +9,6 @@ import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
-import org.minitoolbox.reflection.reification.GenericArrayTypeImpl;
 
 public class TermToArrayTypeConverter<T extends Type> implements FromTermConverter<Compound, T> {
 
@@ -18,7 +19,7 @@ public class TermToArrayTypeConverter<T extends Type> implements FromTermConvert
 		if(componentType instanceof Class)
 			return (T) Array.newInstance((Class<?>) componentType, 0).getClass();
 		else
-			return (T) new GenericArrayTypeImpl(componentType);
+			return (T) genericArrayType(componentType);
 	}
 
 }

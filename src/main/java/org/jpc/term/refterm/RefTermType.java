@@ -1,16 +1,17 @@
 package org.jpc.term.refterm;
 
+import static org.jpc.internal.gc.ReferenceType.SOFT;
+import static org.jpc.internal.gc.ReferenceType.STRONG;
+import static org.jpc.internal.gc.ReferenceType.WEAK;
 import static org.jpc.term.refterm.RefTermType.Opacity.BLACK_BOX;
 import static org.jpc.term.refterm.RefTermType.Opacity.WHITE_BOX;
-import static org.minitoolbox.gc.ReferenceType.SOFT;
-import static org.minitoolbox.gc.ReferenceType.STRONG;
-import static org.minitoolbox.gc.ReferenceType.WEAK;
 
 import org.jpc.Jpc;
 import org.jpc.JpcException;
+import org.jpc.internal.gc.ReferenceType;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
-import org.minitoolbox.gc.ReferenceType;
+
 
 public class RefTermType {
 

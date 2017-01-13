@@ -7,8 +7,8 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.jpc.internal.io.FileUtil;
 import org.jpc.resource.LogicResource;
-import org.minitoolbox.io.FileUtil;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 import org.reflections.util.ConfigurationBuilder;

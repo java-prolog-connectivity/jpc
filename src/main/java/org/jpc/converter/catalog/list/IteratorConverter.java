@@ -1,17 +1,19 @@
 package org.jpc.converter.catalog.list;
 
+import static org.jpc.internal.reflection.ReflectionUtil.parameterizedType;
+
 import java.lang.reflect.Type;
 import java.util.Iterator;
 import java.util.List;
 
 import org.jconverter.converter.ConversionException;
+import org.jconverter.util.typewrapper.TypeWrapper;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
-import org.minitoolbox.reflection.reification.ParameterizedTypeImpl;
-import org.minitoolbox.reflection.typewrapper.TypeWrapper;
+
 
 public class IteratorConverter<T extends Term> implements ToTermConverter<Iterator<?>, T>, FromTermConverter<T, Iterator<?>> {
 
@@ -37,7 +39,7 @@ public class IteratorConverter<T extends Term> implements ToTermConverter<Iterat
 		else
 			componentType = Object.class;
 		
-		Type listType = new ParameterizedTypeImpl(new Type[]{componentType}, null, List.class);
+		Type listType = parameterizedType(new Type[]{componentType}, null, List.class);
 		
 		List list = (List) new CollectionConverter().fromTerm(listTerm, listType, context);
 		return list.iterator();

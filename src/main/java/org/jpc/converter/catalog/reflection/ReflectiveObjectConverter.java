@@ -9,7 +9,7 @@ import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
-import org.minitoolbox.reflection.ReflectiveObject;
+import org.jpc.util.reification.ReflectiveObject;
 
 public class ReflectiveObjectConverter implements ToTermConverter<ReflectiveObject, Compound>, FromTermConverter<Compound, ReflectiveObject> {
 

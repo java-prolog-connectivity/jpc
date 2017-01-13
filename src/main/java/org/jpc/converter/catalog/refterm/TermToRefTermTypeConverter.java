@@ -1,9 +1,9 @@
 package org.jpc.converter.catalog.refterm;
 
 import static org.jpc.engine.prolog.ReturnSpecifierConstants.BB_REF_TERM_FLAG;
-import static org.jpc.engine.prolog.ReturnSpecifierConstants.WB_REF_TERM_FLAG;
 import static org.jpc.engine.prolog.ReturnSpecifierConstants.SOFT_REF_FLAG;
 import static org.jpc.engine.prolog.ReturnSpecifierConstants.STRONG_REF_FLAG;
+import static org.jpc.engine.prolog.ReturnSpecifierConstants.WB_REF_TERM_FLAG;
 import static org.jpc.engine.prolog.ReturnSpecifierConstants.WEAK_REF_FLAG;
 
 import java.lang.reflect.Type;
@@ -11,10 +11,10 @@ import java.lang.reflect.Type;
 import org.jpc.Jpc;
 import org.jpc.JpcException;
 import org.jpc.converter.FromTermConverter;
+import org.jpc.internal.gc.ReferenceType;
 import org.jpc.term.Compound;
 import org.jpc.term.refterm.RefTermType;
 import org.jpc.term.refterm.RefTermType.Opacity;
-import org.minitoolbox.gc.ReferenceType;
 
 public class TermToRefTermTypeConverter implements FromTermConverter<Compound, RefTermType> {
 

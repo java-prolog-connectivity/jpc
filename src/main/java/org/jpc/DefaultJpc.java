@@ -11,6 +11,8 @@ import org.jconverter.converter.Converter;
 import org.jconverter.converter.ConverterEvaluator;
 import org.jconverter.factory.FactoryManager;
 import org.jconverter.factory.JGumFactoryManager;
+import org.jconverter.util.IncompatibleTypesException;
+import org.jconverter.util.typewrapper.TypeWrapper;
 import org.jgum.JGum;
 import org.jpc.converter.FromTermConverterAdapter;
 import org.jpc.converter.JpcConverterManager;
@@ -31,8 +33,7 @@ import org.jpc.term.NumberTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
 import org.jpc.term.refterm.RefTermManager;
-import org.minitoolbox.reflection.IncompatibleTypesException;
-import org.minitoolbox.reflection.typewrapper.TypeWrapper;
+
 
 public class DefaultJpc extends Jpc {
 	

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.jpc.Jpc;
 import org.jpc.term.Term;
-import org.minitoolbox.reflection.ReflectiveClass;
+import org.jpc.util.reification.ReflectiveClass;
 
 public class PrologSpeakingClass<T> extends PrologSpeakingObject {
 

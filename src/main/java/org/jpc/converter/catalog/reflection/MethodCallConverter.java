@@ -17,7 +17,7 @@ import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 import org.jpc.util.PrologSpeakingClass;
 import org.jpc.util.PrologSpeakingObject;
-import org.minitoolbox.reflection.ReflectiveClass;
+import org.jpc.util.reification.ReflectiveClass;
 
 public class MethodCallConverter<T> implements FromTermConverter<Compound, T> {
 

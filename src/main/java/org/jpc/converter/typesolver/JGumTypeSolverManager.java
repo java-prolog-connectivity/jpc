@@ -5,14 +5,14 @@ import static java.util.Arrays.asList;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import org.jconverter.util.TypeUtil;
+import org.jconverter.util.typewrapper.TypeWrapper;
+import org.jconverter.util.typewrapper.VariableTypeWrapper;
 import org.jgum.JGum;
 import org.jgum.category.CategorizationListener;
 import org.jgum.category.Category;
 import org.jgum.category.type.TypeCategory;
 import org.jpc.converter.typesolver.TypeSolverChainEvaluator.NonRedundantTypeSolverEvaluator;
-import org.minitoolbox.reflection.TypeUtil;
-import org.minitoolbox.reflection.typewrapper.TypeWrapper;
-import org.minitoolbox.reflection.typewrapper.VariableTypeWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

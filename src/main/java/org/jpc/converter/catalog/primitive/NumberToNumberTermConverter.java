@@ -6,11 +6,12 @@ import org.jconverter.converter.ConversionException;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
+import org.jpc.internal.reflection.ReflectionUtil;
 import org.jpc.term.FloatTerm;
 import org.jpc.term.IntegerTerm;
 import org.jpc.term.NumberTerm;
 import org.jpc.term.Term;
-import org.minitoolbox.reflection.ReflectionUtil;
+
 
 public class NumberToNumberTermConverter<T extends Number, U extends NumberTerm> implements ToTermConverter<T, U>, FromTermConverter<U, T> {
 

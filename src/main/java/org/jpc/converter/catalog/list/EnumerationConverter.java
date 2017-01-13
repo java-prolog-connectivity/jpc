@@ -1,17 +1,19 @@
 package org.jpc.converter.catalog.list;
 
+import static org.jpc.internal.reflection.ReflectionUtil.parameterizedType;
+
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
 import org.jconverter.converter.ConversionException;
+import org.jconverter.util.typewrapper.TypeWrapper;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Term;
-import org.minitoolbox.reflection.reification.ParameterizedTypeImpl;
-import org.minitoolbox.reflection.typewrapper.TypeWrapper;
+
 
 public class EnumerationConverter<T extends Term> implements ToTermConverter<Enumeration<?>, T>, FromTermConverter<T, Enumeration<?>> {
 
@@ -31,7 +33,7 @@ public class EnumerationConverter<T extends Term> implements ToTermConverter<Enu
 			throw new ConversionException();
 		}
 		
-		Type listType = new ParameterizedTypeImpl(new Type[]{elementType}, null, List.class);
+		Type listType = parameterizedType(new Type[]{elementType}, null, List.class);
 		List collection = context.fromTerm(listTerm, listType);
 		return Collections.enumeration(collection);
 	}

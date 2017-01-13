@@ -8,15 +8,15 @@ import java.lang.ref.WeakReference;
 
 import org.jpc.JpcException;
 import org.jpc.engine.prolog.OperatorsContext;
+import org.jpc.internal.gc.CleanableSoftReference;
+import org.jpc.internal.gc.CleanableWeakReference;
+import org.jpc.internal.gc.ReferenceType;
+import org.jpc.internal.gc.ReferencesCleaner;
 import org.jpc.salt.TermContentHandler;
 import org.jpc.term.compiler.Environment;
 import org.jpc.term.unification.NonUnifiableException;
 import org.jpc.term.visitor.TermVisitor;
 import org.jpc.util.PrologUtil;
-import org.minitoolbox.gc.CleanableSoftReference;
-import org.minitoolbox.gc.CleanableWeakReference;
-import org.minitoolbox.gc.ReferenceType;
-import org.minitoolbox.gc.ReferencesCleaner;
 
 import com.google.common.base.Function;
 

@@ -5,9 +5,9 @@ import java.util.Collection;
 import org.jpc.engine.listener.DriverStateListener;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.engine.prolog.PrologEngineInitializationException;
+import org.jpc.internal.collections.CollectionsUtil;
 import org.jpc.util.JpcPreferences;
 import org.jpc.util.engine.supported.EngineDescription;
-import org.minitoolbox.collections.CollectionsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

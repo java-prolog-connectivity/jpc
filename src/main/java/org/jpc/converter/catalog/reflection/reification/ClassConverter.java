@@ -8,16 +8,16 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jconverter.util.typewrapper.ArrayTypeWrapper;
+import org.jconverter.util.typewrapper.SingleTypeWrapper;
+import org.jconverter.util.typewrapper.TypeWrapper;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
-import org.minitoolbox.reflection.ReflectiveClass;
-import org.minitoolbox.reflection.typewrapper.ArrayTypeWrapper;
-import org.minitoolbox.reflection.typewrapper.SingleTypeWrapper;
-import org.minitoolbox.reflection.typewrapper.TypeWrapper;
+import org.jpc.util.reification.ReflectiveClass;
 
 import com.google.common.base.Joiner;
 

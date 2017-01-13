@@ -13,7 +13,7 @@ import org.jpc.converter.ToTermConverter;
 import org.jpc.converter.catalog.reflection.reification.ClassConverter;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
-import org.minitoolbox.reflection.ReflectiveClass;
+import org.jpc.util.reification.ReflectiveClass;
 
 public class ReflectiveClassConverter implements ToTermConverter<ReflectiveClass<?>, Compound>, FromTermConverter<Compound, ReflectiveClass<?>> {
 	

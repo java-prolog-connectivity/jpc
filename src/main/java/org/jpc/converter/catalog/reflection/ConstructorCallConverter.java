@@ -7,7 +7,7 @@ import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.term.Compound;
 import org.jpc.util.PrologSpeakingClass;
-import org.minitoolbox.reflection.ReflectiveClass;
+import org.jpc.util.reification.ReflectiveClass;
 
 import com.google.gson.internal.Primitives;
 

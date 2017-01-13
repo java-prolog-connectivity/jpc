@@ -7,10 +7,10 @@ import java.util.List;
 import org.jconverter.JConverter;
 import org.jconverter.converter.Converter;
 import org.jconverter.converter.TypedConverter;
+import org.jconverter.util.typewrapper.TypeWrapper;
 import org.jgum.strategy.ChainOfResponsibility;
 import org.jpc.Jpc;
 import org.jpc.term.Term;
-import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

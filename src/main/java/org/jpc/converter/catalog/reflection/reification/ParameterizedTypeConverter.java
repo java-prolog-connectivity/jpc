@@ -1,17 +1,17 @@
 package org.jpc.converter.catalog.reflection.reification;
 
+import static org.jpc.internal.reflection.ReflectionUtil.parameterizedType;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+import org.jconverter.util.typewrapper.SingleTypeWrapper;
+import org.jconverter.util.typewrapper.TypeWrapper;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Compound;
-import org.jpc.term.Term;
-import org.minitoolbox.reflection.ReflectiveClass;
-import org.minitoolbox.reflection.reification.ParameterizedTypeImpl;
-import org.minitoolbox.reflection.typewrapper.SingleTypeWrapper;
-import org.minitoolbox.reflection.typewrapper.TypeWrapper;
+
 
 public class ParameterizedTypeConverter implements ToTermConverter<ParameterizedType, Compound>, FromTermConverter<Compound, ParameterizedType> {
 
@@ -25,7 +25,7 @@ public class ParameterizedTypeConverter implements ToTermConverter<Parameterized
 		Class<?> rawClass = ClassConverter.getRawClass(term, jpc);
 		Type[] actualTypeArguments = jpc.fromTerm(term.arg(3), Type[].class);
 		Type ownerType = jpc.fromTerm(term.arg(4), Type.class);
-		return new ParameterizedTypeImpl(actualTypeArguments, ownerType, rawClass);
+		return parameterizedType(actualTypeArguments, ownerType, rawClass);
 	}
 	
 }

@@ -5,10 +5,10 @@ import java.util.Collection;
 import java.util.List;
 
 import org.jconverter.converter.ConversionException;
+import org.jconverter.util.typewrapper.TypeWrapper;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.term.Term;
-import org.minitoolbox.reflection.typewrapper.TypeWrapper;
 
 public class CollectionConverter<U extends Term,T extends Collection<?>> implements FromTermConverter<U,T> {
 	

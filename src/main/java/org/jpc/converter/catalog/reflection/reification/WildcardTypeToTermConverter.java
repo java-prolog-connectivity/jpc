@@ -6,13 +6,14 @@ import static org.jpc.converter.catalog.reflection.reification.ReificationConsta
 import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
 
+import org.jconverter.internal.reification.WildcardTypeImpl;
+import org.jconverter.util.typewrapper.TypeWrapper;
+import org.jconverter.util.typewrapper.VariableTypeWrapper;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Compound;
-import org.minitoolbox.reflection.reification.WildcardTypeImpl;
-import org.minitoolbox.reflection.typewrapper.TypeWrapper;
-import org.minitoolbox.reflection.typewrapper.VariableTypeWrapper;
+
 
 public class WildcardTypeToTermConverter implements ToTermConverter<WildcardType, Compound>, FromTermConverter<Compound, WildcardType> {
 

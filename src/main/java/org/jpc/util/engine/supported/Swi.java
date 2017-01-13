@@ -1,6 +1,7 @@
 package org.jpc.util.engine.supported;
 
-import org.minitoolbox.commons.OsUtil;
+
+import org.jpc.internal.os.OsUtil;
 
 public class Swi extends EngineDescription {
 

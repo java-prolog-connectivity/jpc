@@ -3,8 +3,8 @@ package org.jpc.engine.embedded.database;
 import java.util.Collection;
 import java.util.Objects;
 
+import org.jpc.internal.collections.CollectionsUtil;
 import org.jpc.term.Term;
-import org.minitoolbox.collections.CollectionsUtil;
 
 import com.google.common.base.Function;
 

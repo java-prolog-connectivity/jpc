@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.minitoolbox.collections.CollectionsUtil;
+import org.jpc.internal.collections.CollectionsUtil;
 
 import com.google.common.collect.Lists;
 

@@ -5,9 +5,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.jpc.engine.embedded.Clause;
 import org.jpc.term.Term;
-import org.minitoolbox.exception.NotYetImplementedException;
 
 public class Index implements IndexChangeListener {
 
@@ -87,7 +87,7 @@ public class Index implements IndexChangeListener {
 	}
 	
 	public void rebuild() {
-		throw new NotYetImplementedException();
+		throw new NotImplementedException("TODO");
 	}
 	
 	@Override

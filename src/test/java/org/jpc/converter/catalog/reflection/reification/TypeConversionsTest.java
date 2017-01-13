@@ -1,6 +1,7 @@
 package org.jpc.converter.catalog.reflection.reification;
 
 
+import static org.jpc.internal.reflection.ReflectionUtil.genericArrayType;
 import static org.junit.Assert.assertEquals;
 
 import java.lang.reflect.Type;
@@ -11,7 +12,6 @@ import org.jpc.JpcBuilder;
 import org.jpc.converter.catalog.reflection.reification.TypeConversionsTest.A.B.C;
 import org.jpc.term.Compound;
 import org.junit.Test;
-import org.minitoolbox.reflection.reification.GenericArrayTypeImpl;
 
 import com.google.common.reflect.TypeToken;
 
@@ -26,7 +26,6 @@ public class TypeConversionsTest {
 	}
 	
 
-	
 	@Test
 	public void testClassConverter() {
 		Class<?> class1 = String.class;
@@ -94,7 +93,7 @@ public class TypeConversionsTest {
 	@Test
 	public void testGenericArrayTypeConverter() {
 		Type componentType = new TypeToken<List<String>>(){}.getType();
-		Type type1 = new GenericArrayTypeImpl(componentType);
+		Type type1 = genericArrayType(componentType);
 		Compound typeTerm = jpc.toTerm(type1);
 		Type type2 = jpc.fromTerm(typeTerm);
 		assertEquals(type1, type2);
@@ -103,8 +102,8 @@ public class TypeConversionsTest {
 	@Test
 	public void testGenericArrayTypeConverter2() {
 		Type componentType = new TypeToken<List<String>>(){}.getType();
-		Type type1 = new GenericArrayTypeImpl(componentType);
-		type1 = new GenericArrayTypeImpl(type1);
+		Type type1 = genericArrayType(componentType);
+		type1 = genericArrayType(type1);
 		Compound typeTerm = jpc.toTerm(type1);
 		Type type2 = jpc.fromTerm(typeTerm);
 		assertEquals(type1, type2);

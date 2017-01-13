@@ -12,8 +12,9 @@ import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.IntegerTerm;
 import org.jpc.term.Term;
+import org.jpc.util.reification.ReflectiveClass;
 import org.junit.Test;
-import org.minitoolbox.reflection.ReflectiveClass;
+
 
 
 public class MethodCallConversionsTest {
