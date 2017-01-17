@@ -13,6 +13,8 @@ import org.jpc.converter.catalog.reflection.StaticClassConversionsTest;
 import org.jpc.converter.catalog.reflection.reification.TypeConversionsTest;
 import org.jpc.converter.typesolver.TypeSolverTest;
 import org.jpc.engine.embedded.JpcEmbeddedEngineTestSuite;
+import org.jpc.internal.reflection.ReflectionUtilTest;
+import org.jpc.internal.regex.RegExUtilTest;
 import org.jpc.salt.JpcTermWriterTest;
 import org.jpc.term.AbstractTermTest;
 import org.jpc.term.AtomTest;
@@ -30,6 +32,8 @@ import org.jpc.term.unification.UnificationTest;
 import org.jpc.util.TermJoinerTest;
 import org.jpc.util.config.EngineConfigurationDeserializerTest;
 import org.jpc.util.config.JpcConfigurationDeserializerTest;
+import org.jpc.util.reification.ReflectiveClassTest;
+import org.jpc.util.reification.ReflectiveObjectTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -61,9 +65,13 @@ import org.junit.runners.Suite;
 	MethodCallConversionsTest.class,
 	FieldResolutionConversionsTest.class,
 	FileConversionsTest.class,
+	ErrorConversionsTest.class,
 	TermJoinerTest.class,
 	EngineConfigurationDeserializerTest.class,
 	JpcConfigurationDeserializerTest.class,
-	ErrorConversionsTest.class
+	ReflectiveClassTest.class,
+	ReflectiveObjectTest.class,
+	ReflectionUtilTest.class,
+	RegExUtilTest.class
 })
 public class JpcTestSuite {}

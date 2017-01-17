@@ -1,4 +1,4 @@
-package org.jpc.internal;
+package org.jpc.internal.reflection;
 
 public class FixtureReflectionUtil {
 
