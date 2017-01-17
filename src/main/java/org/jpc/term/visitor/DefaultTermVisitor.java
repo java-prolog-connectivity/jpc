@@ -3,18 +3,18 @@ package org.jpc.term.visitor;
 import org.jpc.term.AbstractVar;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
-import org.jpc.term.FloatTerm;
-import org.jpc.term.IntegerTerm;
+import org.jpc.term.Float;
+import org.jpc.term.Integer;
 import org.jpc.term.JRef;
 
 public class DefaultTermVisitor implements TermVisitor {
 
 	@Override
-	public void visitInteger(IntegerTerm term) {
+	public void visitInteger(Integer term) {
 	}
 
 	@Override
-	public void visitFloat(FloatTerm term) {
+	public void visitFloat(Float term) {
 	}
 
 	@Override

@@ -12,7 +12,7 @@ import java.util.Map.Entry;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.query.Solution;
 import org.jpc.term.Atom;
-import org.jpc.term.IntegerTerm;
+import org.jpc.term.Integer;
 import org.jpc.term.Term;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +30,7 @@ public class LogtalkSideApiTest {
 		public static String y;
 		public static Boolean z;
 		public static Map<String,String> map;
-		public static List<Entry<String,Integer>> entryList;
+		public static List<Entry<String, java.lang.Integer>> entryList;
 		
 		public static long whatIsTheAnswer() {
 			return 42;
@@ -97,7 +97,7 @@ public class LogtalkSideApiTest {
 		Term term;
 		//[a:1,b:2] is interpreted as a map. It could also been written as [a-1,b-2] or [a=1,b=2].
 		term = defaultPrologEngine().query("[a:1,b:2]::get('a') return term(X)").oneSolutionOrThrow().get("X");
-		assertEquals(new IntegerTerm(1), term);
+		assertEquals(new Integer(1), term);
 	}
 	
 	@Test
@@ -107,7 +107,7 @@ public class LogtalkSideApiTest {
 		term = defaultPrologEngine().query("[a,b,c]::[1] return term(X)").oneSolutionOrThrow().get("X");
 		assertEquals(new Atom("b"), term);
 		term = defaultPrologEngine().query("[1,2,3]::[0] return term(X)").oneSolutionOrThrow().get("X");
-		assertEquals(new IntegerTerm(1), term);
+		assertEquals(new Integer(1), term);
 	}
 	
 	@Test
@@ -144,12 +144,12 @@ public class LogtalkSideApiTest {
 		assertEquals("2", Fixture1.map.get("y"));
 		//the type of the field is Map<String,Integer>. This determines how the term is converted.
 		defaultPrologEngine().query("class([org,jpc,engine,logtalk],['LogtalkSideApiTest','Fixture1'])::[entryList,[x=1,y=2]]").oneSolutionOrThrow();
-		Entry<String,Integer> entry = Fixture1.entryList.get(0);
+		Entry<String, java.lang.Integer> entry = Fixture1.entryList.get(0);
 		assertEquals("x", entry.getKey());
-		assertEquals(new Integer(1), entry.getValue());
+		assertEquals(new java.lang.Integer(1), entry.getValue());
 		entry = Fixture1.entryList.get(1);
 		assertEquals("y", entry.getKey());
-		assertEquals(new Integer(2), entry.getValue());
+		assertEquals(new java.lang.Integer(2), entry.getValue());
 	}
 	
 	
@@ -174,7 +174,7 @@ public class LogtalkSideApiTest {
 		Term term = defaultPrologEngine().query("jobject(abc, term(V))::toUpperCase").oneSolutionOrThrow().get("V");
 		assertEquals(new Atom("ABC"), term);
 		term = defaultPrologEngine().query("jobject([a:1,b:2], term(X))::get('a')").oneSolutionOrThrow().get("X");
-		assertEquals(new IntegerTerm(1), term);
+		assertEquals(new Integer(1), term);
 	}
 
 	
@@ -221,7 +221,7 @@ public class LogtalkSideApiTest {
 		Term term = defaultPrologEngine().query("robject(abc, term(V))::invoke(toUpperCase)").oneSolutionOrThrow().get("V");
 		assertEquals(new Atom("ABC"), term);
 		term = defaultPrologEngine().query("robject([a:1,b:2], term(X))::invoke(get('a'))").oneSolutionOrThrow().get("X");
-		assertEquals(new IntegerTerm(1), term);
+		assertEquals(new Integer(1), term);
 	}
 	
 	@Test
@@ -244,7 +244,7 @@ public class LogtalkSideApiTest {
 	@Test
 	public void testInvoke() {
 		Term term = defaultPrologEngine().query("java::invoke([a:1,b:2], get('a'), term(X))").oneSolutionOrThrow().get("X");
-		assertEquals(new IntegerTerm(1), term);
+		assertEquals(new Integer(1), term);
 	}
 	
 	@Test

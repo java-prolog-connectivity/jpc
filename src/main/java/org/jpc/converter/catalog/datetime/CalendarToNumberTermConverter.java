@@ -6,9 +6,9 @@ import java.util.Calendar;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
-import org.jpc.term.NumberTerm;
+import org.jpc.term.Number;
 
-public class CalendarToNumberTermConverter<T extends Calendar, U extends NumberTerm> implements ToTermConverter<T, U>, FromTermConverter<U, T> {
+public class CalendarToNumberTermConverter<T extends Calendar, U extends Number> implements ToTermConverter<T, U>, FromTermConverter<U, T> {
 
 	@Override
 	public U toTerm(T calendar, Class<U> termClass, Jpc context) {

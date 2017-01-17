@@ -4,18 +4,18 @@ import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.term.compiler.Environment;
 
 
-public abstract class NumberTerm extends Term {
+public abstract class Number extends Term {
 
 	/**
 	 * The number term immutable value
 	 */
-	protected final Number value;
+	protected final java.lang.Number value;
 	
-	NumberTerm(Number number) {
+	Number(java.lang.Number number) {
 		this.value = number;
 	}
 	
-	public Number getValue() {
+	public java.lang.Number getValue() {
 		return value;
 	}
 	
@@ -63,7 +63,7 @@ public abstract class NumberTerm extends Term {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		NumberTerm other = (NumberTerm) obj;
+		Number other = (Number) obj;
 		return value.equals(other.value);
 	}
 

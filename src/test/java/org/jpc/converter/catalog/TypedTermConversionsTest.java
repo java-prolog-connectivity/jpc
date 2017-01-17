@@ -7,11 +7,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.jpc.Jpc;
 import org.jpc.JpcBuilder;
-import org.jpc.converter.catalog.TypedTermToObjectConverter;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
-import org.jpc.term.FloatTerm;
-import org.jpc.term.IntegerTerm;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 import org.junit.Test;

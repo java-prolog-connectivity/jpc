@@ -27,7 +27,7 @@ import com.google.common.base.Joiner;
 public final class Compound extends Term {
 
 	private Boolean ground;
-	private Integer hash;
+	private java.lang.Integer hash;
 	/**
 	 * the id of this Compound
 	 */

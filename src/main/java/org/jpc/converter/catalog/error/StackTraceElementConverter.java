@@ -6,7 +6,7 @@ import org.jpc.Jpc;
 import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
-import org.jpc.term.IntegerTerm;
+import org.jpc.term.Integer;
 
 public class StackTraceElementConverter implements ToTermConverter<StackTraceElement, Compound> {
 
@@ -14,7 +14,7 @@ public class StackTraceElementConverter implements ToTermConverter<StackTraceEle
 	
 	@Override
 	public Compound toTerm(StackTraceElement stk, Class<Compound> termClass, Jpc jpc) {
-		return new Compound(STACK_TRACE_ELEMENT_FUNCTOR_NAME, asList(new Atom(stk.getClassName()), new Atom(stk.getMethodName()), new IntegerTerm(stk.getLineNumber())));
+		return new Compound(STACK_TRACE_ELEMENT_FUNCTOR_NAME, asList(new Atom(stk.getClassName()), new Atom(stk.getMethodName()), new Integer(stk.getLineNumber())));
 	}
 
 }

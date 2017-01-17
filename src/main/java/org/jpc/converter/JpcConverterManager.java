@@ -87,7 +87,7 @@ import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Functor;
 import org.jpc.term.JRef;
-import org.jpc.term.NumberTerm;
+import org.jpc.term.Number;
 import org.jpc.term.SerializedTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
@@ -149,13 +149,13 @@ public class JpcConverterManager extends JGumConverterManager {
 		converterManager.register(new BooleanConverter());
 		//converterManager.register(new NumberConverter());
 		converterManager.register(new NumberToNumberTermConverter());
-		class NumberToAtomConverter<T extends Number> extends ObjectToAtomConverter<T>{};
+		class NumberToAtomConverter<T extends java.lang.Number> extends ObjectToAtomConverter<T>{};
 		converterManager.register(new NumberToAtomConverter());
 		
 		converterManager.register(new CalendarToNumberTermConverter());
 		converterManager.register(new CalendarToAtomConverter());
 		converterManager.register(new XMLGregorianCalendarConverter<Atom>(){});
-		class XMLGregorianCalendarConverterToNumberTerm<T extends NumberTerm> extends XMLGregorianCalendarConverter<T>{}
+		class XMLGregorianCalendarConverterToNumberTerm<T extends Number> extends XMLGregorianCalendarConverter<T>{}
 		converterManager.register(new XMLGregorianCalendarConverterToNumberTerm());
 
 		converterManager.register(new ArrayConverter());

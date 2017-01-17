@@ -10,7 +10,7 @@ import org.jpc.converter.catalog.reflection.ReificationFixture.B;
 import org.jpc.engine.logtalk.LogtalkConstants;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
-import org.jpc.term.IntegerTerm;
+import org.jpc.term.Integer;
 import org.jpc.term.Term;
 import org.jpc.util.reification.ReflectiveClass;
 import org.junit.Test;
@@ -32,7 +32,7 @@ public class MethodCallConversionsTest {
 	@Test
 	public void testStaticMethodCall() {
 		Term classTerm = jpc.toTerm(new ReflectiveClass(B.class));
-		Term messageTerm = new Compound("m", asList(new IntegerTerm(10)));
+		Term messageTerm = new Compound("m", asList(new Integer(10)));
 		Term methodCallTerm = new Compound(LogtalkConstants.LOGTALK_OPERATOR, asList(classTerm, messageTerm));
 		assertEquals(new Long(10L), jpc.fromTerm(methodCallTerm));
 	}

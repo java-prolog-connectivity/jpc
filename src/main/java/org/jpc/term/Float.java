@@ -5,28 +5,30 @@ import org.jpc.term.visitor.TermVisitor;
 
 import com.google.common.base.Function;
 
+
 /**
- * A class reifying a logic integer term
+ * A class reifying a logic float term
  * @author scastro
  *
  */
-public final class IntegerTerm extends NumberTerm {
+public final class Float extends Number {
 
 	/**
-	 * @param   value  This IntegerTerm's (long) value
+	 * @param   value  This FloatTerm's (double) value
 	 */
-	public IntegerTerm(long value) {
+	public Float(double value) {
 		super(value);
 	}
-	
+
 	@Override
 	public void accept(TermVisitor termVisitor) {
-		termVisitor.visitInteger(this);
+		termVisitor.visitFloat(this);
 	}
 
 	@Override
 	protected void basicRead(TermContentHandler contentHandler, Function<Term, Term> termExpander) {
-		contentHandler.startIntegerTerm((Long)value);
+		contentHandler.startFloatTerm((Double)value);
 	}
+
 
 }

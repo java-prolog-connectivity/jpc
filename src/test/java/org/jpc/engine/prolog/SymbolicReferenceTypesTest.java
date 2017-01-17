@@ -16,7 +16,7 @@ import org.jpc.engine.fixture.PersonConverter;
 import org.jpc.query.Query;
 import org.jpc.query.Solution;
 import org.jpc.term.Compound;
-import org.jpc.term.IntegerTerm;
+import org.jpc.term.Integer;
 import org.jpc.term.SerializedTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
@@ -91,7 +91,7 @@ public class SymbolicReferenceTypesTest {
 		PrologEngine prologEngine = defaultPrologEngine();
 		Person person = new Person("Mary");
 		Jpc ctx = JpcBuilder.create().build();
-		Term personTerm = ctx.newRefTerm(person, new Compound("cool_student", asList(new IntegerTerm(42))));
+		Term personTerm = ctx.newRefTerm(person, new Compound("cool_student", asList(new Integer(42))));
 		prologEngine.assertz(new Compound(STUDENT_FUNCTOR_NAME, asList(personTerm)));
 		Query query = prologEngine.query(new Compound(STUDENT_FUNCTOR_NAME, asList(new Var("Person"))), ctx);
 		Person queriedPerson = query.<Person>selectObject("Person").oneSolutionOrThrow();

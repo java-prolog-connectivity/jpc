@@ -3,7 +3,7 @@ package org.jpc.engine.prolog;
 
 import org.jpc.converter.TermConvertable;
 import org.jpc.term.Atom;
-import org.jpc.term.IntegerTerm;
+import org.jpc.term.Integer;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 
@@ -49,7 +49,7 @@ public class Operator implements TermConvertable<Atom> {
 	 */
 	public static Operator asOperator(Term operatorTerm) {
 		ListTerm operatorItems = operatorTerm.asList();
-		int priority = ((IntegerTerm)operatorItems.get(0)).intValue();
+		int priority = ((Integer)operatorItems.get(0)).intValue();
 		Specifier specifier = Specifier.valueOf(((Atom)operatorItems.get(1)).getName());
 		String name = ((Atom)operatorItems.get(2)).getName();
 		Operator op = new Operator(name, specifier, priority);

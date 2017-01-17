@@ -12,8 +12,8 @@ import org.jpc.Jpc;
 import org.jpc.JpcBuilder;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
-import org.jpc.term.FloatTerm;
-import org.jpc.term.IntegerTerm;
+import org.jpc.term.Float;
+import org.jpc.term.Integer;
 import org.jpc.term.Term;
 import org.junit.Test;
 
@@ -23,18 +23,18 @@ public class ConstructorConversionTest {
 	
 	@Test
 	public void testPrimitiveConversions() {
-		Term intTerm = new Compound("int", asList(new IntegerTerm(0)));
-		assertEquals(new Integer(0), jpc.fromTerm(intTerm));
-		intTerm = new Compound("int", asList(new FloatTerm(0)));
-		assertEquals(new Integer(0), jpc.fromTerm(intTerm));
+		Term intTerm = new Compound("int", asList(new Integer(0)));
+		assertEquals(new java.lang.Integer(0), jpc.fromTerm(intTerm));
+		intTerm = new Compound("int", asList(new Float(0)));
+		assertEquals(new java.lang.Integer(0), jpc.fromTerm(intTerm));
 		
-		Term doubleTerm = new Compound("double", asList(new FloatTerm(0)));
+		Term doubleTerm = new Compound("double", asList(new Float(0)));
 		assertEquals(new Double(0), jpc.fromTerm(doubleTerm));
-		intTerm = new Compound("int", asList(new FloatTerm(0)));
-		assertEquals(new Integer(0), jpc.fromTerm(intTerm));
+		intTerm = new Compound("int", asList(new Float(0)));
+		assertEquals(new java.lang.Integer(0), jpc.fromTerm(intTerm));
 		
-		Term floatTerm = new Compound("float", asList(new FloatTerm(0)));
-		assertEquals(new Float(0), jpc.fromTerm(floatTerm));
+		Term floatTerm = new Compound("float", asList(new Float(0)));
+		assertEquals(new java.lang.Float(0), jpc.fromTerm(floatTerm));
 		
 		Term booleanTerm = new Compound("boolean", asList(new Atom("true")));
 		assertTrue((Boolean)jpc.fromTerm(booleanTerm));
@@ -53,7 +53,7 @@ public class ConstructorConversionTest {
 	
 	@Test
 	public void testArrayListConstructor() {
-		Term term = new Compound(ArrayList.class.getName(), asList(new Compound("int", asList(new IntegerTerm(0)))));
+		Term term = new Compound(ArrayList.class.getName(), asList(new Compound("int", asList(new Integer(0)))));
 		assertEquals(Collections.emptyList(), jpc.fromTerm(term));
 	}
 }

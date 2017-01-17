@@ -7,8 +7,8 @@ import static org.junit.Assert.fail;
 
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
-import org.jpc.term.FloatTerm;
-import org.jpc.term.IntegerTerm;
+import org.jpc.term.Float;
+import org.jpc.term.Integer;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
 import org.jpc.term.compiler.Environment;
@@ -62,29 +62,29 @@ public class UnificationTest {
 	
 	@Test
 	public void testSuccessfulConstantUnification() {
-		IntegerTerm iterm1 = new IntegerTerm(0);
-		IntegerTerm iterm2 = new IntegerTerm(0);
+		Integer iterm1 = new Integer(0);
+		Integer iterm2 = new Integer(0);
 		assertEquals(0, iterm1.compileAndUnifyVars(iterm2).entrySet().size());
 		allUnifications(iterm1, iterm2, iterm1);
 		
-		Compound compound1 = new Compound("x", asList(new IntegerTerm(0), new Atom("hello")));
-		Compound compound2 = new Compound("x", asList(new IntegerTerm(0), new Atom("hello")));
+		Compound compound1 = new Compound("x", asList(new Integer(0), new Atom("hello")));
+		Compound compound2 = new Compound("x", asList(new Integer(0), new Atom("hello")));
 		assertEquals(0, compound1.compileAndUnifyVars(compound2).entrySet().size());
 		allUnifications(compound1, compound2, compound1);
 	}
 	
 	@Test
 	public void testFailedConstantUnification() {
-		allFailedUnifications(new IntegerTerm(0), new FloatTerm(0));
+		allFailedUnifications(new Integer(0), new Float(0));
 		
-		Compound compound1 = new Compound("x", asList(new IntegerTerm(0), new Atom("hello")));
-		Compound compound2 = new Compound("y", asList(new IntegerTerm(0), new Atom("hello")));
+		Compound compound1 = new Compound("x", asList(new Integer(0), new Atom("hello")));
+		Compound compound2 = new Compound("y", asList(new Integer(0), new Atom("hello")));
 		allFailedUnifications(compound1, compound2);
 
-		compound2 = new Compound("x", asList(new IntegerTerm(1), new Atom("hello")));
+		compound2 = new Compound("x", asList(new Integer(1), new Atom("hello")));
 		allFailedUnifications(compound1, compound2);
 		
-		compound2 = new Compound("x", asList(new IntegerTerm(0), new Atom("hell")));
+		compound2 = new Compound("x", asList(new Integer(0), new Atom("hell")));
 		allFailedUnifications(compound1, compound2);
 	}
 	
@@ -93,18 +93,18 @@ public class UnificationTest {
 		assertEquals(0, Var.ANONYMOUS_VAR.compileAndUnifyVars(Var.ANONYMOUS_VAR).entrySet().size());
 		allUnifications(Var.ANONYMOUS_VAR, Var.ANONYMOUS_VAR, Var.ANONYMOUS_VAR);
 		
-		assertEquals(0, Var.ANONYMOUS_VAR.compileAndUnifyVars(new IntegerTerm(0)).entrySet().size());
-		allUnifications(Var.ANONYMOUS_VAR, new IntegerTerm(0), Var.ANONYMOUS_VAR);
+		assertEquals(0, Var.ANONYMOUS_VAR.compileAndUnifyVars(new Integer(0)).entrySet().size());
+		allUnifications(Var.ANONYMOUS_VAR, new Integer(0), Var.ANONYMOUS_VAR);
 		
 		assertEquals(0, Var.ANONYMOUS_VAR.compileAndUnifyVars(new Atom("hello")).entrySet().size());
 		allUnifications(Var.ANONYMOUS_VAR, new Atom("hello"), Var.ANONYMOUS_VAR);
 		
-		Compound compound = new Compound("x", asList(new IntegerTerm(0), new Atom("hello")));
+		Compound compound = new Compound("x", asList(new Integer(0), new Atom("hello")));
 		assertEquals(0, Var.ANONYMOUS_VAR.compileAndUnifyVars(compound).entrySet().size());
 		allUnifications(Var.ANONYMOUS_VAR, compound, Var.ANONYMOUS_VAR);
 		
-		assertEquals(0, new IntegerTerm(0).compileAndUnifyVars(Var.ANONYMOUS_VAR).entrySet().size());
-		allUnifications(new IntegerTerm(0), Var.ANONYMOUS_VAR, new IntegerTerm(0));
+		assertEquals(0, new Integer(0).compileAndUnifyVars(Var.ANONYMOUS_VAR).entrySet().size());
+		allUnifications(new Integer(0), Var.ANONYMOUS_VAR, new Integer(0));
 		
 		assertEquals(0, new Atom("hello").compileAndUnifyVars(Var.ANONYMOUS_VAR).entrySet().size());
 		allUnifications(new Atom("hello"), Var.ANONYMOUS_VAR, new Atom("hello"));
@@ -117,38 +117,38 @@ public class UnificationTest {
 	public void testSimpleUnification() {
 		assertTrue(Var.ANONYMOUS_VAR.termEquals(Var.ANONYMOUS_VAR.compileAndUnify(new Var("X"))));
 		assertEquals(new Var("X"), new Var("X").compileAndUnify(Var.ANONYMOUS_VAR));
-		assertEquals(new IntegerTerm(0), new Var("X").compileAndUnify(new IntegerTerm(0)));
-		assertEquals(new IntegerTerm(0), new IntegerTerm(0).compileAndUnify(new Var("X")));
+		assertEquals(new Integer(0), new Var("X").compileAndUnify(new Integer(0)));
+		assertEquals(new Integer(0), new Integer(0).compileAndUnify(new Var("X")));
 		assertEquals(new Var("X"), new Var("X").compileAndUnify(new Var("Y")));
 	}
 	
 	@Test
 	public void testCompoundUnification1() {
 		Compound compound1 = new Compound("x", asList(new Compound("x", asList(new Var("X"))), new Var("X")));
-		Compound compound2 = new Compound("x", asList(new Var("Y"), new IntegerTerm(0)));
-		Compound expected = new Compound("x", asList(new Compound("x", asList(new IntegerTerm(0))), new IntegerTerm(0)));
+		Compound compound2 = new Compound("x", asList(new Var("Y"), new Integer(0)));
+		Compound expected = new Compound("x", asList(new Compound("x", asList(new Integer(0))), new Integer(0)));
 		allUnifications(compound1, compound2, expected);
 		allUnifications(compound2, compound1, expected);
 		
-		compound2 = new Compound("x", asList(Var.ANONYMOUS_VAR, new IntegerTerm(0)));
+		compound2 = new Compound("x", asList(Var.ANONYMOUS_VAR, new Integer(0)));
 		allUnifications(compound1, compound2, expected);
 	}
 	
 	@Test
 	public void testCompoundUnification2() {
-		Compound compound1 = new Compound("x", asList(new IntegerTerm(0), new Var("X")));
+		Compound compound1 = new Compound("x", asList(new Integer(0), new Var("X")));
 		Compound compound2 = new Compound("x", asList(new Var("Y"), new Var("Y")));
-		Compound expected = new Compound("x", asList(new IntegerTerm(0), new IntegerTerm(0)));
+		Compound expected = new Compound("x", asList(new Integer(0), new Integer(0)));
 		allUnifications(compound1, compound2, expected);
 		
-		compound1 = new Compound("x", asList(new IntegerTerm(0), new IntegerTerm(0)));
+		compound1 = new Compound("x", asList(new Integer(0), new Integer(0)));
 		allUnifications(compound1, compound2, expected);
 		allUnifications(compound2, compound1, expected);
 		
-		compound1 = new Compound("x", asList(new IntegerTerm(0), new IntegerTerm(1)));
+		compound1 = new Compound("x", asList(new Integer(0), new Integer(1)));
 		allFailedUnifications(compound1, compound2);
 		
-		compound1 = new Compound("x", asList(new Var("X"), new IntegerTerm(0)));
+		compound1 = new Compound("x", asList(new Var("X"), new Integer(0)));
 		allUnifications(compound1, compound2, expected);
 		
 		compound1 = new Compound("x", asList(new Var("X1"), new Var("X2")));
@@ -158,18 +158,18 @@ public class UnificationTest {
 	
 	@Test
 	public void testCompoundUnification3() {
-		Compound compound1 = new Compound("x", asList(new Var("X1"), new Var("X2"), new IntegerTerm(3), new Var("X3"), new Var("X4"), new Var("X2")));
+		Compound compound1 = new Compound("x", asList(new Var("X1"), new Var("X2"), new Integer(3), new Var("X3"), new Var("X4"), new Var("X2")));
 		Compound compound2 = new Compound("x", asList(new Var("Y"), new Var("Y"), new Var("Y"), new Var("Z"), new Var("Z"), new Var("Z")));
-		Compound expected = new Compound("x", asList(new IntegerTerm(3), new IntegerTerm(3), new IntegerTerm(3), 
-				new IntegerTerm(3), new IntegerTerm(3), new IntegerTerm(3)));
+		Compound expected = new Compound("x", asList(new Integer(3), new Integer(3), new Integer(3),
+				new Integer(3), new Integer(3), new Integer(3)));
 		allUnifications(compound1, compound2, expected);
 		
-		compound1 = new Compound("x", asList(new IntegerTerm(3), new Var("X1"), new Var("X2"), new Var("X3"), new Var("X4"), new Var("X2")));
+		compound1 = new Compound("x", asList(new Integer(3), new Var("X1"), new Var("X2"), new Var("X3"), new Var("X4"), new Var("X2")));
 		allUnifications(compound1, compound2, expected);
 		
-		compound1 = new Compound("x", asList(new IntegerTerm(3), new Var("X1"), new Var("X2"), new Var("X3"), new Var("X4"), new IntegerTerm(4)));
-		expected = new Compound("x", asList(new IntegerTerm(3), new IntegerTerm(3), new IntegerTerm(3), 
-				new IntegerTerm(4), new IntegerTerm(4), new IntegerTerm(4)));
+		compound1 = new Compound("x", asList(new Integer(3), new Var("X1"), new Var("X2"), new Var("X3"), new Var("X4"), new Integer(4)));
+		expected = new Compound("x", asList(new Integer(3), new Integer(3), new Integer(3),
+				new Integer(4), new Integer(4), new Integer(4)));
 		allUnifications(compound1, compound2, expected);
 	}
 	

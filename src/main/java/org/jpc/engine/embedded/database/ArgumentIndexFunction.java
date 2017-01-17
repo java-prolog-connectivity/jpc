@@ -2,7 +2,7 @@ package org.jpc.engine.embedded.database;
 
 import org.jpc.term.Atom;
 import org.jpc.term.JRef;
-import org.jpc.term.NumberTerm;
+import org.jpc.term.Number;
 import org.jpc.term.Term;
 
 import com.google.common.base.Function;
@@ -40,8 +40,8 @@ public class ArgumentIndexFunction implements Function<Term, Object> {
 		}
 		if(!keyTerm.isGround())
 			throw new NonIndexableTermException(term, this);
-		if(keyTerm instanceof NumberTerm)
-			key = ((NumberTerm)keyTerm).getValue();
+		if(keyTerm instanceof Number)
+			key = ((Number)keyTerm).getValue();
 		else if(keyTerm instanceof Atom)
 			key = ((Atom)keyTerm).getName();
 		else if(keyTerm instanceof JRef)

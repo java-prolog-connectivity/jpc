@@ -89,11 +89,11 @@ public abstract class Term {
 	}
 	
 	public boolean hasFunctor(double nameTermObject, int arity) {
-		return hasFunctor(new Functor(new FloatTerm(nameTermObject), arity));
+		return hasFunctor(new Functor(new Float(nameTermObject), arity));
 	}
 	
 	public boolean hasFunctor(long nameTermObject, int arity) {
-		return hasFunctor(new Functor(new IntegerTerm(nameTermObject), arity));
+		return hasFunctor(new Functor(new Integer(nameTermObject), arity));
 	}
 	
 	/**

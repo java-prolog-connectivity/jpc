@@ -9,19 +9,19 @@ public class FloatTermTest {
 
 	@Test
 	public void testEquality() {
-		assertEquals(new FloatTerm(0), new FloatTerm(0));
-		assertEquals(new FloatTerm(-10.5), new FloatTerm(-10.5));
-		assertEquals(new FloatTerm(-10.5).hashCode(), new FloatTerm(-10.5).hashCode());
+		assertEquals(new Float(0), new Float(0));
+		assertEquals(new Float(-10.5), new Float(-10.5));
+		assertEquals(new Float(-10.5).hashCode(), new Float(-10.5).hashCode());
 	}
 	
 	@Test
 	public void testArity() {
-		assertEquals(new FloatTerm(10.5).arity(), 0);
+		assertEquals(new Float(10.5).arity(), 0);
 	}
 	
 	@Test
 	public void testHasFunctor() {
-		assertTrue(new FloatTerm(10.5).hasFunctor(new Functor(new FloatTerm(10.5), 0)));
+		assertTrue(new Float(10.5).hasFunctor(new Functor(new Float(10.5), 0)));
 	}
 	
 }

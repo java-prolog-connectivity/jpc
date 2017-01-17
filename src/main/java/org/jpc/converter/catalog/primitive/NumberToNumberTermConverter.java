@@ -7,32 +7,32 @@ import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
 import org.jpc.internal.reflection.ReflectionUtil;
-import org.jpc.term.FloatTerm;
-import org.jpc.term.IntegerTerm;
-import org.jpc.term.NumberTerm;
+import org.jpc.term.Float;
+import org.jpc.term.Integer;
+import org.jpc.term.Number;
 import org.jpc.term.Term;
 
 
-public class NumberToNumberTermConverter<T extends Number, U extends NumberTerm> implements ToTermConverter<T, U>, FromTermConverter<U, T> {
+public class NumberToNumberTermConverter<T extends java.lang.Number, U extends Number> implements ToTermConverter<T, U>, FromTermConverter<U, T> {
 
 	@Override
 	public T fromTerm(U term, Type targetType, Jpc context) {
-		Number number = term.getValue();
+		java.lang.Number number = term.getValue();
 		return context.convert(number, targetType);
 	}
 
 	@Override
 	public U toTerm(T number, Class<U> termClass, Jpc context) {
 		Term term = null;
-		if(termClass.equals(NumberTerm.class)) {
+		if(termClass.equals(Number.class)) {
 			if(ReflectionUtil.isFloatingPoint(number))
-				term = new FloatTerm(number.doubleValue());
+				term = new Float(number.doubleValue());
 			else
-				term = new IntegerTerm(number.longValue());
-		} else if(termClass.equals(IntegerTerm.class)) {
-			term = new IntegerTerm(number.longValue());
-		} else if(termClass.equals(FloatTerm.class)) {
-			term = new FloatTerm(number.doubleValue());
+				term = new Integer(number.longValue());
+		} else if(termClass.equals(Integer.class)) {
+			term = new Integer(number.longValue());
+		} else if(termClass.equals(Float.class)) {
+			term = new Float(number.doubleValue());
 		} else
 			throw new ConversionException();
 		return (U) term;

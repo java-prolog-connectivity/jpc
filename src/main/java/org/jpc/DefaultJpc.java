@@ -29,7 +29,7 @@ import org.jpc.error.handling.ErrorHandler;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
-import org.jpc.term.NumberTerm;
+import org.jpc.term.Number;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
 import org.jpc.term.refterm.RefTermManager;
@@ -94,8 +94,8 @@ public class DefaultJpc extends Jpc {
 			Atom atom = (Atom)term;
 			return (T) atom.getName();
 		}
-		if((wrappedTargetType.equals(Object.class) || Number.class.isAssignableFrom(wrappedTargetType.getRawClass())) && term instanceof NumberTerm) {
-			return (T) new NumberToNumberTermConverter().fromTerm((NumberTerm)term, targetType.equals(Object.class)?Number.class:targetType, this);
+		if((wrappedTargetType.equals(Object.class) || java.lang.Number.class.isAssignableFrom(wrappedTargetType.getRawClass())) && term instanceof Number) {
+			return (T) new NumberToNumberTermConverter().fromTerm((Number)term, targetType.equals(Object.class)? java.lang.Number.class:targetType, this);
 		}
 		//--- END OF PERFORMANCE BLOCK
 		
@@ -139,8 +139,8 @@ public class DefaultJpc extends Jpc {
 		if(targetType.isAssignableFrom(Atom.class) && object instanceof String) {
 			return (T)new Atom((String)object);
 		}	
-		if((targetType.equals(Term.class) || NumberTerm.class.isAssignableFrom(targetType)) && object instanceof Number) {
-			return (T) new NumberToNumberTermConverter().toTerm((Number)object, targetType.equals(Term.class)?NumberTerm.class:targetType, this);
+		if((targetType.equals(Term.class) || Number.class.isAssignableFrom(targetType)) && object instanceof java.lang.Number) {
+			return (T) new NumberToNumberTermConverter().toTerm((java.lang.Number)object, targetType.equals(Term.class)?Number.class:targetType, this);
 		}
 		//--- END OF PERFORMANCE BLOCK
 		
@@ -148,7 +148,7 @@ public class DefaultJpc extends Jpc {
 		if(targetType.isAssignableFrom(object.getClass())) //the object is already an instance of the desired term.
 			return (T) object;
 		
-		if(!(object instanceof String || object instanceof Number || object instanceof Boolean || object instanceof Character)) { //condition added to increase performance, the check is not needed otherwise.
+		if(!(object instanceof String || object instanceof java.lang.Number || object instanceof Boolean || object instanceof Character)) { //condition added to increase performance, the check is not needed otherwise.
 			try {
 				return (T) new ConverterEvaluator(object, targetType, this).apply(toJRefTermConverter);
 			} catch(ConversionException e) {}

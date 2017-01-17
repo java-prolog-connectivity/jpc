@@ -5,7 +5,7 @@ import static java.util.Arrays.asList;
 import java.util.Map;
 
 import org.jpc.term.Compound;
-import org.jpc.term.IntegerTerm;
+import org.jpc.term.Integer;
 
 import com.google.common.collect.MapMaker;
 
@@ -40,7 +40,7 @@ public class RefTermIdManager {
 	public synchronized Compound newJRefTermId(Object ref) {
 		Compound id = jRefTermId(ref);
 		if(id == null) {
-			id = new Compound(RefTermManager.JREF_TERM_FUNCTOR_NAME, asList(new IntegerTerm(counter++)));
+			id = new Compound(RefTermManager.JREF_TERM_FUNCTOR_NAME, asList(new Integer(counter++)));
 			currentRefs.put(ref, id);
 		}
 		return id;	

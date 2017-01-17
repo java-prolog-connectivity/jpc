@@ -5,9 +5,9 @@ import java.lang.reflect.Type;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
-import org.jpc.term.NumberTerm;
+import org.jpc.term.Number;
 
-public class CharacterToNumberTermConverter<T extends NumberTerm> implements ToTermConverter<Character, T>, FromTermConverter<T, Character> {
+public class CharacterToNumberTermConverter<T extends Number> implements ToTermConverter<Character, T>, FromTermConverter<T, Character> {
 
 	@Override
 	public Character fromTerm(T term, Type targetType, Jpc context) {

@@ -3,8 +3,8 @@ package org.jpc.salt;
 import java.lang.ref.Reference;
 
 import org.jpc.term.Atom;
-import org.jpc.term.FloatTerm;
-import org.jpc.term.IntegerTerm;
+import org.jpc.term.Float;
+import org.jpc.term.Integer;
 import org.jpc.term.JRef.StrongJRef;
 import org.jpc.term.JRef.WeakJRef;
 import org.jpc.term.Term;
@@ -14,13 +14,13 @@ public class JpcTermWriter extends TermWriter<Term> {
 
 	@Override
 	public TermContentHandler startIntegerTerm(long value) {
-		process(new IntegerTerm(value));
+		process(new Integer(value));
 		return this;
 	}
 
 	@Override
 	public TermContentHandler startFloatTerm(double value) {
-		process(new FloatTerm(value));
+		process(new Float(value));
 		return this;
 	}
 

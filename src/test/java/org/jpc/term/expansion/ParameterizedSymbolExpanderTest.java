@@ -16,7 +16,7 @@ import org.jpc.JpcBuilder;
 import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
-import org.jpc.term.IntegerTerm;
+import org.jpc.term.Integer;
 import org.jpc.term.Term;
 import org.junit.Test;
 
@@ -47,7 +47,7 @@ public class ParameterizedSymbolExpanderTest {
 	@Test
 	public void testExpandingMappedObject() {
 		Object o = "hello";
-		Term term = new Compound(CONVERSION_SPECIFIER_OPERATOR, asList(new Compound(SUBSTITUTION_OPERATOR, asList(new IntegerTerm(1))), new Atom(TERM_CONVERSION_BY_MAPPING_SYMBOL)));
+		Term term = new Compound(CONVERSION_SPECIFIER_OPERATOR, asList(new Compound(SUBSTITUTION_OPERATOR, asList(new Integer(1))), new Atom(TERM_CONVERSION_BY_MAPPING_SYMBOL)));
 		Jpc jpc = JpcBuilder.create().build();
 		Term expandedTerm = new PositionalSymbolExpander(asList(o), jpc).apply(term);
 		Object o2 = jpc.fromTerm(expandedTerm);
@@ -66,7 +66,7 @@ public class ParameterizedSymbolExpanderTest {
 		};
 		Jpc context = JpcBuilder.create().register(conv).build();
 		X o = new X();
-		Term term = new Compound(CONVERSION_SPECIFIER_OPERATOR, asList(new Compound(SUBSTITUTION_OPERATOR, asList(new IntegerTerm(1))), new Atom(TERM_CONVERSION_BY_MAPPING_AND_REFERENCE_SYMBOL)));
+		Term term = new Compound(CONVERSION_SPECIFIER_OPERATOR, asList(new Compound(SUBSTITUTION_OPERATOR, asList(new Integer(1))), new Atom(TERM_CONVERSION_BY_MAPPING_AND_REFERENCE_SYMBOL)));
 		Term expandedTerm = new PositionalSymbolExpander(asList(o), context).apply(term);
 		assertEquals(toTerm, expandedTerm);
 		
@@ -77,7 +77,7 @@ public class ParameterizedSymbolExpanderTest {
 	@Test
 	public void testExpandingReferencedObject() {
 		Object o = "hello";
-		Term term = new Compound(CONVERSION_SPECIFIER_OPERATOR, asList(new Compound(SUBSTITUTION_OPERATOR, asList(new IntegerTerm(1))), new Atom(TERM_CONVERSION_BY_REFERENCE_SYMBOL)));
+		Term term = new Compound(CONVERSION_SPECIFIER_OPERATOR, asList(new Compound(SUBSTITUTION_OPERATOR, asList(new Integer(1))), new Atom(TERM_CONVERSION_BY_REFERENCE_SYMBOL)));
 		Jpc jpc = JpcBuilder.create().build();
 		Term expandedTerm = new PositionalSymbolExpander(asList(o), jpc).apply(term);
 		Object o2 = jpc.fromTerm(expandedTerm);
@@ -87,7 +87,7 @@ public class ParameterizedSymbolExpanderTest {
 	@Test
 	public void testExpandingSerializedObject() {
 		Object o = "hello";
-		Term term = new Compound(CONVERSION_SPECIFIER_OPERATOR, asList(new Compound(SUBSTITUTION_OPERATOR, asList(new IntegerTerm(1))), new Atom(TERM_CONVERSION_BY_SERIALIZATION_SYMBOL)));
+		Term term = new Compound(CONVERSION_SPECIFIER_OPERATOR, asList(new Compound(SUBSTITUTION_OPERATOR, asList(new Integer(1))), new Atom(TERM_CONVERSION_BY_SERIALIZATION_SYMBOL)));
 		Jpc jpc = JpcBuilder.create().build();
 		Term expandedTerm = new PositionalSymbolExpander(asList(o), jpc).apply(term);
 		Object o2 = jpc.fromTerm(expandedTerm);

@@ -31,8 +31,8 @@ import org.jpc.JpcBuilder;
 import org.jpc.converter.typesolver.catalog.MapTypeSolver;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
-import org.jpc.term.FloatTerm;
-import org.jpc.term.IntegerTerm;
+import org.jpc.term.Float;
+import org.jpc.term.Integer;
 import org.jpc.term.JRef;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
@@ -69,8 +69,8 @@ public class DefaultConversionsTest {
 		assertEquals(new Atom("apple"), jpc.toTerm("apple"));
 		assertEquals(new Atom("1"), jpc.toTerm("1"));
 		assertEquals(new Atom("1"), jpc.toTerm("1", Atom.class));
-		assertEquals(new IntegerTerm(1), jpc.toTerm("1", IntegerTerm.class));
-		assertEquals(new FloatTerm(1), jpc.toTerm("1", FloatTerm.class));
+		assertEquals(new Integer(1), jpc.toTerm("1", Integer.class));
+		assertEquals(new Float(1), jpc.toTerm("1", Float.class));
 	}
 	
 	@Test
@@ -88,13 +88,13 @@ public class DefaultConversionsTest {
 		AtomicInteger ai = new AtomicInteger(10);
 		AtomicLong al = new AtomicLong(10);
 		BigInteger bi = BigInteger.TEN;
-		assertEquals(new IntegerTerm(10), jpc.toTerm(aByte));
-		assertEquals(new IntegerTerm(10), jpc.toTerm(aShort));
-		assertEquals(new IntegerTerm(10), jpc.toTerm(anInt));
-		assertEquals(new IntegerTerm(10), jpc.toTerm(aLong));
-		assertEquals(new IntegerTerm(10), jpc.toTerm(ai));
-		assertEquals(new IntegerTerm(10), jpc.toTerm(al));
-		assertEquals(new IntegerTerm(10), jpc.toTerm(bi));
+		assertEquals(new Integer(10), jpc.toTerm(aByte));
+		assertEquals(new Integer(10), jpc.toTerm(aShort));
+		assertEquals(new Integer(10), jpc.toTerm(anInt));
+		assertEquals(new Integer(10), jpc.toTerm(aLong));
+		assertEquals(new Integer(10), jpc.toTerm(ai));
+		assertEquals(new Integer(10), jpc.toTerm(al));
+		assertEquals(new Integer(10), jpc.toTerm(bi));
 	}
 	
 	@Test
@@ -102,10 +102,10 @@ public class DefaultConversionsTest {
 		float aFloat = 10.5f;
 		double aDouble = 10.5;
 		BigDecimal bd = new BigDecimal(10.5);
-		assertEquals(new FloatTerm(10), jpc.toTerm(10f));
-		assertEquals(new FloatTerm(10.5), jpc.toTerm(aFloat));
-		assertEquals(new FloatTerm(10.5), jpc.toTerm(aDouble));
-		assertEquals(new FloatTerm(10.5), jpc.toTerm(bd));
+		assertEquals(new Float(10), jpc.toTerm(10f));
+		assertEquals(new Float(10.5), jpc.toTerm(aFloat));
+		assertEquals(new Float(10.5), jpc.toTerm(aDouble));
+		assertEquals(new Float(10.5), jpc.toTerm(bd));
 	}
 	
 	@Test
@@ -116,21 +116,21 @@ public class DefaultConversionsTest {
 	
 	@Test
 	public void testEntryToTerm() {
-		Map.Entry<String, Integer> entry = new AbstractMap.SimpleEntry<>("apple", 10);
-		assertEquals(new Compound(MapTypeSolver.DEFAULT_MAP_ENTRY_SEPARATOR, asList(new Atom("apple"), new IntegerTerm(10))), jpc.toTerm(entry));
+		Map.Entry<String, java.lang.Integer> entry = new AbstractMap.SimpleEntry<>("apple", 10);
+		assertEquals(new Compound(MapTypeSolver.DEFAULT_MAP_ENTRY_SEPARATOR, asList(new Atom("apple"), new Integer(10))), jpc.toTerm(entry));
 	}
 	
 	@Test
 	public void testMapToTerm() {
-		Map<String, Integer> map = new LinkedHashMap<String, Integer>() {{ //LinkedHashMap to preserve insertion order
+		Map<String, java.lang.Integer> map = new LinkedHashMap<String, java.lang.Integer>() {{ //LinkedHashMap to preserve insertion order
 			put("apple", 10);
 			put("orange", 20);
 		}};
 		Term mapTerm = jpc.toTerm(map);
 		List<Term> listTerm = mapTerm.asList();
 		assertEquals(2, listTerm.size());
-		assertEquals(new Compound(MapTypeSolver.DEFAULT_MAP_ENTRY_SEPARATOR, asList(new Atom("apple"), new IntegerTerm(10))), listTerm.get(0));
-		assertEquals(new Compound(MapTypeSolver.DEFAULT_MAP_ENTRY_SEPARATOR, asList(new Atom("orange"), new IntegerTerm(20))), listTerm.get(1));
+		assertEquals(new Compound(MapTypeSolver.DEFAULT_MAP_ENTRY_SEPARATOR, asList(new Atom("apple"), new Integer(10))), listTerm.get(0));
+		assertEquals(new Compound(MapTypeSolver.DEFAULT_MAP_ENTRY_SEPARATOR, asList(new Atom("orange"), new Integer(20))), listTerm.get(1));
 	}
 	
 	@Test
@@ -143,7 +143,7 @@ public class DefaultConversionsTest {
 		Term nonEmptyArray = jpc.toTerm(new Object[]{"apple", 10});
 		assertEquals(
 				new Compound(".", asList(new Atom("apple"), 
-					new Compound(".", asList(new IntegerTerm(10), 
+					new Compound(".", asList(new Integer(10),
 						new Atom("[]")))))
 		, nonEmptyArray);
 	}
@@ -157,11 +157,11 @@ public class DefaultConversionsTest {
 			});
 		assertEquals(new Compound(".", asList(
 				new Compound(".", asList(new Atom("apple"), 
-					new Compound(".", asList(new IntegerTerm(10), 
+					new Compound(".", asList(new Integer(10),
 						new Atom("[]"))))), 
 				new Compound(".", asList(
 					new Compound(".", asList(new Atom("pears"), 
-						new Compound(".", asList(new FloatTerm(10.5), 
+						new Compound(".", asList(new Float(10.5),
 							new Atom("[]"))))), 
 				new Atom("[]"))))), table);
 	}
@@ -170,7 +170,7 @@ public class DefaultConversionsTest {
 	public void testListToTerm() {
 		Term nonEmptyList = jpc.toTerm(asList("apple", 10));
 		assertEquals(new Compound(".", asList(new Atom("apple"), 
-				new Compound(".", asList(new IntegerTerm(10), 
+				new Compound(".", asList(new Integer(10),
 				new Atom("[]"))))), nonEmptyList);
 		assertEquals(jpc.toTerm(new ArrayList()), new Atom("[]"));
 	}
@@ -183,7 +183,7 @@ public class DefaultConversionsTest {
 		}});
 		Term nonEmptyList = jpc.toTerm(enumeration);
 		assertEquals(new Compound(".", asList(new Atom("apple"), 
-				new Compound(".", asList(new IntegerTerm(10), 
+				new Compound(".", asList(new Integer(10),
 				new Atom("[]"))))), nonEmptyList);
 		assertEquals(jpc.toTerm(new ArrayList()), new Atom("[]"));
 	}
@@ -220,7 +220,7 @@ public class DefaultConversionsTest {
 		assertFalse("true".equals(jpc.fromTerm(new Atom(TRUE))));
 		assertTrue("true".equals(jpc.fromTerm(new Atom(TRUE), String.class)));
 		assertEquals("123", jpc.fromTerm(new Atom("123")));
-		assertEquals("123", jpc.fromTerm(new IntegerTerm(123), String.class));
+		assertEquals("123", jpc.fromTerm(new Integer(123), String.class));
 	}
 	
 	@Test
@@ -254,35 +254,35 @@ public class DefaultConversionsTest {
 	
 	@Test
 	public void testTermToInt() {
-		assertTrue(jpc.fromTerm(new IntegerTerm(10L)).equals(10L));
-		assertFalse(jpc.fromTerm(new IntegerTerm(10)).equals(10)); //values in Prolog Integer terms are stored as a Java Long
-		assertEquals(new Long(10L), jpc.fromTerm(new IntegerTerm(10)));
-		assertEquals(new Integer(10), jpc.fromTerm(new IntegerTerm(10), Integer.class));
-		assertEquals(new Integer(10), jpc.fromTerm(new IntegerTerm(10), int.class));
-		assertEquals(new Integer(10), jpc.fromTerm(new Atom("10"), Integer.class));
-		assertEquals(new Integer(10), jpc.fromTerm(new Atom("10"), int.class));
+		assertTrue(jpc.fromTerm(new Integer(10L)).equals(10L));
+		assertFalse(jpc.fromTerm(new Integer(10)).equals(10)); //values in Prolog Integer terms are stored as a Java Long
+		assertEquals(new Long(10L), jpc.fromTerm(new Integer(10)));
+		assertEquals(new java.lang.Integer(10), jpc.fromTerm(new Integer(10), java.lang.Integer.class));
+		assertEquals(new java.lang.Integer(10), jpc.fromTerm(new Integer(10), int.class));
+		assertEquals(new java.lang.Integer(10), jpc.fromTerm(new Atom("10"), java.lang.Integer.class));
+		assertEquals(new java.lang.Integer(10), jpc.fromTerm(new Atom("10"), int.class));
 		try{
-			jpc.fromTerm(new Atom(TRUE), Integer.class);
+			jpc.fromTerm(new Atom(TRUE), java.lang.Integer.class);
 			fail();
 		} catch(Exception e){}
 	}
 	
 	@Test
 	public void testTermToDouble() {
-		assertTrue(jpc.fromTerm(new FloatTerm(1D)).equals(1D));
-		assertFalse(jpc.fromTerm(new FloatTerm(1F)).equals(1F)); //values in Prolog Float terms are stored as a Java Double
-		assertTrue(jpc.fromTerm(new FloatTerm(1F)).equals(1D));
-		assertEquals(new Double(10.5), jpc.fromTerm(new FloatTerm(10.5)));
+		assertTrue(jpc.fromTerm(new Float(1D)).equals(1D));
+		assertFalse(jpc.fromTerm(new Float(1F)).equals(1F)); //values in Prolog Float terms are stored as a Java Double
+		assertTrue(jpc.fromTerm(new Float(1F)).equals(1D));
+		assertEquals(new Double(10.5), jpc.fromTerm(new Float(10.5)));
 	}
 
 	@Test
 	public void testTermToEntry() {
 		Map.Entry<String, Long> entry = new AbstractMap.SimpleEntry<>("apple", 10L);
-		Term entryTerm = new Compound("=", asList(new Atom("apple"), new IntegerTerm(10)));
+		Term entryTerm = new Compound("=", asList(new Atom("apple"), new Integer(10)));
 		assertEquals(entry, jpc.fromTerm(entryTerm));
-		entryTerm = new Compound("-", asList(new Atom("apple"), new IntegerTerm(10)));
+		entryTerm = new Compound("-", asList(new Atom("apple"), new Integer(10)));
 		assertEquals(entry, jpc.fromTerm(entryTerm));
-		entryTerm = new Compound("$", asList(new Atom("apple"), new IntegerTerm(10)));
+		entryTerm = new Compound("$", asList(new Atom("apple"), new Integer(10)));
 		try {
 			assertEquals(entry, jpc.fromTerm(entryTerm, Entry.class));
 			fail();
@@ -291,8 +291,8 @@ public class DefaultConversionsTest {
 
 	@Test
 	public void testTermToMap() {
-		Compound c1 = new Compound("-", asList(new Atom("apple"), new IntegerTerm(10)));
-		Compound c2 = new Compound("-", asList(new Atom("orange"), new IntegerTerm(20)));
+		Compound c1 = new Compound("-", asList(new Atom("apple"), new Integer(10)));
+		Compound c2 = new Compound("-", asList(new Atom("orange"), new Integer(20)));
 		Term listTerm = listTerm(c1, c2);
 		Map map = jpc.fromTerm(listTerm);
 		assertEquals(2, map.size());
@@ -302,8 +302,8 @@ public class DefaultConversionsTest {
 	
 	@Test
 	public void testTermToMap2() {
-		Compound c1 = new Compound("=", asList(new Atom("apple"), new IntegerTerm(10)));
-		Compound c2 = new Compound("=", asList(new Atom("orange"), new IntegerTerm(20)));
+		Compound c1 = new Compound("=", asList(new Atom("apple"), new Integer(10)));
+		Compound c2 = new Compound("=", asList(new Atom("orange"), new Integer(20)));
 		Term listTerm = listTerm(c1, c2);
 		Map map = (Map) jpc.fromTerm(listTerm);
 		assertEquals(2, map.size());
@@ -313,8 +313,8 @@ public class DefaultConversionsTest {
 	
 	@Test
 	public void testTermToMap3() {
-		Compound c1 = new Compound("#", asList(new Atom("apple"), new IntegerTerm(10))); //the symbol # is not a valid entry separator
-		Compound c2 = new Compound("#", asList(new Atom("orange"), new IntegerTerm(20)));
+		Compound c1 = new Compound("#", asList(new Atom("apple"), new Integer(10))); //the symbol # is not a valid entry separator
+		Compound c2 = new Compound("#", asList(new Atom("orange"), new Integer(20)));
 		Term listTerm = listTerm(c1, c2);
 		try {
 			jpc.fromTerm(listTerm);
@@ -339,8 +339,8 @@ public class DefaultConversionsTest {
 	
 	@Test
 	public void testTermToList2() {
-		Compound c1 = new Compound("-", asList(new Atom("apple"), new IntegerTerm(10)));
-		Compound c2 = new Compound("-", asList(new Atom("orange"), new IntegerTerm(20)));
+		Compound c1 = new Compound("-", asList(new Atom("apple"), new Integer(10)));
+		Compound c2 = new Compound("-", asList(new Atom("orange"), new Integer(20)));
 		Term listTerm = listTerm(c1, c2);
 		List list = jpc.fromTerm(listTerm, List.class);
 		assertEquals(2, list.size());
@@ -361,7 +361,7 @@ public class DefaultConversionsTest {
 		list = jpc.fromTerm(listTerm, type); //redundant specification of the type
 		assertEquals(list.get(0), "1");
 		assertEquals(list.get(1), "2");
-		type = new TypeToken<List<Integer>>(){}.getType();
+		type = new TypeToken<List<java.lang.Integer>>(){}.getType();
 		list = jpc.fromTerm(listTerm, type); //indicating that the elements of the list should be integers
 		assertEquals(list.get(0), 1);
 		assertEquals(list.get(1), 2);

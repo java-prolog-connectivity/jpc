@@ -3,7 +3,7 @@ package org.jpc.term.expansion;
 import java.util.List;
 
 import org.jpc.Jpc;
-import org.jpc.term.IntegerTerm;
+import org.jpc.term.Integer;
 import org.jpc.term.Term;
 
 public class PositionalSymbolExpander extends ParameterizedSymbolExpander {
@@ -20,10 +20,10 @@ public class PositionalSymbolExpander extends ParameterizedSymbolExpander {
 	}
 	
 	public Object resolve(Term symbolTerm) {
-		if(!(symbolTerm instanceof IntegerTerm)) {
+		if(!(symbolTerm instanceof Integer)) {
 			throw new RuntimeException("Wrong replacement symbol: " + symbolTerm);
 		}
-		IntegerTerm positionTerm = (IntegerTerm) symbolTerm;
+		Integer positionTerm = (Integer) symbolTerm;
 		return parameters.get(positionTerm.intValue()-1);
 	}
 

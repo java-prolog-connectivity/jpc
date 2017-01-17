@@ -12,8 +12,8 @@ import java.util.Collection;
 import org.jpc.query.Solution;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
-import org.jpc.term.FloatTerm;
-import org.jpc.term.IntegerTerm;
+import org.jpc.term.Float;
+import org.jpc.term.Integer;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
 import org.junit.Test;
@@ -29,11 +29,11 @@ public class PrologEngineTest {
 	@Test
 	public void testDataTypes() {
 		Solution querySolution = defaultPrologEngine().query("I=1, F=1.0, A=true, C=x(x), L=[1], EL=[], V=Var").oneSolutionOrThrow();
-		assertEquals(new IntegerTerm(1), querySolution.get("I"));
-		assertEquals(new FloatTerm(1.0), querySolution.get("F"));
+		assertEquals(new Integer(1), querySolution.get("I"));
+		assertEquals(new Float(1.0), querySolution.get("F"));
 		assertEquals(new Atom("true"), querySolution.get("A"));
 		assertEquals(new Compound("x", asList(new Atom("x"))), querySolution.get("C"));
-		assertEquals(new Compound(".", asList(new IntegerTerm(1), new Atom("[]"))), querySolution.get("L"));
+		assertEquals(new Compound(".", asList(new Integer(1), new Atom("[]"))), querySolution.get("L"));
 		assertEquals(new Atom("[]"), querySolution.get("EL"));
 		assertTrue(querySolution.get("V") instanceof Var);
 	}

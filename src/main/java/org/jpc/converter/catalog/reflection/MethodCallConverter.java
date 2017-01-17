@@ -12,7 +12,7 @@ import org.jpc.engine.logtalk.LogtalkConstants;
 import org.jpc.engine.prolog.PrologConstants;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
-import org.jpc.term.IntegerTerm;
+import org.jpc.term.Integer;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 import org.jpc.util.PrologSpeakingClass;
@@ -54,8 +54,8 @@ public class MethodCallConverter<T> implements FromTermConverter<Compound, T> {
 				if(listTerm.size() == 1) {
 					if(listTerm.get(0) instanceof Atom) {
 						return prologSpeakingObject.getField((Atom)listTerm.get(0));
-					} else if(listTerm.get(0) instanceof IntegerTerm) {
-						int index = ((IntegerTerm)listTerm.get(0)).intValue();
+					} else if(listTerm.get(0) instanceof Integer) {
+						int index = ((Integer)listTerm.get(0)).intValue();
 						if(receiver instanceof List) {
 							return ((List)receiver).get(index);
 						} else if(receiver.getClass().isArray()) {
@@ -69,8 +69,8 @@ public class MethodCallConverter<T> implements FromTermConverter<Compound, T> {
 					if(listTerm.get(0) instanceof Atom) {
 						Term fieldTerm = listTerm.get(1);
 						prologSpeakingObject.setField((Atom)listTerm.get(0), fieldTerm);
-					} else if(listTerm.get(0) instanceof IntegerTerm) {
-						int index = ((IntegerTerm)listTerm.get(0)).intValue();
+					} else if(listTerm.get(0) instanceof Integer) {
+						int index = ((Integer)listTerm.get(0)).intValue();
 						Object value = jpc.fromTerm(listTerm.get(1));
 						if(receiver instanceof List) {
 							((List)receiver).set(index, value);

@@ -9,18 +9,18 @@ public class IntegerTermTest {
 	
 	@Test
 	public void testEquality() {
-		assertEquals(new IntegerTerm(0), new IntegerTerm(0));
-		assertEquals(new IntegerTerm(-10), new IntegerTerm(-10));
-		assertEquals(new IntegerTerm(-10).hashCode(), new IntegerTerm(-10).hashCode());
+		assertEquals(new Integer(0), new Integer(0));
+		assertEquals(new Integer(-10), new Integer(-10));
+		assertEquals(new Integer(-10).hashCode(), new Integer(-10).hashCode());
 	}
 	
 	@Test
 	public void testArity() {
-		assertEquals(new IntegerTerm(10).arity(), 0);
+		assertEquals(new Integer(10).arity(), 0);
 	}
 	
 	@Test
 	public void testHasFunctor() {
-		assertTrue(new IntegerTerm(10).hasFunctor(new Functor(new IntegerTerm(10), 0)));
+		assertTrue(new Integer(10).hasFunctor(new Functor(new Integer(10), 0)));
 	}
 }

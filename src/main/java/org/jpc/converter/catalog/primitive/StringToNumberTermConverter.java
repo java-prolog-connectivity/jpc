@@ -6,11 +6,11 @@ import org.jconverter.converter.ConversionException;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
-import org.jpc.term.FloatTerm;
-import org.jpc.term.IntegerTerm;
-import org.jpc.term.NumberTerm;
+import org.jpc.term.Float;
+import org.jpc.term.Integer;
+import org.jpc.term.Number;
 
-public class StringToNumberTermConverter<T extends NumberTerm> implements ToTermConverter<String, T>, FromTermConverter<T, String> {
+public class StringToNumberTermConverter<T extends Number> implements ToTermConverter<String, T>, FromTermConverter<T, String> {
 
 	@Override
 	public String fromTerm(T term, Type targetType, Jpc context) {
@@ -21,10 +21,10 @@ public class StringToNumberTermConverter<T extends NumberTerm> implements ToTerm
 	public T toTerm(String source, Class<T> termClass, Jpc context) {
 		T term;
 		try {
-			if(termClass.equals(IntegerTerm.class))
-				term = (T) new IntegerTerm(Long.parseLong(source));
+			if(termClass.equals(Integer.class))
+				term = (T) new Integer(Long.parseLong(source));
 			else
-				term = (T) new FloatTerm(Float.parseFloat(source));
+				term = (T) new Float(java.lang.Float.parseFloat(source));
 		} catch(NumberFormatException e) {
 			throw new ConversionException(source.getClass(), termClass, e);
 		}
