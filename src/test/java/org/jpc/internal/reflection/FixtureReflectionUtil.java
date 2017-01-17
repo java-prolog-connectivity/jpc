@@ -2,7 +2,7 @@ package org.jpc.internal.reflection;
 
 public class FixtureReflectionUtil {
 
-	public static interface Interface {
+	public interface Interface {
 		
 	}
 	

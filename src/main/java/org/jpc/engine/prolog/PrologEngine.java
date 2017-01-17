@@ -35,31 +35,31 @@ public interface PrologEngine extends PrologDatabase {
 	/**
 	 * @return the thread model of the Prolog engine. This specifies if the engine can manage or not concurrent requests.
 	 */
-	public ThreadModel threadModel();
+	ThreadModel threadModel();
 	
-	public boolean command(String command);
+	boolean command(String command);
 	
-	public boolean command(String command, List<?> arguments);
+	boolean command(String command, List<?> arguments);
 	
-	public boolean command(String command, Jpc context);
+	boolean command(String command, Jpc context);
 	
-	public boolean command(String command, List<?> arguments, Jpc context);
+	boolean command(String command, List<?> arguments, Jpc context);
 
-	public Query query(String goalString);
+	Query query(String goalString);
 	
-	public Query query(String goalString, List<?> arguments);
+	Query query(String goalString, List<?> arguments);
 
-	public Query query(String goalString, Jpc context);
+	Query query(String goalString, Jpc context);
 
-	public Query query(String goalString, List<?> arguments, Jpc context);
+	Query query(String goalString, List<?> arguments, Jpc context);
 
-	public Query query(String goalString, List<?> arguments, boolean errorHandledQuery, Jpc context);
+	Query query(String goalString, List<?> arguments, boolean errorHandledQuery, Jpc context);
 	
-	public Query query(Term goal);
+	Query query(Term goal);
 	
-	public Query query(Term goal, Jpc context);
+	Query query(Term goal, Jpc context);
 	
-	public Query query(Term goal, List<?> arguments, boolean errorHandledQuery, Jpc context);
+	Query query(Term goal, List<?> arguments, boolean errorHandledQuery, Jpc context);
 	
 	/**
 	 * 
@@ -72,30 +72,30 @@ public interface PrologEngine extends PrologDatabase {
 	 * @param termString
 	 * @return the term representation of a String. Variable names should be preserved.
 	 */
-	public Term asTerm(String termString);
+	Term asTerm(String termString);
 	
-	public Term asTerm(String termString, Jpc context);
+	Term asTerm(String termString, Jpc context);
 	
-	public List<Term> asTerms(List<String> termsString);
+	List<Term> asTerms(List<String> termsString);
 	
-	public List<Term> asTerms(List<String> termsString, Jpc context);
+	List<Term> asTerms(List<String> termsString, Jpc context);
 	
 	/* ********************************************************************************************************************************
 	 * FLAGS
      **********************************************************************************************************************************
      */
 	
-	public boolean setPrologFlag(Term flag, Term flagValue);
+	boolean setPrologFlag(Term flag, Term flagValue);
 	
-	public boolean setPrologFlag(Flag flag, String flagValue);
+	boolean setPrologFlag(Flag flag, String flagValue);
 	
-	public Query currentPrologFlag(Term flag, Term flagValue);
+	Query currentPrologFlag(Term flag, Term flagValue);
 	
-	public Query currentPrologFlag(Flag flag, String flagValue);
+	Query currentPrologFlag(Flag flag, String flagValue);
 	
-	public String currentPrologFlag(Flag flag);
+	String currentPrologFlag(Flag flag);
 	
-	public String prologDialect();
+	String prologDialect();
 	
 	
 	/* ********************************************************************************************************************************
@@ -103,13 +103,13 @@ public interface PrologEngine extends PrologDatabase {
      **********************************************************************************************************************************
      */
 	
-	public OperatorsContext getOperatorsContext();
+	OperatorsContext getOperatorsContext();
 	
-	public Query currentOp(Term priority, Term specifier, Term operator);
+	Query currentOp(Term priority, Term specifier, Term operator);
 
-	public boolean isBinaryOperator(String op);
+	boolean isBinaryOperator(String op);
 	
-	public boolean isUnaryOperator(String op);
+	boolean isUnaryOperator(String op);
 	
 	
 	/* ********************************************************************************************************************************
@@ -117,9 +117,9 @@ public interface PrologEngine extends PrologDatabase {
      **********************************************************************************************************************************
      */
 	
-	public boolean cd(Term path);
+	boolean cd(Term path);
 	
-	public boolean cd(String path);
+	boolean cd(String path);
 	
 	
 	/* ********************************************************************************************************************************
@@ -128,36 +128,36 @@ public interface PrologEngine extends PrologDatabase {
      */
 	
 	@Override
-	public boolean asserta(Term term);
+	boolean asserta(Term term);
 	
 	@Override
-	public boolean assertz(Term term);
+	boolean assertz(Term term);
 
 	@Override
-	public Query retract(Term term);
+	Query retract(Term term);
 	
 	@Override
-	public boolean retractAll(Term term);
+	boolean retractAll(Term term);
 
 	@Override
-	public boolean abolish(Term term);
+	boolean abolish(Term term);
 	
 	@Override
-	public Query clause(Term head, Term body);
+	Query clause(Term head, Term body);
 	
 	/**
 	 * Assert a list of clauses in the logic database. Terms are asserted as the first facts or rules of the corresponding predicate.
 	 * @param terms the terms to assert
 	 * @return
 	 */
-	public boolean asserta(List<? extends Term> terms);
+	boolean asserta(List<? extends Term> terms);
 	
 	/**
 	 * Assert a list of clauses in the logic database. Term are asserted as the last facts or rules of the corresponding predicate.
 	 * @param terms the terms to assert
 	 * @return
 	 */
-	public boolean assertz(List<? extends Term> terms);
+	boolean assertz(List<? extends Term> terms);
 	
 	
 	/* ********************************************************************************************************************************
@@ -165,30 +165,30 @@ public interface PrologEngine extends PrologDatabase {
      **********************************************************************************************************************************
      */
 	
-	public boolean ensureLoaded(List<? extends Term> terms);
+	boolean ensureLoaded(List<? extends Term> terms);
 	
-	public boolean ensureLoaded(Term... terms);
+	boolean ensureLoaded(Term... terms);
 
-	public boolean ensureLoaded(String... resources);
+	boolean ensureLoaded(String... resources);
 	
 
 	/* ********************************************************************************************************************************
 	 * HIGH ORDER PREDICATES
      **********************************************************************************************************************************
      */
-	public Query bagof(Term select, Term exp, Term all);
+	Query bagof(Term select, Term exp, Term all);
 	
-	public Term bagof(Term select, Term exp);
+	Term bagof(Term select, Term exp);
 	
-	public Query findall(Term select, Term exp, Term all);
+	Query findall(Term select, Term exp, Term all);
 	
-	public Term findall(Term select, Term exp);
+	Term findall(Term select, Term exp);
 	
-	public Query setof(Term select, Term exp, Term all);
+	Query setof(Term select, Term exp, Term all);
 	
-	public Term setof(Term select, Term exp);
+	Term setof(Term select, Term exp);
 	
-	public Query forall(Term generator, Term test);
+	Query forall(Term generator, Term test);
 
 
 	/* ********************************************************************************************************************************
@@ -196,7 +196,7 @@ public interface PrologEngine extends PrologDatabase {
      **********************************************************************************************************************************
      */
 	
-	public boolean flushOutput();
+	boolean flushOutput();
 	
 	
 	/* ********************************************************************************************************************************
@@ -204,9 +204,9 @@ public interface PrologEngine extends PrologDatabase {
      **********************************************************************************************************************************
      */
 	
-	public Term unify(Term... terms);
+	Term unify(Term... terms);
 	
-	public Term unify(List<? extends Term> terms);
+	Term unify(List<? extends Term> terms);
 
 
 	/* ********************************************************************************************************************************
@@ -214,7 +214,7 @@ public interface PrologEngine extends PrologDatabase {
      **********************************************************************************************************************************
      */
 	
-	public boolean allSucceed(List<? extends Term> terms);
+	boolean allSucceed(List<? extends Term> terms);
 	
 	
 	/* ********************************************************************************************************************************
@@ -222,9 +222,9 @@ public interface PrologEngine extends PrologDatabase {
      **********************************************************************************************************************************
      */
 	
-	public LogtalkEngine withLogtalk();
+	LogtalkEngine withLogtalk();
 	
-	public LogtalkEngine asLogtalkEngine();
+	LogtalkEngine asLogtalkEngine();
 
 	
 	//The methods below are intended to be invoked from the Prolog side only with the purpose of configuring JPC.
@@ -233,7 +233,7 @@ public interface PrologEngine extends PrologDatabase {
      **********************************************************************************************************************************
      */
 	
-	public void loadJpc();
+	void loadJpc();
 	
-	public void loadJpcForLogtalk();
+	void loadJpcForLogtalk();
 }

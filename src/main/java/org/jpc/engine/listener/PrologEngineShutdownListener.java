@@ -4,6 +4,6 @@ import org.jpc.engine.prolog.PrologEngine;
 
 public interface PrologEngineShutdownListener {
 
-	public void onPrologEngineShutdown(PrologEngine prologEngine);
+	void onPrologEngineShutdown(PrologEngine prologEngine);
 	
 }

@@ -11,6 +11,6 @@ public interface JpcConfigurator {
 	 * Configures a JpcBuilder.
 	 * @param jpcBuilder the JpcBuilder to configure.
 	 */
-	public void configure(JpcBuilder jpcBuilder);
+	void configure(JpcBuilder jpcBuilder);
 	
 }

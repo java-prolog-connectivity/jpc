@@ -5,6 +5,6 @@ import org.jpc.engine.prolog.driver.PrologEngineFactory;
 
 public interface PrologEngineProfileFactory<T extends PrologEngine> {
 
-	public PrologEngineProfile<T> createPrologEngineProfile(PrologEngineFactory<T> prologEngineFactory);
+	PrologEngineProfile<T> createPrologEngineProfile(PrologEngineFactory<T> prologEngineFactory);
 	
 }

@@ -6,26 +6,26 @@ import org.jpc.util.engine.supported.EngineDescription;
 
 public interface PrologEngineDriver<T extends PrologEngine> extends PrologEngineFactory<T> {
 
-	public void addStateListener(DriverStateListener listener);
+	void addStateListener(DriverStateListener listener);
 	
-	public void removeStateListener(DriverStateListener listener);
+	void removeStateListener(DriverStateListener listener);
 	
-	public String getShortDescription();
+	String getShortDescription();
 	
-	public String getDescription();
+	String getDescription();
 	
-	public String getLibraryName();
+	String getLibraryName();
 	
-	public EngineDescription getEngineDescription();
+	EngineDescription getEngineDescription();
 	
-	public String getLicenseUrl();
+	String getLicenseUrl();
 	
-	public String getSiteUrl();
+	String getSiteUrl();
 
 	/**
 	 * 
 	 * @return true if the driver cannot create Prolog engines. false otherwise.
 	 */
-	public boolean isDisabled();
+	boolean isDisabled();
 	
 }

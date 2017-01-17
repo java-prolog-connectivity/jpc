@@ -4,6 +4,6 @@ import org.jpc.engine.prolog.PrologEngine;
 
 public interface PrologEngineProvider<T extends PrologEngine> {
 
-	public T getPrologEngine();
+	T getPrologEngine();
 	
 }

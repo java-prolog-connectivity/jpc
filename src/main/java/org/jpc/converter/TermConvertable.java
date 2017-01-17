@@ -8,5 +8,5 @@ import org.jpc.term.Term;
  *
  */
 public interface TermConvertable<T extends Term> {
-	public T asTerm();
+	T asTerm();
 }

@@ -7,6 +7,6 @@ import org.jpc.term.Term;
 
 public interface FromTermConverter<T extends Term, U> extends JpcConverter {
 
-	public U fromTerm(T term, Type targetType, Jpc context);
+	U fromTerm(T term, Type targetType, Jpc context);
 
 }

@@ -9,13 +9,13 @@ import org.jpc.term.JRef;
 
 public interface TermVisitor {
 
-	public abstract void visitInteger(Integer integerTerm);
-	public abstract void visitFloat(Float floatTerm);
-	public abstract void visitVariable(AbstractVar variable);
-	public abstract void visitAtom(Atom atom);
-	public abstract void visitJRef(JRef<?> jRef);
-	public abstract void visitSoftJRef(JRef<?> jRef);
-	public abstract void visitWeakJRef(JRef<?> jRef);
-	public abstract boolean visitCompound(Compound compound);
+	void visitInteger(Integer integerTerm);
+	void visitFloat(Float floatTerm);
+	void visitVariable(AbstractVar variable);
+	void visitAtom(Atom atom);
+	void visitJRef(JRef<?> jRef);
+	void visitSoftJRef(JRef<?> jRef);
+	void visitWeakJRef(JRef<?> jRef);
+	boolean visitCompound(Compound compound);
 	
 }

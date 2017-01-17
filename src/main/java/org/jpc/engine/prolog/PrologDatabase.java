@@ -10,21 +10,21 @@ public interface PrologDatabase {
 	 * @param terms the terms to assert
 	 * @return
 	 */
-	public abstract boolean asserta(Term term);
+	boolean asserta(Term term);
 	
 	/**
 	 * Assert a clause in the logic database. Term is asserted as the last fact or rule of the corresponding predicate.
 	 * @param terms the terms to assert
 	 * @return
 	 */
-	public boolean assertz(Term term);
+	boolean assertz(Term term);
 	
-	public Query retract(Term term);
+	Query retract(Term term);
 	
-	public boolean retractAll(Term term);
+	boolean retractAll(Term term);
 	
-	public boolean abolish(Term term);
+	boolean abolish(Term term);
 	
-	public Query clause(Term head, Term body);
+	Query clause(Term head, Term body);
 
 }

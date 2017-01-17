@@ -4,6 +4,6 @@ import org.jpc.engine.prolog.PrologEngine;
 
 public interface PrologEngineCreationListener {
 
-	public void onPrologEngineCreation(PrologEngine prologEngine);
+	void onPrologEngineCreation(PrologEngine prologEngine);
 	
 }

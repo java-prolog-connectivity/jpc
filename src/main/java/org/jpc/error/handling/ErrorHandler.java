@@ -5,6 +5,6 @@ import org.jpc.term.Term;
 
 public interface ErrorHandler {
 	
-	public abstract boolean handle(Term errorTerm, Term goal, Jpc context);
+	boolean handle(Term errorTerm, Term goal, Jpc context);
 
 }

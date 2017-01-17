@@ -7,6 +7,6 @@ package org.jpc.engine.listener;
  */
 public interface DriverStateListener {
 
-	public void onDriverDisabled();
+	void onDriverDisabled();
 	
 }
