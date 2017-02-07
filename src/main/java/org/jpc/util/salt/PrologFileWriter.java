@@ -1,10 +1,10 @@
-package org.jpc.salt;
+package org.jpc.util.salt;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 
-public class PrologFileWriter extends PrologStreamWriter {
+public class PrologFileWriter extends PrologPrintStreamWriter {
 
 	protected File file;
 	

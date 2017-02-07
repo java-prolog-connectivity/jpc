@@ -1,4 +1,4 @@
-package org.jpc.salt;
+package org.jpc.util.salt;
 
 import java.util.ArrayList;
 import java.util.List;

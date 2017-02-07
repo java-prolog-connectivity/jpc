@@ -7,15 +7,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
-import org.jpc.salt.JpcTermWriter;
-import org.jpc.salt.TermAdapter;
-import org.jpc.salt.TermContentHandler;
 import org.jpc.term.AbstractVar;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
+import org.jpc.util.salt.JpcTermStreamer;
+import org.jpc.util.salt.TermAdapter;
+import org.jpc.util.salt.TermCollector;
+import org.jpc.util.salt.TermContentHandler;
 
 /**
  * An utility class for general purpose queries and term manipulation
@@ -105,7 +106,8 @@ public class PrologUtil {
 	 * @return
 	 */
 	public static Term replaceVariables(Term term, final String prefix) {
-		JpcTermWriter termWriter = new JpcTermWriter();
+		TermCollector<Term> collector = new TermCollector();
+		JpcTermStreamer termWriter = new JpcTermStreamer(collector);
 		TermAdapter variableAdapter = new TermAdapter(termWriter) {
 			@Override
 			public TermContentHandler startVariable(String name) {
@@ -122,7 +124,7 @@ public class PrologUtil {
 			}
 		};
 		term.read(variableAdapter);
-		return termWriter.getTerms().get(0);
+		return collector.getFirst();
 	}
 	
 	public static String escapeString(String s) {

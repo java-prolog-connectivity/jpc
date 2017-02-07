@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.jpc.internal.io.FileUtil;
-import org.jpc.resource.LogicResource;
+import org.jpc.util.resource.LogicResource;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 import org.reflections.util.ConfigurationBuilder;

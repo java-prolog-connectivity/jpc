@@ -1,4 +1,4 @@
-package org.jpc.salt;
+package org.jpc.util.salt;
 
 import static java.util.Arrays.asList;
 import static org.jpc.engine.logtalk.LogtalkObject.logtalkMessage;
@@ -12,13 +12,13 @@ import org.jpc.term.Term;
 /**
  * Writes the text representation of the logic terms to a given output stream
  */
-public class PrologStreamWriter extends PrologWriter {
+public class PrologPrintStreamWriter extends PrologWriter {
 
 	protected PrintStream out;
 	public static final String DIRECTIVE_PREFIX = ":- ";
 	
 	
-	public PrologStreamWriter(PrintStream out) {
+	public PrologPrintStreamWriter(PrintStream out) {
 		this.out = out;
 	}
 	

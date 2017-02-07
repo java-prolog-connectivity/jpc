@@ -1,22 +1,31 @@
-package org.jpc.salt;
+package org.jpc.util.salt;
 
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.util.JpcPreferences;
 
 public class CachedPrologEngineWriter extends PrologFileWriter implements Closeable {
 
+	private static String getName() {
+		return "prolog-cached-writer_" + UUID.randomUUID().toString();
+	}
+
+	private static String getTmpExtension() {
+		return "tmp";
+	}
+
 	private PrologEngine prologEngine;
-	
+
 	public CachedPrologEngineWriter(PrologEngine prologEngine) throws IOException {
 		this(prologEngine, new JpcPreferences());
 	}
 	
 	public CachedPrologEngineWriter(PrologEngine prologEngine, JpcPreferences jpcPreferences) throws IOException {
-		super(File.createTempFile("prolog-engine-writer", ".tmp", jpcPreferences.getJpcTmpDirectory()));
+		super(File.createTempFile(getName(), "." + getTmpExtension(), jpcPreferences.getJpcTmpDirectory()));
 		this.prologEngine = prologEngine;
 		//file.deleteOnExit();
 	}

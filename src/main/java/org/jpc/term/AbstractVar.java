@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jpc.engine.prolog.OperatorsContext;
-import org.jpc.salt.TermContentHandler;
+import org.jpc.util.salt.TermContentHandler;
 import org.jpc.term.visitor.TermVisitor;
 
 import com.google.common.base.Function;

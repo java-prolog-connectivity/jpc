@@ -7,7 +7,7 @@ import static org.jpc.engine.prolog.PrologConstants.TRUE;
 
 import org.jpc.JpcException;
 import org.jpc.engine.prolog.OperatorsContext;
-import org.jpc.salt.TermContentHandler;
+import org.jpc.util.salt.TermContentHandler;
 import org.jpc.term.compiler.Environment;
 import org.jpc.term.visitor.TermVisitor;
 import org.jpc.util.PrologUtil;

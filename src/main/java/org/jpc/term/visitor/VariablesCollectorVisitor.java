@@ -1,4 +1,4 @@
-package org.jpc.util.salt;
+package org.jpc.term.visitor;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -6,13 +6,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.jpc.term.AbstractVar;
-import org.jpc.term.visitor.DefaultTermVisitor;
 
-public class VariablesCollectorHandler extends DefaultTermVisitor {
+public class VariablesCollectorVisitor extends DefaultTermVisitor {
 	
 	Set<AbstractVar> variables; //set no avoid duplicated entries
 	
-	public VariablesCollectorHandler() {
+	public VariablesCollectorVisitor() {
 		variables = new LinkedHashSet<>(); //LinkedHashSet to preserve insertion order
 	}
 	

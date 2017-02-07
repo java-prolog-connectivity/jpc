@@ -1,4 +1,4 @@
-package org.jpc.salt;
+package org.jpc.util.salt;
 
 import static java.util.Arrays.asList;
 import static org.jpc.term.ListTerm.listTerm;
@@ -23,8 +23,9 @@ public class JpcTermWriterTest {
 	
 	@Test
 	public void testTermWriter() {
-		JpcTermWriter termWriter = new JpcTermWriter();
+		TermCollector<Term> collector = new TermCollector();
+		JpcTermStreamer termWriter = new JpcTermStreamer(collector);
 		t3.read(termWriter);
-		assertTrue(t3.termEquals(termWriter.getTerms().get(0)));
+		assertTrue(t3.termEquals(collector.getFirst()));
 	}
 }

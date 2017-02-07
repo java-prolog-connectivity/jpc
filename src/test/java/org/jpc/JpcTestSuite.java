@@ -15,7 +15,7 @@ import org.jpc.converter.typesolver.TypeSolverTest;
 import org.jpc.engine.embedded.JpcEmbeddedEngineTestSuite;
 import org.jpc.internal.reflection.ReflectionUtilTest;
 import org.jpc.internal.regex.RegExUtilTest;
-import org.jpc.salt.JpcTermWriterTest;
+import org.jpc.util.salt.JpcTermWriterTest;
 import org.jpc.term.AbstractTermTest;
 import org.jpc.term.AtomTest;
 import org.jpc.term.CompoundTest;

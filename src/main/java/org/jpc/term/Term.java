@@ -10,17 +10,18 @@ import java.util.Map;
 
 import org.jpc.JpcException;
 import org.jpc.engine.prolog.OperatorsContext;
-import org.jpc.salt.JpcTermWriter;
-import org.jpc.salt.TermContentHandler;
 import org.jpc.term.compiler.BindableVar;
 import org.jpc.term.compiler.Environment;
 import org.jpc.term.expansion.DefaultTermExpander;
 import org.jpc.term.unification.NonUnifiableException;
 import org.jpc.term.visitor.DefaultTermVisitor;
 import org.jpc.term.visitor.TermVisitor;
-import org.jpc.util.salt.ChangeVariableNameAdapter;
-import org.jpc.util.salt.ReplaceVariableAdapter;
-import org.jpc.util.salt.VariablesCollectorHandler;
+import org.jpc.term.visitor.VariablesCollectorVisitor;
+import org.jpc.util.salt.JpcTermStreamer;
+import org.jpc.util.salt.TermCollector;
+import org.jpc.util.salt.TermContentHandler;
+import org.jpc.util.salt.adapters.ChangeVariableNameAdapter;
+import org.jpc.util.salt.adapters.ReplaceVariableAdapter;
 
 import com.google.common.base.Function;
 
@@ -150,10 +151,11 @@ public abstract class Term {
 	public Term replaceVariables(Map<String, ? extends Term> map) {
 		if(isGround())
 			return this;
-		JpcTermWriter termWriter = new JpcTermWriter();
+		TermCollector<Term> collector = new TermCollector();
+		JpcTermStreamer termWriter = new JpcTermStreamer(collector);
 		ReplaceVariableAdapter replaceVariableAdapter = new ReplaceVariableAdapter(termWriter, map);
 		read(replaceVariableAdapter);
-		return termWriter.getTerms().get(0);
+		return collector.getFirst();
 	}
 
 	/**
@@ -164,10 +166,11 @@ public abstract class Term {
 	public Term changeVariablesNames(Map<String, String> map) {
 		if(isGround())
 			return this;
-		JpcTermWriter termWriter = new JpcTermWriter();
+		TermCollector<Term> collector = new TermCollector();
+		JpcTermStreamer termWriter = new JpcTermStreamer(collector);
 		ChangeVariableNameAdapter changeVariableNameAdapter = new ChangeVariableNameAdapter(termWriter, map);
 		read(changeVariableNameAdapter);
-		return termWriter.getTerms().get(0);
+		return collector.getFirst();
 	}
 
 
@@ -186,7 +189,7 @@ public abstract class Term {
 	public List<AbstractVar> getVariables() {
 		if(isGround())
 			return Collections.emptyList();
-		VariablesCollectorHandler varCollector = new VariablesCollectorHandler();
+		VariablesCollectorVisitor varCollector = new VariablesCollectorVisitor();
 		accept(varCollector);
 		return varCollector.getVariables();
 	}
@@ -246,9 +249,10 @@ public abstract class Term {
 	
 	
 	public Term termExpansion(Function<Term, Term> termExpander) {
-		JpcTermWriter termWriter = new JpcTermWriter();
+		TermCollector<Term> collector = new TermCollector();
+		JpcTermStreamer termWriter = new JpcTermStreamer(collector);
 		read(termWriter, termExpander);
-		return termWriter.getTerms().get(0);
+		return collector.getFirst();
 	}
 	
 	public void read(TermContentHandler contentHandler) {

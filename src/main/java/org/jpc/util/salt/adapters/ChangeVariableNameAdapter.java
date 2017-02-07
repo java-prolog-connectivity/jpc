@@ -1,10 +1,9 @@
-package org.jpc.util.salt;
+package org.jpc.util.salt.adapters;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
-import org.jpc.salt.TermContentHandler;
+import org.jpc.util.salt.TermContentHandler;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
 

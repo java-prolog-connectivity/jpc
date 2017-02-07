@@ -1,11 +1,14 @@
-package org.jpc.resource;
+package org.jpc.util.resource;
+
+import static org.jpc.util.dialect.Language.LOGTALK;
+import static org.jpc.util.dialect.Language.PROLOG;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.base.Joiner;
 
-public abstract class LogicResource extends AbstractResource {
+public abstract class LogicResource {
 
 	public static boolean hasLogicExtension(String name) {
 		return PrologResource.hasPrologExtension(name) || LogtalkResource.hasLogtalkExtension(name);
@@ -14,8 +17,8 @@ public abstract class LogicResource extends AbstractResource {
 	private static String logicResourceExtensionRegex; //an OR regex expression with all the extensions of logic resources
 	
 	public static List<String> getLogicResourceExtensions() {
-		List<String> logicResourceExtensions = new ArrayList<String>(PrologResource.getPrologExtensions());
-		logicResourceExtensions.addAll(LogtalkResource.getLogtalkExtensions());
+		List<String> logicResourceExtensions = new ArrayList<String>(PROLOG.getExtensions());
+		logicResourceExtensions.addAll(LOGTALK.getExtensions());
 		return logicResourceExtensions;
 	}
 	
@@ -42,12 +45,21 @@ public abstract class LogicResource extends AbstractResource {
 		return fileNames;
 	}
 
+	protected final String name;
+
+	public LogicResource(String name) {
+		this.name = name.trim();
+	}
+
+	public String getName() {
+		return name;
+	}
+
 	public String getNameWithoutLogicExtension() {
 		return suppressLogicExtension(name);
 	}
-	
-	public LogicResource(String name) {
-		super(name);
-	}
+
+	@Override
+	public String toString() {return name;}
 
 }

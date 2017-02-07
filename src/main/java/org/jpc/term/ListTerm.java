@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.jpc.converter.TermConvertable;
 import org.jpc.engine.prolog.PrologConstants;
-import org.jpc.salt.TermContentHandler;
+import org.jpc.util.salt.TermContentHandler;
 
 public class ListTerm extends ArrayList<Term> implements TermConvertable {
 	

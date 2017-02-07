@@ -1,4 +1,4 @@
-package org.jpc.salt;
+package org.jpc.util.salt;
 
 import java.util.List;
 
@@ -26,10 +26,12 @@ public class JpcTermBuilder extends TermBuilder<Term> {
 	@Override
 	public Term build() {
 		Term builtTerm;
-		if(!isCompound())
+		if(!isCompound()) {
 			builtTerm = getFunctor();
-		else
+		}
+		else {
 			builtTerm = new Compound(getFunctor(), getArgs());
+		}
 		return builtTerm;
 	}
 

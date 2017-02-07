@@ -1,4 +1,4 @@
-package org.jpc.salt;
+package org.jpc.util.salt;
 
 
 /**

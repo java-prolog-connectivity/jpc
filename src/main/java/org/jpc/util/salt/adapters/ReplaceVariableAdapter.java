@@ -1,10 +1,9 @@
-package org.jpc.util.salt;
+package org.jpc.util.salt.adapters;
 
 import java.util.Map;
 
-import org.jpc.converter.TermConvertable;
-import org.jpc.salt.TermContentHandler;
-import org.jpc.salt.TermAdapter;
+import org.jpc.util.salt.TermContentHandler;
+import org.jpc.util.salt.TermAdapter;
 import org.jpc.term.Term;
 
 public class ReplaceVariableAdapter extends TermAdapter {

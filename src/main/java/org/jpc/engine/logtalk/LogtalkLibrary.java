@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jpc.resource.LogtalkResource;
+import org.jpc.util.resource.LogtalkResource;
 
 public class LogtalkLibrary {
 

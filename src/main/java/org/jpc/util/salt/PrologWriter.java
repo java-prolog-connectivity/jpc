@@ -1,15 +1,12 @@
-package org.jpc.salt;
+package org.jpc.util.salt;
 
 import org.jpc.JpcException;
 import org.jpc.term.Term;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Write logic terms to a "target". 
- * This target is defined by subclasses. For example, it may be a logic engine or just a text file.
- */
-public abstract class PrologWriter extends JpcTermWriter implements PrologContentHandler {
+
+public abstract class PrologWriter implements TermProcessor<Term> {
 
 	private static final Logger logger = LoggerFactory.getLogger(PrologWriter.class);
 
@@ -17,9 +14,6 @@ public abstract class PrologWriter extends JpcTermWriter implements PrologConten
 	private boolean writeClause;
 	private boolean readingLogtalkObjectTerm;
 	private Term currentLogtalkObjectTerm;
-	
-	public PrologWriter() {
-	}
 
 	private void resetLogtalkOjectTerm() {
 		currentLogtalkObjectTerm = null;
@@ -35,7 +29,7 @@ public abstract class PrologWriter extends JpcTermWriter implements PrologConten
 	
 	
 	@Override
-	protected void write(Term term) {
+	public void process(Term term) {
 		if(readingLogtalkObjectTerm) {
 			setCurrentLogtalkObjectTerm(term); //the read term is the logtalk object context for the instructions that come next
 			readingLogtalkObjectTerm = false;
@@ -52,32 +46,26 @@ public abstract class PrologWriter extends JpcTermWriter implements PrologConten
 		writeClause = false;
 		readingLogtalkObjectTerm = false;
 	}
-	
-	@Override
-	public TermContentHandler followingDirectives() {
+
+	//next read terms will be interpreted as goals to be executed
+	public void followingDirectives() {
 		resetWritingMode();
 		writeDirective = true;
-		return this;
 	}
 
-	@Override
-	public TermContentHandler followingDynamicClauses() {
+	//next read terms will be considered dynamic clauses to be asserted
+	public void followingDynamicClauses() {
 		resetWritingMode();
 		writeClause = true;
-		return this;
 	}
 
-	@Override
-	public TermContentHandler startLogtalkObjectContext() {
+	public void startLogtalkObjectContext() {
 		readingLogtalkObjectTerm = true; //the next term to come will be considered the logtalk object context
-		return this;
 	}
 
-	@Override
-	public TermContentHandler endLogtalkObjectContext() {
+	public void endLogtalkObjectContext() {
 		readingLogtalkObjectTerm = false;
 		resetLogtalkOjectTerm();
-		return this;
 	}
 	
 	public void writeDirective(Term directive) {
@@ -103,5 +91,3 @@ public abstract class PrologWriter extends JpcTermWriter implements PrologConten
 	public abstract void writeLogtalkObjectClause(Term clause);
 
 }
-
-

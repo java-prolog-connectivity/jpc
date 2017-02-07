@@ -1,4 +1,4 @@
-package org.jpc.salt;
+package org.jpc.util.salt;
 
 import java.lang.ref.Reference;
 
@@ -10,7 +10,11 @@ import org.jpc.term.JRef.WeakJRef;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
 
-public class JpcTermWriter extends TermWriter<Term> {
+public class JpcTermStreamer extends TermStreamer<Term> {
+
+	public JpcTermStreamer(TermProcessor<Term> termProcessor) {
+		super(termProcessor);
+	}
 
 	@Override
 	public TermContentHandler startIntegerTerm(long value) {

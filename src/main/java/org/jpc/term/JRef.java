@@ -12,7 +12,7 @@ import org.jpc.internal.gc.CleanableSoftReference;
 import org.jpc.internal.gc.CleanableWeakReference;
 import org.jpc.internal.gc.ReferenceType;
 import org.jpc.internal.gc.ReferencesCleaner;
-import org.jpc.salt.TermContentHandler;
+import org.jpc.util.salt.TermContentHandler;
 import org.jpc.term.compiler.Environment;
 import org.jpc.term.unification.NonUnifiableException;
 import org.jpc.term.visitor.TermVisitor;

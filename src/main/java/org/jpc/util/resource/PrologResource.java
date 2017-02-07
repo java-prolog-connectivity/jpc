@@ -1,28 +1,24 @@
-package org.jpc.resource;
+package org.jpc.util.resource;
+
+import static org.jpc.util.dialect.Language.PROLOG;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.jpc.internal.regex.RegExUtil;
 
 
 public class PrologResource extends LogicResource {
-	
-	private static final List<String> defaultPrologExtensions = Arrays.asList(new String[] {"pl", "P", "pro"});
-	
-	public static List<String> getPrologExtensions() {
-		return defaultPrologExtensions;
-	}
-	
+
 	public static boolean hasPrologExtension(String name) {
-		return RegExUtil.hasExtension(name, defaultPrologExtensions);
+		return RegExUtil.hasExtension(name, PROLOG.getExtensions());
 	}
 	
 	public static List<PrologResource> asPrologResources(List<String> names) {
 		List<PrologResource> resources = new ArrayList<>();
-		for(String name : names)
+		for (String name : names) {
 			resources.add(new PrologResource(name));
+		}
 		return resources;
 	}
 	

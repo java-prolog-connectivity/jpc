@@ -10,10 +10,6 @@ public abstract class PrologFlag extends Flag {
 	}
 
 	static class Dialect extends PrologFlag {
-		public static final String SWI = "swi";
-		public static final String YAP = "yap";
-		public static final String XSB = "xsb";
-		
 		public Dialect() {super("dialect");}
 	} 
 	

@@ -1,4 +1,4 @@
-package org.jpc.salt;
+package org.jpc.util.salt;
 
 import org.jpc.engine.logtalk.LogtalkObject;
 import org.jpc.engine.prolog.PrologEngine;

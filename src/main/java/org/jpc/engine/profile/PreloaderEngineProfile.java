@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.engine.prolog.driver.PrologEngineFactory;
-import org.jpc.resource.LogtalkResource;
+import org.jpc.util.resource.LogtalkResource;
 
 public class PreloaderEngineProfile<T extends PrologEngine> extends PrologEngineProfile<T> {
 
