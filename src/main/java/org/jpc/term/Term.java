@@ -1,6 +1,7 @@
 package org.jpc.term;
 
 import static org.jpc.engine.prolog.PrologConstants.ANONYMOUS_VAR_NAME;
+import static org.jpc.util.termprocessor.TermCollector.termCollector;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jpc.JpcException;
+import org.jpc.engine.dialect.Dialect;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.term.compiler.BindableVar;
 import org.jpc.term.compiler.Environment;
@@ -18,10 +19,11 @@ import org.jpc.term.visitor.DefaultTermVisitor;
 import org.jpc.term.visitor.TermVisitor;
 import org.jpc.term.visitor.VariablesCollectorVisitor;
 import org.jpc.util.salt.JpcTermStreamer;
-import org.jpc.util.salt.TermCollector;
 import org.jpc.util.salt.TermContentHandler;
 import org.jpc.util.salt.adapters.ChangeVariableNameAdapter;
 import org.jpc.util.salt.adapters.ReplaceVariableAdapter;
+import org.jpc.util.termprocessor.GenericTermCollector;
+import org.jpc.util.termprocessor.TermCollector;
 
 import com.google.common.base.Function;
 
@@ -34,7 +36,7 @@ import com.google.common.base.Function;
  */
 public abstract class Term {
 
-	private Boolean list;
+	private Boolean listTerm;
 	
 	/**
 	 * 
@@ -56,8 +58,8 @@ public abstract class Term {
 	}
 
 	/**
-	 * Returns the arguments list of this term.
-	 * If the term has no arguments will return an empty list
+	 * Returns the arguments listTerm of this term.
+	 * If the term has no arguments will return an empty listTerm
 	 * @return the arguments of this term
 	 */
 	public List<Term> getArgs() {
@@ -98,14 +100,14 @@ public abstract class Term {
 	}
 	
 	/**
-	 * whether this Term is a list
+	 * whether this Term is a listTerm
 	 * 
-	 * @return whether this Term is a list
+	 * @return whether this Term is a listTerm
 	 */
 	public final boolean isList() {
-		if(list == null)
-			list = basicIsList();
-		return list;
+		if(listTerm == null)
+			listTerm = basicIsList();
+		return listTerm;
 	}
 	
 	protected boolean basicIsList() {
@@ -113,18 +115,18 @@ public abstract class Term {
 	}
 	
 	/**
-	 * Returns a list representation of this term. Throws an exception if the term cannot be converted to a list (if it is not either the atom '[]' or a cons compound term)
-	 * @return a list representation of this term.
+	 * Returns a listTerm representation of this term. Throws an exception if the term cannot be converted to a listTerm (if it is not either the atom '[]' or a cons compound term)
+	 * @return a listTerm representation of this term.
 	 */
 	public ListTerm asList() {
-		throw new UnsupportedOperationException();
+		throw new NotAListException(this);
 	}
 
 	/**
-	 * the length of this list, iff it is one, else an exception is thrown
+	 * the length of this listTerm, iff it is one, else an exception is thrown
 	 * 
-	 * @throws LException
-	 * @return the length (as an int) of this list, iff it is one
+	 * @throws NotAListException
+	 * @return the length (as an int) of this listTerm, iff it is one
 	 */
 	public int listLength() {
 		Compound compound = (Compound) this;
@@ -133,7 +135,7 @@ public abstract class Term {
 		} else if (compound.hasFunctor("[]", 0)) {
 			return 0;
 		} else {
-			throw new JpcException("term" + compound.toString() + "is not a list");
+			throw new NotAListException(compound);
 		}
 	}
 
@@ -151,7 +153,7 @@ public abstract class Term {
 	public Term replaceVariables(Map<String, ? extends Term> map) {
 		if(isGround())
 			return this;
-		TermCollector<Term> collector = new TermCollector();
+		GenericTermCollector<Term> collector = termCollector();
 		JpcTermStreamer termWriter = new JpcTermStreamer(collector);
 		ReplaceVariableAdapter replaceVariableAdapter = new ReplaceVariableAdapter(termWriter, map);
 		read(replaceVariableAdapter);
@@ -166,7 +168,7 @@ public abstract class Term {
 	public Term changeVariablesNames(Map<String, String> map) {
 		if(isGround())
 			return this;
-		TermCollector<Term> collector = new TermCollector();
+		GenericTermCollector<Term> collector = termCollector();
 		JpcTermStreamer termWriter = new JpcTermStreamer(collector);
 		ChangeVariableNameAdapter changeVariableNameAdapter = new ChangeVariableNameAdapter(termWriter, map);
 		read(changeVariableNameAdapter);
@@ -202,7 +204,7 @@ public abstract class Term {
 	}
 
 	/**
-	 * @return a list with all the non underscore variables (i.e., all variables that do not start with "_")
+	 * @return a listTerm with all the non underscore variables (i.e., all variables that do not start with "_")
 	 */
 	public List<AbstractVar> getNonUnderscoreVariables() {
 		List<AbstractVar> nonUnderscoreVariables = new ArrayList<>();
@@ -214,15 +216,15 @@ public abstract class Term {
 	}
 	
 	/**
-	 * @return a list with all the variables that do not start with "_".
+	 * @return a listTerm with all the variables that do not start with "_".
 	 */
 	public List<String> getNonUnderscoreVariableNames() {
 		return AbstractVar.getVariableNames(getNonUnderscoreVariables());
 	}
 	
 	/**
-	 * Returns a list with all the named variables (i.e., all variables but "_")
-	 * @return a list with all the named variables (i.e., all variables but "_")
+	 * Returns a listTerm with all the named variables (i.e., all variables but "_")
+	 * @return a listTerm with all the named variables (i.e., all variables but "_")
 	 */
 	public List<AbstractVar> getNamedVariables() {
 		List<AbstractVar> nonUnderscoreVariables = new ArrayList<>();
@@ -234,8 +236,8 @@ public abstract class Term {
 	}
 	
 	/**
-	 * Returns a list with all the named variables names (i.e., all variables but "_")
-	 * @return a list with all the named variables names (i.e., all variables but "_")
+	 * Returns a listTerm with all the named variables names (i.e., all variables but "_")
+	 * @return a listTerm with all the named variables names (i.e., all variables but "_")
 	 */
 	public List<String> getNamedVariablesNames() {
 		return AbstractVar.getVariableNames(getNamedVariables());
@@ -249,7 +251,7 @@ public abstract class Term {
 	
 	
 	public Term termExpansion(Function<Term, Term> termExpander) {
-		TermCollector<Term> collector = new TermCollector();
+		TermCollector collector = termCollector();
 		JpcTermStreamer termWriter = new JpcTermStreamer(collector);
 		read(termWriter, termExpander);
 		return collector.getFirst();
@@ -277,16 +279,16 @@ public abstract class Term {
 	 * is false, since both the receiver and the arguments are anonymous variables, not the same variable. But:
 	 * 		'new Variable("_").termEquals(new Variable("_"))'
 	 * is true, since they both have the same term representation
-	 * @param termAdaptable
+	 * @param term
 	 * @return
 	 */
-	public boolean termEquals(Term t) {
-		return equals(t); //default implementation, to be overridden.
+	public boolean termEquals(Term term) {
+		return equals(term); //default implementation, to be overridden.
 	}
 	
 	/**
-	 * @param   list1  a list of Terms
-	 * @param   list2  another list of Terms
+	 * @param   list1  a listTerm of Terms
+	 * @param   list2  another listTerm of Terms
 	 * @return  true if all of the Terms in the (same-length) lists are pairwise term equivalent
 	 */
 	public static boolean termEquals(List<? extends Term> list1, List<? extends Term> list2) {
@@ -307,20 +309,21 @@ public abstract class Term {
 	 * STRING CONVERSION METHODS.
      **********************************************************************************************************************************
      */
-	
-	/**
-	 * Reads the contents of this term (i.e., generates events) to a content handler
-	 * @param contentHandler the content handler that will receive the events describing the structure of this term
-	 */
+
 	@Override
 	public String toString() {
 		return toEscapedString();
 	}
-	
-	public abstract String toEscapedString();
-	
-	public abstract String toString(OperatorsContext operatorsContext);
 
+	public String toEscapedString() {
+		return toEscapedString(Dialect.JPC);
+	}
+
+	public String toEscapedString(Dialect dialect) {
+		return toEscapedString(dialect, OperatorsContext.empty());
+	}
+
+	public abstract String toEscapedString(Dialect dialect, OperatorsContext operatorsContext);
 
 	/**
 	 * Converts an array of Terms to its escaped String representation.
@@ -328,10 +331,10 @@ public abstract class Term {
 	 * @param   terms    an array of Terms to convert
 	 * @return  String representation of an array of Terms
 	 */
-	public static <T extends Term> String toEscapedString(T... terms) {
+	public static <T extends Term> String toEscapedString(Dialect dialect, OperatorsContext operatorsContext, T... terms) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < terms.length; ++i) {
-			sb.append(terms[i].toEscapedString());
+			sb.append(terms[i].toEscapedString(dialect, operatorsContext));
 			if (i != terms.length - 1) {
 				sb.append(", ");
 			}
@@ -340,13 +343,13 @@ public abstract class Term {
 	}
 	
 	/**
-	 * Converts a list of Terms to a String.
+	 * Converts a listTerm of Terms to a String.
 	 * 
 	 * @param terms
-	 * @return String representation of a list of Terms
+	 * @return String representation of a listTerm of Terms
 	 */
-	public static <T extends Term> String toEscapedString(List<T> terms) {
-		return toEscapedString(terms.toArray(new Term[]{}));
+	public static <T extends Term> String toEscapedString(Dialect dialect, OperatorsContext operatorsContext, List<T> terms) {
+		return toEscapedString(dialect, operatorsContext, terms.toArray(new Term[]{}));
 	}
 	
 	

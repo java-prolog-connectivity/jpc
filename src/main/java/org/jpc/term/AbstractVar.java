@@ -3,9 +3,10 @@ package org.jpc.term;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jpc.engine.dialect.Dialect;
 import org.jpc.engine.prolog.OperatorsContext;
-import org.jpc.util.salt.TermContentHandler;
 import org.jpc.term.visitor.TermVisitor;
+import org.jpc.util.salt.TermContentHandler;
 
 import com.google.common.base.Function;
 
@@ -51,25 +52,14 @@ public abstract class AbstractVar extends Term {
 		contentHandler.startVariable(getName());	
 	}
 
-	
-	@Override
-	public String toString(OperatorsContext operatorsContext) {
-		return toString();
-	}
-	
 	/**
 	 * Returns a Prolog source text representation of this Variable
 	 * 
 	 * @return  a Prolog source text representation of this Variable
 	 */
 	@Override
-	public String toString() {
+	public String toEscapedString(Dialect dialect, OperatorsContext operatorsContext) {
 		return getName();
-	}
-	
-	@Override
-	public String toEscapedString() {
-		return toString();
 	}
 	
 	/**

@@ -1,20 +1,20 @@
 package org.jpc.util.engine.supported;
 
+import org.jpc.engine.dialect.Dialect;
+
 public class Xsb extends EngineDescription {
 
-	public static final String XSB = "XSB";
-	public static final String XSB_DIALECT = XSB.toLowerCase();
 	public static final String XSB_BIN_DIRECTORY_PROPERTY_NAME = "XSB_BIN_DIRECTORY"; //environment variable with the path to the XSB executable.
 	private static final String EXECUTABLE_FILE_NAME = "xsb";
-	
+
 	@Override
 	public String getName() {
-		return XSB;
+		return getDialect().name();
 	}
 
 	@Override
-	public String getDialect() {
-		return XSB_DIALECT;
+	public Dialect getDialect() {
+		return Dialect.XSB;
 	}
 	
 	public String getExecutableFileName() {

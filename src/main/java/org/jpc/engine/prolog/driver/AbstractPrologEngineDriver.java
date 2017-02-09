@@ -88,7 +88,7 @@ public abstract class AbstractPrologEngineDriver<T extends PrologEngine> impleme
 		long endTime = System.nanoTime();
 		long total = (endTime - startTime)/1000000;
 		
-		String prologDialect = newPrologEngine.prologDialect();
+		String prologDialect = newPrologEngine.dialectFlag();
 		StringBuilder sb = new StringBuilder();
 		if(prologDialect == null) {
 			logger.warn("Attempt to query the Prolog dialect property from the Prolog engine failed.");

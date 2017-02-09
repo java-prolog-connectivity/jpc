@@ -18,7 +18,7 @@ public class FunctorIndexFunction implements Function<Term, Object> {
 		Object key = null;
 		if(term instanceof Compound) {
 			Compound compound = (Compound)term;
-			Term name = compound.getName();
+			Term name = compound.getNameTerm();
 			if(name.isGround()) //the name of the compound should be ground in order to be indexable.
 				key = compound.getFunctor();
 		} else if(term instanceof Atom) {

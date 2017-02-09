@@ -1,24 +1,23 @@
 package org.jpc.util.engine.supported;
 
 
+import org.jpc.engine.dialect.Dialect;
 import org.jpc.internal.os.OsUtil;
 
 public class Swi extends EngineDescription {
 
-	public static final String SWI = "SWI";
-	public static final String SWI_DIALECT = SWI.toLowerCase();
 	public static final String SWI_BIN_DIRECTORY_PROPERTY_NAME = "SWI_BIN_DIRECTORY";
 	private static final String EXECUTABLE_FILE_NAME_WINDOWS_OSX = "swipl"; //executable for windows or osx
 	private static final String EXECUTABLE_FILE_NAME_LINUX = "pl"; //executable for linux
 	
 	@Override
 	public String getName() {
-		return SWI;
+		return getDialect().name();
 	}
 
 	@Override
-	public String getDialect() {
-		return SWI_DIALECT;
+	public Dialect getDialect() {
+		return Dialect.SWI;
 	}
 	
 	public String getExecutableFileName() {

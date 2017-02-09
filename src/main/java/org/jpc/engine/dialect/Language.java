@@ -1,4 +1,4 @@
-package org.jpc.util.dialect;
+package org.jpc.engine.dialect;
 
 
 import static java.util.Arrays.asList;

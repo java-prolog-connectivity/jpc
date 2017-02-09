@@ -1,4 +1,4 @@
-package org.jpc.util.salt;
+package org.jpc.util.termprocessor;
 
 
 import java.util.ArrayDeque;
@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
-public class TermCollector<TermType> implements TermProcessor<TermType> {
+public class GenericTermCollector<TermType> implements GenericTermProcessor<TermType> {
 
     private Deque<TermType> terms = new ArrayDeque<>();
 

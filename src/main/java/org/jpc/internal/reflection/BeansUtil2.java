@@ -216,7 +216,7 @@ public class BeansUtil2 {
 	/*
 	private static PropertyDescriptor getPropertyDescriptor(Class clazz, String propertyName) {
 		for(PropertyDescriptor propertyDescriptor : PropertyUtils.getPropertyDescriptors(clazz)) {
-			if(propertyDescriptor.getName().equals(propertyName))
+			if(propertyDescriptor.getNameTerm().equals(propertyName))
 				return propertyDescriptor;
 		}
 		return null;

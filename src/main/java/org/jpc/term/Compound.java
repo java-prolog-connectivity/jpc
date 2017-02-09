@@ -8,13 +8,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import org.jpc.JpcException;
+import org.jpc.engine.dialect.Dialect;
 import org.jpc.engine.prolog.Operator;
 import org.jpc.engine.prolog.OperatorsContext;
-import org.jpc.util.salt.TermContentHandler;
 import org.jpc.term.compiler.Environment;
 import org.jpc.term.unification.NonUnifiableException;
 import org.jpc.term.visitor.TermVisitor;
+import org.jpc.util.salt.TermContentHandler;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
@@ -47,7 +47,7 @@ public final class Compound extends Term {
 	/**
 	 * Creates a Compound with id and args.
 	 * 
-	 * @param   id   the id of this Compound
+	 * @param   name   the name of this Compound
 	 * @param   args   the (one or more) arguments of this Compound
 	 */
 	public Compound(Term name, List<? extends Term> args) {
@@ -82,11 +82,11 @@ public final class Compound extends Term {
 			}
 			return list;
 		} else
-			throw new JpcException("The term " + this + " is not a list");
+			throw new NotAListException(this);
 	}
 	
 	public boolean hasName(String name) {
-		return getNameString().equals(name);
+		return getName().equals(name);
 	}
 	
 	public boolean hasName(Term term) {
@@ -108,13 +108,13 @@ public final class Compound extends Term {
 	 * 
 	 * @return the id of this Compound
 	 */
-	public Term getName() {
+	public Term getNameTerm() {
 		return name;
 	}
 	
-	public String getNameString() {
+	public String getName() {
 		if(name instanceof Atom) {
-			return ((Atom)name).getName();
+			return ((Atom) name).getName();
 		} else {
 			throw new RuntimeException("The compound functor is not an atom: " + name);
 		}
@@ -134,7 +134,7 @@ public final class Compound extends Term {
 	public boolean isGround() {
 		if(ground == null) {
 			boolean tmpGround = true;
-			if(!getName().isGround())
+			if(!getNameTerm().isGround())
 				tmpGround = false;
 			else {
 				for(Term arg : getArgs()) {
@@ -151,7 +151,7 @@ public final class Compound extends Term {
 	
 	public void accept(TermVisitor termVisitor) {
 		if(termVisitor.visitCompound(this)) {
-			getName().accept(termVisitor);
+			getNameTerm().accept(termVisitor);
 			for(Term child: args) {
 				child.accept(termVisitor);
 			}
@@ -167,23 +167,28 @@ public final class Compound extends Term {
 	@Override
 	protected void basicRead(TermContentHandler contentHandler, Function<Term, Term> termExpander) {
 		contentHandler.startCompound();
-		getName().read(contentHandler, termExpander);
+		getNameTerm().read(contentHandler, termExpander);
 		for(Term child: args) {
 			child.read(contentHandler, termExpander);
 		}
 		contentHandler.endCompound();
 	}
-	
+
+	/**
+	 * Returns a prefix functional representation of a Compound of the form id(arg1,...),
+	 * 
+	 * @return  string representation of an Compound
+	 */
 	@Override
-	public String toString(OperatorsContext operatorsContext) {
+	public String toEscapedString(Dialect dialect, OperatorsContext operatorsContext) {
 		StringBuilder sb = new StringBuilder();
 		if(isList()) {
 			sb.append("[");
 			List<String> members = new ArrayList<>();
 			for(Term term : asList()) {
-				members.add(term.toString(operatorsContext));
+				members.add(term.toEscapedString(dialect, operatorsContext));
 			}
-			sb.append(Joiner.on(",").join(members));
+			sb.append(Joiner.on(", ").join(members));
 			sb.append("]");
 		} else {
 			Operator op = operatorsContext.getOperator(this);
@@ -191,31 +196,21 @@ public final class Compound extends Term {
 				if(op.isUnary()) {
 					if(op.isPrefix()) {
 						sb.append(op.getName());
-						sb.append(arg(1).toString(operatorsContext));
+						sb.append(arg(1).toEscapedString(dialect, operatorsContext));
 					} else {
-						sb.append(arg(1).toString(operatorsContext));
+						sb.append(arg(1).toEscapedString(dialect, operatorsContext));
 						sb.append(op.getName());
 					}
 				} else {
-					sb.append(arg(1).toString(operatorsContext));
+					sb.append(arg(1).toEscapedString(dialect, operatorsContext));
 					sb.append(op.getName());
-					sb.append(arg(2).toString(operatorsContext));
+					sb.append(arg(2).toEscapedString(dialect, operatorsContext));
 				}
-					
-			} else
-				sb.append(toString());
+			} else {
+				sb.append(getNameTerm().toEscapedString(dialect, operatorsContext) + "(" + Term.toEscapedString(dialect, operatorsContext, args) + ")");
+			}
 		}
 		return sb.toString();
-	}
-	
-	/**
-	 * Returns a prefix functional representation of a Compound of the form id(arg1,...),
-	 * 
-	 * @return  string representation of an Compound
-	 */
-	@Override
-	public String toEscapedString() {
-		return getName().toEscapedString() + "(" + Term.toEscapedString(args) + ")";
 	}
 	
 	@Override
@@ -227,7 +222,7 @@ public final class Compound extends Term {
 
 	private int basicHashCode() {
 		List<Term> allFields = new ArrayList<Term>(getArgs());
-		allFields.add(0, getName());
+		allFields.add(0, getNameTerm());
 		return Objects.hash(allFields.toArray());
 	}
 	
@@ -264,7 +259,7 @@ public final class Compound extends Term {
 				throw new NonUnifiableException(this, term);
 			else {
 				Compound compound = (Compound) term;
-				getName().unify(compound.getName());
+				getNameTerm().unify(compound.getNameTerm());
 				for(int i=0; i<arity(); i++)
 					arg(i+1).unify(term.arg(i+1));
 			}
@@ -274,7 +269,7 @@ public final class Compound extends Term {
 	@Override
 	public Term preCompile(Environment env) {
 		Compound compiledCompound;
-		Term compiledName = getName().preCompile(env);
+		Term compiledName = getNameTerm().preCompile(env);
 		List<Term> compiledArgs = new ArrayList<>();
 		for(Term arg : getArgs()) {
 			compiledArgs.add(arg.preCompile(env));
@@ -287,7 +282,7 @@ public final class Compound extends Term {
 	@Override
 	public Term prepareForQuery(Environment env) {
 		Compound compiledCompound;
-		Term compiledName = getName().prepareForQuery(env);
+		Term compiledName = getNameTerm().prepareForQuery(env);
 		List<Term> compiledArgs = new ArrayList<>();
 		for(Term arg : getArgs()) {
 			compiledArgs.add(arg.prepareForQuery(env));
@@ -303,7 +298,7 @@ public final class Compound extends Term {
 		if(isGround())
 			framedCompound = this;
 		else {
-			Term framedName = getName();
+			Term framedName = getNameTerm();
 			if(!framedName.isGround())
 				framedName = framedName.prepareForFrame(env);
 			List<Term> framedArgs = new ArrayList<>();

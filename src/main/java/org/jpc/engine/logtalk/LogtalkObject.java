@@ -86,7 +86,7 @@ public class LogtalkObject<T extends Term> implements TermConvertable<T>, Prolog
 
 	public Term name() {
 		if(term instanceof Compound)
-			return ((Compound)term).getName();
+			return ((Compound)term).getNameTerm();
 		else
 			return term;
 	}

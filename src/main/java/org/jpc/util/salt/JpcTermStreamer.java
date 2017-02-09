@@ -9,10 +9,11 @@ import org.jpc.term.JRef.StrongJRef;
 import org.jpc.term.JRef.WeakJRef;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
+import org.jpc.util.termprocessor.GenericTermProcessor;
 
 public class JpcTermStreamer extends TermStreamer<Term> {
 
-	public JpcTermStreamer(TermProcessor<Term> termProcessor) {
+	public JpcTermStreamer(GenericTermProcessor<Term> termProcessor) {
 		super(termProcessor);
 	}
 

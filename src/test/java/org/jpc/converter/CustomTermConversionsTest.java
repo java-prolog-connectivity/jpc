@@ -20,7 +20,7 @@ public class CustomTermConversionsTest {
 	class HelloConverter implements FromTermConverter<Compound, String> {
 		@Override
 		public String fromTerm(Compound term, Type targetType, Jpc context) {
-			return term.getNameString() + " " + ((Atom)term.arg(1)).getName();
+			return term.getName() + " " + ((Atom)term.arg(1)).getName();
 		}
 	}
 	

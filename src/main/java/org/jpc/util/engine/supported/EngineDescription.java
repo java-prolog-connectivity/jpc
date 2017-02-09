@@ -1,5 +1,7 @@
 package org.jpc.util.engine.supported;
 
+import org.jpc.engine.dialect.Dialect;
+
 public abstract class EngineDescription {
 
 	public abstract String getName();
@@ -8,7 +10,7 @@ public abstract class EngineDescription {
 	 * 
 	 * @return the dialect as answered by the query "prolog_flag(dialect, Dialect)".
 	 */
-	public abstract String getDialect();
+	public abstract Dialect getDialect();
 	
 	public abstract String getDescription();
 	

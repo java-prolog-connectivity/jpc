@@ -2,10 +2,12 @@ package org.jpc.util;
 
 import static java.util.Arrays.asList;
 import static org.jpc.engine.prolog.PrologConstants.ANONYMOUS_VAR_NAME;
+import static org.jpc.util.termprocessor.TermCollector.termCollector;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jpc.term.AbstractVar;
 import org.jpc.term.Atom;
@@ -15,8 +17,8 @@ import org.jpc.term.Term;
 import org.jpc.term.Var;
 import org.jpc.util.salt.JpcTermStreamer;
 import org.jpc.util.salt.TermAdapter;
-import org.jpc.util.salt.TermCollector;
 import org.jpc.util.salt.TermContentHandler;
+import org.jpc.util.termprocessor.TermCollector;
 
 /**
  * An utility class for general purpose queries and term manipulation
@@ -106,7 +108,7 @@ public class PrologUtil {
 	 * @return
 	 */
 	public static Term replaceVariables(Term term, final String prefix) {
-		TermCollector<Term> collector = new TermCollector();
+		TermCollector collector = termCollector();
 		JpcTermStreamer termWriter = new JpcTermStreamer(collector);
 		TermAdapter variableAdapter = new TermAdapter(termWriter) {
 			@Override
@@ -128,11 +130,22 @@ public class PrologUtil {
 	}
 	
 	public static String escapeString(String s) {
-		String escapedString = s;
-		escapedString = escapedString.replaceAll("\\\\", Matcher.quoteReplacement("\\\\"));
-		escapedString = escapedString.replaceAll("'", Matcher.quoteReplacement("''")); //escaping ' with \' does not work correctly in XSB, therefore it is escaped with the alternative ''
-		escapedString = "'" + escapedString + "'";
-		return escapedString;
+		boolean requireQuotes = false;
+		s = s.replaceAll("\\\\", Matcher.quoteReplacement("\\\\"));
+		s = s.replaceAll("'", Matcher.quoteReplacement("''")); //escaping ' with \' does not work correctly in XSB, therefore it is escaped with the alternative ''
+		if (requireQuotes(s)) {
+			s = "'" + s + "'";
+		}
+		return s;
 	}
-	
+
+	// see https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html
+	private static final Pattern INVALID_ATOM_CHARS = Pattern.compile("[^\\w]");
+
+	private static boolean requireQuotes(String s) {
+		return s.isEmpty() ||
+				INVALID_ATOM_CHARS.matcher(s).find() ||
+				!Character.isLowerCase(s.charAt(0));
+	}
+
 }

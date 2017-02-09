@@ -5,12 +5,12 @@ import static org.jpc.engine.prolog.PrologConstants.FALSE;
 import static org.jpc.engine.prolog.PrologConstants.NIL_SYMBOL;
 import static org.jpc.engine.prolog.PrologConstants.TRUE;
 
-import org.jpc.JpcException;
+import org.jpc.engine.dialect.Dialect;
 import org.jpc.engine.prolog.OperatorsContext;
-import org.jpc.util.salt.TermContentHandler;
 import org.jpc.term.compiler.Environment;
 import org.jpc.term.visitor.TermVisitor;
 import org.jpc.util.PrologUtil;
+import org.jpc.util.salt.TermContentHandler;
 
 import com.google.common.base.Function;
 
@@ -24,16 +24,20 @@ public final class Atom extends Term {
 	public static final Atom TRUE_TERM = new Atom(TRUE);
 	public static final Atom FAIL_TERM = new Atom(FAIL); //preferring 'fail' over 'false' since 'fail' is ISO.
 	public static final Atom NIL = new Atom(NIL_SYMBOL);
-	
+
 	private final String name;
 	private String escapedName; //lazily initialized.
-	
-	public Atom(Boolean bool) {
-		this(bool.toString());
+
+	public static Atom atom(String name) {
+		return new Atom(name);
+	}
+
+	public static Atom atom(Boolean bool) {
+		return atom(bool.toString());
 	}
 	
 	/**
-	 * @param   id   the Atom's id (unquoted)
+	 * @param   name   the Atom's name (unquoted)
 	 */
 	public Atom(String name) {
 		this.name = name;
@@ -62,7 +66,7 @@ public final class Atom extends Term {
 		if(isList())
 			return new ListTerm();
 		else
-			throw new JpcException("The term " + this + " is not a list");
+			throw new NotAListException(this);
 	}
 
 	@Override
@@ -79,21 +83,16 @@ public final class Atom extends Term {
 	protected void basicRead(TermContentHandler contentHandler, Function<Term, Term> termExpander) {
 		contentHandler.startAtom(name);
 	}
-	
+
 	@Override
-	public String toEscapedString() {
+	public String toEscapedString(Dialect dialect, OperatorsContext operatorsContext) {
 		if(escapedName == null) {
 			escapedName = name;
 			if(!isList()) {
-				this.escapedName = PrologUtil.escapeString(escapedName);
+				escapedName = PrologUtil.escapeString(escapedName);
 			}
 		}
 		return escapedName;
-	}
-	
-	@Override
-	public String toString(OperatorsContext operatorsContext) {
-		return toString();
 	}
 	
 	@Override

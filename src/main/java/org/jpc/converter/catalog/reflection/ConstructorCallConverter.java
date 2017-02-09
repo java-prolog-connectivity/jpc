@@ -15,7 +15,7 @@ public class ConstructorCallConverter<T> implements FromTermConverter<Compound, 
 
 	@Override
 	public T fromTerm(Compound term, Type targetType, Jpc jpc) {
-		String className = term.getNameString();
+		String className = term.getName();
 		Class<? extends T> targetClass;
 		try {
 			targetClass = ReflectiveClass.classForName(className);

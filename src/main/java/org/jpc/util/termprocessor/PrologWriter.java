@@ -1,19 +1,35 @@
-package org.jpc.util.salt;
+package org.jpc.util.termprocessor;
 
 import org.jpc.JpcException;
+import org.jpc.engine.dialect.Dialect;
 import org.jpc.term.Term;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public abstract class PrologWriter implements TermProcessor<Term> {
+public abstract class PrologWriter implements TermProcessor {
 
 	private static final Logger logger = LoggerFactory.getLogger(PrologWriter.class);
+
+	private final Dialect dialect;
 
 	private boolean writeDirective;
 	private boolean writeClause;
 	private boolean readingLogtalkObjectTerm;
 	private Term currentLogtalkObjectTerm;
+
+
+	public PrologWriter() {
+		this(Dialect.JPC);
+	}
+
+	public PrologWriter(Dialect dialect) {
+		this.dialect = dialect;
+	}
+
+	public Dialect getDialect() {
+		return dialect;
+	}
 
 	private void resetLogtalkOjectTerm() {
 		currentLogtalkObjectTerm = null;

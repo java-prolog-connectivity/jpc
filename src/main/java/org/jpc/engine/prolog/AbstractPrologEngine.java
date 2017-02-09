@@ -1,23 +1,7 @@
 package org.jpc.engine.prolog;
 
 import static java.util.Arrays.asList;
-import static org.jpc.engine.prolog.PrologConstants.ABOLISH;
-import static org.jpc.engine.prolog.PrologConstants.ASSERTA;
-import static org.jpc.engine.prolog.PrologConstants.ASSERTZ;
-import static org.jpc.engine.prolog.PrologConstants.ATOM_CHARS;
-import static org.jpc.engine.prolog.PrologConstants.BAGOF;
-import static org.jpc.engine.prolog.PrologConstants.CD;
-import static org.jpc.engine.prolog.PrologConstants.CLAUSE;
-import static org.jpc.engine.prolog.PrologConstants.CURRENT_OP;
-import static org.jpc.engine.prolog.PrologConstants.CURRENT_PROLOG_FLAG;
-import static org.jpc.engine.prolog.PrologConstants.ENSURE_LOADED;
-import static org.jpc.engine.prolog.PrologConstants.FINDALL;
-import static org.jpc.engine.prolog.PrologConstants.FLUSH_OUTPUT;
-import static org.jpc.engine.prolog.PrologConstants.FORALL;
-import static org.jpc.engine.prolog.PrologConstants.RETRACT;
-import static org.jpc.engine.prolog.PrologConstants.RETRACT_ALL;
-import static org.jpc.engine.prolog.PrologConstants.SETOF;
-import static org.jpc.engine.prolog.PrologConstants.SET_PROLOG_FLAG;
+import static org.jpc.engine.prolog.PrologConstants.*;
 import static org.jpc.term.ListTerm.listTerm;
 import static org.jpc.term.Var.ANONYMOUS_VAR;
 import static org.jpc.util.JpcPreferences.JPC_LOADER_FILE;
@@ -33,6 +17,7 @@ import java.util.Map;
 
 import org.jpc.Jpc;
 import org.jpc.JpcBuilder;
+import org.jpc.engine.dialect.Dialect;
 import org.jpc.engine.logtalk.LogtalkEngine;
 import org.jpc.query.Query;
 import org.jpc.query.Solution;
@@ -43,9 +28,9 @@ import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
 import org.jpc.term.expansion.PositionalSymbolExpander;
-import org.jpc.util.TermJoiner;
 import org.jpc.util.LogtalkUtil;
 import org.jpc.util.PrologUtil;
+import org.jpc.util.TermJoiner;
 import org.jpc.util.engine.PrologResourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -148,8 +133,13 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 			terms.add(asTerm(s, context));
 		return terms;
 	}
-	
-	
+
+	@Override
+	public Dialect dialect() {
+		return Dialect.fromDialectFlag(dialectFlag());
+	}
+
+
 	/* ********************************************************************************************************************************
 	 * FLAGS
      **********************************************************************************************************************************
@@ -188,7 +178,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	}
 	
 	@Override
-	public String prologDialect() {
+	public String dialectFlag() {
 		return currentPrologFlag(PrologFlag.DIALECT);
 	}
 	
@@ -466,7 +456,7 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	@Override
 	public LogtalkEngine withLogtalk() {
 		boolean logtalkLoaded = false;
-		String prologDialect = prologDialect();
+		String prologDialect = dialectFlag();
 		logger.info("Attempting to load logtalk in a " + prologDialect + " Prolog engine...");
 		
 		long startTime = System.nanoTime();

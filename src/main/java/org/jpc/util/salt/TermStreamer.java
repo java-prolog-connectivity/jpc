@@ -3,10 +3,12 @@ package org.jpc.util.salt;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import org.jpc.util.termprocessor.GenericTermProcessor;
+
 
 public abstract class TermStreamer<TermType> implements TermContentHandler {
 
-	protected final TermProcessor termProcessor;
+	protected final GenericTermProcessor termProcessor;
 
 	/**
 	 * An auxiliar stack for storing partially built terms (like compounds)
@@ -17,7 +19,7 @@ public abstract class TermStreamer<TermType> implements TermContentHandler {
 		this((term) -> {});
 	}*/
 
-	public TermStreamer(TermProcessor<TermType> termProcessor) {
+	public TermStreamer(GenericTermProcessor<TermType> termProcessor) {
 		this.termProcessor = termProcessor;
 	}
 

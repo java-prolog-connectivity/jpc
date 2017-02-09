@@ -3,6 +3,7 @@ package org.jpc.engine.prolog;
 import java.util.List;
 
 import org.jpc.Jpc;
+import org.jpc.engine.dialect.Dialect;
 import org.jpc.engine.logtalk.LogtalkEngine;
 import org.jpc.query.Query;
 import org.jpc.term.Term;
@@ -79,7 +80,9 @@ public interface PrologEngine extends PrologDatabase {
 	List<Term> asTerms(List<String> termsString);
 	
 	List<Term> asTerms(List<String> termsString, Jpc context);
-	
+
+	Dialect dialect();
+
 	/* ********************************************************************************************************************************
 	 * FLAGS
      **********************************************************************************************************************************
@@ -95,7 +98,7 @@ public interface PrologEngine extends PrologDatabase {
 	
 	String currentPrologFlag(Flag flag);
 	
-	String prologDialect();
+	String dialectFlag();
 	
 	
 	/* ********************************************************************************************************************************

@@ -1,19 +1,21 @@
 package org.jpc.term;
 
 import static java.util.Arrays.asList;
+import static org.jpc.engine.prolog.PrologConstants.CONS_FUNCTOR;
+import static org.jpc.term.Atom.atom;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.jpc.util.PrologUtil;
 import org.junit.Test;
 
 public class CompoundTest {
-	Term t1 = new Compound("yellow", asList(new Compound("blue", asList(new Atom("red")))));
-	
+	private final Term t1 = new Compound("yellow", asList(new Compound("blue", asList(new Atom("red")))));
+	private final Compound listCompound = new Compound(CONS_FUNCTOR, asList(atom("a"),
+			new Compound(CONS_FUNCTOR, asList(atom("b"),
+					new Compound(CONS_FUNCTOR, asList(atom("c"), Atom.NIL))))));
+
+
 	@Test
 	public void testEquality() {
 		Term t2 = new Compound("yellow", asList(new Compound("blue", asList(new Atom("red")))));
@@ -40,6 +42,11 @@ public class CompoundTest {
 		assertFalse(t1.hasFunctor("yellow", 0));
 		assertFalse(t1.hasFunctor("yellow", 2));
 		assertFalse(t1.hasFunctor("orange", 1));
+	}
+
+	@Test
+	public void testCompoundListToString() {
+		assertEquals("[a, b, c]", listCompound.toString());
 	}
 
 }

@@ -1,5 +1,6 @@
 package org.jpc.term;
 
+import org.jpc.engine.dialect.Dialect;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.term.compiler.Environment;
 
@@ -39,10 +40,10 @@ public abstract class Number extends Term {
 	public boolean isGround() {
 		return true;
 	}
-	
+
 	@Override
-	public String toEscapedString() {
-		return value.toString();
+	public String toEscapedString(Dialect dialect, OperatorsContext operatorsContext) {
+		return getValue().toString();
 	}
 	
 	@Override
@@ -66,12 +67,6 @@ public abstract class Number extends Term {
 		Number other = (Number) obj;
 		return value.equals(other.value);
 	}
-
-	@Override
-	public String toString(OperatorsContext operatorsContext) {
-		return toString();
-	}
-
 	
 	@Override
 	public Term preCompile(Environment env) {

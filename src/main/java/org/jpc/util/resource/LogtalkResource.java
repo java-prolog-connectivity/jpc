@@ -1,6 +1,6 @@
 package org.jpc.util.resource;
 
-import static org.jpc.util.dialect.Language.LOGTALK;
+import static org.jpc.engine.dialect.Language.LOGTALK;
 
 import java.util.ArrayList;
 import java.util.List;

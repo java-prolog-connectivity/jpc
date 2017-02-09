@@ -7,21 +7,26 @@ import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 
 import org.jpc.JpcException;
+import org.jpc.engine.dialect.Dialect;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.internal.gc.CleanableSoftReference;
 import org.jpc.internal.gc.CleanableWeakReference;
 import org.jpc.internal.gc.ReferenceType;
 import org.jpc.internal.gc.ReferencesCleaner;
-import org.jpc.util.salt.TermContentHandler;
 import org.jpc.term.compiler.Environment;
 import org.jpc.term.unification.NonUnifiableException;
 import org.jpc.term.visitor.TermVisitor;
 import org.jpc.util.PrologUtil;
+import org.jpc.util.salt.TermContentHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Function;
 
 public abstract class JRef<T> extends Term {
-	
+
+	private final static Logger logger = LoggerFactory.getLogger(JRef.class);
+
 	private static ReferencesCleaner defaultJRefCleaner;
 
 	private static synchronized ReferencesCleaner getDefaultCleaner() {
@@ -90,18 +95,8 @@ public abstract class JRef<T> extends Term {
 	}
 
 	@Override
-	public String toEscapedString() {
+	public String toEscapedString(Dialect dialect, OperatorsContext oc) {
 		return PrologUtil.escapeString(getReferent().toString());
-	}
-
-	@Override
-	public String toString(OperatorsContext o) {
-		return toString();
-	}
-
-	@Override
-	public String toString() {
-		return getClass().getSimpleName() + "(" + getReferent().toString() + ")";
 	}
 
 	@Override
@@ -198,7 +193,7 @@ public abstract class JRef<T> extends Term {
 			else if(weakRef instanceof PhantomReference)
 				throw new JpcException("Phantom references are not supported.");
 			else
-				throw new JpcException("Unrecognized reference type."); //this should never happen (just in case future versions of Java add inadvertently new reference types).
+				throw new AssertionError("Unrecognized reference type."); //this should never happen (just in case future versions of Java add new reference types).
 		}
 		
 		@Override

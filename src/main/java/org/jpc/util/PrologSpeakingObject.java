@@ -43,7 +43,7 @@ public class PrologSpeakingObject {
 	}
 	
 	private <T> T invoke(Compound compound) {
-		return invoke((Atom)compound.getName(), compound.getArgs());
+		return invoke((Atom)compound.getNameTerm(), compound.getArgs());
 	}
 	
 	public <T> T invoke(Term messageTerm) {

@@ -5,8 +5,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
+import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.util.JpcPreferences;
+import org.jpc.util.termprocessor.PrologFileWriter;
 
 public class CachedPrologEngineWriter extends PrologFileWriter implements Closeable {
 
@@ -25,7 +27,9 @@ public class CachedPrologEngineWriter extends PrologFileWriter implements Closea
 	}
 	
 	public CachedPrologEngineWriter(PrologEngine prologEngine, JpcPreferences jpcPreferences) throws IOException {
-		super(File.createTempFile(getName(), "." + getTmpExtension(), jpcPreferences.getJpcTmpDirectory()));
+		super(prologEngine.dialect(),
+				OperatorsContext.empty(), // the final target is the engine so no need to pretty print operators.
+				File.createTempFile(getName(), "." + getTmpExtension(), jpcPreferences.getJpcTmpDirectory()));
 		this.prologEngine = prologEngine;
 		//file.deleteOnExit();
 	}
