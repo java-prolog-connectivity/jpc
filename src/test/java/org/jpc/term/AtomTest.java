@@ -1,5 +1,6 @@
 package org.jpc.term;
 
+import static org.jpc.term.Functor.functor;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -24,7 +25,7 @@ public class AtomTest {
 	
 	@Test
 	public void testHasFunctor() {
-		assertTrue(new Atom("hello").hasFunctor(new Functor(new Atom("hello"), 0)));
+		assertTrue(new Atom("hello").hasFunctor(functor("hello", 0)));
 	}
 	
 	@Test

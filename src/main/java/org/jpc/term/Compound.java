@@ -2,6 +2,7 @@ package org.jpc.term;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.jpc.engine.prolog.PrologConstants.CONS_FUNCTOR;
+import static org.jpc.term.Functor.functor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,9 +55,13 @@ public final class Compound extends Term {
 		checkArgument(!args.isEmpty(), "A compound term must have at least one argument");
 		this.name = name;
 		this.args = (List<Term>) args;
-		functor = new Functor(name, arity());
+		functor = functor(name, arity());
 	}
-	
+
+	public static Compound compound(String name, List args) {
+		return new Compound(name, args);
+	}
+
 	@Override
 	public boolean isHilog() {
 		return !(name instanceof Atom);

@@ -1,7 +1,7 @@
 package org.jpc.converter.catalog.reflection;
 
 import static java.util.Arrays.asList;
-import static org.jpc.converter.catalog.reflection.reification.ReificationConstants.CLASS_FUNCTOR_NAME;
+import static org.jpc.converter.catalog.reflection.type.ReificationConstants.CLASS_FUNCTOR_NAME;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.List;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
-import org.jpc.converter.catalog.reflection.reification.ClassConverter;
+import org.jpc.converter.catalog.reflection.type.ClassConverter;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.util.reification.ReflectiveClass;
@@ -24,7 +24,7 @@ public class ReflectiveClassConverter implements ToTermConverter<ReflectiveClass
 
 	@Override
 	public Compound toTerm(ReflectiveClass<?> staticClass, Class<Compound> termClass, Jpc jpc) {
-		String[] dotSplitted = staticClass.getWrappedClass().getName().split("[.]");
+		String[] dotSplitted = staticClass.getWrapped().getName().split("[.]");
 		List<String> packageFragmentNames = new ArrayList<>(asList(dotSplitted));
 		String classPart = packageFragmentNames.remove(packageFragmentNames.size() - 1);
 		List<String> classFragmentNames = asList(classPart.split("[$]"));

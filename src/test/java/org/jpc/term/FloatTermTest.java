@@ -1,5 +1,6 @@
 package org.jpc.term;
 
+import static org.jpc.term.Functor.functor;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -21,7 +22,7 @@ public class FloatTermTest {
 	
 	@Test
 	public void testHasFunctor() {
-		assertTrue(new Float(10.5).hasFunctor(new Functor(new Float(10.5), 0)));
+		assertTrue(new Float(10.5).hasFunctor(functor(new Float(10.5), 0)));
 	}
 	
 }

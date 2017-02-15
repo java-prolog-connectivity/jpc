@@ -3,7 +3,6 @@ package org.jpc.engine.provider;
 import org.jpc.engine.prolog.PrologEngine;
 
 /**
- * TODO move to interface PrologEngineProvider when Java8 is available
  * Currently used for unit testing.
  * @author sergioc
  *
@@ -19,7 +18,11 @@ public class PrologEngineProviderManager {
 	public static void setPrologEngine(PrologEngine prologEngine) {
 		setPrologEngineProvider(new SimpleEngineProvider(prologEngine));
 	}
-	
+
+	public static void resetPrologEngine() {
+		setPrologEngine(null);
+	}
+
 	public static synchronized void setPrologEngineProvider(PrologEngineProvider<? extends PrologEngine> prologEngineProvider) {
 		PrologEngineProviderManager.prologEngineProvider = prologEngineProvider;
 	}

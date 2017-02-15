@@ -3,6 +3,7 @@ package org.jpc.engine.embedded;
 import static java.util.Arrays.asList;
 import static org.jpc.engine.fixture.Student.STUDENT_FUNCTOR_NAME;
 import static org.jpc.engine.provider.PrologEngineProviderManager.getPrologEngine;
+import static org.jpc.term.Var.dontCare;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -27,7 +28,7 @@ public class ObjectReferenceTypesTest {
 
 	@Before
 	public void retractStudents() {
-		getPrologEngine().retractAll(new Compound(STUDENT_FUNCTOR_NAME, asList(Var.ANONYMOUS_VAR)));
+		getPrologEngine().retractAll(new Compound(STUDENT_FUNCTOR_NAME, asList(dontCare())));
 	}
 	
 	@Test
@@ -35,7 +36,7 @@ public class ObjectReferenceTypesTest {
 		Person person1 = new Person("Mary");
 		Person person2 = new Person("Mary");
 		PrologEngine prologEngine = getPrologEngine();
-		assertFalse(prologEngine.query(new Compound(STUDENT_FUNCTOR_NAME, asList(Var.ANONYMOUS_VAR))).hasSolution());
+		assertFalse(prologEngine.query(new Compound(STUDENT_FUNCTOR_NAME, asList(dontCare()))).hasSolution());
 		
 		prologEngine.assertz(new Compound(STUDENT_FUNCTOR_NAME, asList(JRef.jRef(person1))));
 		assertTrue(prologEngine.query(new Compound(STUDENT_FUNCTOR_NAME, asList(JRef.jRef(person1)))).hasSolution());
@@ -46,7 +47,7 @@ public class ObjectReferenceTypesTest {
 	public void testIdentityPreservation() {
 		Person person1 = new Person("Mary");
 		PrologEngine prologEngine = getPrologEngine();
-		assertFalse(prologEngine.query(new Compound(STUDENT_FUNCTOR_NAME, asList(Var.ANONYMOUS_VAR))).hasSolution());
+		assertFalse(prologEngine.query(new Compound(STUDENT_FUNCTOR_NAME, asList(dontCare()))).hasSolution());
 		
 		prologEngine.assertz(new Compound(STUDENT_FUNCTOR_NAME, asList(JRef.jRef(person1))));
 		Solution solution = prologEngine.query(new Compound(STUDENT_FUNCTOR_NAME, asList(new Var("X")))).oneSolutionOrThrow();
@@ -60,7 +61,7 @@ public class ObjectReferenceTypesTest {
 		Person person2 = new Person("Mary");
 		Person person3 = new Person("Mary");
 		PrologEngine prologEngine = getPrologEngine();
-		assertFalse(prologEngine.query(new Compound(STUDENT_FUNCTOR_NAME, asList(Var.ANONYMOUS_VAR))).hasSolution());
+		assertFalse(prologEngine.query(new Compound(STUDENT_FUNCTOR_NAME, asList(dontCare()))).hasSolution());
 		
 		prologEngine.assertz(new Compound(STUDENT_FUNCTOR_NAME, asList(JRef.jRef(person1))));
 		prologEngine.assertz(new Compound(STUDENT_FUNCTOR_NAME, asList(JRef.weakJRef(person2))));
@@ -80,13 +81,13 @@ public class ObjectReferenceTypesTest {
 		Runnable cleaningTask = new Runnable() {
 			@Override
 			public void run() {
-				prologEngine.retractAll(new Compound(STUDENT_FUNCTOR_NAME, asList(Var.ANONYMOUS_VAR)));
+				prologEngine.retractAll(new Compound(STUDENT_FUNCTOR_NAME, asList(dontCare())));
 			}
 		};
 		prologEngine.assertz(new Compound(STUDENT_FUNCTOR_NAME, asList(JRef.weakJRef(person, cleaningTask))));
-		assertTrue(prologEngine.query(new Compound(STUDENT_FUNCTOR_NAME, asList(Var.ANONYMOUS_VAR))).hasSolution());
+		assertTrue(prologEngine.query(new Compound(STUDENT_FUNCTOR_NAME, asList(dontCare()))).hasSolution());
 		person = null;
 		System.gc();
-		assertFalse(prologEngine.query(new Compound(STUDENT_FUNCTOR_NAME, asList(Var.ANONYMOUS_VAR))).hasSolution());
+		assertFalse(prologEngine.query(new Compound(STUDENT_FUNCTOR_NAME, asList(dontCare()))).hasSolution());
 	}
 }

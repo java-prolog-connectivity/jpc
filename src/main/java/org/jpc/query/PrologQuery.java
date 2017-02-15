@@ -28,7 +28,7 @@ public abstract class PrologQuery extends Query {
 	}
 	
 	public static Term exceptionHandledQueryTerm(Term term) {
-		return new Compound(CATCH, asList(term, new Var(Solution.EXCEPTION_VAR_NAME), Atom.TRUE_TERM));
+		return new Compound(CATCH, asList(term, new Var(Solution.EXCEPTION_VAR_NAME), Atom.TRUE));
 	}
 	
 	public static Term withOperatorsQueryTerm(Term term) {

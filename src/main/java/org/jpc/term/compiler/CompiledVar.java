@@ -1,6 +1,6 @@
 package org.jpc.term.compiler;
 
-import static org.jpc.engine.prolog.PrologConstants.ANONYMOUS_VAR_NAME;
+import static org.jpc.engine.prolog.PrologConstants.UNDERSCORE_VAR_NAME;
 
 import org.jpc.term.AbstractVar;
 import org.jpc.term.Term;
@@ -35,7 +35,7 @@ public final class CompiledVar extends AbstractVar {
 	@Override
 	public String getName() {
 		if(isAnonymous())
-			return ANONYMOUS_VAR_NAME;
+			return UNDERSCORE_VAR_NAME;
 		return "_" + clauseId + "_"+ varId;
 	}
 

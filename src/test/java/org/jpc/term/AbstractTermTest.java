@@ -2,16 +2,14 @@ package org.jpc.term;
 
 import static java.util.Arrays.asList;
 import static org.jpc.term.ListTerm.listTerm;
-import static org.jpc.term.Var.ANONYMOUS_VAR;
+import static org.jpc.term.Var.dontCare;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jpc.converter.TermConvertable;
 import org.junit.Test;
 
 /**
@@ -25,12 +23,12 @@ public class AbstractTermTest {
 	Term bVar = new Var("B");
 	Term namedAnonVar = new Var("_A");
 
-	Term t0 = new Compound(aAtom, asList(ANONYMOUS_VAR));
-	Term t1 = new Compound(aAtom, asList(new Compound(ANONYMOUS_VAR, asList(aVar))));
-	Term t2 = new Compound(aAtom, asList(new Compound(ANONYMOUS_VAR, asList(
+	Term t0 = new Compound(aAtom, asList(dontCare()));
+	Term t1 = new Compound(aAtom, asList(new Compound(dontCare(), asList(aVar))));
+	Term t2 = new Compound(aAtom, asList(new Compound(dontCare(), asList(
 			listTerm(asList(aVar, aVar))))));
-	Term t3 = new Compound(aAtom, asList(new Compound(ANONYMOUS_VAR, asList(
-			listTerm(asList(aAtom, aVar, bVar, namedAnonVar, ANONYMOUS_VAR))))));
+	Term t3 = new Compound(aAtom, asList(new Compound(dontCare(), asList(
+			listTerm(asList(aAtom, aVar, bVar, namedAnonVar, dontCare()))))));
 	
 	
 	@Test
@@ -39,7 +37,7 @@ public class AbstractTermTest {
 		assertFalse(aAtom.hasVariable("A"));
 		assertTrue(namedAnonVar.hasVariable("_A"));
 		assertFalse(namedAnonVar.hasVariable("_"));
-		assertTrue(ANONYMOUS_VAR.hasVariable("_"));
+		assertTrue(dontCare().hasVariable("_"));
 		
 		assertTrue(t0.hasVariable("_"));
 		assertFalse(t0.hasVariable("A"));
@@ -61,7 +59,7 @@ public class AbstractTermTest {
 		assertEquals(asList(), aAtom.getVariableNames());
 		assertEquals(asList("A"), aVar.getVariableNames());
 		assertEquals(asList("_A"), namedAnonVar.getVariableNames());
-		assertEquals(asList("_"), ANONYMOUS_VAR.getVariableNames());
+		assertEquals(asList("_"), dontCare().getVariableNames());
 		
 		assertEquals(asList("_"), t0.getVariableNames());
 		assertEquals(asList("_", "A"), t1.getVariableNames());
@@ -74,7 +72,7 @@ public class AbstractTermTest {
 		assertEquals(asList(), aAtom.getNamedVariablesNames());
 		assertEquals(asList("A"), aVar.getNamedVariablesNames());
 		assertEquals(asList("_A"), namedAnonVar.getNamedVariablesNames());
-		assertEquals(asList(), ANONYMOUS_VAR.getNamedVariablesNames());
+		assertEquals(asList(), dontCare().getNamedVariablesNames());
 		
 		assertEquals(asList(), t0.getNamedVariablesNames());
 		assertEquals(asList("A"), t1.getNamedVariablesNames());
@@ -93,7 +91,7 @@ public class AbstractTermTest {
 		
 		assertEquals(aAtom, aAtom.changeVariablesNames(map));
 		assertEquals(newAVar, aVar.changeVariablesNames(map));
-		assertEquals(newAnon, ANONYMOUS_VAR.changeVariablesNames(map));
+		assertEquals(newAnon, dontCare().changeVariablesNames(map));
 		
 		assertEquals(new Compound(aAtom, asList(newAnon)), 
 				t0.changeVariablesNames(map));
@@ -116,7 +114,7 @@ public class AbstractTermTest {
 		
 		assertEquals(aAtom, aAtom.replaceVariables(map));
 		assertEquals(newAVar, aVar.replaceVariables(map));
-		assertEquals(newAnon, ANONYMOUS_VAR.replaceVariables(map));
+		assertEquals(newAnon, dontCare().replaceVariables(map));
 		
 		assertEquals(new Compound(aAtom, asList(newAnon)), 
 				t0.replaceVariables(map));

@@ -1,12 +1,10 @@
 package org.jpc.term;
 
-import static org.jpc.engine.prolog.PrologConstants.FAIL;
-import static org.jpc.engine.prolog.PrologConstants.FALSE;
 import static org.jpc.engine.prolog.PrologConstants.NIL_SYMBOL;
-import static org.jpc.engine.prolog.PrologConstants.TRUE;
 
 import org.jpc.engine.dialect.Dialect;
 import org.jpc.engine.prolog.OperatorsContext;
+import org.jpc.engine.prolog.PrologConstants;
 import org.jpc.term.compiler.Environment;
 import org.jpc.term.visitor.TermVisitor;
 import org.jpc.util.PrologUtil;
@@ -21,9 +19,10 @@ import com.google.common.base.Function;
  */
 public final class Atom extends Term {
 
-	public static final Atom TRUE_TERM = new Atom(TRUE);
-	public static final Atom FAIL_TERM = new Atom(FAIL); //preferring 'fail' over 'false' since 'fail' is ISO.
-	public static final Atom NIL = new Atom(NIL_SYMBOL);
+	public static final Atom TRUE = new Atom(PrologConstants.TRUE);
+	public static final Atom FAIL = new Atom(PrologConstants.FAIL);
+	public static final Atom FALSE = new Atom(PrologConstants.FALSE);
+	public static final Atom NIL = new Atom(PrologConstants.NIL_SYMBOL);
 
 	private final String name;
 	private String escapedName; //lazily initialized.
@@ -35,7 +34,7 @@ public final class Atom extends Term {
 	public static Atom atom(Boolean bool) {
 		return atom(bool.toString());
 	}
-	
+
 	/**
 	 * @param   name   the Atom's name (unquoted)
 	 */
@@ -53,7 +52,7 @@ public final class Atom extends Term {
 	}
 	
 	public boolean isBoolean() {
-		return getName().equals(TRUE) || getName().equals(FAIL) || getName().equals(FALSE);
+		return getName().equals(PrologConstants.TRUE) || getName().equals(PrologConstants.FAIL) || getName().equals(PrologConstants.FALSE);
 	}
 	
 	@Override

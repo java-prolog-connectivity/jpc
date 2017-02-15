@@ -1,7 +1,7 @@
-package org.jpc.converter.catalog.reflection.reification;
+package org.jpc.converter.catalog.reflection.type;
 
 import static java.util.Arrays.asList;
-import static org.jpc.converter.catalog.reflection.reification.ReificationConstants.TYPE_VARIABLE_FUNCTOR_NAME;
+import static org.jpc.converter.catalog.reflection.type.ReificationConstants.TYPE_VARIABLE_FUNCTOR_NAME;
 
 import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;

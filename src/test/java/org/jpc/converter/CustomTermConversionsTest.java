@@ -1,6 +1,7 @@
 package org.jpc.converter;
 
 import static java.util.Arrays.asList;
+import static org.jpc.term.Var.dontCare;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -27,7 +28,7 @@ public class CustomTermConversionsTest {
 	@Test
 	public void testNonGroundQuantification() {
 		JpcBuilder builder = JpcBuilder.create();
-		Compound helloCompound = new Compound("hello",  asList(Var.ANONYMOUS_VAR)); //the converter will be applied for any term having the form: hello(_)
+		Compound helloCompound = new Compound("hello",  asList(dontCare())); //the converter will be applied for any term having the form: hello(_)
 		builder.register(new HelloConverter(), helloCompound);
 		Jpc jpc = builder.build();
 		Compound helloWorldCompound = new Compound("hello",  asList(new Atom("world")));
@@ -62,7 +63,7 @@ public class CustomTermConversionsTest {
 		assertEquals("hello world", s);
 		
 		//since the argument of the compound is an anonymous variable, this variable will not be replaced from the unified term in the Prolog database (the atom "world").
-		ungroundCompound = new Compound("hello",  asList(Var.ANONYMOUS_VAR)); 
+		ungroundCompound = new Compound("hello",  asList(dontCare()));
 		try {
 			jpc.fromTerm(ungroundCompound);
 			fail(); //Implementation note: still trying to decide if this is a feature or a bug.

@@ -1,7 +1,7 @@
 package org.jpc.term;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.jpc.engine.prolog.PrologConstants.ANONYMOUS_VAR_NAME;
+import static org.jpc.engine.prolog.PrologConstants.UNDERSCORE_VAR_NAME;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +17,10 @@ import org.jpc.term.compiler.UncompiledTermException;
  */
 public final class Var extends AbstractVar {
 
-	public static final Var ANONYMOUS_VAR = new Var(ANONYMOUS_VAR_NAME);
+	private static final Var UNDERSCORE_VAR = new Var(UNDERSCORE_VAR_NAME);
 	
 	public static boolean isUnderscoreVariableName(String variableName) {
-		return variableName.substring(0, 1).equals(ANONYMOUS_VAR_NAME); //the variable id is equals to "_" or starts with "_"
+		return variableName.substring(0, 1).equals(UNDERSCORE_VAR_NAME); //the variable id is equals to "_" or starts with "_"
 	}
 	
 	public static List<Var> asVariables(Iterable<String> variablesNames) {
@@ -46,17 +46,25 @@ public final class Var extends AbstractVar {
 	protected final String name; // the id of this Variable
 	
 	public Var() {
-		this.name = ANONYMOUS_VAR_NAME;
+		this.name = UNDERSCORE_VAR_NAME;
 	}
 	
 	public Var(String name) {
 		checkArgument(isValidVariableName(name), "The variable id " + name + " is not valid");
 		this.name = name;
 	}
-	
+
+	public static Var dontCare() {
+		return UNDERSCORE_VAR;
+	}
+
+	public static Var var(String name) {
+		return new Var(name);
+	}
+
 	@Override
 	public boolean isAnonymous() {
-		return name.equals(ANONYMOUS_VAR_NAME);
+		return name.equals(UNDERSCORE_VAR_NAME);
 	}
 	
 	/**

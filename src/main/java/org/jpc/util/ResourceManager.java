@@ -69,7 +69,7 @@ public class ResourceManager {
 	 * @param url
 	 * @return a boolean indicating if the url has been processed after this call
 	 * if the URL was already processed before returns false
-	 * If it is not possible to process the URL an exception will be launched
+	 * If it is not possible to accept the URL an exception will be launched
 	 */
 	public synchronized boolean process(URL url) {
 		if(hasBeenProcessed(url))

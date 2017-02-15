@@ -3,6 +3,7 @@ package org.jpc.engine.prolog;
 import static java.util.Arrays.asList;
 import static org.jpc.engine.fixture.Student.STUDENT_FUNCTOR_NAME;
 import static org.jpc.engine.prolog.PrologEngines.defaultPrologEngine;
+import static org.jpc.term.Var.dontCare;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -34,7 +35,7 @@ public class SymbolicReferenceTypesTest {
 
 	@Before
 	public void retractStudents() {
-		defaultPrologEngine().retractAll(new Compound(STUDENT_FUNCTOR_NAME, asList(Var.ANONYMOUS_VAR)));
+		defaultPrologEngine().retractAll(new Compound(STUDENT_FUNCTOR_NAME, asList(dontCare())));
 	}
 	
 	@Test

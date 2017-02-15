@@ -1,8 +1,9 @@
 package org.jpc.util;
 
 import static java.util.Arrays.asList;
-import static org.jpc.engine.prolog.PrologConstants.ANONYMOUS_VAR_NAME;
-import static org.jpc.util.termprocessor.TermCollector.termCollector;
+import static org.jpc.engine.prolog.PrologConstants.UNDERSCORE_VAR_NAME;
+import static org.jpc.term.Var.dontCare;
+import static org.jpc.util.termprocessor.JpcTermCollector.termCollector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ import org.jpc.term.Var;
 import org.jpc.util.salt.JpcTermStreamer;
 import org.jpc.util.salt.TermAdapter;
 import org.jpc.util.salt.TermContentHandler;
-import org.jpc.util.termprocessor.TermCollector;
+import org.jpc.util.termprocessor.JpcTermCollector;
 
 /**
  * An utility class for general purpose queries and term manipulation
@@ -90,7 +91,7 @@ public class PrologUtil {
 	public static List<Var> anonymousVariables(int n) {
 		List<Var> variablesList = new ArrayList<>();
 		for(int i=0; i<n; i++) {
-			variablesList.add(Var.ANONYMOUS_VAR);
+			variablesList.add(dontCare());
 		}
 		return variablesList;
 	}
@@ -108,16 +109,16 @@ public class PrologUtil {
 	 * @return
 	 */
 	public static Term replaceVariables(Term term, final String prefix) {
-		TermCollector collector = termCollector();
+		JpcTermCollector collector = termCollector();
 		JpcTermStreamer termWriter = new JpcTermStreamer(collector);
 		TermAdapter variableAdapter = new TermAdapter(termWriter) {
 			@Override
 			public TermContentHandler startVariable(String name) {
 				String newName = null;
-				if(name.equals(ANONYMOUS_VAR_NAME)) {
-					newName = ANONYMOUS_VAR_NAME;
-				} else if(name.substring(0, 1).equals(ANONYMOUS_VAR_NAME)) {
-					newName = ANONYMOUS_VAR_NAME + prefix + name;
+				if(name.equals(UNDERSCORE_VAR_NAME)) {
+					newName = UNDERSCORE_VAR_NAME;
+				} else if(name.substring(0, 1).equals(UNDERSCORE_VAR_NAME)) {
+					newName = UNDERSCORE_VAR_NAME + prefix + name;
 				} else {
 					newName = prefix + name;
 				}

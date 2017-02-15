@@ -1,6 +1,7 @@
 package org.jpc.converter.typesolver;
 
 import static java.util.Arrays.asList;
+import static org.jpc.term.Functor.functor;
 
 import java.lang.reflect.Type;
 
@@ -61,7 +62,7 @@ public class JpcTypeSolverManager extends JGumTypeSolverManager {
 		super(jgum);
 		this.embeddedEngine = embeddedEngine;
 		MutableIndexManager indexManager = embeddedEngine.getIndexManager();
-		Functor typeSolverFunctor = new Functor(TYPE_SOLVER_FUNCTOR_NAME, 2);
+		Functor typeSolverFunctor = functor(TYPE_SOLVER_FUNCTOR_NAME, 2);
 		IndexDescriptor indexDescriptor = IndexDescriptor.forIndexedArgument(1, indexManager); //makes use of any index defined for the first argument.
 		indexManager.setIndexDescriptor(typeSolverFunctor, indexDescriptor); //clause heads having TYPE_SOLVER_FUNCTOR_NAME as a functor name will be indexed according to the first argument of the term head.
 	}

@@ -4,13 +4,13 @@ import static org.junit.Assert.assertEquals;
 
 import org.jpc.Jpc;
 import org.jpc.JpcBuilder;
-import org.jpc.converter.catalog.reflection.reification.TypeConversionsTest.A.B.C;
+import org.jpc.converter.catalog.reflection.type.TypeConversionsTest.A.B.C;
 import org.jpc.term.Compound;
 import org.jpc.util.reification.ReflectiveClass;
 import org.junit.Test;
 
 
-public class StaticClassConversionsTest {
+public class ReflectiveClassConversionsTest {
 
 	Jpc jpc = JpcBuilder.create().build();
 	

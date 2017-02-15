@@ -1,6 +1,8 @@
 package org.jpc.engine.embedded;
 
 import static java.util.Arrays.asList;
+import static org.jpc.term.Functor.functor;
+import static org.jpc.term.Var.dontCare;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -12,7 +14,6 @@ import org.jpc.query.Query;
 import org.jpc.query.Solution;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
-import org.jpc.term.Functor;
 import org.jpc.term.JRef;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
@@ -69,7 +70,7 @@ public class JpcEmbeddedEngineSpecificTest {
 		assertQueryAndRetract(new JpcEngine(), compound);
 		compound = new Compound("x", asList(new Var("X"), new Var("X"), new Var("X")));
 		assertQueryAndRetract(new JpcEngine(), compound);
-		compound = new Compound("x", asList(Var.ANONYMOUS_VAR, Var.ANONYMOUS_VAR, Var.ANONYMOUS_VAR));
+		compound = new Compound("x", asList(dontCare(), dontCare(), dontCare()));
 		assertQueryAndRetract(new JpcEngine(), compound);
 	}
 	
@@ -100,7 +101,7 @@ public class JpcEmbeddedEngineSpecificTest {
 	public void testQueryIndexedCompound() {
 		JpcEngine engine = new JpcEngine();
 		IndexDescriptor indexDescriptor = new IndexDescriptor(new UpdatableIndexFunction(ArgumentIndexFunction.firstArgumentFunction()));
-		engine.getIndexManager().setIndexDescriptor(new Functor(new Atom("a"), 3), indexDescriptor);
+		engine.getIndexManager().setIndexDescriptor(functor("a", 3), indexDescriptor);
 		queryingCompound(engine);
 	}
 	

@@ -31,7 +31,7 @@ public class PrologSpeakingObject {
 	}
 
 	public Object getWrappedObject() {
-		return reflectiveObject.getWrappedObject();
+		return reflectiveObject.getWrapped();
 	}
 
 	public Jpc getJpcContext() {
@@ -64,7 +64,7 @@ public class PrologSpeakingObject {
 		for(int i = 0; i<argTerms.size(); i++) {
 			args.add(jpc.fromTerm(argTerms.get(i)));
 		}
-		return reflectiveObject.invoke(methodName, args);
+		return (T) reflectiveObject.invoke(methodName, args);
 	}
 
 	public void setField(Atom fieldName, Term fieldValueTerm) {
@@ -82,7 +82,7 @@ public class PrologSpeakingObject {
 	}
 	
 	public <T> T getField(Atom fieldName) {
-		return reflectiveObject.getField(fieldName.getName());
+		return (T) reflectiveObject.getField(fieldName.getName());
 	}
 	
 }

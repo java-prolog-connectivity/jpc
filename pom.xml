@@ -76,22 +76,26 @@
 
 	</dependencies>
 
-
 	<build>
-		<plugins>   
+		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.6</version>
 				<configuration>
-<!-- 					<excludes>
-					    <exclude>org/jpc/engine/logtalk/**/*.java</exclude>
-					    <exclude>org/jpc/engine/prolog/**/*.java</exclude>
-				    	<exclude>org/jpc/util/engine/**/*.java</exclude>
-		      		</excludes> -->
-		      		<includes>
-        				<include>org/jpc/JpcTestSuite.java</include>
-      				</includes>
+					<excludes>
+						<exclude>org/jpc/util/engine/PrologResourceLoaderTest.java</exclude>
+						<exclude>org/jpc/engine/prolog/PrologEngineTest.java</exclude>
+						<exclude>org/jpc/term/RefTermTest.java</exclude>
+						<exclude>org/jpc/util/engine/PrologResourceLoaderTest.java</exclude>
+						<exclude>org/jpc/engine/prolog/SymbolicReferenceTypesTest.java</exclude>
+						<exclude>org/jpc/engine/logtalk/LogtalkSideApiTest.java</exclude>
+						<exclude>org/jpc/engine/prolog/PrologErrorsTest.java</exclude>
+						<exclude>org/jpc/engine/embedded/ObjectReferenceTypesTest.java</exclude>
+						<exclude>org/jpc/engine/prolog/ObservableQueryTest.java</exclude>
+						<exclude>org/jpc/engine/prolog/AnsweringJavaObjectsTest.java</exclude>
+						<exclude>org/jpc/engine/prolog/QueryLifeCycleTest.java</exclude>
+						<exclude>org/jpc/engine/logtalk/LogtalkEngineTest.java</exclude>
+					</excludes>
 				</configuration>
 			</plugin>
 		</plugins>

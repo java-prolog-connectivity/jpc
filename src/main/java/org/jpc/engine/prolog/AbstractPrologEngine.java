@@ -3,7 +3,7 @@ package org.jpc.engine.prolog;
 import static java.util.Arrays.asList;
 import static org.jpc.engine.prolog.PrologConstants.*;
 import static org.jpc.term.ListTerm.listTerm;
-import static org.jpc.term.Var.ANONYMOUS_VAR;
+import static org.jpc.term.Var.dontCare;
 import static org.jpc.util.JpcPreferences.JPC_LOADER_FILE;
 import static org.jpc.util.JpcPreferences.JPC_LOGTALK_LOADER_FILE;
 import static org.jpc.util.JpcPreferences.JPC_VAR_PREFIX;
@@ -204,8 +204,8 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	public boolean isBinaryOperator(String op) {
 		TermJoiner joiner = TermJoiner.getDefault();
 		return query(joiner.join(
-				new Compound(CURRENT_OP, asList(ANONYMOUS_VAR, new Var("Type"), new Atom(op))), 
-				new Compound(ATOM_CHARS, Arrays.<Term>asList(new Var("Type"), listTerm(ANONYMOUS_VAR, new Atom("f"), ANONYMOUS_VAR)))
+				new Compound(CURRENT_OP, asList(dontCare(), new Var("Type"), new Atom(op))),
+				new Compound(ATOM_CHARS, Arrays.<Term>asList(new Var("Type"), listTerm(dontCare(), new Atom("f"), dontCare())))
 			)).hasSolution();
 		//return createQuery("current_op(_, Type, '" + op + "'), atom_chars(Type, [_, f, _])").hasSolution();
 	}
@@ -214,8 +214,8 @@ public abstract class AbstractPrologEngine implements PrologEngine {
 	public boolean isUnaryOperator(String op) {
 		TermJoiner joiner = TermJoiner.getDefault();
 		return query(joiner.join(
-				new Compound(CURRENT_OP, asList(ANONYMOUS_VAR, new Var("Type"), 
-				new Atom(op))), new Compound(ATOM_CHARS, asList(new Var("Type"), listTerm(new Atom("f"), ANONYMOUS_VAR)))
+				new Compound(CURRENT_OP, asList(dontCare(), new Var("Type"),
+				new Atom(op))), new Compound(ATOM_CHARS, asList(new Var("Type"), listTerm(new Atom("f"), dontCare())))
 			)).hasSolution();
 		//return createQuery("current_op(_, Type, '" + op + "'), atom_chars(Type, [f, _])").hasSolution();
 	}

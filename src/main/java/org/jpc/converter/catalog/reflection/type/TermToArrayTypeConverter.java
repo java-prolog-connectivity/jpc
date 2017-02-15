@@ -1,4 +1,4 @@
-package org.jpc.converter.catalog.reflection.reification;
+package org.jpc.converter.catalog.reflection.type;
 
 import static org.jpc.internal.reflection.ReflectionUtil.genericArrayType;
 

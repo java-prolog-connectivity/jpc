@@ -1,8 +1,9 @@
-package org.jpc.converter.catalog.reflection.reification;
+package org.jpc.converter.catalog.reflection.type;
 
 import static java.util.Arrays.asList;
-import static org.jpc.converter.catalog.reflection.reification.ReificationConstants.TYPE_VARIABLE_FUNCTOR_NAME;
+import static org.jpc.converter.catalog.reflection.type.ReificationConstants.TYPE_VARIABLE_FUNCTOR_NAME;
 import static org.jpc.internal.reflection.ReflectionUtil.typeVariable;
+import static org.jpc.term.Var.dontCare;
 
 import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.Type;
@@ -17,7 +18,6 @@ import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
-import org.jpc.term.Var;
 
 
 public class TypeVariableToTermConverter implements ToTermConverter<TypeVariable<? extends GenericDeclaration>, Compound>, FromTermConverter<Compound, TypeVariable<? extends GenericDeclaration>> {
@@ -30,7 +30,7 @@ public class TypeVariableToTermConverter implements ToTermConverter<TypeVariable
 		if(genericDeclaration != null)
 			genericDeclarationTerm = jpc.toTerm(genericDeclaration); //TODO: Fix. Currently will throw a ConversionException if the generic declaration is not a class.
 		else
-			genericDeclarationTerm = Var.ANONYMOUS_VAR;
+			genericDeclarationTerm = dontCare();
 		
 		Type[] upperBounds = variableTypeWrapper.getUpperBounds();
 		Type[] lowerBounds = variableTypeWrapper.getLowerBounds();

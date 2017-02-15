@@ -1,6 +1,7 @@
 package org.jpc.engine.embedded.database;
 
 import static java.util.Arrays.asList;
+import static org.jpc.term.Functor.functor;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,7 +24,7 @@ public class IndexManager {
 	
 	static {
 		Map<Functor, List<IndexDescriptor>> functorIndexes = new HashMap<>();
-		functorIndexes.put(new Functor(DIRECTIVE_FUNCTOR_NAME, 2), asList(IndexDescriptor.forArgumentFunctor(1)));
+		functorIndexes.put(functor(DIRECTIVE_FUNCTOR_NAME, 2), asList(IndexDescriptor.forArgumentFunctor(1)));
 		systemIndexManager = new IndexManager(functorIndexes);
 	}
 	

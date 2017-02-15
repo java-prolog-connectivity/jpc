@@ -1,11 +1,12 @@
 package org.jpc.util.reification;
 
+import static java.util.Collections.emptyList;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -13,16 +14,16 @@ import java.util.Map.Entry;
 import org.jpc.internal.reflection.BeansUtil2;
 import org.jpc.internal.reflection.ReflectionUtil;
 
-public class ReflectiveObject {
+public class ReflectiveObject<T> {
 
-	protected static <T> T applyMethod(Object receiver, Class<?> receiverClass, String methodName, List<? extends Object> args) {
-		T applied;
+	protected static <U> U applyMethod(Object receiver, Class<?> receiverClass, String methodName, List<? extends Object> args) {
+		U applied;
 		Class<?>[] argTypes = new Class[args.size()];			
 		for(int i = 0; i<args.size(); i++) {
 			argTypes[i] = args.get(i).getClass();
 		}
 		if(methodName.equals("new")) {
-			Constructor<T> constructor = ReflectionUtil.<T>getMatchingAccessibleConstructor((Class<T>)receiverClass, argTypes);
+			Constructor<U> constructor = ReflectionUtil.<U>getMatchingAccessibleConstructor( (Class<U>) receiverClass, argTypes);
 			try {
 				applied = constructor.newInstance(args.toArray());
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
@@ -33,7 +34,7 @@ public class ReflectiveObject {
 			if(method == null)
 				throw new RuntimeException("No matching method: " + methodName + " with types: " + argTypes + " in class: " + receiverClass);
 			try {
-				applied = (T) method.invoke(receiver, args.toArray()); //receiver is ignored if the method is static.
+				applied = (U) method.invoke(receiver, args.toArray()); //receiver is ignored if the method is static.
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				throw new RuntimeException(e);
 			}
@@ -42,29 +43,29 @@ public class ReflectiveObject {
 	}
 	
 
-	private final Object wrappedObject;
+	private final T wrapped;
 	
-	public ReflectiveObject(Object wrappedObject) {
-		this.wrappedObject = wrappedObject;
+	public ReflectiveObject(T wrappedObject) {
+		this.wrapped = wrappedObject;
 	}
 
-	public Object getWrappedObject() {
-		return wrappedObject;
+	public T getWrapped() {
+		return wrapped;
 	}
 	
-	protected Object getTargetObject() {
-		return wrappedObject;
+	protected T getTargetObject() {
+		return wrapped;
 	}
 	
 	protected Class<?> getTargetClass() {
-		return wrappedObject.getClass();
+		return wrapped.getClass();
 	}
 	
-	public <T> T invoke(String methodName) {
-		return invoke(methodName, Collections.emptyList());
+	public <U> U invoke(String methodName) {
+		return invoke(methodName, emptyList());
 	}
 	
-	public <T> T invoke(String methodName, List<? extends Object> args) {
+	public <U> U invoke(String methodName, List<? extends Object> args) {
 		return applyMethod(getTargetObject(), getTargetClass(), methodName, args);
 	}
 	
@@ -113,7 +114,7 @@ public class ReflectiveObject {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((wrappedObject == null) ? 0 : wrappedObject.hashCode());
+				+ ((wrapped == null) ? 0 : wrapped.hashCode());
 		return result;
 	}
 
@@ -126,10 +127,10 @@ public class ReflectiveObject {
 		if (getClass() != obj.getClass())
 			return false;
 		ReflectiveObject other = (ReflectiveObject) obj;
-		if (wrappedObject == null) {
-			if (other.wrappedObject != null)
+		if (wrapped == null) {
+			if (other.wrapped != null)
 				return false;
-		} else if (!wrappedObject.equals(other.wrappedObject))
+		} else if (!wrapped.equals(other.wrapped))
 			return false;
 		return true;
 	}

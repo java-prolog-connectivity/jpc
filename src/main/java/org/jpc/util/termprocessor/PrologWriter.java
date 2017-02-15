@@ -45,7 +45,7 @@ public abstract class PrologWriter implements TermProcessor {
 	
 	
 	@Override
-	public void process(Term term) {
+	public void accept(Term term) {
 		if(readingLogtalkObjectTerm) {
 			setCurrentLogtalkObjectTerm(term); //the read term is the logtalk object context for the instructions that come next
 			readingLogtalkObjectTerm = false;

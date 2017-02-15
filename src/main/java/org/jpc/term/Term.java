@@ -1,7 +1,8 @@
 package org.jpc.term;
 
-import static org.jpc.engine.prolog.PrologConstants.ANONYMOUS_VAR_NAME;
-import static org.jpc.util.termprocessor.TermCollector.termCollector;
+import static org.jpc.engine.prolog.PrologConstants.UNDERSCORE_VAR_NAME;
+import static org.jpc.term.Functor.functor;
+import static org.jpc.util.termprocessor.JpcTermCollector.termCollector;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,8 +23,7 @@ import org.jpc.util.salt.JpcTermStreamer;
 import org.jpc.util.salt.TermContentHandler;
 import org.jpc.util.salt.adapters.ChangeVariableNameAdapter;
 import org.jpc.util.salt.adapters.ReplaceVariableAdapter;
-import org.jpc.util.termprocessor.GenericTermCollector;
-import org.jpc.util.termprocessor.TermCollector;
+import org.jpc.util.termprocessor.JpcTermCollector;
 
 import com.google.common.base.Function;
 
@@ -84,19 +84,19 @@ public abstract class Term {
 	public abstract boolean hasFunctor(Functor functor);
 
 	public boolean hasFunctor(String nameTermObject, int arity) {
-		return hasFunctor(new Functor(new Atom(nameTermObject), arity));
+		return hasFunctor(functor(nameTermObject, arity));
 	}
 	
 	public boolean hasFunctor(boolean nameTermObject, int arity) {
-		return hasFunctor(new Functor(new Atom(Boolean.toString(nameTermObject)), arity));
+		return hasFunctor(functor(Boolean.toString(nameTermObject), arity));
 	}
 	
 	public boolean hasFunctor(double nameTermObject, int arity) {
-		return hasFunctor(new Functor(new Float(nameTermObject), arity));
+		return hasFunctor(functor(new Float(nameTermObject), arity));
 	}
 	
 	public boolean hasFunctor(long nameTermObject, int arity) {
-		return hasFunctor(new Functor(new Integer(nameTermObject), arity));
+		return hasFunctor(functor(new Integer(nameTermObject), arity));
 	}
 	
 	/**
@@ -153,7 +153,7 @@ public abstract class Term {
 	public Term replaceVariables(Map<String, ? extends Term> map) {
 		if(isGround())
 			return this;
-		GenericTermCollector<Term> collector = termCollector();
+		JpcTermCollector collector = termCollector();
 		JpcTermStreamer termWriter = new JpcTermStreamer(collector);
 		ReplaceVariableAdapter replaceVariableAdapter = new ReplaceVariableAdapter(termWriter, map);
 		read(replaceVariableAdapter);
@@ -168,7 +168,7 @@ public abstract class Term {
 	public Term changeVariablesNames(Map<String, String> map) {
 		if(isGround())
 			return this;
-		GenericTermCollector<Term> collector = termCollector();
+		JpcTermCollector collector = termCollector();
 		JpcTermStreamer termWriter = new JpcTermStreamer(collector);
 		ChangeVariableNameAdapter changeVariableNameAdapter = new ChangeVariableNameAdapter(termWriter, map);
 		read(changeVariableNameAdapter);
@@ -229,7 +229,7 @@ public abstract class Term {
 	public List<AbstractVar> getNamedVariables() {
 		List<AbstractVar> nonUnderscoreVariables = new ArrayList<>();
 		for(AbstractVar var : getVariables()) {
-			if(!ANONYMOUS_VAR_NAME.equals(var.getName()))
+			if(!UNDERSCORE_VAR_NAME.equals(var.getName()))
 				nonUnderscoreVariables.add(var);
 		}
 		return nonUnderscoreVariables;
@@ -251,7 +251,7 @@ public abstract class Term {
 	
 	
 	public Term termExpansion(Function<Term, Term> termExpander) {
-		TermCollector collector = termCollector();
+		JpcTermCollector collector = termCollector();
 		JpcTermStreamer termWriter = new JpcTermStreamer(collector);
 		read(termWriter, termExpander);
 		return collector.getFirst();

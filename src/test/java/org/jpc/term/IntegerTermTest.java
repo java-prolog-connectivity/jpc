@@ -1,5 +1,6 @@
 package org.jpc.term;
 
+import static org.jpc.term.Functor.functor;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -21,6 +22,6 @@ public class IntegerTermTest {
 	
 	@Test
 	public void testHasFunctor() {
-		assertTrue(new Integer(10).hasFunctor(new Functor(new Integer(10), 0)));
+		assertTrue(new Integer(10).hasFunctor(functor(new Integer(10), 0)));
 	}
 }

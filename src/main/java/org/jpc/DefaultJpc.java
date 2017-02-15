@@ -1,6 +1,7 @@
 package org.jpc;
 
 import static java.util.Arrays.asList;
+import static org.jpc.term.Var.dontCare;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -129,7 +130,7 @@ public class DefaultJpc extends Jpc {
 	public <T extends Term> T toTerm(Object object, Class<T> targetType) {
 		if(object==null) {
 			if(targetType.isAssignableFrom(Var.class))
-				return (T) Var.ANONYMOUS_VAR;
+				return (T) dontCare();
 			else
 				throw new NullPointerException("A Null object cannot be transformed to a logic term of class " + targetType);
 		}

@@ -60,8 +60,8 @@ public class DefaultConversionsTest {
 	
 	@Test
 	public void testBooleanToTerm() {
-		assertEquals(Atom.TRUE_TERM, jpc.toTerm(true));
-		assertEquals(Atom.FAIL_TERM, jpc.toTerm(false));
+		assertEquals(Atom.TRUE, jpc.toTerm(true));
+		assertEquals(Atom.FALSE, jpc.toTerm(false));
 	}
 	
 	@Test

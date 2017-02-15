@@ -1,6 +1,7 @@
 package org.jpc.term.unification;
 
 import static java.util.Arrays.asList;
+import static org.jpc.term.Var.dontCare;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -90,33 +91,33 @@ public class UnificationTest {
 	
 	@Test
 	public void testAnonymousVarUnification() {
-		assertEquals(0, Var.ANONYMOUS_VAR.compileAndUnifyVars(Var.ANONYMOUS_VAR).entrySet().size());
-		allUnifications(Var.ANONYMOUS_VAR, Var.ANONYMOUS_VAR, Var.ANONYMOUS_VAR);
+		assertEquals(0, dontCare().compileAndUnifyVars(dontCare()).entrySet().size());
+		allUnifications(dontCare(), dontCare(), dontCare());
 		
-		assertEquals(0, Var.ANONYMOUS_VAR.compileAndUnifyVars(new Integer(0)).entrySet().size());
-		allUnifications(Var.ANONYMOUS_VAR, new Integer(0), Var.ANONYMOUS_VAR);
+		assertEquals(0, dontCare().compileAndUnifyVars(new Integer(0)).entrySet().size());
+		allUnifications(dontCare(), new Integer(0), dontCare());
 		
-		assertEquals(0, Var.ANONYMOUS_VAR.compileAndUnifyVars(new Atom("hello")).entrySet().size());
-		allUnifications(Var.ANONYMOUS_VAR, new Atom("hello"), Var.ANONYMOUS_VAR);
+		assertEquals(0, dontCare().compileAndUnifyVars(new Atom("hello")).entrySet().size());
+		allUnifications(dontCare(), new Atom("hello"), dontCare());
 		
 		Compound compound = new Compound("x", asList(new Integer(0), new Atom("hello")));
-		assertEquals(0, Var.ANONYMOUS_VAR.compileAndUnifyVars(compound).entrySet().size());
-		allUnifications(Var.ANONYMOUS_VAR, compound, Var.ANONYMOUS_VAR);
+		assertEquals(0, dontCare().compileAndUnifyVars(compound).entrySet().size());
+		allUnifications(dontCare(), compound, dontCare());
 		
-		assertEquals(0, new Integer(0).compileAndUnifyVars(Var.ANONYMOUS_VAR).entrySet().size());
-		allUnifications(new Integer(0), Var.ANONYMOUS_VAR, new Integer(0));
+		assertEquals(0, new Integer(0).compileAndUnifyVars(dontCare()).entrySet().size());
+		allUnifications(new Integer(0), dontCare(), new Integer(0));
 		
-		assertEquals(0, new Atom("hello").compileAndUnifyVars(Var.ANONYMOUS_VAR).entrySet().size());
-		allUnifications(new Atom("hello"), Var.ANONYMOUS_VAR, new Atom("hello"));
+		assertEquals(0, new Atom("hello").compileAndUnifyVars(dontCare()).entrySet().size());
+		allUnifications(new Atom("hello"), dontCare(), new Atom("hello"));
 		
-		assertEquals(0, compound.compileAndUnifyVars(Var.ANONYMOUS_VAR).entrySet().size());
-		allUnifications(compound, Var.ANONYMOUS_VAR, compound);
+		assertEquals(0, compound.compileAndUnifyVars(dontCare()).entrySet().size());
+		allUnifications(compound, dontCare(), compound);
 	}
 
 	@Test
 	public void testSimpleUnification() {
-		assertTrue(Var.ANONYMOUS_VAR.termEquals(Var.ANONYMOUS_VAR.compileAndUnify(new Var("X"))));
-		assertEquals(new Var("X"), new Var("X").compileAndUnify(Var.ANONYMOUS_VAR));
+		assertTrue(dontCare().termEquals(dontCare().compileAndUnify(new Var("X"))));
+		assertEquals(new Var("X"), new Var("X").compileAndUnify(dontCare()));
 		assertEquals(new Integer(0), new Var("X").compileAndUnify(new Integer(0)));
 		assertEquals(new Integer(0), new Integer(0).compileAndUnify(new Var("X")));
 		assertEquals(new Var("X"), new Var("X").compileAndUnify(new Var("Y")));
@@ -130,7 +131,7 @@ public class UnificationTest {
 		allUnifications(compound1, compound2, expected);
 		allUnifications(compound2, compound1, expected);
 		
-		compound2 = new Compound("x", asList(Var.ANONYMOUS_VAR, new Integer(0)));
+		compound2 = new Compound("x", asList(dontCare(), new Integer(0)));
 		allUnifications(compound1, compound2, expected);
 	}
 	

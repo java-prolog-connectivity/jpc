@@ -9,8 +9,8 @@ import org.jpc.converter.catalog.io.FileConversionsTest;
 import org.jpc.converter.catalog.reflection.ConstructorConversionTest;
 import org.jpc.converter.catalog.reflection.FieldResolutionConversionsTest;
 import org.jpc.converter.catalog.reflection.MethodCallConversionsTest;
-import org.jpc.converter.catalog.reflection.StaticClassConversionsTest;
-import org.jpc.converter.catalog.reflection.reification.TypeConversionsTest;
+import org.jpc.converter.catalog.reflection.ReflectiveClassConversionsTest;
+import org.jpc.converter.catalog.reflection.type.TypeConversionsTest;
 import org.jpc.converter.typesolver.TypeSolverTest;
 import org.jpc.engine.embedded.JpcEmbeddedEngineTestSuite;
 import org.jpc.internal.reflection.ReflectionUtilTest;
@@ -58,7 +58,7 @@ import org.junit.runners.Suite;
 	DefaultConversionsTest.class,
 	CustomTermConversionsTest.class,
 	TypeConversionsTest.class,
-	StaticClassConversionsTest.class,
+	ReflectiveClassConversionsTest.class,
 	TypedTermConversionsTest.class,
 	CustomTermToObjectConversionsTest.class,
 	ConstructorConversionTest.class,

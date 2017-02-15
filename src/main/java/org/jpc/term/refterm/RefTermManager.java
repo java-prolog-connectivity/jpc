@@ -1,6 +1,8 @@
 package org.jpc.term.refterm;
 
 import static java.util.Arrays.asList;
+import static org.jpc.term.Functor.functor;
+import static org.jpc.term.Var.dontCare;
 
 import java.lang.ref.ReferenceQueue;
 import java.util.Map;
@@ -114,7 +116,7 @@ public class RefTermManager {
 		currentRefsMap = new MapMaker().weakKeys().makeMap();
 		embeddedEngine = new JpcEngine();
 		MutableIndexManager indexManager = embeddedEngine.getIndexManager();
-		Functor jRefTermFunctor = new Functor(JREF_TERM_FUNCTOR_NAME, 2);
+		Functor jRefTermFunctor = functor(JREF_TERM_FUNCTOR_NAME, 2);
 		//IndexDescriptor indexDescriptor = IndexDescriptor.forArgument(1); //inefficient.
 		IndexDescriptor firstArgumentIdx = IndexDescriptor.forIndexedArgument(1, indexManager); //makes use of any index defined for the first argument.
 //		IndexDescriptor secondArgumentIdx = new IndexDescriptor(new Function<Term, Object>() {
@@ -138,11 +140,11 @@ public class RefTermManager {
 	}
 
 	private void remove(Compound compound) {
-		embeddedEngine.retractOne(new Compound(JREF_TERM_FUNCTOR_NAME, asList(compound, Var.ANONYMOUS_VAR)));
+		embeddedEngine.retractOne(new Compound(JREF_TERM_FUNCTOR_NAME, asList(compound, dontCare())));
 	}
 	
 	private void remove(JRef<?> jref) {
-		embeddedEngine.retractOne(new Compound(JREF_TERM_FUNCTOR_NAME, asList(Var.ANONYMOUS_VAR, jref)));
+		embeddedEngine.retractOne(new Compound(JREF_TERM_FUNCTOR_NAME, asList(dontCare(), jref)));
 	}
 	
 	private void put(Compound compound, JRef<?> jref) {

@@ -8,7 +8,7 @@ import org.jpc.util.JpcPreferences;
 import org.jpc.util.engine.supported.EngineDescription;
 
 /**
- * This class describes logic engines that are unique per process
+ * This class describes logic engines that are unique per accept
  * Instances can cache the logic engine when creating it
  * @author sergioc
  *

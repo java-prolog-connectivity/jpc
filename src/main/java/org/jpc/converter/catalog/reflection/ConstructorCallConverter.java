@@ -20,16 +20,18 @@ public class ConstructorCallConverter<T> implements FromTermConverter<Compound, 
 		try {
 			targetClass = ReflectiveClass.classForName(className);
 		} catch(RuntimeException e) {
-			if(e.getCause() instanceof ClassNotFoundException)
+			if(e.getCause() instanceof ClassNotFoundException) {
 				throw new ConversionException();
-			else
+			} else {
 				throw e;
+			}
 		}
 		if(targetClass.isPrimitive() || Primitives.isWrapperType(targetClass)) {
 			if(term.arity() == 1) {
 				return jpc.fromTerm(term.arg(1), targetClass);
-			} else
+			} else {
 				throw new ConversionException();
+			}
 		} else {
 			PrologSpeakingClass<? extends T> prologSpeakingClass = new PrologSpeakingClass<>(targetClass, jpc);
 			return prologSpeakingClass.newInstance(term.getArgs());

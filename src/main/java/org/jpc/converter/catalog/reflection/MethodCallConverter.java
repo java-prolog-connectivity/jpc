@@ -43,7 +43,7 @@ public class MethodCallConverter<T> implements FromTermConverter<Compound, T> {
 			Object receiver = jpc.fromTerm(receiverTerm);
 			PrologSpeakingObject prologSpeakingObject;
 			if(receiver instanceof ReflectiveClass) {
-				prologSpeakingObject = new PrologSpeakingClass(((ReflectiveClass)receiver).getWrappedClass(), jpc);
+				prologSpeakingObject = new PrologSpeakingClass(((ReflectiveClass<?>)receiver).getWrapped(), jpc);
 			} else {
 				prologSpeakingObject = new PrologSpeakingObject(receiver, jpc);
 			}

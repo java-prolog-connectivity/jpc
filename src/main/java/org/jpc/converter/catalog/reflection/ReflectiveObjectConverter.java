@@ -29,7 +29,7 @@ public class ReflectiveObjectConverter implements ToTermConverter<ReflectiveObje
 
 	@Override
 	public Compound toTerm(ReflectiveObject reflectiveObject, Class<Compound> termClass, Jpc jpc) {
-		Term term = jpc.toTerm(reflectiveObject.getWrappedObject());
+		Term term = jpc.toTerm(reflectiveObject.getWrapped());
 		return new Compound(REFLECTIVE_OBJECT_FUNCTOR_NAME, asList(term));
 	}
 

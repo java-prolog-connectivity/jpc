@@ -1,4 +1,4 @@
-package org.jpc.converter.catalog.reflection.reification;
+package org.jpc.converter.catalog.reflection.type;
 
 
 import static org.jpc.internal.reflection.ReflectionUtil.genericArrayType;
@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.jpc.Jpc;
 import org.jpc.JpcBuilder;
-import org.jpc.converter.catalog.reflection.reification.TypeConversionsTest.A.B.C;
+import org.jpc.converter.catalog.reflection.type.TypeConversionsTest.A.B.C;
 import org.jpc.term.Compound;
 import org.junit.Test;
 

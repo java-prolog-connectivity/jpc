@@ -7,7 +7,7 @@ package org.jpc.engine.prolog;
  */
 public class PrologConstants {
 	
-	public static final String ANONYMOUS_VAR_NAME = "_";
+	public static final String UNDERSCORE_VAR_NAME = "_";
 	
 	public static final String TRUE = "true";
 	

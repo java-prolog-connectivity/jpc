@@ -10,11 +10,11 @@ import org.apache.commons.lang3.ClassUtils;
  * @author sergioc
  *
  */
-public class ReflectiveClass<T> extends ReflectiveObject {
+public class ReflectiveClass<T> extends ReflectiveObject<Class<T>> {
 	
 	public static <T> Class<T> classForName(String className) {
 		try {
-			return (Class<T>)ClassUtils.getClass(className); //works well with primitive types.
+			return (Class<T>) ClassUtils.getClass(className); //works well with primitive types.
 			//return Class.forName(className); //does not work with primitive types.
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
@@ -29,18 +29,14 @@ public class ReflectiveClass<T> extends ReflectiveObject {
 		super(wrappedClass);
 	}
 
-	public Class<T> getWrappedClass() {
-		return (Class<T>) getWrappedObject();
-	}
-	
 	@Override
-	protected Object getTargetObject() {
+	protected Class<T> getTargetObject() {
 		return null;
 	}
 	
 	@Override
-	protected Class<T> getTargetClass() {
-		return getWrappedClass();
+	protected Class<?> getTargetClass() {
+		return getWrapped();
 	}
 	
 	public T newInstance(List<? extends Object> args) {

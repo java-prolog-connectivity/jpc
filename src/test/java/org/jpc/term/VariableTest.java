@@ -1,5 +1,6 @@
 package org.jpc.term;
 
+import static org.jpc.term.Functor.functor;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -46,9 +47,9 @@ public class VariableTest {
 	
 	@Test
 	public void testHasFunctor() {
-		assertTrue(new Var("A").hasFunctor(new Functor(new Var("A"), 0)));
-		assertTrue(new Var("_A").hasFunctor(new Functor(new Var("_A"), 0)));
-		assertTrue(new Var("_").hasFunctor(new Functor(new Var("_"), 0)));
+		assertTrue(new Var("A").hasFunctor(functor(new Var("A"), 0)));
+		assertTrue(new Var("_A").hasFunctor(functor(new Var("_A"), 0)));
+		assertTrue(new Var("_").hasFunctor(functor(new Var("_"), 0)));
 	}
 	
 }

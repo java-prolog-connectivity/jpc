@@ -1,21 +1,30 @@
 package org.jpc.term;
 
+import static org.jpc.term.Atom.atom;
+import static org.jpc.term.Var.dontCare;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jpc.converter.TermConvertable;
 
-public class Functor {
+
+public class Functor implements TermConvertable<Term> {
 
 	private final Term name;
 	private final int arity;
-	
-	public Functor(String name, int arity) {
-		this(new Atom(name), arity);
-	}
-	
-	public Functor(Term name, int arity) {
+
+	private Functor(Term name, int arity) {
 		this.name = name;
 		this.arity = arity;
+	}
+
+	public static Functor functor(String name, int arity) {
+		return new Functor(atom(name), arity);
+	}
+
+	public static Functor functor(Term name, int arity) {
+		return new Functor(name, arity);
 	}
 
 	public Term getName() {
@@ -59,13 +68,14 @@ public class Functor {
 		return name.toString() + "/" + arity;
 	}
 
+	@Override
 	public Term asTerm() {
 		if(arity == 0)
 			return name;
 		else {
 			List<Term> args = new ArrayList<>();
 			for(int i = 0 ; i<arity; i++) {
-				args.add(Var.ANONYMOUS_VAR);
+				args.add(dontCare());
 			}
 			return new Compound(name, args);
 		}

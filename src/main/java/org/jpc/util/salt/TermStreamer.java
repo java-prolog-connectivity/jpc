@@ -2,13 +2,12 @@ package org.jpc.util.salt;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-
-import org.jpc.util.termprocessor.GenericTermProcessor;
+import java.util.function.Consumer;
 
 
 public abstract class TermStreamer<TermType> implements TermContentHandler {
 
-	protected final GenericTermProcessor termProcessor;
+	protected final Consumer<TermType> termProcessor;
 
 	/**
 	 * An auxiliar stack for storing partially built terms (like compounds)
@@ -19,7 +18,7 @@ public abstract class TermStreamer<TermType> implements TermContentHandler {
 		this((term) -> {});
 	}*/
 
-	public TermStreamer(GenericTermProcessor<TermType> termProcessor) {
+	public TermStreamer(Consumer<TermType> termProcessor) {
 		this.termProcessor = termProcessor;
 	}
 
@@ -29,7 +28,7 @@ public abstract class TermStreamer<TermType> implements TermContentHandler {
 
 	protected void process(TermType term) {
 		if(!isProcessingCompound()) {
-			termProcessor.process(term);
+			termProcessor.accept(term);
 		} else {
 			addToProcessingStack(term);
 		}
