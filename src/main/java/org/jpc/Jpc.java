@@ -1,9 +1,12 @@
 package org.jpc;
 
+import static org.jconverter.converter.TypeDomain.typeDomain;
+
 import java.lang.reflect.Type;
 import java.util.List;
 
 import org.jconverter.JConverter;
+import org.jconverter.converter.TypeDomain;
 import org.jconverter.factory.FactoryManager;
 import org.jpc.converter.JpcConverterManager;
 import org.jpc.term.Compound;
@@ -35,12 +38,20 @@ public abstract class Jpc extends JConverter {
 	}
 	
 	public abstract <T> T fromTerm(Term term);
-	
-	public abstract <T> T fromTerm(Term term, Type type);
+
+	public <T> T fromTerm(Term term, Type targetType) {
+		return fromTerm(term, typeDomain(targetType));
+	}
+
+	public abstract <T> T fromTerm(Term term, TypeDomain target);
 	
 	public abstract <T extends Term> T toTerm(Object object);
-	
-	public abstract <T extends Term> T toTerm(Object object, Class<T> termClass);
+
+	public <T extends Term> T toTerm(Object object, Type targetType) {
+		return toTerm(object, typeDomain(targetType));
+	}
+
+	public abstract <T extends Term> T toTerm(Object object, TypeDomain target);
 	
 	public abstract Compound toCompound(Object name, List<?> args);
 	

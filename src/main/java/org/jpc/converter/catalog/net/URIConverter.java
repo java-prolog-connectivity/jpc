@@ -2,10 +2,10 @@ package org.jpc.converter.catalog.net;
 
 import static java.util.Arrays.asList;
 
-import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.jconverter.converter.TypeDomain;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
@@ -17,7 +17,7 @@ public class URIConverter implements ToTermConverter<URI, Compound>, FromTermCon
 	public static final String URI_FUNCTOR_NAME = "uri";
 	
 	@Override
-	public URI fromTerm(Compound compound, Type targetType, Jpc context) {
+	public URI fromTerm(Compound compound, TypeDomain target, Jpc context) {
 		try {
 			return new URI(((Atom)compound.arg(1)).getName());
 		} catch (URISyntaxException e) {
@@ -26,7 +26,7 @@ public class URIConverter implements ToTermConverter<URI, Compound>, FromTermCon
 	}
 
 	@Override
-	public Compound toTerm(URI uri, Class<Compound> termClass, Jpc context) {
+	public Compound toTerm(URI uri, TypeDomain target, Jpc context) {
 		return new Compound(URI_FUNCTOR_NAME, asList(new Atom(uri.toString())));
 	}
 

@@ -1,10 +1,10 @@
 package org.jpc.converter.catalog.error;
 
+import static org.jconverter.converter.ConversionGoal.conversionGoal;
 import static org.jpc.converter.catalog.error.IsoPrologErrorConverter.isIsoPrologError;
 
-import java.lang.reflect.Type;
-
-import org.jconverter.converter.ConversionException;
+import org.jconverter.converter.DelegateConversionException;
+import org.jconverter.converter.TypeDomain;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.error.ExistenceError;
@@ -20,9 +20,10 @@ public class ExistenceErrorConverter implements FromTermConverter<Compound, Exis
 	}
 	
 	@Override
-	public ExistenceError fromTerm(Compound term, Type type, Jpc context) {
-		if(!isExistenceError(term))
-			throw new ConversionException();
+	public ExistenceError fromTerm(Compound term, TypeDomain target, Jpc context) {
+		if (!isExistenceError(term)) {
+			throw new DelegateConversionException(conversionGoal(term, target));
+		}
 		return new ExistenceError(term);
 	}
 	

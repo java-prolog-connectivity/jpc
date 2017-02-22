@@ -3,22 +3,16 @@ package org.jpc.internal.reflection;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Set;
+import java.util.function.Predicate;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.google.common.base.Predicate;
 
 public class ReflectionUtilTest {
 
 	@Test
 	public void testFindAllResources() {
-		Predicate<String> isTxtFile = new Predicate<String>() {
-			@Override
-			public boolean apply(String s) {
-				return s.endsWith(".txt");
-			}
-		};
+		Predicate<String> isTxtFile = s -> s.endsWith(".txt");
 		Set<String> resources;
 		resources = ReflectionUtil.findResourcesInPackage("fixture", isTxtFile);
 		assertEquals(3, resources.size());

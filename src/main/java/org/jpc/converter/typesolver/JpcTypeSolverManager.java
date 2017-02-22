@@ -27,7 +27,7 @@ import org.jpc.term.Term;
 import org.jpc.term.Var;
 import org.jpc.util.JpcPreferences;
 
-public class JpcTypeSolverManager extends JGumTypeSolverManager {
+public class JpcTypeSolverManager extends TypeSolverManagerImpl {
 	
 	private static final String TYPE_SOLVER_FUNCTOR_NAME = "type_solver";
 	

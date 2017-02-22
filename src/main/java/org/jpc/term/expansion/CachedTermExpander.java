@@ -2,10 +2,9 @@ package org.jpc.term.expansion;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import org.jpc.term.Term;
-
-import com.google.common.base.Function;
 
 public class CachedTermExpander implements Function<Term, Term> {
 

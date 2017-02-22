@@ -1,39 +1,12 @@
 package org.jpc.engine.logtalk;
 
 import static java.util.Arrays.asList;
-import static org.jpc.engine.logtalk.LogtalkConstants.ABOLISH_CATEGORY;
-import static org.jpc.engine.logtalk.LogtalkConstants.ABOLISH_EVENTS;
-import static org.jpc.engine.logtalk.LogtalkConstants.ABOLISH_OBJECT;
-import static org.jpc.engine.logtalk.LogtalkConstants.ABOLISH_PROTOCOL;
-import static org.jpc.engine.logtalk.LogtalkConstants.CATEGORY_PROPERTY;
-import static org.jpc.engine.logtalk.LogtalkConstants.COMPLEMENTS_OBJECT;
-import static org.jpc.engine.logtalk.LogtalkConstants.CONFORMS_TO_PROTOCOL;
-import static org.jpc.engine.logtalk.LogtalkConstants.CREATE_CATEGORY;
-import static org.jpc.engine.logtalk.LogtalkConstants.CREATE_OBJECT;
-import static org.jpc.engine.logtalk.LogtalkConstants.CREATE_PROTOCOL;
-import static org.jpc.engine.logtalk.LogtalkConstants.CURRENT_CATEGORY;
-import static org.jpc.engine.logtalk.LogtalkConstants.CURRENT_EVENT;
-import static org.jpc.engine.logtalk.LogtalkConstants.CURRENT_LOGTALK_FLAG;
-import static org.jpc.engine.logtalk.LogtalkConstants.CURRENT_OBJECT;
-import static org.jpc.engine.logtalk.LogtalkConstants.CURRENT_PROTOCOL;
-import static org.jpc.engine.logtalk.LogtalkConstants.DEFINE_EVENTS;
-import static org.jpc.engine.logtalk.LogtalkConstants.EXTENDS_CATEGORY;
-import static org.jpc.engine.logtalk.LogtalkConstants.EXTENDS_OBJECTS;
-import static org.jpc.engine.logtalk.LogtalkConstants.EXTENDS_PROTOCOL;
-import static org.jpc.engine.logtalk.LogtalkConstants.IMPLEMENTS_PROTOCOL;
-import static org.jpc.engine.logtalk.LogtalkConstants.IMPORTS_CATEGORY;
-import static org.jpc.engine.logtalk.LogtalkConstants.INSTANTIATES_CLASS;
-import static org.jpc.engine.logtalk.LogtalkConstants.LOGTALK_LOAD;
-import static org.jpc.engine.logtalk.LogtalkConstants.OBJECT_PROPERTY;
-import static org.jpc.engine.logtalk.LogtalkConstants.PROTOCOL_PROPERTY;
-import static org.jpc.engine.logtalk.LogtalkConstants.SET_LOGTALK_FLAG;
-import static org.jpc.engine.logtalk.LogtalkConstants.SPECIALIZES_CLASS;
+import static org.jpc.engine.logtalk.LogtalkConstants.*;
 import static org.jpc.term.ListTerm.listTerm;
 
 import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +53,7 @@ public class LogtalkEngine extends PrologEngineProxy {
 	public String currentLogtalkFlag(LogtalkFlag flag) {
 		String flagValue = null;
 		Var varFlag = new Var("Var");
-		Map<String, Term> solutions = query(new Compound(CURRENT_LOGTALK_FLAG, Arrays.asList(flag.asTerm(), varFlag))).oneSolutionOrThrow();
+		Map<String, Term> solutions = query(new Compound(CURRENT_LOGTALK_FLAG, asList(flag.asTerm(), varFlag))).oneSolutionOrThrow();
 		if(solutions!=null) {
 			Atom flagValueTerm = (Atom) solutions.get(varFlag.getName());
 			flagValue = flagValueTerm.getName();

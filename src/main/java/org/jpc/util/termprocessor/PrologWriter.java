@@ -69,8 +69,8 @@ public abstract class PrologWriter implements TermProcessor {
 		writeDirective = true;
 	}
 
-	//next read terms will be considered dynamic clauses to be asserted
-	public void followingDynamicClauses() {
+	//next read terms will be considered as clauses to be asserted
+	public void followingClauses() {
 		resetWritingMode();
 		writeClause = true;
 	}

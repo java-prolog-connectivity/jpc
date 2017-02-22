@@ -1,6 +1,7 @@
 package org.jpc.engine.prolog;
 
 import static java.util.Arrays.asList;
+import static org.jconverter.converter.TypeDomain.typeDomain;
 import static org.jpc.engine.prolog.PrologConstants.*;
 import static org.jpc.term.ListTerm.listTerm;
 import static org.jpc.term.Var.dontCare;

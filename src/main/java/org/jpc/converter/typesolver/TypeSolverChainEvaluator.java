@@ -1,10 +1,9 @@
 package org.jpc.converter.typesolver;
 
 import java.lang.reflect.Type;
+import java.util.function.Function;
 
-import org.jconverter.converter.NonRedundantEvaluator;
-
-import com.google.common.base.Function;
+import org.jconverter.util.NonRedundantEvaluator;
 
 public class TypeSolverChainEvaluator<T> implements Function<Object, Type> {
 
@@ -28,18 +27,25 @@ public class TypeSolverChainEvaluator<T> implements Function<Object, Type> {
 	public Type applyChain(TypeSolverChain<T> typeSolverChain) {
 		return typeSolverChain.apply((Function)this);
 	}
-	
-	static class NonRedundantTypeSolverEvaluator<T> extends NonRedundantEvaluator<TypeSolver<T>,Type> {
 
-		public NonRedundantTypeSolverEvaluator(Function<TypeSolver<T>,Type> evaluator) {
-			super(evaluator);
+
+	static class NonRedundantTypeSolverEvaluator<T> extends TypeSolverEvaluator<T> {
+
+		private final NonRedundantEvaluator<TypeSolver<T>, Type> nonRedundantEvaluator;
+
+		public NonRedundantTypeSolverEvaluator(TypeSolverEvaluator<T> evaluator) {
+			super(evaluator.getSourceObject());
+			this.nonRedundantEvaluator = new NonRedundantEvaluator<>(evaluator);
 		}
-		
+
 		@Override
-		protected Type onAlreadyVisited(TypeSolver<T> alreadyVisited) {
-			throw new UnrecognizedObjectException();
+		public Type apply(TypeSolver<T> typeSolver) {
+			try {
+				return nonRedundantEvaluator.apply(typeSolver);
+			} catch(NonRedundantEvaluator.AlreadyEvaluatedException e) {
+				throw new UnrecognizedObjectException();
+			}
 		}
-		
 	}
 	
 }

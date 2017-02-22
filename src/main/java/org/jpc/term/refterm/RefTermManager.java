@@ -6,6 +6,7 @@ import static org.jpc.term.Var.dontCare;
 
 import java.lang.ref.ReferenceQueue;
 import java.util.Map;
+import java.util.Optional;
 
 import org.jpc.JpcException;
 import org.jpc.engine.embedded.JpcEngine;
@@ -22,7 +23,6 @@ import org.jpc.term.JRef;
 import org.jpc.term.JRef.WeakJRef;
 import org.jpc.term.Var;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.MapMaker;
 
 /**
@@ -119,18 +119,20 @@ public class RefTermManager {
 		Functor jRefTermFunctor = functor(JREF_TERM_FUNCTOR_NAME, 2);
 		//IndexDescriptor indexDescriptor = IndexDescriptor.forArgument(1); //inefficient.
 		IndexDescriptor firstArgumentIdx = IndexDescriptor.forIndexedArgument(1, indexManager); //makes use of any index defined for the first argument.
-//		IndexDescriptor secondArgumentIdx = new IndexDescriptor(new Function<Term, Object>() {
-//			@Override
-//			public Object apply(Term term) {
-//				Compound compound = (Compound) term;
-//				JRef<Object> jRef = (JRef<Object>) compound.arg(2);
-//				Object referent = jRef.getReferent();
-//				Object key = null;
-//				if(referent != null)
-//					key = RefTermIdManager.getDefault().jRefTermId(referent);
-//				return key;
-//			}
-//		}); //index also by the referent in the second argument.
+
+
+/*		//index also by the referent in the second argument.
+		IndexDescriptor secondArgumentIdx = new IndexDescriptor(
+				term -> {
+					Compound compound = (Compound) term;
+					JRef<Object> jRef = (JRef<Object>) compound.arg(2);
+					Object referent = jRef.getReferent();
+					Object key = null;
+					if(referent != null)
+						key = RefTermIdManager.getDefault().jRefTermId(referent);
+					return key;
+				});*/
+
 		//indexManager.setIndexDescriptors(jRefTermFunctor, asList(firstArgumentIdx, secondArgumentIdx)); //clause heads having jref_term/2 as a functor will be indexed according to their first and second argument.
 		indexManager.setIndexDescriptors(jRefTermFunctor, asList(firstArgumentIdx));
 	}
@@ -159,7 +161,7 @@ public class RefTermManager {
 		if(optSolution.isPresent()) {
 			jRef = (JRef<T>) optSolution.get().get(jRefVarName);
 		}
-		return Optional.fromNullable(jRef);
+		return Optional.ofNullable(jRef);
 	}
 	
 //	private Optional<Compound> getRefTerm(JRef<?> jref) {

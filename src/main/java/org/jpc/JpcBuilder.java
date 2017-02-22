@@ -2,7 +2,7 @@ package org.jpc;
 
 import org.jconverter.JConverterBuilder;
 import org.jconverter.factory.FactoryManager;
-import org.jconverter.factory.JGumFactoryManager;
+import org.jconverter.factory.FactoryManagerImpl;
 import org.jgum.JGum;
 import org.jpc.converter.JpcConverter;
 import org.jpc.converter.JpcConverterManager;
@@ -46,7 +46,7 @@ public class JpcBuilder extends JConverterBuilder {
 	
 	private JpcBuilder(JGum jgum, JpcEngine embeddedEngine) {
 		this(JpcConverterManager.registerDefaults(new JpcConverterManager(jgum, embeddedEngine)),
-				JGumFactoryManager.registerDefaults(new JGumFactoryManager(jgum)),
+				FactoryManagerImpl.registerDefaults(new FactoryManagerImpl(jgum)),
 				JpcTypeSolverManager.registerDefaults(new JpcTypeSolverManager(jgum, embeddedEngine)),
 				new RefTermManager(), 
 				new DefaultJpcErrorHandler());

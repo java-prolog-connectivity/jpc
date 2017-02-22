@@ -10,12 +10,14 @@ public class AtomTypeSolver implements TypeSolver<Atom> {
 
 	@Override
 	public Type inferType(Atom atom) {
-		if(atom.isList())
+		if (atom.isList()) {
 			return List.class;
-		else if(atom.isBoolean())
+		} else if(atom.isBoolean()) {
 			return Boolean.class;
-		else
+		} else {
 			return String.class;
+		}
+
 	}
 
 }

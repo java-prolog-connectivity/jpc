@@ -3,9 +3,9 @@ package org.jpc.converter.catalog.io;
 import static java.util.Arrays.asList;
 
 import java.io.File;
-import java.lang.reflect.Type;
 import java.net.URI;
 
+import org.jconverter.converter.TypeDomain;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
@@ -18,13 +18,13 @@ public class FileConverter implements ToTermConverter<File, Compound>, FromTermC
 	public static final String FILE_FUNCTOR_NAME = "file";
 	
 	@Override
-	public File fromTerm(Compound compound, Type targetType, Jpc jpc) {
+	public File fromTerm(Compound compound, TypeDomain target, Jpc jpc) {
 		PrologSpeakingClass<File> prologSpeakingClass = new PrologSpeakingClass<>(File.class, jpc);
 		return prologSpeakingClass.newInstance(compound.getArgs());
 	}
 
 	@Override
-	public Compound toTerm(File file, Class<Compound> termClass, Jpc jpc) {
+	public Compound toTerm(File file, TypeDomain target, Jpc jpc) {
 		URI uri = file.toURI();
 		Term uriTerm = jpc.toTerm(uri);
 		return new Compound(FILE_FUNCTOR_NAME, asList(uriTerm));

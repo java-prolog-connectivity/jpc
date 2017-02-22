@@ -1,7 +1,6 @@
 package org.jpc.converter.catalog;
 
-import java.lang.reflect.Type;
-
+import org.jconverter.converter.TypeDomain;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.term.AbstractVar;
@@ -9,7 +8,7 @@ import org.jpc.term.AbstractVar;
 public class VarConverter<T> implements FromTermConverter<AbstractVar, T> {
 	
 	@Override
-	public T fromTerm(AbstractVar term, Type type, Jpc context) {
+	public T fromTerm(AbstractVar term, TypeDomain target, Jpc context) {
 		return null;
 	}
 	

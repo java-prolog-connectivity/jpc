@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import org.jpc.internal.io.FileUtil;
 import org.jpc.util.resource.LogicResource;
@@ -15,7 +16,6 @@ import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Predicate;
 import com.google.common.io.Resources;
 
 /**
@@ -115,7 +115,7 @@ public class ResourceManager {
 		tmpDirForUrl.mkdir();
 		
 		Predicate<String> predicate = new Predicate<String>() {
-			  public boolean apply(String string) {
+			  public boolean test(String string) {
 				  return LogicResource.hasLogicExtension(string); //matching resources names ending  with the default Logtalk and Prolog extensions pl|P|lgt
 			  }
 			};
@@ -124,23 +124,20 @@ public class ResourceManager {
 
 	
 	public static void copyResources(URL url, Predicate<String> predicate, File destination) {// throws IOException {
-		if(predicate == null)
-			predicate = new Predicate<String>() {
-				  public boolean apply(String string) {
-					  return true; //no filter, so all the resources will be copied
-				  }
-		};
-		
+		if(predicate == null) {
+			predicate = s -> true; //no filter, so all the resources will be copied
+		}
 		Reflections reflections = new Reflections(new ConfigurationBuilder()
 		.setUrls(url)
         .setScanners(new ResourcesScanner()));
-		
+
+		Predicate<String> pred = predicate; //just making happy the compiler
 		/*
 		 * WARNING: the getResources method answers resources RELATIVE paths (relatives to the classpath from where they were found)
 		 * If a file is created with this path (like with: new File(relativePath)) the path of such File object will be the current execution path + the relative path
 		 * If the current execution path is not the base directory of the relative paths, this could lead to files having absolute paths pointing to non existing resources
 		 */
-		Set<String> resourcePaths = reflections.getResources(predicate);  //in case a complex predicate is needed
+		Set<String> resourcePaths = reflections.getResources(s -> pred.test(s));  //in case a complex predicate is needed
 		
 		for(String resourcePath : resourcePaths) {
 			logger.debug("Copying resource to tmp location: " + resourcePath);

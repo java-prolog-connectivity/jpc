@@ -3,6 +3,7 @@ package org.jpc.converter.catalog.error;
 import static java.util.Arrays.asList;
 import static org.jpc.engine.prolog.PrologConstants.PROLOG_ERROR_FUNCTOR_NAME;
 
+import org.jconverter.converter.TypeDomain;
 import org.jpc.Jpc;
 import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Compound;
@@ -13,7 +14,7 @@ public class ThrowableConverter implements ToTermConverter<Throwable, Compound> 
 	public static final String JEXCEPTION_FUNCTOR_NAME = "jexception";
 	
 	@Override
-	public Compound toTerm(Throwable ex, Class<Compound> termClass, Jpc jpc) {
+	public Compound toTerm(Throwable ex, TypeDomain target, Jpc jpc) {
 		Term throwableClassTerm = jpc.toTerm(ex.getClass());
 		Term messageTerm = jpc.toTerm(ex.getMessage());
 		Term causeTerm = jpc.toTerm(ex.getCause());

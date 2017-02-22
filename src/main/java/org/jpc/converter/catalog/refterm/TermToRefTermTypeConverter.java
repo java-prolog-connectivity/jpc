@@ -6,8 +6,7 @@ import static org.jpc.engine.prolog.ReturnSpecifierConstants.STRONG_REF_FLAG;
 import static org.jpc.engine.prolog.ReturnSpecifierConstants.WB_REF_TERM_FLAG;
 import static org.jpc.engine.prolog.ReturnSpecifierConstants.WEAK_REF_FLAG;
 
-import java.lang.reflect.Type;
-
+import org.jconverter.converter.TypeDomain;
 import org.jpc.Jpc;
 import org.jpc.JpcException;
 import org.jpc.converter.FromTermConverter;
@@ -19,7 +18,7 @@ import org.jpc.term.refterm.RefTermType.Opacity;
 public class TermToRefTermTypeConverter implements FromTermConverter<Compound, RefTermType> {
 
 	@Override
-	public RefTermType fromTerm(Compound term, Type targetType, Jpc context) {
+	public RefTermType fromTerm(Compound term, TypeDomain target, Jpc context) {
 		ReferenceType javaReferenceType;
 		Opacity opacity;
 		

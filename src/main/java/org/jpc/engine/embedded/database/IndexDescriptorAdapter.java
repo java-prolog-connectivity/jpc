@@ -1,8 +1,8 @@
 package org.jpc.engine.embedded.database;
 
-import org.jpc.term.Term;
+import java.util.function.Function;
 
-import com.google.common.base.Function;
+import org.jpc.term.Term;
 
 public class IndexDescriptorAdapter {
 

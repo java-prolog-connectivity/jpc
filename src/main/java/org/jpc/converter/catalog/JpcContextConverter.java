@@ -1,7 +1,6 @@
 package org.jpc.converter.catalog;
 
-import java.lang.reflect.Type;
-
+import org.jconverter.converter.TypeDomain;
 import org.jpc.Jpc;
 import org.jpc.JpcException;
 import org.jpc.converter.FromTermConverter;
@@ -14,7 +13,7 @@ public class JpcContextConverter implements FromTermConverter<Compound, Jpc> {
 	public static final String DEFAULT_JPC_ID = "default";
 	
 	@Override
-	public Jpc fromTerm(Compound term, Type targetType, Jpc context) {
+	public Jpc fromTerm(Compound term, TypeDomain target, Jpc context) {
 		String jpcId = ((Atom)term.arg(1)).getName();
 		if(!jpcId.equals(DEFAULT_JPC_ID))
 			throw new JpcException("Unrecognized Jpc id: " + jpcId);

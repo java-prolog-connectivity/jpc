@@ -3,11 +3,12 @@ package org.jpc.converter.typesolver;
 import static java.util.Arrays.asList;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
-import org.jconverter.util.TypeUtil;
-import org.jconverter.util.typewrapper.TypeWrapper;
-import org.jconverter.util.typewrapper.VariableTypeWrapper;
+import org.typetools.TypeUtil;
+import org.typetools.typewrapper.TypeWrapper;
+import org.typetools.typewrapper.VariableTypeWrapper;
 import org.jgum.JGum;
 import org.jgum.category.CategorizationListener;
 import org.jgum.category.Category;
@@ -16,16 +17,16 @@ import org.jpc.converter.typesolver.TypeSolverChainEvaluator.NonRedundantTypeSol
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Optional;
+import java.util.Optional;
 
 //Implementation note: consider moving this class and its super class to the JConverter library (it looks like it can be generalized).
-public class JGumTypeSolverManager extends TypeSolverManager {
+public class TypeSolverManagerImpl extends TypeSolverManager {
 
-	private final static Logger logger = LoggerFactory.getLogger(JGumTypeSolverManager.class);
+	private final static Logger logger = LoggerFactory.getLogger(TypeSolverManagerImpl.class);
 
 	private final JGum jgum;
 	
-	public JGumTypeSolverManager(JGum jgum) {
+	public TypeSolverManagerImpl(JGum jgum) {
 		this.jgum = jgum;
 	}
 	
@@ -35,7 +36,7 @@ public class JGumTypeSolverManager extends TypeSolverManager {
 		if(chainOpt.isPresent()) {
 			chain =  chainOpt.get();
 		} else {
-			chain = new TypeSolverChain();
+			chain = new TypeSolverChain(new ArrayList<>());
 			typeCategory.setProperty(key, chain);
 		}
 		return chain;

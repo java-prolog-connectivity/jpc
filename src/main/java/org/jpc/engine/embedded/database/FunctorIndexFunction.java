@@ -4,7 +4,7 @@ import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
 
-import com.google.common.base.Function;
+import java.util.function.Function;
 
 /**
  * Index function mapping a term to its functor name.

@@ -1,5 +1,6 @@
 package org.jpc.converter.catalog.list;
 
+import static org.jconverter.converter.ConversionGoal.conversionGoal;
 import static org.jpc.internal.reflection.ReflectionUtil.parameterizedType;
 
 import java.lang.reflect.Type;
@@ -7,30 +8,32 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
-import org.jconverter.converter.ConversionException;
-import org.jconverter.util.typewrapper.TypeWrapper;
+import org.jconverter.converter.DelegateConversionException;
+import org.jconverter.converter.TypeDomain;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
 import org.jpc.term.Term;
+import org.typetools.typewrapper.TypeWrapper;
 
 
 public class EnumerationConverter<T extends Term> implements ToTermConverter<Enumeration<?>, T>, FromTermConverter<T, Enumeration<?>> {
 
 	@Override
-	public T toTerm(Enumeration<?> en, Class<T> termClass, Jpc context) {
-		return (T) new IterableConverter().toTerm(Collections.list(en), termClass, context);
+	public T toTerm(Enumeration<?> en, TypeDomain target, Jpc context) {
+		return (T) new IterableConverter().toTerm(Collections.list(en), target, context);
 	}
 	
 	@Override
-	public Enumeration<?> fromTerm(T listTerm, Type type, Jpc context) {
-		if(!listTerm.isList())
-			throw new ConversionException();
+	public Enumeration<?> fromTerm(T listTerm, TypeDomain target, Jpc context) {
+		if (!listTerm.isList()) {
+			throw new DelegateConversionException(conversionGoal(listTerm, target));
+		}
 		Type elementType = null;
 		try {
-			elementType = TypeWrapper.wrap(type).as(Enumeration.class).getActualTypeArgumentsOrUpperBounds()[0]; //will throw an exception if the type is not compatible with Enumeration
+			elementType = TypeWrapper.wrap(target.getType()).as(Enumeration.class).getActualTypeArgumentsOrUpperBounds()[0]; //will throw an exception if the type is not compatible with Enumeration
 		} catch(Exception e) {
-			throw new ConversionException();
+			throw new DelegateConversionException(conversionGoal(listTerm, target));
 		}
 		
 		Type listType = parameterizedType(new Type[]{elementType}, null, List.class);

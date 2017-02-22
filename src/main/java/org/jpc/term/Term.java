@@ -25,7 +25,7 @@ import org.jpc.util.salt.adapters.ChangeVariableNameAdapter;
 import org.jpc.util.salt.adapters.ReplaceVariableAdapter;
 import org.jpc.util.termprocessor.JpcTermCollector;
 
-import com.google.common.base.Function;
+import java.util.function.Function;
 
 /**
  * Implementations of this interface are Java representations of Prolog Terms (i.e., Prolog data types)
@@ -412,18 +412,16 @@ public abstract class Term {
 	 * @return a term where the bindings of the variables of the receiver have been applied.
 	 */
 	public final Term resolveBindings() {
-		return termExpansion(new Function<Term, Term>() {
-			public Term apply(Term term) {
-				if(term instanceof BindableVar) {
-					BindableVar bindableVar = (BindableVar) term;
-					if(!bindableVar.isAnonymous())
-						return bindableVar.getBinding().resolveBindings();
-					else
-						return bindableVar.getVar();
-				} else if(term.isGround())
-					return term;
-				return null;
-			}
+		return termExpansion(term -> {
+			if(term instanceof BindableVar) {
+				BindableVar bindableVar = (BindableVar) term;
+				if(!bindableVar.isAnonymous())
+					return bindableVar.getBinding().resolveBindings();
+				else
+					return bindableVar.getVar();
+			} else if(term.isGround())
+				return term;
+			return null;
 		});
 	}
 	

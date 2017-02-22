@@ -10,10 +10,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.jgum.JGum;
-import org.jpc.converter.typesolver.JGumTypeSolverManager;
-import org.jpc.converter.typesolver.TypeSolver;
-import org.jpc.converter.typesolver.TypeSolverManager;
-import org.jpc.converter.typesolver.UnrecognizedObjectException;
 import org.junit.Test;
 
 public class TypeSolverTest {
@@ -64,7 +60,7 @@ public class TypeSolverTest {
 	
 	@Test
 	public void testNonGenericListTypeSolver() {
-		TypeSolverManager manager = new JGumTypeSolverManager(new JGum());
+		TypeSolverManager manager = new TypeSolverManagerImpl(new JGum());
 		Object key = new Object();
 		manager.register(key, new NonGenericTypeSolver());
 		assertEquals(ListClass.class, manager.inferType(key, new Object()));
@@ -73,7 +69,7 @@ public class TypeSolverTest {
 	
 	@Test
 	public void testUnrecognizedObjectExceptionTypeSolver() {
-		TypeSolverManager manager = new JGumTypeSolverManager(new JGum());
+		TypeSolverManager manager = new TypeSolverManagerImpl(new JGum());
 		Object key = new Object();
 		manager.register(key, new NonGenericTypeSolver());
 		manager.register(key, new UnrecognizedObjectExceptionTypeSolver());
@@ -82,7 +78,7 @@ public class TypeSolverTest {
 	
 	@Test
 	public void testUnrecognizedObjectExceptionTypeSolver2() {
-		TypeSolverManager manager = new JGumTypeSolverManager(new JGum());
+		TypeSolverManager manager = new TypeSolverManagerImpl(new JGum());
 		Object key = new Object();
 		manager.register(key, new UnrecognizedObjectExceptionTypeSolver());
 		try {
@@ -95,7 +91,7 @@ public class TypeSolverTest {
 	
 	@Test
 	public void testNoTypeSolver() {
-		TypeSolverManager manager = new JGumTypeSolverManager(new JGum());
+		TypeSolverManager manager = new TypeSolverManagerImpl(new JGum());
 		try {
 			manager.inferType(new Object(), new Object());
 			fail();
@@ -104,7 +100,7 @@ public class TypeSolverTest {
 
 	@Test
 	public void testGenericListTypeSolver() {
-		TypeSolverManager manager = new JGumTypeSolverManager(new JGum());
+		TypeSolverManager manager = new TypeSolverManagerImpl(new JGum());
 		Object key = new Object();
 		manager.register(key, new GenericListTypeSolver());
 		try {
@@ -116,7 +112,7 @@ public class TypeSolverTest {
 	
 	@Test
 	public void testFullGenericListTypeSolver() {
-		TypeSolverManager manager = new JGumTypeSolverManager(new JGum());
+		TypeSolverManager manager = new TypeSolverManagerImpl(new JGum());
 		Object key = new Object();
 		manager.register(key, new FullGenericListTypeSolver());
 		try {
@@ -128,7 +124,7 @@ public class TypeSolverTest {
 	
 	@Test
 	public void testSingleBoundListTypeSolver() {
-		TypeSolverManager manager = new JGumTypeSolverManager(new JGum());
+		TypeSolverManager manager = new TypeSolverManagerImpl(new JGum());
 		Object key = new Object();
 		manager.register(key, new SingleBoundListTypeSolver());
 		try {
@@ -142,7 +138,7 @@ public class TypeSolverTest {
 	public void testMultipleBoundsListTypeSolver() {
 		JGum jgum = new JGum();
 		jgum.forClass(Vector.class);
-		TypeSolverManager manager = new JGumTypeSolverManager(new JGum());
+		TypeSolverManager manager = new TypeSolverManagerImpl(new JGum());
 		Object key = new Object();
 		manager.register(key, new MultipleBoundsListTypeSolver());
 		try {

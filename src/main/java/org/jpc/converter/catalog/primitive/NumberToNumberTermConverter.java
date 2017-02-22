@@ -1,8 +1,9 @@
 package org.jpc.converter.catalog.primitive;
 
-import java.lang.reflect.Type;
+import static org.jconverter.converter.ConversionGoal.conversionGoal;
 
-import org.jconverter.converter.ConversionException;
+import org.jconverter.converter.DelegateConversionException;
+import org.jconverter.converter.TypeDomain;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
@@ -16,25 +17,27 @@ import org.jpc.term.Term;
 public class NumberToNumberTermConverter<T extends java.lang.Number, U extends Number> implements ToTermConverter<T, U>, FromTermConverter<U, T> {
 
 	@Override
-	public T fromTerm(U term, Type targetType, Jpc context) {
+	public T fromTerm(U term, TypeDomain target, Jpc context) {
 		java.lang.Number number = term.getValue();
-		return context.convert(number, targetType);
+		return context.convert(number, target);
 	}
 
 	@Override
-	public U toTerm(T number, Class<U> termClass, Jpc context) {
+	public U toTerm(T number, TypeDomain target, Jpc context) {
 		Term term = null;
-		if(termClass.equals(Number.class)) {
+		if(target.getRawClass().equals(Number.class)) {
 			if(ReflectionUtil.isFloatingPoint(number))
 				term = new Float(number.doubleValue());
-			else
+			else {
 				term = new Integer(number.longValue());
-		} else if(termClass.equals(Integer.class)) {
+			}
+		} else if(target.getRawClass().equals(Integer.class)) {
 			term = new Integer(number.longValue());
-		} else if(termClass.equals(Float.class)) {
+		} else if(target.getRawClass().equals(Float.class)) {
 			term = new Float(number.doubleValue());
-		} else
-			throw new ConversionException();
+		} else {
+			throw new DelegateConversionException(conversionGoal(number, target));
+		}
 		return (U) term;
 	}
 

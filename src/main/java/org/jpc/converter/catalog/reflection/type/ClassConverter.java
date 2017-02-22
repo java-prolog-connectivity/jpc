@@ -8,9 +8,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jconverter.util.typewrapper.ArrayTypeWrapper;
-import org.jconverter.util.typewrapper.SingleTypeWrapper;
-import org.jconverter.util.typewrapper.TypeWrapper;
+import org.jconverter.converter.TypeDomain;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
@@ -18,6 +16,9 @@ import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
 import org.jpc.util.reification.ReflectiveClass;
+import org.typetools.typewrapper.ArrayTypeWrapper;
+import org.typetools.typewrapper.SingleTypeWrapper;
+import org.typetools.typewrapper.TypeWrapper;
 
 import com.google.common.base.Joiner;
 
@@ -41,7 +42,7 @@ public class ClassConverter implements ToTermConverter<Class<?>, Compound>, From
 	
 	
 	@Override
-	public Compound toTerm(Class<?> clazz, Class<Compound> termClass, Jpc jpc) {
+	public Compound toTerm(Class<?> clazz, TypeDomain target, Jpc jpc) {
 		TypeWrapper typeWrapper = TypeWrapper.wrap(clazz);
 		if(typeWrapper instanceof SingleTypeWrapper) {
 			return toTerm((SingleTypeWrapper)typeWrapper, jpc);
@@ -78,7 +79,7 @@ public class ClassConverter implements ToTermConverter<Class<?>, Compound>, From
 	
 
 	@Override
-	public Class<?> fromTerm(Compound term, Type targetType, Jpc jpc) {
+	public Class<?> fromTerm(Compound term, TypeDomain target, Jpc jpc) {
 		return getRawClass(term, jpc);
 	}
 	
@@ -86,7 +87,7 @@ public class ClassConverter implements ToTermConverter<Class<?>, Compound>, From
 	public static class ShortNotationClassConverter implements FromTermConverter<Compound, Class<?>> {
 
 		@Override
-		public Class<?> fromTerm(Compound term, Type targetType, Jpc jpc) {
+		public Class<?> fromTerm(Compound term, TypeDomain target, Jpc jpc) {
 			String className = ((Atom)term.arg(1)).getName();
 			return ReflectiveClass.classForName(className);
 		}

@@ -1,7 +1,6 @@
 package org.jpc.converter.catalog.primitive;
 
-import java.lang.reflect.Type;
-
+import org.jconverter.converter.TypeDomain;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
@@ -10,12 +9,12 @@ import org.jpc.term.Atom;
 public class ObjectToAtomConverter<T> implements ToTermConverter<T, Atom>, FromTermConverter<Atom, T> {
 
 	@Override
-	public T fromTerm(Atom term, Type targetType, Jpc context) {
-		return context.convert(term.getName(), targetType);
+	public T fromTerm(Atom term, TypeDomain target, Jpc context) {
+		return context.convert(term.getName(), target);
 	}
 
 	@Override
-	public Atom toTerm(T object, Class<Atom> termClass, Jpc context) {
+	public Atom toTerm(T object, TypeDomain target, Jpc context) {
 		return new Atom(object.toString());
 	}
 

@@ -2,8 +2,7 @@ package org.jpc.converter.catalog.reflection;
 
 import static java.util.Arrays.asList;
 
-import java.lang.reflect.Type;
-
+import org.jconverter.converter.TypeDomain;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
@@ -16,7 +15,7 @@ public class ReflectiveObjectConverter implements ToTermConverter<ReflectiveObje
 	public static final String REFLECTIVE_OBJECT_FUNCTOR_NAME = "robject";
 	
 	@Override
-	public ReflectiveObject fromTerm(Compound term, Type targetType, Jpc jpc) {
+	public ReflectiveObject fromTerm(Compound term, TypeDomain target, Jpc jpc) {
 		Object object = jpc.fromTerm(term.arg(1));
 		/*
 		if(object instanceof ReflectiveClass)
@@ -28,7 +27,7 @@ public class ReflectiveObjectConverter implements ToTermConverter<ReflectiveObje
 	}
 
 	@Override
-	public Compound toTerm(ReflectiveObject reflectiveObject, Class<Compound> termClass, Jpc jpc) {
+	public Compound toTerm(ReflectiveObject reflectiveObject, TypeDomain target, Jpc jpc) {
 		Term term = jpc.toTerm(reflectiveObject.getWrapped());
 		return new Compound(REFLECTIVE_OBJECT_FUNCTOR_NAME, asList(term));
 	}

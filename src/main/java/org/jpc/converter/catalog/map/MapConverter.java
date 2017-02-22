@@ -1,5 +1,7 @@
 package org.jpc.converter.catalog.map;
 
+import static org.jconverter.converter.ConversionGoal.conversionGoal;
+import static org.jconverter.converter.TypeDomain.typeDomain;
 import static org.jpc.internal.reflection.ReflectionUtil.parameterizedType;
 
 import java.lang.reflect.Type;
@@ -8,8 +10,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.jconverter.converter.ConversionException;
-import org.jconverter.util.typewrapper.TypeWrapper;
+import org.jconverter.converter.DelegateConversionException;
+import org.jconverter.converter.TypeDomain;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
@@ -19,6 +21,7 @@ import org.jpc.converter.typesolver.catalog.MapTypeSolver;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
+import org.typetools.typewrapper.TypeWrapper;
 
 
 public abstract class MapConverter {
@@ -35,19 +38,16 @@ public abstract class MapConverter {
 	
 
 	public static class MapToTermConverter<T extends Map<?,?>,U extends Term> extends MapConverter implements ToTermConverter<T,U> {
-		
-		public MapToTermConverter() {
-			super();
-		}
-		
+
 		public MapToTermConverter(String entrySeparator) {
 			super(entrySeparator);
 		}
 		
 		@Override
-		public U toTerm(T map, Class<U> termClass, Jpc context) {
-			if(!Term.class.isAssignableFrom(termClass))
-				throw new ConversionException();
+		public U toTerm(T map, TypeDomain target, Jpc context) {
+			if (!target.isSubsetOf(typeDomain(Term.class))) {
+				throw new DelegateConversionException(conversionGoal(map, target));
+			}
 			ListTerm terms = new ListTerm();
 			Set<Entry<?,?>> entries = (Set)map.entrySet();
 			for(Entry<?,?> entry : entries) {
@@ -61,32 +61,29 @@ public abstract class MapConverter {
 	
 	
 	public static class TermToMapConverter<T extends Term,U extends Map<?,?>> extends MapConverter implements FromTermConverter<T,U> {
-		
-		public TermToMapConverter() {
-			super();
-		}
-		
+
 		public TermToMapConverter(String entrySeparator) {
 			super(entrySeparator);
 		}
 		
 		@Override
-		public U fromTerm(T listTerm, Type type, Jpc context) {
-			if(!listTerm.isList())
-				throw new ConversionException();
+		public U fromTerm(T listTerm, TypeDomain target, Jpc context) {
+			if (!listTerm.isList()) {
+				throw new DelegateConversionException(conversionGoal(listTerm, target));
+			}
 			U map = null;
 			List<Term> listMembers = null;
 			try {
-				map = context.instantiate(type); //will throw an exception if the type is not compatible with map
+				map = context.instantiate(target.getType()); //will throw an exception if the type is not compatible with map
 				listMembers = listTerm.asList(); //will throw an exception if the term is not a list term
 			}catch(Exception e) {
-				throw new ConversionException();
+				throw new DelegateConversionException(conversionGoal(listTerm, target));
 			}
-			Type[] mapTypes = TypeWrapper.wrap(type).as(Map.class).getActualTypeArgumentsOrUpperBounds();
+			Type[] mapTypes = TypeWrapper.wrap(target.getType()).as(Map.class).getActualTypeArgumentsOrUpperBounds();
 			Type entryType = parameterizedType(mapTypes, Map.class, Map.Entry.class);
 			
 			for(Term termMember : listMembers) {
-				Entry<?,?> entry = new TermToMapEntryConverter(entrySeparator).fromTerm((Compound)termMember, entryType, context);
+				Entry<?,?> entry = new TermToMapEntryConverter(entrySeparator).fromTerm((Compound)termMember, typeDomain(entryType), context);
 				((Map)map).put(entry.getKey(), entry.getValue());
 			}
 			return map;

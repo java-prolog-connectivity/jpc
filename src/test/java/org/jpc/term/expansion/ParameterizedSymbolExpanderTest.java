@@ -11,6 +11,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.jconverter.converter.TypeDomain;
 import org.jpc.Jpc;
 import org.jpc.JpcBuilder;
 import org.jpc.converter.ToTermConverter;
@@ -60,7 +61,7 @@ public class ParameterizedSymbolExpanderTest {
 		class X {}
 		ToTermConverter<X, Compound> conv = new ToTermConverter<X, Compound>() {
 			@Override
-			public Compound toTerm(X o, Class<Compound> type, Jpc context) {
+			public Compound toTerm(X o, TypeDomain target, Jpc context) {
 				return toTerm;
 			}
 		};

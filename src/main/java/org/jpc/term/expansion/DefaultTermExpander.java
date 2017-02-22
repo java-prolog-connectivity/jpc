@@ -1,8 +1,8 @@
 package org.jpc.term.expansion;
 
-import org.jpc.term.Term;
+import java.util.function.Function;
 
-import com.google.common.base.Function;
+import org.jpc.term.Term;
 
 /**
  * This class should be deleted in Java 8 when default methods are available

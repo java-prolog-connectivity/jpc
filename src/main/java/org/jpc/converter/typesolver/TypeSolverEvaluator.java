@@ -2,19 +2,23 @@ package org.jpc.converter.typesolver;
 
 import java.lang.reflect.Type;
 
-import com.google.common.base.Function;
+import java.util.function.Function;
 
 public class TypeSolverEvaluator<T> implements Function<TypeSolver<T>, Type> {
 
-	private final T object;
+	private final T sourceObject;
 
-	public TypeSolverEvaluator(T object) {
-		this.object = object;
+	public TypeSolverEvaluator(T sourceObject) {
+		this.sourceObject = sourceObject;
+	}
+
+	public T getSourceObject() {
+		return sourceObject;
 	}
 
 	@Override
 	public Type apply(TypeSolver<T> typeSolver) {
-		return typeSolver.inferType(object);
+		return typeSolver.inferType(sourceObject);
 	}
 	
 }

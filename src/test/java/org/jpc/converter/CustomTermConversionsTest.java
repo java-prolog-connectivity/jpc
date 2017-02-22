@@ -6,9 +6,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.lang.reflect.Type;
-
-import org.jconverter.converter.ConversionException;
+import org.jconverter.converter.NotSuitableConverterException;
+import org.jconverter.converter.TypeDomain;
 import org.jpc.Jpc;
 import org.jpc.JpcBuilder;
 import org.jpc.term.Atom;
@@ -20,8 +19,8 @@ public class CustomTermConversionsTest {
 
 	class HelloConverter implements FromTermConverter<Compound, String> {
 		@Override
-		public String fromTerm(Compound term, Type targetType, Jpc context) {
-			return term.getName() + " " + ((Atom)term.arg(1)).getName();
+		public String fromTerm(Compound term, TypeDomain target, Jpc context) {
+			return term.getName() + " " + ((Atom) term.arg(1)).getName();
 		}
 	}
 	
@@ -39,7 +38,7 @@ public class CustomTermConversionsTest {
 		try {
 			jpc.fromTerm(helloWorldCompound);
 			fail();
-		} catch(ConversionException e) {}
+		} catch(NotSuitableConverterException e) {}
 	}
 	
 	@Test
@@ -56,7 +55,7 @@ public class CustomTermConversionsTest {
 		try {
 			jpc.fromTerm(helloWorldCompound);
 			fail();
-		} catch(ConversionException e) {}
+		} catch(NotSuitableConverterException e) {}
 		
 		Compound ungroundCompound = new Compound("hello",  asList(new Var("X")));
 		s = jpc.fromTerm(ungroundCompound);
@@ -77,12 +76,12 @@ public class CustomTermConversionsTest {
 	class MyClassConverter implements FromTermConverter<Atom, MyClass>, ToTermConverter<MyClass, Atom> {
 
 		@Override
-		public Atom toTerm(MyClass object, Class<Atom> termClass, Jpc context) {
+		public Atom toTerm(MyClass object, TypeDomain target, Jpc context) {
 			return new Atom(atomForMyClass);
 		}
 
 		@Override
-		public MyClass fromTerm(Atom term, Type targetType, Jpc context) {
+		public MyClass fromTerm(Atom term, TypeDomain target, Jpc context) {
 			return new MyClass();
 		}
 	}

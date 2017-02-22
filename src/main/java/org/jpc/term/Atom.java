@@ -10,7 +10,7 @@ import org.jpc.term.visitor.TermVisitor;
 import org.jpc.util.PrologUtil;
 import org.jpc.util.salt.TermContentHandler;
 
-import com.google.common.base.Function;
+import java.util.function.Function;
 
 /**
  * A class reifying a logic atom

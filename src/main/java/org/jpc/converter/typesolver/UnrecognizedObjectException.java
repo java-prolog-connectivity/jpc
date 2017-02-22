@@ -8,4 +8,24 @@ package org.jpc.converter.typesolver;
 public class UnrecognizedObjectException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
+
+	public UnrecognizedObjectException() {
+	}
+
+	public UnrecognizedObjectException(Throwable cause) {
+		super(cause);
+	}
+
+/*	public UnrecognizedObjectException(Object object) {
+		super(formatMessage(object));
+	}
+
+	public UnrecognizedObjectException(Object object, Throwable cause) {
+		super(formatMessage(object), cause);
+	}
+
+	private static String formatMessage(Object object) {
+		return "No type defined for " + object + ".";
+	}*/
+
 }

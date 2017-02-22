@@ -1,8 +1,8 @@
 package org.jpc.query;
 
-import org.jpc.term.Term;
+import java.util.function.Function;
 
-import com.google.common.base.Function;
+import org.jpc.term.Term;
 
 public class SolutionToTermFunction implements Function<Solution, Term> {
 

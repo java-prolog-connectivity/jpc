@@ -1,12 +1,11 @@
 package org.jpc.query;
 
 import java.lang.reflect.Type;
+import java.util.function.Function;
 
 import org.jpc.Jpc;
 import org.jpc.JpcBuilder;
 import org.jpc.term.Term;
-
-import com.google.common.base.Function;
 
 public class TermToObjectFunction<T> implements Function<Term,T> {
 

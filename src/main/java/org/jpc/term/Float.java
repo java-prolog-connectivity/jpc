@@ -3,7 +3,7 @@ package org.jpc.term;
 import org.jpc.util.salt.TermContentHandler;
 import org.jpc.term.visitor.TermVisitor;
 
-import com.google.common.base.Function;
+import java.util.function.Function;
 
 
 /**

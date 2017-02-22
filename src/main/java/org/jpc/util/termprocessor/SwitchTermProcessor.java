@@ -6,6 +6,8 @@ import static org.jpc.term.Compound.compound;
 import static org.jpc.term.JRef.jRef;
 import static org.jpc.term.Var.var;
 
+import java.util.Optional;
+
 import org.jpc.JpcException;
 import org.jpc.engine.embedded.JpcEngine;
 import org.jpc.engine.prolog.PrologEngine;
@@ -14,8 +16,6 @@ import org.jpc.query.Solution;
 import org.jpc.term.Functor;
 import org.jpc.term.Term;
 import org.jpc.term.Var;
-
-import com.google.common.base.Optional;
 
 public class SwitchTermProcessor implements TermProcessor {
 

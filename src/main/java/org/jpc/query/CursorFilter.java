@@ -3,7 +3,7 @@ package org.jpc.query;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.base.Predicate;
+import java.util.function.Predicate;
 
 public class CursorFilter<T> extends Cursor<T> {
 
@@ -30,8 +30,9 @@ public class CursorFilter<T> extends Cursor<T> {
 	protected List<T> basicAllSolutions() {
 		List<T> allSolutions = new ArrayList<>();
 		for(T t : cursor.allSolutions()) {
-			if(predicate.apply(t))
+			if (predicate.test(t)) {
 				allSolutions.add(t);
+			}
 		}
 		return allSolutions;
 	}
@@ -50,9 +51,9 @@ public class CursorFilter<T> extends Cursor<T> {
 	protected T basicNext() {
 		while(cursor.hasNext()) {
 			T t = cursor.next();
-			if(predicate.apply(t))
+			if (predicate.test(t)) {
 				return t;
-			
+			}
 		}
 		return null;
 	}

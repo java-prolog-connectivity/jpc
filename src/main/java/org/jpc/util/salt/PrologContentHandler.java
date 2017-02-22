@@ -18,8 +18,8 @@ public class PrologContentHandler extends JpcTermStreamer {
 		return this;
 	}
 
-	public PrologContentHandler followingDynamicClauses() {
-		getPrologWriter().followingDynamicClauses();
+	public PrologContentHandler followingClauses() {
+		getPrologWriter().followingClauses();
 		return this;
 	}
 	

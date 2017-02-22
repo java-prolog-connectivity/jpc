@@ -21,7 +21,7 @@ import org.jpc.util.salt.TermContentHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Function;
+import java.util.function.Function;
 
 public abstract class JRef<T> extends Term {
 

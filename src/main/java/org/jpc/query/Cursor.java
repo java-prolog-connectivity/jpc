@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
+import java.util.Optional;
 
 /**
  * Note: The class hierarchy of class Cursor will be redesigned after the coming release of Java8 supporting virtual extension methods
@@ -71,7 +71,7 @@ public abstract class Cursor<T> implements AutoCloseable, Iterator<T> {
 		try {
 			return Optional.of(oneSolutionOrThrow());
 		} catch(NoSuchElementException e) {
-			return Optional.absent();
+			return Optional.empty();
 		}
 	}
 	

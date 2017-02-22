@@ -5,7 +5,7 @@ import org.jpc.term.JRef;
 import org.jpc.term.Number;
 import org.jpc.term.Term;
 
-import com.google.common.base.Function;
+import java.util.function.Function;
 
 /**
  * An ArgumentIndexFunction maps the index of a compound term to one of its arguments in a given position.

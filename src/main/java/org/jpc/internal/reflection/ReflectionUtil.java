@@ -1,8 +1,8 @@
 package org.jpc.internal.reflection;
 
 import static com.google.common.collect.Sets.newHashSet;
-import static org.jconverter.util.typevisitor.TypeVisitor.InterfaceMode.EXCLUDE_INTERFACES;
-import static org.jconverter.util.typevisitor.TypeVisitor.InterfaceMode.INCLUDE_INTERFACES;
+import static org.typetools.typevisitor.TypeVisitor.InterfaceMode.EXCLUDE_INTERFACES;
+import static org.typetools.typevisitor.TypeVisitor.InterfaceMode.INCLUDE_INTERFACES;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,17 +29,18 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
-import org.jconverter.internal.reification.GenericArrayTypeImpl;
-import org.jconverter.internal.reification.ParameterizedTypeImpl;
-import org.jconverter.internal.reification.TypeVariableImpl;
-import org.jconverter.util.IncompatibleTypesException;
-import org.jconverter.util.typevisitor.FindFirstTypeVisitor;
-import org.jconverter.util.typevisitor.TypeVisitor;
-import org.jconverter.util.typewrapper.TypeWrapper;
+import org.typetools.reification.GenericArrayTypeImpl;
+import org.typetools.reification.ParameterizedTypeImpl;
+import org.typetools.reification.TypeVariableImpl;
+import org.typetools.IncompatibleTypesException;
+import org.typetools.typevisitor.FindFirstTypeVisitor;
+import org.typetools.typevisitor.TypeVisitor;
+import org.typetools.typewrapper.TypeWrapper;
 import org.reflections.ReflectionUtils;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
@@ -47,7 +48,6 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.reflect.TypeToken;
 
@@ -134,15 +134,9 @@ public class ReflectionUtil {
 		fb.include(FilterBuilder.prefix(packageName));
 		cb.filterInputsBy(fb);
 		Reflections reflections = new Reflections(cb);
-		Set<String> resources = reflections.getResources(predicate);
+		Set<String> resources = reflections.getResources(predicate::test);
 		if(!includeSubPackages) {
-			Predicate<String> isResourceInPackage = new Predicate<String>() {
-				@Override
-				public boolean apply(String resource) {
-					return isResourceInPackage(resource, packageName, includeSubPackages);
-				}
-			};
-			resources = new HashSet<>(Collections2.filter(resources, isResourceInPackage));
+			resources = new HashSet<>(Collections2.filter(resources, resource -> isResourceInPackage(resource, packageName, includeSubPackages)));
 		}
 		return resources;
 	}
@@ -175,15 +169,7 @@ public class ReflectionUtil {
 	 * @return a set of resources with the given name plus their extension
 	 */
 	public static Set<String> resourcesWithAnyExtension(final String resourceName, String packageName, boolean includeSubPackages, ClassLoader... classLoaders) {
-		Predicate<String> hasName = new Predicate<String>() {
-			@Override
-			public boolean apply(String name) {
-				if(name.equals(resourceName) || name.matches(Pattern.quote(resourceName)+"\\..+"))
-					return true;
-				else
-					return false;
-			}
-		};
+		Predicate<String> hasName = name -> name.equals(resourceName) || name.matches(Pattern.quote(resourceName)+"\\..+");
 		return findResourcesInPackage(packageName, hasName, includeSubPackages, classLoaders);
 	}
 
@@ -247,7 +233,7 @@ public class ReflectionUtil {
 	 */
 	public static boolean handleSameMessage(Method m1, Method m2) {
 		/*
-		if(!m1.getReturnType().equals(m2.getReturnType()))
+		if(!m1.getTargetDomain().equals(m2.getTargetDomain()))
 			return false;
 		*/
 		if(!m1.getName().equals(m2.getName()))
@@ -545,12 +531,7 @@ public class ReflectionUtil {
 	}
 
 	public static <T> Set<Class<? extends T>> filterAbstractClasses(Set<Class<? extends T>> unfilteredClasses) {
-		Predicate<Class<?>> predicate = new Predicate<Class<?>>() {
-			public boolean apply(Class<?> clazz) {
-				return !isAbstract(clazz);
-			}
-		};
-		return ReflectionUtils.getAll(unfilteredClasses, predicate);
+		return ReflectionUtils.getAll(unfilteredClasses, (Class clazz) -> !isAbstract(clazz));
 	}
 
 	public static ParameterizedType parameterizedType(Type[] actualTypeArguments, Type ownerType, Class<?> rawType) {

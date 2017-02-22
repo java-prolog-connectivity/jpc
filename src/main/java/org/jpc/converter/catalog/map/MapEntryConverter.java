@@ -1,20 +1,22 @@
 package org.jpc.converter.catalog.map;
 
 import static java.util.Arrays.asList;
+import static org.jconverter.converter.ConversionGoal.conversionGoal;
 
 import java.lang.reflect.Type;
 import java.util.AbstractMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.jconverter.converter.ConversionException;
-import org.jconverter.util.typewrapper.TypeWrapper;
+import org.jconverter.converter.DelegateConversionException;
+import org.jconverter.converter.TypeDomain;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.converter.ToTermConverter;
 import org.jpc.converter.typesolver.catalog.MapTypeSolver;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
+import org.typetools.typewrapper.TypeWrapper;
 
 
 public abstract class MapEntryConverter<K,V> {
@@ -41,7 +43,7 @@ public abstract class MapEntryConverter<K,V> {
 		}
 		
 		@Override
-		public Compound toTerm(Entry<K,V> entry, Class<Compound> termClass, Jpc context) {
+		public Compound toTerm(Entry<K,V> entry, TypeDomain target, Jpc context) {
 			Term key = context.toTerm(entry.getKey());
 			Term value = context.toTerm(entry.getValue());
 			Compound term = new Compound(entrySeparator, asList(key, value));
@@ -62,16 +64,16 @@ public abstract class MapEntryConverter<K,V> {
 		}
 
 		@Override
-		public Entry<K,V> fromTerm(Compound term, Type type, Jpc context) {
-			if(!term.hasFunctor(entrySeparator, 2)) //verify the term structure
-				throw new ConversionException();
-			TypeWrapper typeWrapper = TypeWrapper.wrap(type);
-			if(!(typeWrapper.getRawClass().equals(Entry.class) || typeWrapper.getRawClass().equals(AbstractMap.SimpleEntry.class))) //verify the type
-				throw new ConversionException();
+		public Entry<K,V> fromTerm(Compound term, TypeDomain target, Jpc context) {
+			if (!term.hasFunctor(entrySeparator, 2)) {//verify the term structure
+				throw new DelegateConversionException(conversionGoal(term, target));
+			}
+			if(!(target.getRawClass().equals(Entry.class) || target.getRawClass().equals(AbstractMap.SimpleEntry.class))) //verify the type
+				throw new DelegateConversionException(conversionGoal(term, target));
 			
 			Term keyTerm = term.arg(1);
 			Term valueTerm = term.arg(2);
-			Type[] entryTypes = TypeWrapper.wrap(type).as(Entry.class).getActualTypeArgumentsOrUpperBounds();
+			Type[] entryTypes = TypeWrapper.wrap(target.getType()).as(Entry.class).getActualTypeArgumentsOrUpperBounds();
 			Type keyType = entryTypes[0];
 			Type valueType = entryTypes[1];
 			Object key = context.fromTerm(keyTerm, keyType);

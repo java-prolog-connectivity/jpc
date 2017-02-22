@@ -1,10 +1,10 @@
 package org.jpc.converter.catalog.error;
 
+import static org.jconverter.converter.ConversionGoal.conversionGoal;
 import static org.jpc.converter.catalog.error.IsoPrologErrorConverter.isIsoPrologError;
 
-import java.lang.reflect.Type;
-
-import org.jconverter.converter.ConversionException;
+import org.jconverter.converter.DelegateConversionException;
+import org.jconverter.converter.TypeDomain;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.error.TypeError;
@@ -20,9 +20,10 @@ public class TypeErrorConverter implements FromTermConverter<Compound, TypeError
 	}
 	
 	@Override
-	public TypeError fromTerm(Compound term, Type type, Jpc context) {
-		if(!isTypeError(term))
-			throw new ConversionException();
+	public TypeError fromTerm(Compound term, TypeDomain target, Jpc context) {
+		if(!isTypeError(term)) {
+			throw new DelegateConversionException(conversionGoal(term, target));
+		}
 		return new TypeError(term);
 	}
 	

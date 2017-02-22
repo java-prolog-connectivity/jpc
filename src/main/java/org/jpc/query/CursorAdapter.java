@@ -3,7 +3,7 @@ package org.jpc.query;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.base.Function;
+import java.util.function.Function;
 import com.google.common.base.Functions;
 
 public class CursorAdapter<AdaptedType, AdapteeType> extends Cursor<AdaptedType> {

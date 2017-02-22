@@ -1,10 +1,10 @@
 package org.jpc.converter.catalog.error;
 
+import static org.jconverter.converter.ConversionGoal.conversionGoal;
 import static org.jpc.converter.catalog.error.IsoPrologErrorConverter.isIsoPrologError;
 
-import java.lang.reflect.Type;
-
-import org.jconverter.converter.ConversionException;
+import org.jconverter.converter.DelegateConversionException;
+import org.jconverter.converter.TypeDomain;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.error.EvaluationError;
@@ -20,9 +20,10 @@ public class EvaluationErrorConverter implements FromTermConverter<Compound, Eva
 	}
 	
 	@Override
-	public EvaluationError fromTerm(Compound term, Type type, Jpc context) {
-		if(!isEvaluationError(term))
-			throw new ConversionException();
+	public EvaluationError fromTerm(Compound term, TypeDomain target, Jpc context) {
+		if (!isEvaluationError(term)) {
+			throw new DelegateConversionException(conversionGoal(term, target));
+		}
 		return new EvaluationError(term);
 	}
 	

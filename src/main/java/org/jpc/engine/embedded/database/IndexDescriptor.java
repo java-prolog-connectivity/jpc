@@ -1,15 +1,14 @@
 package org.jpc.engine.embedded.database;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
-
-import com.google.common.base.Function;
-import com.google.common.base.Functions;
 
 /**
  * An index descriptor is modelled by an index function and a list of next Index Descriptors.
@@ -24,8 +23,8 @@ public class IndexDescriptor {
 	 * @return a new index descriptor composing the subterm (adapter) function and the index descriptor sent as parameter.
 	 */
 	static IndexDescriptor indexDescriptorAdapter(IndexDescriptor indexDescriptor, Function<Term, Term> adapterFunction) {
-		Function<Term, ?> indexFunction = Functions.compose(indexDescriptor.getIndexFunction(), adapterFunction);
-		Function<Term, List<IndexDescriptor>> indexDescriptorFunction = Functions.compose(indexDescriptor.getNextIndexDescriptorsFunction(), adapterFunction);
+		Function<Term, ?> indexFunction = indexDescriptor.getIndexFunction().compose(adapterFunction);
+		Function<Term, List<IndexDescriptor>> indexDescriptorFunction = indexDescriptor.getNextIndexDescriptorsFunction().compose(adapterFunction);
 		return new IndexDescriptor(indexFunction, indexDescriptorFunction);
 	}
 	
@@ -36,32 +35,23 @@ public class IndexDescriptor {
 				 * The next indexes function makes use of the index manager to find the user-defined indexes for a given term.
 				 * This function is invoked when instantiating an indexed IndexedClauses associated with the index of a term.
 				 */
-				new Function<Term, List<IndexDescriptor>>() {
-					@Override
-					public List<IndexDescriptor> apply(Term term) { 
-						if(term instanceof Compound) { //indexes can be defined only for compounds.
-							Compound compound = (Compound) term;
-							return indexManager.getOrCreateIndexDescriptors(compound.getFunctor()); //functor should be ground (otherwise an exception will be thrown here).
-						} else {
-							return Collections.<IndexDescriptor>emptyList();
-						}
+				term -> {
+					if(term instanceof Compound) { //indexes can be defined only for compounds.
+						Compound compound = (Compound) term;
+						return indexManager.getOrCreateIndexDescriptors(compound.getFunctor()); //functor should be ground (otherwise an exception will be thrown here).
+					} else {
+						return Collections.<IndexDescriptor>emptyList();
 					}
 				});
 	}
 	
-	private static Function<Term, Term> termArgumentFunction(final int argPos) {
-		return new Function<Term, Term>() {
-			@Override
-			public Term apply(Term term) {
-				return term.arg(argPos);
-			}
-		};
+	private static Function<Term, Term> termArgumentFunction(int argPos) {
+		return term -> term.arg(argPos);
 	}
 	
 	/**
 	 * 
 	 * @param argPos the term argument position.
-	 * @param indexManager an index manager.
 	 * @return an IndexDescriptor based on the functor of a term argument in the given position.
 	 */
 	public static IndexDescriptor forArgumentFunctor(int argPos) {
@@ -92,12 +82,8 @@ public class IndexDescriptor {
 		if(indexFunctions.size() == 1) {
 			return new IndexDescriptor(indexFunction);
 		} else {
-			return new IndexDescriptor(indexFunction, new Function<Term, List<IndexDescriptor>>() {
-				@Override
-				public List<IndexDescriptor> apply(Term term) {
-					return asList(forFunctions(indexFunctions.subList(1, indexFunctions.size())));
-				}
-			});
+			return new IndexDescriptor(indexFunction,
+					term -> asList(forFunctions(indexFunctions.subList(1, indexFunctions.size()))));
 		}
 	}
 	
@@ -110,12 +96,7 @@ public class IndexDescriptor {
 	}
 	
 	public IndexDescriptor(UpdatableIndexFunction<Term, ?> indexFunction) {
-		this(indexFunction, new Function<Term, List<IndexDescriptor>>() {
-			@Override
-			public List<IndexDescriptor> apply(Term term) {
-				return Collections.<IndexDescriptor>emptyList();
-			}
-		});
+		this(indexFunction, term -> emptyList());
 	}
 	
 	public IndexDescriptor(Function<Term, ?> indexFunction, Function<Term, List<IndexDescriptor>> nextIndexDescriptorsFunction) {

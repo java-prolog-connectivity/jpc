@@ -9,7 +9,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.jconverter.converter.ConversionException;
+import org.jconverter.converter.NotSuitableConverterException;
 import org.jpc.Jpc;
 import org.jpc.JpcBuilder;
 import org.jpc.engine.fixture.Person;
@@ -139,7 +139,7 @@ public class SymbolicReferenceTypesTest {
 		try {
 			prologEngine.query(new Compound(STUDENT_FUNCTOR_NAME, asList(new Var("Person")))).<Person>selectObject("Person").oneSolutionOrThrow();
 			fail();
-		} catch(ConversionException e) {}
+		} catch(NotSuitableConverterException e) {}
 	}
 	
 }

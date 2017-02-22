@@ -1,10 +1,10 @@
 package org.jpc.converter.catalog.error;
 
+import static org.jconverter.converter.ConversionGoal.conversionGoal;
 import static org.jpc.converter.catalog.error.IsoPrologErrorConverter.isIsoPrologError;
 
-import java.lang.reflect.Type;
-
-import org.jconverter.converter.ConversionException;
+import org.jconverter.converter.DelegateConversionException;
+import org.jconverter.converter.TypeDomain;
 import org.jpc.Jpc;
 import org.jpc.converter.FromTermConverter;
 import org.jpc.error.DomainError;
@@ -20,9 +20,10 @@ public class DomainErrorConverter implements FromTermConverter<Compound, DomainE
 	}
 	
 	@Override
-	public DomainError fromTerm(Compound term, Type type, Jpc context) {
-		if(!isDomainError(term))
-			throw new ConversionException();
+	public DomainError fromTerm(Compound term, TypeDomain target, Jpc context) {
+		if (!isDomainError(term)) {
+			throw new DelegateConversionException(conversionGoal(term, target));
+		}
 		return new DomainError(term);
 	}
 

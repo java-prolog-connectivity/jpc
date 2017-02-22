@@ -1,10 +1,12 @@
 package org.jpc.converter.catalog.reflection;
 
+import static org.jconverter.converter.ConversionGoal.conversionGoal;
+
 import java.lang.reflect.Array;
-import java.lang.reflect.Type;
 import java.util.List;
 
-import org.jconverter.converter.ConversionException;
+import org.jconverter.converter.DelegateConversionException;
+import org.jconverter.converter.TypeDomain;
 import org.jpc.Jpc;
 import org.jpc.JpcException;
 import org.jpc.converter.FromTermConverter;
@@ -22,9 +24,10 @@ import org.jpc.util.reification.ReflectiveClass;
 public class MethodCallConverter<T> implements FromTermConverter<Compound, T> {
 
 	@Override
-	public T fromTerm(Compound term, Type targetType, Jpc jpc) {
-		if(!term.hasFunctor(LogtalkConstants.LOGTALK_OPERATOR, 2))
-			throw new ConversionException();
+	public T fromTerm(Compound term, TypeDomain target, Jpc jpc) {
+		if (!term.hasFunctor(LogtalkConstants.LOGTALK_OPERATOR, 2)) {
+			throw new DelegateConversionException(conversionGoal(term, target));
+		}
 		Term receiverTerm = term.arg(1);
 		Term messageTerm = term.arg(2);
 		List<Term> receivers = ListTerm.fromTermSequence(receiverTerm);

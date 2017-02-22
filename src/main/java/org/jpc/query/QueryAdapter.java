@@ -2,13 +2,13 @@ package org.jpc.query;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import org.jpc.Jpc;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.term.Term;
 
-import com.google.common.base.Function;
-import com.google.common.base.Functions;
+;
 
 public class QueryAdapter extends Query {
 
@@ -16,7 +16,7 @@ public class QueryAdapter extends Query {
 	protected Query query;
 	
 	public QueryAdapter(Query query) {
-		this(query, Functions.<Solution>identity());
+		this(query, Function.identity());
 	}
 	
 	public QueryAdapter(Query query, Function<Solution, Solution> adapterFunction) {
