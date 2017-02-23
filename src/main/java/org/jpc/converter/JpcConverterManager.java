@@ -14,15 +14,15 @@ import static org.jpc.term.Var.var;
 
 import java.util.List;
 
-import org.jconverter.converter.CheckedConverterEvaluator;
+import org.jconverter.converter.ConversionFunction;
 import org.jconverter.converter.Converter;
 import org.jconverter.converter.ConverterImpl;
 import org.jconverter.converter.ConverterManager;
 import org.jconverter.converter.ConverterRegister;
 import org.jconverter.converter.DelegateConversionException;
+import org.jconverter.converter.InterTypeConverterEvaluator;
 import org.jconverter.converter.InterTypeConverterManager;
 import org.jconverter.converter.TypeDomain;
-import org.jconverter.converter.TypedConverter;
 import org.jgum.JGum;
 import org.jgum.category.Category;
 import org.jgum.category.CategoryProperty.PropertyIterable;
@@ -239,7 +239,6 @@ public class JpcConverterManager extends InterTypeConverterManager {
 				return converterRegisters;
 			}
 		};
-		
 		return convert(converter, term, target, jpc);
 	}
 	
@@ -253,11 +252,11 @@ public class JpcConverterManager extends InterTypeConverterManager {
 	
 	
 	private void registerFromTermConverter(Object key, FromTermConverter<?,?> converter) {
-		register(key, Adapters.asTypedConverter(converter));
+		register(key, Adapters.asConversionFunction(converter));
 	}
 	
 	private void registerToTermConverter(Object key, ToTermConverter<?,?> converter) {
-		register(key, Adapters.asTypedConverter(converter));
+		register(key, Adapters.asConversionFunction(converter));
 	}
 	
 	public void register(JpcConverter converter) {
@@ -293,12 +292,12 @@ public class JpcConverterManager extends InterTypeConverterManager {
 
 		if (converter instanceof FromTermConverter) {
 			embeddedEngine.assertz(new Compound(FROM_TERM_CONVERTER_FUNCTOR_NAME, asList(
-					term, jRef(Adapters.asTypedConverter((FromTermConverter) converter)))));
+					term, jRef(Adapters.asConversionFunction((FromTermConverter) converter)))));
 		}
 
 		if (converter instanceof ToTermConverter) {
 			embeddedEngine.assertz(new Compound(TO_TERM_CONVERTER_FUNCTOR_NAME, asList(
-					term, jRef(Adapters.asTypedConverter((ToTermConverter) converter)))));
+					term, jRef(Adapters.asConversionFunction((ToTermConverter) converter)))));
 			registerToTermConverter(key, (ToTermConverter) converter); //delete
 		}
 	}
@@ -338,9 +337,9 @@ public class JpcConverterManager extends InterTypeConverterManager {
 					Solution solution = query.next();
 					unifiedTerm = term.replaceVariables(solution);
 					unifiedTerm = unifiedTerm.compile(true);
-					TypedConverter converter = (TypedConverter) ((JRef) solution.get(converterVarName)).getReferent();
+					ConversionFunction converter = (ConversionFunction) ((JRef) solution.get(converterVarName)).getReferent();
 					try {
-						converted = new CheckedConverterEvaluator(conversionGoal(unifiedTerm, target), jpc).apply(converter);
+						converted = new InterTypeConverterEvaluator(conversionGoal(unifiedTerm, target), jpc).apply(converter);
 						converterFound = true;
 						break;
 					} catch (DelegateConversionException e) {} //just try with the next converter.

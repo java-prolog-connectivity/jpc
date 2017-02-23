@@ -21,7 +21,7 @@ public static final String CUSTOM_TERM_FUNCTOR_NAME = "jconvertable";
 		Term converterTerm = term.arg(2);
 		FromTermConverter<Term, T> converter = jpc.fromTerm(converterTerm, FromTermConverter.class);
 		ConverterEvaluator<Term, T> converterEvaluator = new InterTypeConverterEvaluator<>(conversionGoal(sourceTerm, target), jpc);
-		return (T) converterEvaluator.apply(Adapters.asTypedConverter(converter));
+		return (T) converterEvaluator.apply(Adapters.asConversionFunction(converter));
 	}
 	
 }

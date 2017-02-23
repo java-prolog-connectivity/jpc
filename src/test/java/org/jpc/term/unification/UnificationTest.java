@@ -59,8 +59,7 @@ public class UnificationTest {
 		} catch(NonUnifiableException e) {}
 
 	}
-	
-	
+
 	@Test
 	public void testSuccessfulConstantUnification() {
 		Integer iterm1 = new Integer(0);

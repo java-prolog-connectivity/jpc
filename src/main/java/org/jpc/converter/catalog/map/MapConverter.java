@@ -56,7 +56,6 @@ public abstract class MapConverter {
 			}
 			return (U) terms.asTerm();
 		}
-		
 	}
 	
 	

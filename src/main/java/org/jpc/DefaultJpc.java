@@ -73,8 +73,8 @@ public class DefaultJpc extends Jpc {
 		this.typeSolverManager = typeSolverManager;
 		this.refTermManager = refTermManager;
 		this.errorHandler = errorHandler;
-		fromJRefTermConverter = Adapters.asTypedConverter(new FromRefTermConverter());
-		toJRefTermConverter = Adapters.asTypedConverter(new ToRefTermConverter());
+		fromJRefTermConverter = Adapters.asConversionFunction(new FromRefTermConverter());
+		toJRefTermConverter = Adapters.asConversionFunction(new ToRefTermConverter());
 	}
 
 	private JpcConverterManager getJpcConverterManager() {
@@ -102,11 +102,11 @@ public class DefaultJpc extends Jpc {
 		//--- END OF PERFORMANCE BLOCK
 		
 		
-		if(!targetClass.equals(Object.class) && typeDomain(term.getClass()).isSubsetOf(target)) {
+		if (!targetClass.equals(Object.class) && target.contains(term)) {
 			return (T) term;
 		}
 		
-		if(term instanceof Compound) { //condition added to increase performance, the check is not needed otherwise.
+		if (term instanceof Compound) { //condition added to increase performance, the check is not needed otherwise.
 			try {
 				return (T) new InterTypeConverterEvaluator(conversionGoal(term, target), this).apply(fromJRefTermConverter);
 			} catch (DelegateConversionException e) {}
@@ -135,13 +135,18 @@ public class DefaultJpc extends Jpc {
 	public <T extends Term> T toTerm(Object object, TypeDomain target) {
 		Class<?> targetClass = target.getRawClass();
 		if (object==null) {
-			if(targetClass.isAssignableFrom(Var.class))
+			if(targetClass.isAssignableFrom(Var.class)) {
 				return (T) dontCare();
-			else
+			}
+			else {
 				throw new NullPointerException("A Null object cannot be transformed to target logic term: " + target);
+			}
 		}
-		
-		
+
+		if (targetClass.isAssignableFrom(object.getClass())) {//the object is already an instance of the desired term.
+			return (T) object;
+		}
+
 		//PERFORMANCE BLOCK (May be deleted. Hardcoding of few primitive conversions just to increase performance).
 		if (targetClass.isAssignableFrom(Atom.class) && object instanceof String) {
 			return (T) new Atom((String)object);
@@ -152,10 +157,6 @@ public class DefaultJpc extends Jpc {
 		}
 		//--- END OF PERFORMANCE BLOCK
 		
-		
-		if (targetClass.isAssignableFrom(object.getClass())) //the object is already an instance of the desired term.
-			return (T) object;
-		
 		if (!(object instanceof String || object instanceof java.lang.Number || object instanceof Boolean || object instanceof Character)) { //condition added to increase performance, the check is not needed otherwise.
 			try {
 				return (T) new InterTypeConverterEvaluator(conversionGoal(object, target), this).apply(toJRefTermConverter);
@@ -164,10 +165,10 @@ public class DefaultJpc extends Jpc {
 		
 		try {
 			Type typeSolverType = inferType(object);
-			if(typeSolverType != null) {
+			if (typeSolverType != null) {
 				try {
 					targetClass = (Class) TypeWrapper.wrap(typeSolverType).mostSpecificType(targetClass); //will throw an exception if the types are not compatible.
-					target = typeDomain(targetClass);
+					target = target.refine(targetClass);
 				} catch(IncompatibleTypesException e) {} // the most specific type is not compatible with the target type. Just ignore it and do nothing.
 			}
 		} catch(UnrecognizedObjectException e){} //a type recommendation cannot be found (do nothing).

@@ -271,7 +271,11 @@ public abstract class Term {
 	
 	protected abstract void basicRead(TermContentHandler contentHandler, Function<Term, Term> termExpander);
 	
-	
+	//TODO FIXME!
+	public boolean subsumes(Term term) {
+		return compile().canUnify(term.compile());  //provisional implementation. This is not correct.
+	}
+
 	/**
 	 * Test if this object is equivalent to the term representation of the object sent as parameter
 	 * This is not testing for equality in a mathematical sense, for example:
