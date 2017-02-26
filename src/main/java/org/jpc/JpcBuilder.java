@@ -1,13 +1,16 @@
 package org.jpc;
 
+import static java.util.Collections.emptyList;
+import static org.jconverter.converter.ConverterKey.converterKey;
+
+import org.jcategory.JCategory;
 import org.jconverter.JConverterBuilder;
 import org.jconverter.factory.FactoryManager;
 import org.jconverter.factory.FactoryManagerImpl;
-import org.jgum.JGum;
-import org.jpc.converter.JpcConverter;
-import org.jpc.converter.JpcConverterManager;
-import org.jpc.converter.typesolver.JpcTypeSolverManager;
-import org.jpc.converter.typesolver.TypeSolver;
+import org.jpc.mapping.converter.JpcConverter;
+import org.jpc.mapping.converter.JpcConverterManager;
+import org.jpc.mapping.typesolver.JpcTypeSolverManager;
+import org.jpc.mapping.typesolver.TypeSolver;
 import org.jpc.engine.embedded.JpcEngine;
 import org.jpc.error.handling.DefaultJpcErrorHandler;
 import org.jpc.error.handling.ErrorHandler;
@@ -29,25 +32,25 @@ public class JpcBuilder extends JConverterBuilder {
 	}
 	
 	/**
-	 * @param jgum a categorization context.
+	 * @param categorization a categorization context.
 	 * @return a JpcBuilder.
 	 */
-	public static JpcBuilder create(JGum jgum) {
-		return new JpcBuilder(jgum);
+	public static JpcBuilder create(JCategory categorization) {
+		return new JpcBuilder(categorization);
 	}
 	
 	private JpcBuilder() {
-		this(new JGum());
+		this(new JCategory());
 	}
 	
-	private JpcBuilder(JGum jgum) {
-		this(jgum, new JpcEngine());
+	private JpcBuilder(JCategory categorization) {
+		this(categorization, new JpcEngine());
 	}
 	
-	private JpcBuilder(JGum jgum, JpcEngine embeddedEngine) {
-		this(JpcConverterManager.registerDefaults(new JpcConverterManager(jgum, embeddedEngine)),
-				FactoryManagerImpl.registerDefaults(new FactoryManagerImpl(jgum)),
-				JpcTypeSolverManager.registerDefaults(new JpcTypeSolverManager(jgum, embeddedEngine)),
+	private JpcBuilder(JCategory categorization, JpcEngine embeddedEngine) {
+		this(JpcConverterManager.registerDefaults(new JpcConverterManager(categorization, embeddedEngine)),
+				FactoryManagerImpl.registerDefaults(new FactoryManagerImpl(categorization)),
+				JpcTypeSolverManager.registerDefaults(new JpcTypeSolverManager(categorization, embeddedEngine)),
 				new RefTermManager(), 
 				new DefaultJpcErrorHandler());
 	}
@@ -72,7 +75,12 @@ public class JpcBuilder extends JConverterBuilder {
 		getConverterManager().register(converter);
 		return this;
 	}
-	
+
+	public JpcBuilder register(Object contextId, JpcConverter converter) {
+		getConverterManager().register(converterKey(contextId), converter);
+		return this;
+	}
+
 	public JpcBuilder register(JpcConverter converter, Term term) {
 		getConverterManager().register(converter, term);
 		return this;
@@ -118,7 +126,7 @@ public class JpcBuilder extends JConverterBuilder {
 	}
 	
 	public Jpc build() {
-		return new DefaultJpc(getConverterManager(), factoryManager, typeSolverManager, refTermManager, errorHandlerManager);
+		return new JpcImpl(getConverterManager(), factoryManager, emptyList(), typeSolverManager, refTermManager, errorHandlerManager);
 	}
 	
 }

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.jpc.converter.TermConvertable;
+import org.jpc.mapping.converter.TermConvertable;
 import org.jpc.engine.prolog.PrologConstants;
 import org.jpc.util.salt.TermContentHandler;
 

@@ -1,5 +1,6 @@
 package org.jpc.util.config;
 
+import static org.jcategory.category.Key.key;
 import static org.jpc.util.JpcPreferences.CONFIGURATION_FILE;
 
 import java.io.IOException;
@@ -10,8 +11,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.jgum.JGum;
-import org.jgum.category.CategoryProperty;
+import org.jcategory.JCategory;
+import org.jcategory.category.CategoryProperty;
+import org.jcategory.category.Key;
 import org.jpc.JpcException;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.engine.provider.LazyEngineProvider;
@@ -25,13 +27,14 @@ public class EngineConfigurationManager {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EngineConfigurationManager.class);
 	
-	private static final Object PROVIDER_KEY = LazyEngineProvider.class;
+	private static final Key PROVIDER_KEY = key(LazyEngineProvider.class);
 	
 	private static EngineConfigurationManager engineConfigurationManager;
 	
 	public static synchronized EngineConfigurationManager getDefault() {
-		if(engineConfigurationManager == null)
+		if (engineConfigurationManager == null) {
 			engineConfigurationManager = createFromFile();
+		}
 		return engineConfigurationManager;
 	}
 	
@@ -67,12 +70,12 @@ public class EngineConfigurationManager {
 		return new EngineConfigurationManager().configureFromFile(resource);
 	}
 	
-	private final JGum jgum; //manages a name categorization for providers.
+	private final JCategory categorization; //manages a name categorization for providers.
 	private final Map<Object,LazyEngineProvider<?>> map; //a map of engine names to providers (not all engine configurations declare a name).
 	private final Set<LazyEngineProvider<?>> allProviders; //a separate set is maintained to efficiently find all the providers.
 	
 	private EngineConfigurationManager() {
-		jgum = new JGum();
+		categorization = new JCategory();
 		map = new HashMap<>();
 		allProviders = new HashSet<>();
 	}
@@ -118,8 +121,8 @@ public class EngineConfigurationManager {
 			}
 			for(String categoryName : engineConfiguration.getCategoryNames()) {
 				logger.trace("Registering Prolog engine for category named: " + categoryName);
-				if(!jgum.forName(categoryName).getLocalProperty(PROVIDER_KEY).isPresent())
-					jgum.forName(categoryName).setProperty(PROVIDER_KEY, provider);
+				if (categorization.forName(categoryName).getLocalProperty(PROVIDER_KEY).isEmpty())
+					categorization.forName(categoryName).setProperty(PROVIDER_KEY, provider);
 				else
 					throw new JpcException("An engine configuration has already been registered for the category named " + categoryName + ".");
 			}
@@ -172,7 +175,7 @@ public class EngineConfigurationManager {
 	}
 	
 	public <T extends PrologEngine> T getPrologEngine(String categoryName) {
-		CategoryProperty<LazyEngineProvider<T>> providerProperty = jgum.forName(categoryName).<LazyEngineProvider<T>>getProperty(LazyEngineProvider.class);
+		CategoryProperty<LazyEngineProvider<T>> providerProperty = categorization.forName(categoryName).getProperty(PROVIDER_KEY);
 		if(providerProperty.isPresent())
 			return providerProperty.get().getPrologEngine();
 		else

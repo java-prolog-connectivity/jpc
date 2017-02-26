@@ -1,6 +1,6 @@
 package org.jpc.engine.prolog;
 
-import org.jpc.converter.TermConvertable;
+import org.jpc.mapping.converter.TermConvertable;
 import org.jpc.term.Atom;
 import org.jpc.term.Term;
 

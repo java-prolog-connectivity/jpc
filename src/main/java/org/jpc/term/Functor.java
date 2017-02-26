@@ -6,7 +6,7 @@ import static org.jpc.term.Var.dontCare;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jpc.converter.TermConvertable;
+import org.jpc.mapping.converter.TermConvertable;
 
 
 public class Functor implements TermConvertable<Term> {

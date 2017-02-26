@@ -1,5 +1,6 @@
 package org.jpc;
 
+import static java.util.Arrays.asList;
 import static org.jconverter.converter.TypeDomain.typeDomain;
 
 import java.lang.reflect.Type;
@@ -7,8 +8,9 @@ import java.util.List;
 
 import org.jconverter.JConverter;
 import org.jconverter.converter.TypeDomain;
-import org.jconverter.factory.FactoryManager;
-import org.jpc.converter.JpcConverterManager;
+import org.jpc.mapping.converter.JpcConverterManager;
+import org.jpc.mapping.typesolver.TypeSolverManager;
+import org.jpc.error.handling.ErrorHandler;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
@@ -19,75 +21,76 @@ import org.jpc.term.refterm.RefTermManager;
  * @author sergioc
  *
  */
-public abstract class Jpc extends JConverter {
-	
-	private static Jpc defaultJpc;
-	
-	public static Jpc getDefault() {
-		if(defaultJpc == null)
-			setDefault(new DefaultJpc());
-		return defaultJpc;
-	}
-	
-	public static void setDefault(Jpc jpc) {
-		defaultJpc = jpc;
-	}
-	
-	public Jpc(JpcConverterManager converterManager, FactoryManager factoryManager) {
-		super(converterManager, factoryManager);
-	}
-	
-	public abstract <T> T fromTerm(Term term);
+public interface Jpc extends JConverter {
 
-	public <T> T fromTerm(Term term, Type targetType) {
+	default Jpc withId(Object ...contextIds) {
+		return new JpcImpl(
+				getJpcConverterManager(),
+				getFactoryManager(),
+				asList(contextIds),
+				getTypeSolverManager(),
+				getRefTermManager(),
+				getErrorHandler()
+				);
+	}
+
+	JpcConverterManager getJpcConverterManager();
+
+	TypeSolverManager getTypeSolverManager();
+
+	ErrorHandler getErrorHandler();
+
+	<T> T fromTerm(Term term);
+
+	default <T> T fromTerm(Term term, Type targetType) {
 		return fromTerm(term, typeDomain(targetType));
 	}
 
-	public abstract <T> T fromTerm(Term term, TypeDomain target);
+	<T> T fromTerm(Term term, TypeDomain target);
 	
-	public abstract <T extends Term> T toTerm(Object object);
+	<T extends Term> T toTerm(Object object);
 
-	public <T extends Term> T toTerm(Object object, Type targetType) {
+	default <T extends Term> T toTerm(Object object, Type targetType) {
 		return toTerm(object, typeDomain(targetType));
 	}
 
-	public abstract <T extends Term> T toTerm(Object object, TypeDomain target);
+	<T extends Term> T toTerm(Object object, TypeDomain target);
 	
-	public abstract Compound toCompound(Object name, List<?> args);
+	Compound toCompound(Object name, List<?> args);
 	
-	public abstract ListTerm listTerm(Object ...objects);
+	ListTerm listTerm(Object ...objects);
 	
-	public abstract ListTerm listTerm(List<?> objects);
+	ListTerm listTerm(List<?> objects);
 
 	/**
 	 * 
 	 * @param object the object which conversion target type to infer.
 	 * @return the inferred type.
 	 */
-	public abstract Type inferType(Object object);
+	Type inferType(Object object);
 
-	public abstract boolean handleError(Term errorTerm, Term goal);
+	boolean handleError(Term errorTerm, Term goal);
 
-	public abstract RefTermManager getRefTermManager();
+	RefTermManager getRefTermManager();
 
-	public abstract Compound newSoftRefTerm(Object ref, Compound compound);
+	Compound newSoftRefTerm(Object ref, Compound compound);
 	
-	public abstract Compound newSoftRefTerm(Object ref);
+	Compound newSoftRefTerm(Object ref);
 	
-	public abstract Compound newWeakRefTerm(Object ref, Compound compound);
+	Compound newWeakRefTerm(Object ref, Compound compound);
 	
-	public abstract Compound newWeakRefTerm(Object ref);
+	Compound newWeakRefTerm(Object ref);
 	
-	public abstract Compound newRefTerm(Object ref);
+	Compound newRefTerm(Object ref);
 	
-	public abstract Compound newRefTerm(Object ref, Compound compound);
+	Compound newRefTerm(Object ref, Compound compound);
 	
-	public abstract void forgetRefTerm(Compound term);
+	void forgetRefTerm(Compound term);
 	
-	public abstract void forgetRef(Object ref);
+	void forgetRef(Object ref);
 	
-	public abstract Compound refTerm(Object o);
+	Compound refTerm(Object o);
 	
-	public abstract <T> T resolveRefTerm(Compound compound);
+	<T> T resolveRefTerm(Compound compound);
 	
 }

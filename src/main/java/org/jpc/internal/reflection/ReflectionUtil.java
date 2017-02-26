@@ -1,8 +1,8 @@
 package org.jpc.internal.reflection;
 
 import static com.google.common.collect.Sets.newHashSet;
-import static org.typetools.typevisitor.TypeVisitor.InterfaceMode.EXCLUDE_INTERFACES;
-import static org.typetools.typevisitor.TypeVisitor.InterfaceMode.INCLUDE_INTERFACES;
+import static org.typeutils.typevisitor.TypeVisitor.InterfaceMode.EXCLUDE_INTERFACES;
+import static org.typeutils.typevisitor.TypeVisitor.InterfaceMode.INCLUDE_INTERFACES;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,13 +34,13 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
-import org.typetools.reification.GenericArrayTypeImpl;
-import org.typetools.reification.ParameterizedTypeImpl;
-import org.typetools.reification.TypeVariableImpl;
-import org.typetools.IncompatibleTypesException;
-import org.typetools.typevisitor.FindFirstTypeVisitor;
-import org.typetools.typevisitor.TypeVisitor;
-import org.typetools.typewrapper.TypeWrapper;
+import org.typeutils.reification.GenericArrayTypeImpl;
+import org.typeutils.reification.ParameterizedTypeImpl;
+import org.typeutils.reification.TypeVariableImpl;
+import org.typeutils.IncompatibleTypesException;
+import org.typeutils.typevisitor.FindFirstTypeVisitor;
+import org.typeutils.typevisitor.TypeVisitor;
+import org.typeutils.typewrapper.TypeWrapper;
 import org.reflections.ReflectionUtils;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;

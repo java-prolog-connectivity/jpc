@@ -1,7 +1,7 @@
 package org.jpc.error.handling;
 
 import org.jpc.Jpc;
-import org.jpc.converter.catalog.error.PrologErrorConverter;
+import org.jpc.mapping.converter.catalog.error.PrologErrorConverter;
 import org.jpc.error.PrologError;
 import org.jpc.term.Term;
 

@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 import org.jconverter.converter.TypeDomain;
 import org.jpc.Jpc;
 import org.jpc.JpcBuilder;
-import org.jpc.converter.ToTermConverter;
+import org.jpc.mapping.converter.ToTermConverter;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Integer;

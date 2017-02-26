@@ -13,7 +13,7 @@ import java.io.Serializable;
 
 import javax.xml.bind.DatatypeConverter;
 
-import org.jpc.converter.TermConvertable;
+import org.jpc.mapping.converter.TermConvertable;
 
 public class SerializedTerm implements TermConvertable<Compound> {
 

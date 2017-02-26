@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.jpc.Jpc;
 import org.jpc.JpcBuilder;
-import org.jpc.converter.TermConvertable;
+import org.jpc.mapping.converter.TermConvertable;
 import org.jpc.engine.prolog.PrologDatabase;
 import org.jpc.engine.prolog.PrologEngine;
 import org.jpc.query.LogtalkQuery;

@@ -5,7 +5,7 @@ import static java.util.Arrays.asList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jpc.converter.TermConvertable;
+import org.jpc.mapping.converter.TermConvertable;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 

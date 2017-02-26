@@ -4,8 +4,8 @@ import static java.util.Arrays.asList;
 
 import org.jconverter.converter.TypeDomain;
 import org.jpc.Jpc;
-import org.jpc.converter.FromTermConverter;
-import org.jpc.converter.ToTermConverter;
+import org.jpc.mapping.converter.FromTermConverter;
+import org.jpc.mapping.converter.ToTermConverter;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 
