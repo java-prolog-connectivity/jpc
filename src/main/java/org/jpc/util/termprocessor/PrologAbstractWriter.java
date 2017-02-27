@@ -7,9 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public abstract class PrologWriter implements TermProcessor {
+public abstract class PrologAbstractWriter implements TermProcessor {
 
-	private static final Logger logger = LoggerFactory.getLogger(PrologWriter.class);
+	private static final Logger logger = LoggerFactory.getLogger(PrologAbstractWriter.class);
 
 	private final Dialect dialect;
 
@@ -19,11 +19,11 @@ public abstract class PrologWriter implements TermProcessor {
 	private Term currentLogtalkObjectTerm;
 
 
-	public PrologWriter() {
+	public PrologAbstractWriter() {
 		this(Dialect.JPC);
 	}
 
-	public PrologWriter(Dialect dialect) {
+	public PrologAbstractWriter(Dialect dialect) {
 		this.dialect = dialect;
 	}
 

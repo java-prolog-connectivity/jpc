@@ -1,15 +1,15 @@
 package org.jpc.util.salt;
 
-import org.jpc.util.termprocessor.PrologWriter;
+import org.jpc.util.termprocessor.PrologAbstractWriter;
 
 public class PrologContentHandler extends JpcTermStreamer {
 
-	public PrologContentHandler(PrologWriter prologWriter) {
+	public PrologContentHandler(PrologAbstractWriter prologWriter) {
 		super(prologWriter);
 	}
 
-	private PrologWriter getPrologWriter() {
-		return (PrologWriter) termProcessor;
+	private PrologAbstractWriter getPrologWriter() {
+		return (PrologAbstractWriter) termProcessor;
 	}
 
 	//Prolog related events

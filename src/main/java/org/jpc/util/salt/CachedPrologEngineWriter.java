@@ -39,8 +39,8 @@ public class CachedPrologEngineWriter extends PrologFileWriter implements Closea
 	}
 
 	@Override
-	public void close() throws IOException {
-		out.close();
+	public void close() {
+		super.close();
 		getPrologEngine().ensureLoaded(file.getAbsolutePath());
 	}
 
