@@ -131,7 +131,6 @@ public class PrologUtil {
 	}
 	
 	public static String escapeString(String s) {
-		boolean requireQuotes = false;
 		s = s.replaceAll("\\\\", Matcher.quoteReplacement("\\\\"));
 		s = s.replaceAll("'", Matcher.quoteReplacement("''")); //escaping ' with \' does not work correctly in XSB, therefore it is escaped with the alternative ''
 		if (requireQuotes(s)) {
