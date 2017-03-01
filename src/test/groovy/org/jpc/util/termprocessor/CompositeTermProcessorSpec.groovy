@@ -5,12 +5,13 @@ import org.jpc.term.Term
 import spock.lang.Specification
 
 import static org.jpc.term.Atom.atom
+import static org.jpc.util.TermPredicates.unifiesWith
 
-class SwitchTermProcessorSpec extends Specification {
+class CompositeTermProcessorSpec extends Specification {
 
     def 'Throws exception when no defined processors'() {
         given:
-        SwitchTermProcessor matchingTermProcessor = SwitchTermProcessor.builder().build()
+        CompositeTermProcessor matchingTermProcessor = CompositeTermProcessor.builder().build()
 
         when:
         matchingTermProcessor.accept(atom("x"))
@@ -21,8 +22,8 @@ class SwitchTermProcessorSpec extends Specification {
 
     def 'Throws exception when no matching processors'() {
         given:
-        SwitchTermProcessor matchingTermProcessor = SwitchTermProcessor.builder()
-                .addProcessor(atom("y"), Mock(TermProcessor))
+        CompositeTermProcessor matchingTermProcessor = CompositeTermProcessor.builder()
+                .addProcessor(unifiesWith(atom("y")), Mock(TermProcessor))
                 .build()
 
         when:
@@ -38,9 +39,9 @@ class SwitchTermProcessorSpec extends Specification {
         TermProcessor termProcessor = Mock()
         Term matchingTerm = atom("x")
         Term unmatchingTerm = atom("y")
-        SwitchTermProcessor matchingTermProcessor = SwitchTermProcessor.builder()
-                .addProcessor(matchingTerm, termProcessor)
-                .addProcessor(unmatchingTerm, termProcessor)
+        CompositeTermProcessor matchingTermProcessor = CompositeTermProcessor.builder()
+                .addProcessor(unifiesWith(matchingTerm), termProcessor)
+                .addProcessor(unifiesWith(unmatchingTerm), termProcessor)
                 .build()
 
         when:
@@ -57,10 +58,10 @@ class SwitchTermProcessorSpec extends Specification {
         TermProcessor thirdTermProcessor = Mock()
         Term matchingTerm = atom("x")
         Term unmatchingTerm = atom("y")
-        SwitchTermProcessor matchingTermProcessor = SwitchTermProcessor.builder()
-                .addProcessor(matchingTerm, firstTermProcessor)
-                .addProcessor(matchingTerm, secondTermProcessor)
-                .addProcessor(unmatchingTerm, thirdTermProcessor)
+        CompositeTermProcessor matchingTermProcessor = CompositeTermProcessor.builder()
+                .addProcessor(unifiesWith(matchingTerm), firstTermProcessor)
+                .addProcessor(unifiesWith(matchingTerm), secondTermProcessor)
+                .addProcessor(unifiesWith(unmatchingTerm), thirdTermProcessor)
                 .build()
 
         when:

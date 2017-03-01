@@ -41,8 +41,8 @@ public class VariableTest {
 	
 	@Test
 	public void testArity() {
-		assertEquals(new Var("A").arity(), 0);
-		assertEquals(new Var("_").arity(), 0);
+		assertEquals(new Var("A").getArity(), 0);
+		assertEquals(new Var("_").getArity(), 0);
 	}
 	
 	@Test

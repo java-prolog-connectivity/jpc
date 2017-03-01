@@ -20,7 +20,7 @@ public class AtomTest {
 	
 	@Test
 	public void testArity() {
-		assertEquals(new Atom("hello").arity(), 0);
+		assertEquals(new Atom("hello").getArity(), 0);
 	}
 	
 	@Test

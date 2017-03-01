@@ -55,7 +55,7 @@ public final class Compound extends Term {
 		checkArgument(!args.isEmpty(), "A compound term must have at least one argument");
 		this.name = name;
 		this.args = (List<Term>) args;
-		functor = functor(name, arity());
+		functor = functor(name, getArity());
 	}
 
 	public static Compound compound(String name, List args) {
@@ -165,8 +165,8 @@ public final class Compound extends Term {
 
 	public boolean usesOperator(Operator operator) {
 		return(hasName(operator.getName()) &&
-			((operator.isUnary() && arity() == 1) || 
-			(operator.isBinary() && arity() == 2)));
+			((operator.isUnary() && getArity() == 1) ||
+			(operator.isBinary() && getArity() == 2)));
 	}
 	
 	@Override
@@ -260,12 +260,12 @@ public final class Compound extends Term {
 		if(this != term) {
 			if(term instanceof AbstractVar || term instanceof JRef)
 				term.unify(this);
-			else if(!(term instanceof Compound) || term.arity() != arity())
+			else if(!(term instanceof Compound) || term.getArity() != getArity())
 				throw new NonUnifiableException(this, term);
 			else {
 				Compound compound = (Compound) term;
 				getNameTerm().unify(compound.getNameTerm());
-				for(int i=0; i<arity(); i++)
+				for(int i = 0; i< getArity(); i++)
 					arg(i+1).unify(term.arg(i+1));
 			}
 		}

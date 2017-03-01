@@ -31,9 +31,9 @@ public class CompoundTest {
 	
 	@Test
 	public void testArity() {
-		assertEquals(t1.arity(), 1);
-		assertEquals(t1.arg(1).arity(), 1);
-		assertEquals(t1.arg(1).arg(1).arity(), 0);
+		assertEquals(t1.getArity(), 1);
+		assertEquals(t1.arg(1).getArity(), 1);
+		assertEquals(t1.arg(1).arg(1).getArity(), 0);
 	}
 	
 	@Test

@@ -17,7 +17,7 @@ public class IntegerTermTest {
 	
 	@Test
 	public void testArity() {
-		assertEquals(new Integer(10).arity(), 0);
+		assertEquals(new Integer(10).getArity(), 0);
 	}
 	
 	@Test

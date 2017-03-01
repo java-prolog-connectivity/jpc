@@ -15,8 +15,12 @@ public class ConditionalTermProcessor implements TermProcessor {
         this.predicate = predicate;
     }
 
+    private boolean applies(Term term) {
+        return predicate.test(term);
+    }
+
     public void accept(Term term) {
-        if (predicate.test(term)) {
+        if (applies(term)) {
             termProcessor.accept(term);
         }
     }

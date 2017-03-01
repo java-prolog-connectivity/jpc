@@ -28,7 +28,7 @@ public class ConstructorCallConverter<T> implements FromTermConverter<Compound, 
 			}
 		}
 		if(targetClass.isPrimitive() || Primitives.isWrapperType(targetClass)) {
-			if(term.arity() == 1) {
+			if(term.getArity() == 1) {
 				return jpc.fromTerm(term.arg(1), targetClass);
 			} else {
 				throw new DelegateConversionException(conversionGoal(term, target));

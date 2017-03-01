@@ -59,7 +59,7 @@ public class OperatorsContext {
 	}
 
 	public Operator getOperator(Term term) {
-		if(term instanceof Compound && term.arity() <= 2) { //the term is a compound with one or two arguments
+		if(term instanceof Compound && term.getArity() <= 2) { //the term is a compound with one or two arguments
 			Compound compound = (Compound) term;
 			Term compoundName = compound.getNameTerm();
 			if(compoundName instanceof Atom) {

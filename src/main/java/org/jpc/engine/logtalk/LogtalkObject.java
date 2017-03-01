@@ -92,7 +92,7 @@ public class LogtalkObject<T extends Term> implements TermConvertable<T>, Prolog
 	}
 	
 	public int arity() {
-		return term.arity();
+		return term.getArity();
 	}
 	
 	@Override

@@ -17,7 +17,7 @@ public class FloatTermTest {
 	
 	@Test
 	public void testArity() {
-		assertEquals(new Float(10.5).arity(), 0);
+		assertEquals(new Float(10.5).getArity(), 0);
 	}
 	
 	@Test

@@ -71,11 +71,10 @@ public abstract class Term {
 	 * 
 	 * @return the arity (1+) of this Term. Returns 0 if the term does not have any arguments (i.e., the Term is an instance of Compound)
 	 */
-	public int arity() {
+	public int getArity() {
 		return getArgs().size();
 	}
 
-	
 	/**
 	 * Whether this term has a given functor.
 	 * @param functor the functor of this term.
