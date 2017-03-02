@@ -4,11 +4,14 @@ import static java.util.Arrays.asList;
 import static org.jpc.engine.prolog.PrologConstants.FAIL;
 import static org.jpc.engine.prolog.PrologConstants.FALSE;
 import static org.jpc.engine.prolog.PrologConstants.TRUE;
+import static org.jpc.term.Atom.atom;
 import static org.jpc.term.JRef.jRef;
 import static org.jpc.term.ListTerm.listTerm;
+import static org.jpc.term.TermConstants.JAVA_NULL;
+import static org.jpc.term.Var.dontCare;
+import static org.jpc.term.Var.var;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -35,7 +38,7 @@ import org.jpc.term.Float;
 import org.jpc.term.Integer;
 import org.jpc.term.JRef;
 import org.jpc.term.Term;
-import org.jpc.term.Var;
+import org.jpc.term.TermConstants;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -50,7 +53,7 @@ public class DefaultConversionsTest {
 	
 	@Test
 	public void testNullToTerm() {
-		assertTrue(new Var("_").termEquals(jpc.toTerm(null)));
+		assertTrue(JAVA_NULL.termEquals(jpc.toTerm(null)));
 	}
 	
 	@Test
@@ -60,8 +63,8 @@ public class DefaultConversionsTest {
 	
 	@Test
 	public void testBooleanToTerm() {
-		assertEquals(Atom.TRUE, jpc.toTerm(true));
-		assertEquals(Atom.FALSE, jpc.toTerm(false));
+		assertEquals(TermConstants.TRUE, jpc.toTerm(true));
+		assertEquals(TermConstants.FALSE, jpc.toTerm(false));
 	}
 	
 	@Test
@@ -210,8 +213,9 @@ public class DefaultConversionsTest {
 	}
 	
 	@Test
-	public void testVariableToNull() {
-		assertNull(jpc.fromTerm(new Var("X")));
+	public void testVariableConversion() {
+		assertEquals(var("X"), jpc.fromTerm(var("X")));
+		assertTrue(dontCare().termEquals(jpc.fromTerm(dontCare())));
 	}
 	
 	@Test
@@ -324,13 +328,13 @@ public class DefaultConversionsTest {
 	
 	@Test
 	public void testTermToEmptyList() {
-		List<?> list = jpc.fromTerm(Atom.NIL);
+		List<?> list = jpc.fromTerm(TermConstants.NIL);
 		assertEquals(0, list.size());
 	}
 	
 	@Test
 	public void testTermToList() {
-		Term listTerm = listTerm(new Atom("apple"), new Var("X"));
+		Term listTerm = listTerm(new Atom("apple"), JAVA_NULL);
 		List list = (List) jpc.fromTerm(listTerm);
 		assertEquals(2, list.size());
 		assertEquals(list.get(0), "apple");
@@ -373,7 +377,7 @@ public class DefaultConversionsTest {
 	
 	@Test
 	public void testTermToObjectArray() {
-		Term listTerm = listTerm(new Atom("apple"), new Var("X"));
+		Term listTerm = listTerm(new Atom("apple"), JAVA_NULL);
 		Object[] array = jpc.fromTerm(listTerm, Object[].class);
 		assertEquals(2, array.length);
 		assertEquals(array[0], "apple");
@@ -382,7 +386,7 @@ public class DefaultConversionsTest {
 	
 	@Test
 	public void testTermToStringArray() {
-		Term listTerm = listTerm(new Atom("apple"), new Var("X"));
+		Term listTerm = listTerm(new Atom("apple"), JAVA_NULL);
 		String[] array = jpc.fromTerm(listTerm, String[].class);
 		assertEquals(2, array.length);
 		assertEquals(array[0], "apple");
@@ -393,11 +397,11 @@ public class DefaultConversionsTest {
 	public void testTermToObjectTable() {
 		Term term = new Compound(".", asList(
 				new Compound(".", asList(new Atom("apple"), 
-						new Compound(".", asList(new Var("Var"), 
+						new Compound(".", asList(JAVA_NULL,
 							new Atom("[]"))))), 
 					new Compound(".", asList(
 						new Compound(".", asList(new Atom("pears"), 
-							new Compound(".", asList(new Var("_"), 
+							new Compound(".", asList(JAVA_NULL,
 								new Atom("[]"))))), 
 					new Atom("[]")))));
 		Object[][] table = jpc.fromTerm(term, Object[][].class);
@@ -408,11 +412,11 @@ public class DefaultConversionsTest {
 	public void testTermToStringTable() {
 		Term term = new Compound(".", asList(
 				new Compound(".", asList(new Atom("apple"), 
-						new Compound(".", asList(new Var("Var"), 
+						new Compound(".", asList(JAVA_NULL,
 							new Atom("[]"))))), 
 					new Compound(".", asList(
 						new Compound(".", asList(new Atom("pears"), 
-							new Compound(".", asList(new Var("_"), 
+							new Compound(".", asList(JAVA_NULL,
 								new Atom("[]"))))), 
 					new Atom("[]")))));
 		String[][] table = jpc.fromTerm(term, String[][].class);
@@ -422,12 +426,12 @@ public class DefaultConversionsTest {
 	@Test
 	public void testTermToListOfStringArray() {
 		Term term = new Compound(".", asList(
-				new Compound(".", asList(new Atom("apple"), 
-						new Compound(".", asList(new Var("Var"), 
+				new Compound(".", asList(atom("apple"),
+						new Compound(".", asList(JAVA_NULL,
 							new Atom("[]"))))), 
 					new Compound(".", asList(
-						new Compound(".", asList(new Atom("pears"), 
-							new Compound(".", asList(new Var("_"), 
+						new Compound(".", asList(atom("pears"),
+							new Compound(".", asList(JAVA_NULL,
 								new Atom("[]"))))), 
 					new Atom("[]")))));
 		Type type = new TypeToken<List<String[]>>(){}.getType();

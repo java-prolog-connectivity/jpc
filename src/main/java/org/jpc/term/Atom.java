@@ -19,11 +19,6 @@ import java.util.function.Function;
  */
 public final class Atom extends Term {
 
-	public static final Atom TRUE = new Atom(PrologConstants.TRUE);
-	public static final Atom FAIL = new Atom(PrologConstants.FAIL);
-	public static final Atom FALSE = new Atom(PrologConstants.FALSE);
-	public static final Atom NIL = new Atom(PrologConstants.NIL_SYMBOL);
-
 	private final String name;
 	private String escapedName; //lazily initialized.
 

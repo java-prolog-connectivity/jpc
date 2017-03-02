@@ -56,7 +56,7 @@ public class ListTerm extends ArrayList<Term> implements TermConvertable {
 	
 	@Override
 	public Term asTerm() {
-		Term unwrappedListTerm = Atom.NIL;
+		Term unwrappedListTerm = TermConstants.NIL;
 		for (int i = size() - 1; i >= 0; --i) {
 			unwrappedListTerm = new Compound(".", asList(get(i), unwrappedListTerm));
 		}

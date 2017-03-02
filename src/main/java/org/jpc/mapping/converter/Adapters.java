@@ -7,10 +7,13 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jcategory.strategy.ChainOfResponsibility;
+import org.jconverter.JConverter;
 import org.jconverter.converter.ConversionFunction;
 import org.jconverter.converter.Converter;
 import org.jconverter.converter.DelegateConversionException;
-import org.jcategory.strategy.ChainOfResponsibility;
+import org.jconverter.converter.TypeDomain;
+import org.jpc.Jpc;
 import org.jpc.term.Term;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,5 +74,38 @@ public class Adapters {
             return ConversionFunction.forConverter(new ToTermConverterAdapter<>(converter));
         }
     }
+
+
+
+    public static class FromTermConverterAdapter<T extends Term, V> implements Converter<T, V> {
+        private final FromTermConverter<T,V> converter;
+
+        public FromTermConverterAdapter(FromTermConverter<T,V> converter) {
+            this.converter = converter;
+        }
+
+        @Override
+        public V apply(T source, TypeDomain target, JConverter context) {
+            return converter.fromTerm(source, target, (Jpc) context);
+        }
+    }
+
+
+
+    public static class ToTermConverterAdapter<T, V extends Term> implements Converter<T, V> {
+
+        private final ToTermConverter<T,V> converter;
+
+        public ToTermConverterAdapter(ToTermConverter<T,V> converter) {
+            this.converter = converter;
+        }
+
+        @Override
+        public V apply(T source, TypeDomain target, JConverter context) {
+            return converter.toTerm(source, target, (Jpc) context);
+        }
+
+    }
+
 
 }

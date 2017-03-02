@@ -6,9 +6,9 @@ import static org.jpc.engine.prolog.PrologConstants.CATCH;
 import org.jpc.Jpc;
 import org.jpc.engine.prolog.OperatorsContext;
 import org.jpc.engine.prolog.PrologEngine;
-import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
+import org.jpc.term.TermConstants;
 import org.jpc.term.Var;
 
 public abstract class PrologQuery extends Query {
@@ -28,7 +28,7 @@ public abstract class PrologQuery extends Query {
 	}
 	
 	public static Term exceptionHandledQueryTerm(Term term) {
-		return new Compound(CATCH, asList(term, new Var(Solution.EXCEPTION_VAR_NAME), Atom.TRUE));
+		return new Compound(CATCH, asList(term, new Var(Solution.EXCEPTION_VAR_NAME), TermConstants.TRUE));
 	}
 	
 	public static Term withOperatorsQueryTerm(Term term) {

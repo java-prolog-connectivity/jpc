@@ -1,8 +1,6 @@
 package org.jpc.mapping.converter.catalog;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.jpc.Jpc;
@@ -11,6 +9,7 @@ import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;
+import org.jpc.term.TermConstants;
 import org.junit.Test;
 
 public class TypedTermConversionsTest {
@@ -20,7 +19,7 @@ public class TypedTermConversionsTest {
 	@Test
 	public void testTypedTermConversionTest() {
 		Term typeTerm; // = jpc.toTerm(boolean.class);
-		typeTerm = new Compound("type", asList(Atom.NIL, ListTerm.listTerm(new Atom("boolean"))));
+		typeTerm = new Compound("type", asList(TermConstants.NIL, ListTerm.listTerm(new Atom("boolean"))));
 		Term sourceTerm = new Compound(TypedTermToObjectConverter.TYPED_TERM_FUNCTOR_NAME, asList(new Atom("true"), typeTerm));
 		assertTrue((Boolean)jpc.fromTerm(sourceTerm));
 		typeTerm = new Compound("type", asList(new Atom("boolean")));

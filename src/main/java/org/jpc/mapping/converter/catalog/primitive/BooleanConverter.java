@@ -1,9 +1,9 @@
 package org.jpc.mapping.converter.catalog.primitive;
 
 import static org.jconverter.converter.ConversionGoal.conversionGoal;
-import static org.jpc.term.Atom.FAIL;
-import static org.jpc.term.Atom.FALSE;
-import static org.jpc.term.Atom.TRUE;
+import static org.jpc.term.TermConstants.FAIL;
+import static org.jpc.term.TermConstants.FALSE;
+import static org.jpc.term.TermConstants.TRUE;
 
 import org.jconverter.converter.DelegateConversionException;
 import org.jconverter.converter.TypeDomain;

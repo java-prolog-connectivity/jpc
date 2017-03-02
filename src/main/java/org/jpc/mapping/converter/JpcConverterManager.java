@@ -31,6 +31,11 @@ import org.jconverter.converter.InterTypeConverterManager;
 import org.jconverter.converter.TypeDomain;
 import org.jpc.Jpc;
 import org.jpc.JpcException;
+import org.jpc.engine.embedded.JpcEngine;
+import org.jpc.engine.embedded.database.IndexDescriptor;
+import org.jpc.engine.embedded.database.MutableIndexManager;
+import org.jpc.engine.logtalk.LogtalkConstants;
+import org.jpc.engine.prolog.PrologConstants;
 import org.jpc.mapping.converter.catalog.CustomTermToObjectConverter;
 import org.jpc.mapping.converter.catalog.JRefToObjectConverter;
 import org.jpc.mapping.converter.catalog.JpcContextConverter;
@@ -86,11 +91,6 @@ import org.jpc.mapping.converter.catalog.reflection.type.TypeVariableToTermConve
 import org.jpc.mapping.converter.catalog.reflection.type.WildcardTypeToTermConverter;
 import org.jpc.mapping.converter.catalog.serialized.FromSerializedConverter;
 import org.jpc.mapping.typesolver.catalog.MapTypeSolver;
-import org.jpc.engine.embedded.JpcEngine;
-import org.jpc.engine.embedded.database.IndexDescriptor;
-import org.jpc.engine.embedded.database.MutableIndexManager;
-import org.jpc.engine.logtalk.LogtalkConstants;
-import org.jpc.engine.prolog.PrologConstants;
 import org.jpc.query.Query;
 import org.jpc.query.Solution;
 import org.jpc.term.Atom;
@@ -264,10 +264,12 @@ public class JpcConverterManager extends InterTypeConverterManager {
 	}
 	
 	public void register(Key key, JpcConverter converter) {
-		if (converter instanceof FromTermConverter)
+		if (converter instanceof FromTermConverter) {
 			registerFromTermConverter(key, (FromTermConverter) converter);
-		if (converter instanceof ToTermConverter)
+		}
+		if (converter instanceof ToTermConverter) {
 			registerToTermConverter(key, (ToTermConverter) converter);
+		}
 	}
 
 	public void register(JpcConverter converter, Functor functor) {
@@ -294,7 +296,6 @@ public class JpcConverterManager extends InterTypeConverterManager {
 			embeddedEngine.assertz(new Compound(FROM_TERM_CONVERTER_FUNCTOR_NAME, asList(
 					term, jRef(Adapters.asConversionFunction((FromTermConverter) converter)))));
 		}
-
 		if (converter instanceof ToTermConverter) {
 			registerToTermConverter(key, (ToTermConverter) converter); //delete
 		}

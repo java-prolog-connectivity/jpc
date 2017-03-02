@@ -13,7 +13,7 @@ public class CompoundTest {
 	private final Term t1 = new Compound("yellow", asList(new Compound("blue", asList(new Atom("red")))));
 	private final Compound listCompound = new Compound(CONS_FUNCTOR, asList(atom("a"),
 			new Compound(CONS_FUNCTOR, asList(atom("b"),
-					new Compound(CONS_FUNCTOR, asList(atom("c"), Atom.NIL))))));
+					new Compound(CONS_FUNCTOR, asList(atom("c"), TermConstants.NIL))))));
 
 
 	@Test

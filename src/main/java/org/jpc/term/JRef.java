@@ -5,6 +5,7 @@ import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
+import java.util.function.Function;
 
 import org.jpc.JpcException;
 import org.jpc.engine.dialect.Dialect;
@@ -20,8 +21,6 @@ import org.jpc.util.PrologUtil;
 import org.jpc.util.salt.TermContentHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.function.Function;
 
 public abstract class JRef<T> extends Term {
 
@@ -186,14 +185,15 @@ public abstract class JRef<T> extends Term {
 		
 		@Override
 		public ReferenceType getReferenceType() {
-			if(weakRef instanceof SoftReference)
+			if (weakRef instanceof SoftReference) {
 				return ReferenceType.SOFT;
-			else if(weakRef instanceof WeakReference)
+			} else if(weakRef instanceof WeakReference) {
 				return ReferenceType.WEAK;
-			else if(weakRef instanceof PhantomReference)
+			} else if(weakRef instanceof PhantomReference) {
 				throw new JpcException("Phantom references are not supported.");
-			else
+			} else {
 				throw new AssertionError("Unrecognized reference type."); //this should never happen (just in case future versions of Java add new reference types).
+			}
 		}
 		
 		@Override

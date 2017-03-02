@@ -4,7 +4,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.jconverter.converter.ConversionGoal.conversionGoal;
 import static org.jconverter.converter.TypeDomain.typeDomain;
-import static org.jpc.term.Var.dontCare;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -19,7 +18,12 @@ import org.jconverter.converter.InterTypeConverterEvaluator;
 import org.jconverter.converter.TypeDomain;
 import org.jconverter.factory.FactoryManager;
 import org.jconverter.factory.FactoryManagerImpl;
+import org.jpc.engine.embedded.JpcEngine;
+import org.jpc.error.handling.DefaultJpcErrorHandler;
+import org.jpc.error.handling.ErrorHandler;
+import org.jpc.mapping.converter.Adapters;
 import org.jpc.mapping.converter.JpcConverterManager;
+import org.jpc.mapping.converter.catalog.NullConverter;
 import org.jpc.mapping.converter.catalog.primitive.NumberToNumberTermConverter;
 import org.jpc.mapping.converter.catalog.refterm.FromRefTermConverter;
 import org.jpc.mapping.converter.catalog.refterm.ToRefTermConverter;
@@ -27,16 +31,11 @@ import org.jpc.mapping.typesolver.JpcTypeSolverManager;
 import org.jpc.mapping.typesolver.TypeSolverKey;
 import org.jpc.mapping.typesolver.TypeSolverManager;
 import org.jpc.mapping.typesolver.UnrecognizedObjectException;
-import org.jpc.engine.embedded.JpcEngine;
-import org.jpc.error.handling.DefaultJpcErrorHandler;
-import org.jpc.error.handling.ErrorHandler;
-import org.jpc.mapping.converter.Adapters;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Number;
 import org.jpc.term.Term;
-import org.jpc.term.Var;
 import org.jpc.term.refterm.RefTermManager;
 import org.typeutils.IncompatibleTypesException;
 import org.typeutils.typewrapper.TypeWrapper;
@@ -130,10 +129,15 @@ public class JpcImpl extends JConverterImpl implements Jpc {
 	@Override
 	public <T> T fromTerm(Term term, TypeDomain target) {
 		Objects.requireNonNull(term);
+
+		try {
+			return (T) new NullConverter().fromTerm(term, target, this);
+		} catch(DelegateConversionException e) {}
+
 		Class<?> targetClass = target.getRawClass();
 		
 		//PERFORMANCE BLOCK (May be deleted. Hardcoding of few primitive conversions just to increase performance).
-		if(targetClass.equals(String.class) && term instanceof Atom) { //if the target type is Object better do not take the shortcut below, since many options are possible.
+		if (targetClass.equals(String.class) && term instanceof Atom) { //if the target type is Object better do not take the shortcut below, since many options are possible.
 			Atom atom = (Atom)term;
 			return (T) atom.getName();
 		}
@@ -175,15 +179,19 @@ public class JpcImpl extends JConverterImpl implements Jpc {
 
 	@Override
 	public <T extends Term> T toTerm(Object object, TypeDomain target) {
+		try {
+			return (T) new NullConverter().toTerm(object, target, this);
+		} catch(DelegateConversionException e) {}
+
 		Class<?> targetClass = target.getRawClass();
-		if (object==null) {
+/*		if (object==null) {
 			if(targetClass.isAssignableFrom(Var.class)) {
 				return (T) dontCare();
 			}
 			else {
 				throw new NullPointerException("A Null object cannot be transformed to target logic term: " + target);
 			}
-		}
+		}*/
 
 		if (targetClass.isAssignableFrom(object.getClass())) {//the object is already an instance of the desired term.
 			return (T) object;
