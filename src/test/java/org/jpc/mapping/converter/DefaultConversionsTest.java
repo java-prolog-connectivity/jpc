@@ -4,7 +4,8 @@ import static java.util.Arrays.asList;
 import static org.jpc.engine.prolog.PrologConstants.FAIL;
 import static org.jpc.engine.prolog.PrologConstants.FALSE;
 import static org.jpc.engine.prolog.PrologConstants.TRUE;
-import static org.jpc.mapping.converter.catalog.OptionalConverter.OPTIONAL_FUNCTOR_NAME;
+import static org.jpc.mapping.converter.catalog.util.OptionalConverter.OPTIONAL_FUNCTOR_NAME;
+import static org.jpc.mapping.converter.catalog.util.UuidConverter.UUID_FUNCTOR_NAME;
 import static org.jpc.term.Atom.atom;
 import static org.jpc.term.JRef.jRef;
 import static org.jpc.term.ListTerm.listTerm;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -52,7 +54,7 @@ public class DefaultConversionsTest {
 	private Jpc jpc = JpcBuilder.create().build();
 
 	@Test
-	public void testNonEmptyOptionalToTerm() {
+	public void testNonEmptyOptionalConversion() {
 		Optional<String> opt = Optional.of("x");
 		Term optionalTerm = jpc.toTerm(opt);
 		assertEquals(new Compound(OPTIONAL_FUNCTOR_NAME, asList(atom("x"))), optionalTerm);
@@ -60,12 +62,21 @@ public class DefaultConversionsTest {
 	}
 
 	@Test
-	public void testEmptyOptionalToTerm() {
+	public void testEmptyOptionalConversion() {
 		Optional<String> opt = Optional.empty();
 		Term optionalTerm = jpc.toTerm(opt);
 		assertEquals(EMPTY_OPTIONAL, optionalTerm);
 		assertEquals(opt, jpc.fromTerm(optionalTerm));
 	}
+
+	@Test
+	public void testUuidConverter() {
+		UUID uuid = UUID.randomUUID();
+		Term uuidTerm = jpc.toTerm(uuid);
+		assertEquals(new Compound(UUID_FUNCTOR_NAME, asList(atom(uuid.toString()))), uuidTerm);
+		assertEquals(uuid, jpc.fromTerm(uuidTerm));
+	}
+
 
 	// TODO restructure all these tests in a Spock specification
 	// *** OBJECT TO TERM TESTS ***

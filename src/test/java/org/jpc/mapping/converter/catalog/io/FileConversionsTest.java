@@ -9,7 +9,7 @@ import java.net.URISyntaxException;
 
 import org.jpc.Jpc;
 import org.jpc.JpcBuilder;
-import org.jpc.mapping.converter.catalog.net.URIConverter;
+import org.jpc.mapping.converter.catalog.net.UriConverter;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.junit.Test;
@@ -30,7 +30,7 @@ public class FileConversionsTest {
 		}
 		File file = new File(uri);
 		Compound fileCompound = jpc.toTerm(file);
-		assertEquals(new Compound(FileConverter.FILE_FUNCTOR_NAME, asList(new Compound(URIConverter.URI_FUNCTOR_NAME, asList(new Atom(uriFileName))))), fileCompound);
+		assertEquals(new Compound(FileConverter.FILE_FUNCTOR_NAME, asList(new Compound(UriConverter.URI_FUNCTOR_NAME, asList(new Atom(uriFileName))))), fileCompound);
 		assertEquals(file, jpc.fromTerm(fileCompound));
 	}
 	

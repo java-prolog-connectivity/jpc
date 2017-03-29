@@ -2,7 +2,7 @@ package org.jpc.term;
 
 
 import static java.util.Arrays.asList;
-import static org.jpc.mapping.converter.catalog.OptionalConverter.OPTIONAL_FUNCTOR_NAME;
+import static org.jpc.mapping.converter.catalog.util.OptionalConverter.OPTIONAL_FUNCTOR_NAME;
 import static org.jpc.term.Atom.atom;
 import static org.jpc.term.Compound.compound;
 

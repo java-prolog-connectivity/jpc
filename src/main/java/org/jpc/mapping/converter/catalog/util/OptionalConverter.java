@@ -1,4 +1,4 @@
-package org.jpc.mapping.converter.catalog;
+package org.jpc.mapping.converter.catalog.util;
 
 
 import static java.util.Arrays.asList;

@@ -12,7 +12,7 @@ import org.jpc.mapping.converter.ToTermConverter;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 
-public class URIConverter implements ToTermConverter<URI, Compound>, FromTermConverter<Compound, URI> {
+public class UriConverter implements ToTermConverter<URI, Compound>, FromTermConverter<Compound, URI> {
 
 	public static final String URI_FUNCTOR_NAME = "uri";
 	

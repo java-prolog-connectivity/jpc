@@ -4,11 +4,13 @@ import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.jconverter.converter.ConversionGoal.conversionGoal;
-import static org.jpc.mapping.converter.catalog.OptionalConverter.OPTIONAL_FUNCTOR_NAME;
+import static org.jpc.mapping.converter.catalog.net.UriConverter.URI_FUNCTOR_NAME;
 import static org.jpc.mapping.converter.catalog.reflection.type.ReificationConstants.ARRAY_FUNCTOR_NAME;
 import static org.jpc.mapping.converter.catalog.reflection.type.ReificationConstants.CLASS_FUNCTOR_NAME;
 import static org.jpc.mapping.converter.catalog.reflection.type.ReificationConstants.TYPE_FUNCTOR_NAME;
 import static org.jpc.mapping.converter.catalog.reflection.type.ReificationConstants.TYPE_VARIABLE_FUNCTOR_NAME;
+import static org.jpc.mapping.converter.catalog.util.OptionalConverter.OPTIONAL_FUNCTOR_NAME;
+import static org.jpc.mapping.converter.catalog.util.UuidConverter.UUID_FUNCTOR_NAME;
 import static org.jpc.term.Functor.functor;
 import static org.jpc.term.JRef.jRef;
 import static org.jpc.term.Var.var;
@@ -40,12 +42,16 @@ import org.jpc.engine.prolog.PrologConstants;
 import org.jpc.mapping.converter.catalog.CustomTermToObjectConverter;
 import org.jpc.mapping.converter.catalog.JRefToObjectConverter;
 import org.jpc.mapping.converter.catalog.JpcContextConverter;
-import org.jpc.mapping.converter.catalog.OptionalConverter;
 import org.jpc.mapping.converter.catalog.SequenceConverter;
 import org.jpc.mapping.converter.catalog.TermConvertableConverter;
 import org.jpc.mapping.converter.catalog.TermSpecifierConverter;
 import org.jpc.mapping.converter.catalog.TypedTermToObjectConverter;
 import org.jpc.mapping.converter.catalog.VarConverter;
+import org.jpc.mapping.converter.catalog.collection.ArrayConverter;
+import org.jpc.mapping.converter.catalog.collection.CollectionConverter;
+import org.jpc.mapping.converter.catalog.collection.EnumerationConverter;
+import org.jpc.mapping.converter.catalog.collection.IterableConverter;
+import org.jpc.mapping.converter.catalog.collection.IteratorConverter;
 import org.jpc.mapping.converter.catalog.datetime.CalendarToAtomConverter;
 import org.jpc.mapping.converter.catalog.datetime.CalendarToNumberTermConverter;
 import org.jpc.mapping.converter.catalog.datetime.XMLGregorianCalendarConverter;
@@ -63,16 +69,11 @@ import org.jpc.mapping.converter.catalog.error.ThrowableConverter;
 import org.jpc.mapping.converter.catalog.error.TypeErrorConverter;
 import org.jpc.mapping.converter.catalog.error.UnknownIsoPrologErrorConverter;
 import org.jpc.mapping.converter.catalog.io.FileConverter;
-import org.jpc.mapping.converter.catalog.collection.ArrayConverter;
-import org.jpc.mapping.converter.catalog.collection.CollectionConverter;
-import org.jpc.mapping.converter.catalog.collection.EnumerationConverter;
-import org.jpc.mapping.converter.catalog.collection.IterableConverter;
-import org.jpc.mapping.converter.catalog.collection.IteratorConverter;
 import org.jpc.mapping.converter.catalog.map.MapConverter.MapToTermConverter;
 import org.jpc.mapping.converter.catalog.map.MapConverter.TermToMapConverter;
 import org.jpc.mapping.converter.catalog.map.MapEntryConverter.MapEntryToTermConverter;
 import org.jpc.mapping.converter.catalog.map.MapEntryConverter.TermToMapEntryConverter;
-import org.jpc.mapping.converter.catalog.net.URIConverter;
+import org.jpc.mapping.converter.catalog.net.UriConverter;
 import org.jpc.mapping.converter.catalog.primitive.BooleanConverter;
 import org.jpc.mapping.converter.catalog.primitive.CharacterToNumberTermConverter;
 import org.jpc.mapping.converter.catalog.primitive.NumberToNumberTermConverter;
@@ -92,6 +93,8 @@ import org.jpc.mapping.converter.catalog.reflection.type.TermToArrayTypeConverte
 import org.jpc.mapping.converter.catalog.reflection.type.TypeVariableToTermConverter;
 import org.jpc.mapping.converter.catalog.reflection.type.WildcardTypeToTermConverter;
 import org.jpc.mapping.converter.catalog.serialized.FromSerializedConverter;
+import org.jpc.mapping.converter.catalog.util.OptionalConverter;
+import org.jpc.mapping.converter.catalog.util.UuidConverter;
 import org.jpc.mapping.typesolver.catalog.MapTypeSolver;
 import org.jpc.query.Query;
 import org.jpc.query.Solution;
@@ -150,6 +153,7 @@ public class JpcConverterManager extends InterTypeConverterManager {
 		converterManager.register(new TermConvertableConverter());
 		converterManager.register(new VarConverter());
 		converterManager.register(new JRefToObjectConverter());
+		converterManager.register(new UuidConverter(), functor(UUID_FUNCTOR_NAME, 1));
 		converterManager.register(new OptionalConverter(), functor(OPTIONAL_FUNCTOR_NAME, 1));
 		converterManager.register(new CharacterToNumberTermConverter());
 		converterManager.register(new ObjectToAtomConverter<Character>(){});
@@ -182,7 +186,7 @@ public class JpcConverterManager extends InterTypeConverterManager {
 			converterManager.register(new TermToMapEntryConverter(mapEntrySeparator));
 		}
 		
-		converterManager.register(new URIConverter(), functor(URIConverter.URI_FUNCTOR_NAME,1));
+		converterManager.register(new UriConverter(), functor(URI_FUNCTOR_NAME,1));
 		converterManager.register(new FileConverter(), functor(FileConverter.FILE_FUNCTOR_NAME,1));
 		
 		
