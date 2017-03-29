@@ -1,4 +1,4 @@
-package org.jpc.mapping.converter.catalog.list;
+package org.jpc.mapping.converter.catalog.collection;
 
 import static org.jconverter.converter.ConversionGoal.conversionGoal;
 import static org.jconverter.converter.TypeDomain.typeDomain;
@@ -26,8 +26,9 @@ public class IteratorConverter<T extends Term> implements ToTermConverter<Iterat
 			throw new DelegateConversionException(conversionGoal(it, target));
 		}
 		ListTerm terms = new ListTerm();
-		while(it.hasNext())
+		while (it.hasNext()) {
 			terms.add(context.toTerm(it.next()));
+		}
 		return (T) terms.asTerm();
 	}
 
@@ -39,11 +40,12 @@ public class IteratorConverter<T extends Term> implements ToTermConverter<Iterat
 		TypeWrapper wrappedTargetType = TypeWrapper.wrap(target.getType());
 		Type componentType = null;
 		TypeWrapper iteratorTypeWrapper = wrappedTargetType.as(Iterator.class);
-		if(iteratorTypeWrapper.hasActualTypeArguments())
+		if (iteratorTypeWrapper.hasActualTypeArguments()) {
 			componentType = iteratorTypeWrapper.getActualTypeArguments()[0];
-		else
+		} else {
 			componentType = Object.class;
-		
+		}
+
 		Type listType = parameterizedType(new Type[]{componentType}, null, List.class);
 		
 		List list = (List) new CollectionConverter().fromTerm(listTerm, listType, context);

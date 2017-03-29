@@ -1,25 +1,32 @@
 package org.jpc.engine.dialect;
 
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
 
 import java.util.List;
 
 public enum Language {
-    PROLOG("PROLOG", "pl", "prolog", "pro"), LOGTALK("LOGTALK", "lgt", "logtalk");
+    PROLOG("PROLOG", "pl", asList("pl", "prolog", "pro")), LOGTALK("LOGTALK", "lgt", asList("lgt", "logtalk"));
 
     private final String name;
-
+    private final String defaultExtension;
     private final List<String> extensions;
 
-    Language(String name, String ...extensions) {
+    Language(String name, String defaultExtension, List<String> extensions) {
+        checkArgument(extensions.contains(defaultExtension));
         this.name = name;
-        this.extensions = unmodifiableList(asList(extensions));
+        this.defaultExtension = defaultExtension;
+        this.extensions = unmodifiableList((extensions));
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getDefaultExtension() {
+        return defaultExtension;
     }
 
     public List<String> getExtensions() {

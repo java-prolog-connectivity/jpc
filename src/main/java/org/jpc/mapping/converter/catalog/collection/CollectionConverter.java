@@ -1,4 +1,4 @@
-package org.jpc.mapping.converter.catalog.list;
+package org.jpc.mapping.converter.catalog.collection;
 
 import static org.jconverter.converter.ConversionGoal.conversionGoal;
 

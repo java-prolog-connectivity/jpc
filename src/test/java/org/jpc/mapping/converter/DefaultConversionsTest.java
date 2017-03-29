@@ -4,9 +4,11 @@ import static java.util.Arrays.asList;
 import static org.jpc.engine.prolog.PrologConstants.FAIL;
 import static org.jpc.engine.prolog.PrologConstants.FALSE;
 import static org.jpc.engine.prolog.PrologConstants.TRUE;
+import static org.jpc.mapping.converter.catalog.OptionalConverter.OPTIONAL_FUNCTOR_NAME;
 import static org.jpc.term.Atom.atom;
 import static org.jpc.term.JRef.jRef;
 import static org.jpc.term.ListTerm.listTerm;
+import static org.jpc.term.TermConstants.EMPTY_OPTIONAL;
 import static org.jpc.term.TermConstants.JAVA_NULL;
 import static org.jpc.term.Var.dontCare;
 import static org.jpc.term.Var.var;
@@ -26,6 +28,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -47,15 +50,33 @@ import com.google.common.reflect.TypeToken;
 public class DefaultConversionsTest {
 
 	private Jpc jpc = JpcBuilder.create().build();
-	
-	
+
+	@Test
+	public void testNonEmptyOptionalToTerm() {
+		Optional<String> opt = Optional.of("x");
+		Term optionalTerm = jpc.toTerm(opt);
+		assertEquals(new Compound(OPTIONAL_FUNCTOR_NAME, asList(atom("x"))), optionalTerm);
+		assertEquals(opt, jpc.fromTerm(optionalTerm));
+	}
+
+	@Test
+	public void testEmptyOptionalToTerm() {
+		Optional<String> opt = Optional.empty();
+		Term optionalTerm = jpc.toTerm(opt);
+		assertEquals(EMPTY_OPTIONAL, optionalTerm);
+		assertEquals(opt, jpc.fromTerm(optionalTerm));
+	}
+
+	// TODO restructure all these tests in a Spock specification
 	// *** OBJECT TO TERM TESTS ***
 	
 	@Test
 	public void testNullToTerm() {
 		assertTrue(JAVA_NULL.termEquals(jpc.toTerm(null)));
 	}
-	
+
+
+
 	@Test
 	public void testTermToTerm() {
 		assertEquals(new Atom("x"), jpc.toTerm(new Atom("x")));
