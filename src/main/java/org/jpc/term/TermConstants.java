@@ -17,6 +17,6 @@ public abstract class TermConstants {
     public static final Atom FALSE = atom(PrologConstants.FALSE);
     public static final Atom NIL = atom(PrologConstants.NIL_SYMBOL);
     public static final Term JAVA_NULL = compound("@", asList(atom(Objects.toString(null))));
-    public static final Compound EMPTY_OPTIONAL = compound(OPTIONAL_FUNCTOR_NAME, asList(JAVA_NULL));
+    public static final Compound EMPTY_OPTIONAL = compound(OPTIONAL_FUNCTOR_NAME, asList(atom("empty")));
 
 }

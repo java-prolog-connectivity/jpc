@@ -5,6 +5,7 @@ import static org.jpc.engine.prolog.PrologConstants.FAIL;
 import static org.jpc.engine.prolog.PrologConstants.FALSE;
 import static org.jpc.engine.prolog.PrologConstants.TRUE;
 import static org.jpc.mapping.converter.catalog.util.OptionalConverter.OPTIONAL_FUNCTOR_NAME;
+import static org.jpc.mapping.converter.catalog.util.OptionalConverter.PRESENT_OPTIONAL_VALUE_WRAPPER;
 import static org.jpc.mapping.converter.catalog.util.UuidConverter.UUID_FUNCTOR_NAME;
 import static org.jpc.term.Atom.atom;
 import static org.jpc.term.JRef.jRef;
@@ -57,7 +58,8 @@ public class DefaultConversionsTest {
 	public void testNonEmptyOptionalConversion() {
 		Optional<String> opt = Optional.of("x");
 		Term optionalTerm = jpc.toTerm(opt);
-		assertEquals(new Compound(OPTIONAL_FUNCTOR_NAME, asList(atom("x"))), optionalTerm);
+		assertEquals(new Compound(OPTIONAL_FUNCTOR_NAME, asList(
+				new Compound(PRESENT_OPTIONAL_VALUE_WRAPPER, asList(atom("x"))))), optionalTerm);
 		assertEquals(opt, jpc.fromTerm(optionalTerm));
 	}
 
