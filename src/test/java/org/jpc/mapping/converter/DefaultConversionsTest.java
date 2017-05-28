@@ -37,7 +37,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.jpc.Jpc;
 import org.jpc.JpcBuilder;
-import org.jconverter.typesolver.catalog.MapTypeSolver;
+import org.jpc.mapping.typesolver.catalog.MapTypeSolver;
 import org.jpc.term.Atom;
 import org.jpc.term.Compound;
 import org.jpc.term.Float;

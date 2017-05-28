@@ -17,7 +17,7 @@ import org.jpc.mapping.converter.FromTermConverter;
 import org.jpc.mapping.converter.ToTermConverter;
 import org.jpc.mapping.converter.catalog.map.MapEntryConverter.MapEntryToTermConverter;
 import org.jpc.mapping.converter.catalog.map.MapEntryConverter.TermToMapEntryConverter;
-import org.jconverter.typesolver.catalog.MapTypeSolver;
+import org.jpc.mapping.typesolver.catalog.MapTypeSolver;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;
 import org.jpc.term.Term;

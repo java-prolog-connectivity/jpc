@@ -27,7 +27,7 @@ import org.jpc.mapping.converter.catalog.NullConverter;
 import org.jpc.mapping.converter.catalog.primitive.NumberToNumberTermConverter;
 import org.jpc.mapping.converter.catalog.refterm.FromRefTermConverter;
 import org.jpc.mapping.converter.catalog.refterm.ToRefTermConverter;
-import org.jconverter.typesolver.JpcTypeSolverManager;
+import org.jpc.mapping.typesolver.JpcTypeSolverManager;
 import org.jconverter.typesolver.TypeSolverKey;
 import org.jconverter.typesolver.TypeSolverManager;
 import org.jconverter.typesolver.UnrecognizedObjectException;
