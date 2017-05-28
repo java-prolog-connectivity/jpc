@@ -95,7 +95,7 @@ import org.jpc.mapping.converter.catalog.reflection.type.WildcardTypeToTermConve
 import org.jpc.mapping.converter.catalog.serialized.FromSerializedConverter;
 import org.jpc.mapping.converter.catalog.util.OptionalConverter;
 import org.jpc.mapping.converter.catalog.util.UuidConverter;
-import org.jpc.mapping.typesolver.catalog.MapTypeSolver;
+import org.jconverter.typesolver.catalog.MapTypeSolver;
 import org.jpc.query.Query;
 import org.jpc.query.Solution;
 import org.jpc.term.Atom;

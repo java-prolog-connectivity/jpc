@@ -9,7 +9,7 @@ import java.util.List;
 import org.jconverter.JConverter;
 import org.jconverter.converter.TypeDomain;
 import org.jpc.mapping.converter.JpcConverterManager;
-import org.jpc.mapping.typesolver.TypeSolverManager;
+import org.jconverter.typesolver.TypeSolverManager;
 import org.jpc.error.handling.ErrorHandler;
 import org.jpc.term.Compound;
 import org.jpc.term.ListTerm;

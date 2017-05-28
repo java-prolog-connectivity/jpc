@@ -13,7 +13,7 @@ import org.jconverter.converter.TypeDomain;
 import org.jpc.Jpc;
 import org.jpc.mapping.converter.FromTermConverter;
 import org.jpc.mapping.converter.ToTermConverter;
-import org.jpc.mapping.typesolver.catalog.MapTypeSolver;
+import org.jconverter.typesolver.catalog.MapTypeSolver;
 import org.jpc.term.Compound;
 import org.jpc.term.Term;
 import org.typeutils.typewrapper.TypeWrapper;
