@@ -11,5 +11,5 @@ In case you would like to know more about it, you may find interesting the JPC's
 Contact
 -------
 
-Questions, wish lists and constructive feedback can be sent to [uclouvain(dot)be (that symbol for emails) sergio(dot)castro]
+Questions, wish lists and constructive feedback can be sent to [gmail(dot)com (that symbol for emails) sergioc78]
 \(inversing the order\).
