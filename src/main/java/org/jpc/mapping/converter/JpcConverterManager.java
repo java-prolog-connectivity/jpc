@@ -54,6 +54,7 @@ import org.jpc.mapping.converter.catalog.collection.IterableConverter;
 import org.jpc.mapping.converter.catalog.collection.IteratorConverter;
 import org.jpc.mapping.converter.catalog.datetime.CalendarToAtomConverter;
 import org.jpc.mapping.converter.catalog.datetime.CalendarToNumberTermConverter;
+import org.jpc.mapping.converter.catalog.datetime.TimestampToNumberTermConverter;
 import org.jpc.mapping.converter.catalog.datetime.XMLGregorianCalendarConverter;
 import org.jpc.mapping.converter.catalog.error.DomainErrorConverter;
 import org.jpc.mapping.converter.catalog.error.EvaluationErrorConverter;
@@ -75,6 +76,7 @@ import org.jpc.mapping.converter.catalog.map.MapEntryConverter.MapEntryToTermCon
 import org.jpc.mapping.converter.catalog.map.MapEntryConverter.TermToMapEntryConverter;
 import org.jpc.mapping.converter.catalog.net.UriConverter;
 import org.jpc.mapping.converter.catalog.primitive.BooleanConverter;
+import org.jpc.mapping.converter.catalog.primitive.CharSequenceToTermConverter;
 import org.jpc.mapping.converter.catalog.primitive.CharacterToNumberTermConverter;
 import org.jpc.mapping.converter.catalog.primitive.NumberToNumberTermConverter;
 import org.jpc.mapping.converter.catalog.primitive.ObjectToAtomConverter;
@@ -158,6 +160,7 @@ public class JpcConverterManager extends InterTypeConverterManager {
 		converterManager.register(new CharacterToNumberTermConverter());
 		converterManager.register(new ObjectToAtomConverter<Character>(){});
 		converterManager.register(new StringToNumberTermConverter());
+		converterManager.register(new CharSequenceToTermConverter());
 		converterManager.register(new ObjectToAtomConverter<String>(){});
 		converterManager.register(new BooleanConverter());
 		//converterManager.register(new NumberConverter());
@@ -170,6 +173,7 @@ public class JpcConverterManager extends InterTypeConverterManager {
 		converterManager.register(new XMLGregorianCalendarConverter<Atom>(){});
 		class XMLGregorianCalendarConverterToNumberTerm<T extends Number> extends XMLGregorianCalendarConverter<T>{}
 		converterManager.register(new XMLGregorianCalendarConverterToNumberTerm());
+		converterManager.register(new TimestampToNumberTermConverter());
 
 		converterManager.register(new ArrayConverter());
 		converterManager.register(new CollectionConverter());
