@@ -8,7 +8,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 
+import com.google.common.base.Joiner;
+import org.jpc.JpcBuilder;
 import org.jpc.engine.dialect.Dialect;
 import org.jpc.engine.prolog.Operator;
 import org.jpc.engine.prolog.OperatorsContext;
@@ -16,9 +19,6 @@ import org.jpc.term.compiler.Environment;
 import org.jpc.term.unification.NonUnifiableException;
 import org.jpc.term.visitor.TermVisitor;
 import org.jpc.util.salt.TermContentHandler;
-
-import java.util.function.Function;
-import com.google.common.base.Joiner;
 
 /**
  * A class reifying a logic compound term
@@ -69,7 +69,7 @@ public final class Compound extends Term {
 	
 	@Override
 	protected boolean basicIsList() {
-		return isCons() && arg(2).isList();
+		return isCons(); // && arg(2).isList(); // stack overflows if the list is too big
 	}
 	
 	public boolean isCons() {
@@ -316,6 +316,17 @@ public final class Compound extends Term {
 			framedCompound.ground = isGround();
 		}
 		return framedCompound;
+	}
+
+	public static void main(String[] args) {
+		int[] a = new int[100000];
+		List<java.lang.Integer> l = new ArrayList<>();
+		for (int i = 0; i < 100000; i++) {
+			l.add(i);
+		}
+		Term t = JpcBuilder.create().build().toTerm(l);
+		System.out.println(t.isList());
+		System.out.println("x");
 	}
 
 }

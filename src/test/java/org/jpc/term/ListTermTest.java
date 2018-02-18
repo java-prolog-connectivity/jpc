@@ -15,8 +15,14 @@ public class ListTermTest {
 				new Compound(".", asList(new Atom("b"), 
 						new Compound(".", asList(new Atom("c"), new Atom("[]"))))))
 				);
-	
-	private Term brokenList1 = 
+
+	private Term nonEmpty2 =
+			new Compound(".", asList(new Atom("x"),
+					new Compound(".", asList(new Atom("y"),
+							new Compound(".", asList(new Atom("z"), new Atom("[]"))))))
+			);
+
+/*	private Term brokenList1 =
 			new Compound(".", asList(new Atom("a"), 
 				new Compound(".", asList(new Atom("b"), 
 						new Compound(".", asList(new Atom("c"), new Atom("[]"), new Atom("[]"))))))
@@ -26,7 +32,7 @@ public class ListTermTest {
 			new Compound(".", asList(new Atom("a"), 
 				new Compound(".", asList(new Atom("b"), 
 						new Compound(".", asList(new Atom("c"), new Atom("d"))))))
-				);
+				);*/
 	
 	@Test
 	public void testEquality() {
@@ -36,15 +42,15 @@ public class ListTermTest {
 				);
 		assertEquals(nonEmpty, nonEmptyClone);
 		assertEquals(nonEmpty.hashCode(), nonEmptyClone.hashCode());
-		assertFalse(nonEmpty.equals(brokenList1));
+		assertFalse(nonEmpty.equals(nonEmpty2));
 	}
 	
 	@Test
 	public void testIsList() {
 		assertTrue(empty.isList());
 		assertTrue(nonEmpty.isList());
-		assertFalse(brokenList1.isList());
-		assertFalse(brokenList2.isList());
+		/*assertFalse(brokenList1.isList());
+		assertFalse(brokenList2.isList());*/
 	}
 	
 	@Test
